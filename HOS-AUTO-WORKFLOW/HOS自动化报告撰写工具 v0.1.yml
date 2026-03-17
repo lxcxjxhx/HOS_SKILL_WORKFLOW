@@ -1,0 +1,1409 @@
+app:
+  description: HOS自动化报告撰写工具 v0.1
+  icon: 8af3c832-0176-44c5-815b-7e1323528924
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: HOS自动化报告撰写工具 v0.1
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: bowenliang123/md_exporter:3.6.9@3f027d63e80b44d5d5a9f706871afaef37905b8f8a89a2d152dc530211a8acb1
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: hjlarry/mermaid_converter:0.0.1@46e755f0d92566a1f7a6e85086eac02a735afaa41479e7a2277b150abda70b18
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/deepseek:0.0.11@35bcd3f233f99d07bdadef8b326945df3bda5e8f773330144bc90d84800336b9
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/firecrawl:0.0.3@02f037a6e82c44103d3604456f8e57b5516464183344f32d74eec3f82d6036b0
+    version: null
+kind: app
+version: 0.6.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        attachment_image_file_size_limit: 2
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        file_upload_limit: 50
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        single_chunk_attachment_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: question-classifier
+      id: 1773752364237-source-1773752394996-target
+      source: '1773752364237'
+      sourceHandle: source
+      target: '1773752394996'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: code
+      id: 1773752364237-source-1773752424789-target
+      source: '1773752364237'
+      sourceHandle: source
+      target: '1773752424789'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: knowledge-retrieval
+      id: 1773752394996-1-1773752434636-target
+      source: '1773752394996'
+      sourceHandle: '1'
+      target: '1773752434636'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1773752394996-2-1773752455196-target
+      source: '1773752394996'
+      sourceHandle: '2'
+      target: '1773752455196'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: tool
+      id: 1773752434636-source-1773752446300-target
+      source: '1773752434636'
+      sourceHandle: source
+      target: '1773752446300'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: tool
+        targetType: llm
+      id: 1773752446300-source-1773752451732-target
+      source: '1773752446300'
+      sourceHandle: source
+      target: '1773752451732'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: tool
+      id: 1773752455196-source-1773752470244-target
+      source: '1773752455196'
+      sourceHandle: source
+      target: '1773752470244'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: tool
+      id: 1773752451732-source-1773752470244-target
+      source: '1773752451732'
+      sourceHandle: source
+      target: '1773752470244'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: tool
+        targetType: tool
+      id: 1773752470244-source-1773752482653-target
+      source: '1773752470244'
+      sourceHandle: source
+      target: '1773752482653'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: 1773752493523-source-1773752498076-target
+      source: '1773752493523'
+      sourceHandle: source
+      target: '1773752498076'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: tool
+        targetType: code
+      id: 1773752482653-source-1773752489596-target
+      source: '1773752482653'
+      sourceHandle: source
+      target: '1773752489596'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: llm
+      id: 1773752424789-source-1773752626396-target
+      source: '1773752424789'
+      sourceHandle: source
+      target: '1773752626396'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1773752626396-source-1773752489596-target
+      source: '1773752626396'
+      sourceHandle: source
+      target: '1773752489596'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: code
+      id: 1773752489596-source-1773752493523-target
+      source: '1773752489596'
+      sourceHandle: source
+      target: '1773752493523'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: 用户输入
+        type: start
+        variables: []
+      height: 72
+      id: '1773752364237'
+      position:
+        x: 0
+        y: 196
+      positionAbsolute:
+        x: 0
+        y: 196
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        classes:
+        - id: '1'
+          name: ''
+        - id: '2'
+          name: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: ''
+          provider: ''
+        query_variable_selector: []
+        selected: false
+        title: 问题分类器
+        type: question-classifier
+        vision:
+          enabled: false
+      height: 113
+      id: '1773752394996'
+      position:
+        x: 362
+        y: 0
+      positionAbsolute:
+        x: 362
+        y: 0
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import zipfile\nimport os\nimport base64\nimport tempfile\n\ndef handler(inputs:\
+          \ dict) -> dict:\n    \"\"\"\n    输入：\n        inputs[\"file\"] = 上传的 docx\
+          \ 文件（二进制）\n\n    输出：\n        {\n            \"xml_files\": {filename: content},\n\
+          \            \"images\": {filename: base64}\n        }\n    \"\"\"\n\n \
+          \   file = inputs.get(\"file\")\n\n    if not file:\n        return {\"\
+          error\": \"No file provided\"}\n\n    # 创建临时目录\n    with tempfile.TemporaryDirectory()\
+          \ as tmpdir:\n        docx_path = os.path.join(tmpdir, \"input.docx\")\n\
+          \n        # 写入文件\n        with open(docx_path, \"wb\") as f:\n         \
+          \   f.write(file)\n\n        extract_dir = os.path.join(tmpdir, \"unzipped\"\
+          )\n        os.makedirs(extract_dir, exist_ok=True)\n\n        # 解压 docx\n\
+          \        with zipfile.ZipFile(docx_path, 'r') as zip_ref:\n            zip_ref.extractall(extract_dir)\n\
+          \n        xml_files = {}\n        images = {}\n\n        # 遍历解压目录\n    \
+          \    for root, dirs, files in os.walk(extract_dir):\n            for name\
+          \ in files:\n                full_path = os.path.join(root, name)\n    \
+          \            rel_path = os.path.relpath(full_path, extract_dir)\n\n    \
+          \            # 提取 XML\n                if name.endswith(\".xml\"):\n   \
+          \                 try:\n                        with open(full_path, \"\
+          r\", encoding=\"utf-8\") as f:\n                            xml_files[rel_path]\
+          \ = f.read()\n                    except:\n                        # 有些\
+          \ XML 可能不是 UTF-8\n                        with open(full_path, \"rb\") as\
+          \ f:\n                            xml_files[rel_path] = f.read().decode(\"\
+          utf-8\", errors=\"ignore\")\n\n                # 提取图片\n                if\
+          \ rel_path.startswith(\"word/media/\"):\n                    with open(full_path,\
+          \ \"rb\") as f:\n                        images[rel_path] = base64.b64encode(f.read()).decode()\n\
+          \n        return {\n            \"xml_files\": xml_files,\n            \"\
+          images\": images\n        }"
+        code_language: python3
+        outputs:
+          result:
+            children: null
+            type: string
+        selected: false
+        title: 模板文件转换
+        type: code
+        variables:
+        - value_selector: []
+          variable: arg1
+        - value_selector: []
+          variable: arg2
+      height: 51
+      id: '1773752424789'
+      position:
+        x: 362
+        y: 218
+      positionAbsolute:
+        x: 362
+        y: 218
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        dataset_ids: []
+        multiple_retrieval_config:
+          reranking_enable: false
+          top_k: 4
+        query_attachment_selector: []
+        query_variable_selector: []
+        retrieval_mode: multiple
+        selected: false
+        title: 知识检索
+        type: knowledge-retrieval
+      height: 51
+      id: '1773752434636'
+      position:
+        x: 723
+        y: 12
+      positionAbsolute:
+        x: 723
+        y: 12
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        is_team_authorization: false
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: The base URL to start crawling from.
+            ja_JP: The base URL to start crawling from.
+            pt_BR: The base URL to start crawling from.
+            zh_Hans: 要爬取网站的起始URL。
+          label:
+            en_US: Start URL
+            ja_JP: Start URL
+            pt_BR: Start URL
+            zh_Hans: 起始URL
+          llm_description: The URL of the website that needs to be crawled. This is
+            a required parameter.
+          max: null
+          min: null
+          name: url
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: true
+          form: form
+          human_description:
+            en_US: If you choose not to wait, it will directly return a job ID. You
+              can use this job ID to check the crawling results or cancel the crawling
+              task, which is usually very useful for a large-scale crawling task.
+            ja_JP: If you choose not to wait, it will directly return a job ID. You
+              can use this job ID to check the crawling results or cancel the crawling
+              task, which is usually very useful for a large-scale crawling task.
+            pt_BR: If you choose not to wait, it will directly return a job ID. You
+              can use this job ID to check the crawling results or cancel the crawling
+              task, which is usually very useful for a large-scale crawling task.
+            zh_Hans: 如果选择不等待，则会直接返回一个job_id，可以通过job_id查询爬取结果或取消爬取任务，这通常对于一个大型爬取任务来说非常有用。
+          label:
+            en_US: Wait For Results
+            ja_JP: Wait For Results
+            pt_BR: Wait For Results
+            zh_Hans: 等待爬取结果
+          llm_description: ''
+          max: null
+          min: null
+          name: wait_for_results
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: boolean
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: 'Pages matching these patterns will be skipped. Example: blog/*,
+              about/*'
+            ja_JP: 'Pages matching these patterns will be skipped. Example: blog/*,
+              about/*'
+            pt_BR: 'Pages matching these patterns will be skipped. Example: blog/*,
+              about/*'
+            zh_Hans: 匹配这些模式的页面将被跳过。示例：blog/*, about/*
+          label:
+            en_US: URL patterns to exclude
+            ja_JP: URL patterns to exclude
+            pt_BR: URL patterns to exclude
+            zh_Hans: 要排除的URL模式
+          llm_description: ''
+          max: null
+          min: null
+          name: excludePaths
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: 'Only pages matching these patterns will be crawled. Example: blog/*,
+              about/*'
+            ja_JP: 'Only pages matching these patterns will be crawled. Example: blog/*,
+              about/*'
+            pt_BR: 'Only pages matching these patterns will be crawled. Example: blog/*,
+              about/*'
+            zh_Hans: 只有与这些模式匹配的页面才会被爬取。示例：blog/*, about/*
+          label:
+            en_US: URL patterns to include
+            ja_JP: URL patterns to include
+            pt_BR: URL patterns to include
+            zh_Hans: 要包含的URL模式
+          llm_description: ''
+          max: null
+          min: null
+          name: includePaths
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: 2
+          form: form
+          human_description:
+            en_US: Maximum depth to crawl relative to the entered URL. A maxDepth
+              of 0 scrapes only the entered URL. A maxDepth of 1 scrapes the entered
+              URL and all pages one level deep. A maxDepth of 2 scrapes the entered
+              URL and all pages up to two levels deep. Higher values follow the same
+              pattern.
+            ja_JP: Maximum depth to crawl relative to the entered URL. A maxDepth
+              of 0 scrapes only the entered URL. A maxDepth of 1 scrapes the entered
+              URL and all pages one level deep. A maxDepth of 2 scrapes the entered
+              URL and all pages up to two levels deep. Higher values follow the same
+              pattern.
+            pt_BR: Maximum depth to crawl relative to the entered URL. A maxDepth
+              of 0 scrapes only the entered URL. A maxDepth of 1 scrapes the entered
+              URL and all pages one level deep. A maxDepth of 2 scrapes the entered
+              URL and all pages up to two levels deep. Higher values follow the same
+              pattern.
+            zh_Hans: 相对于输入的URL，爬取的最大深度。maxDepth为0时，仅抓取输入的URL。maxDepth为1时，抓取输入的URL以及所有一级深层页面。maxDepth为2时，抓取输入的URL以及所有两级深层页面。更高值遵循相同模式。
+          label:
+            en_US: Maximum crawl depth
+            ja_JP: Maximum crawl depth
+            pt_BR: Maximum crawl depth
+            zh_Hans: 爬取深度
+          llm_description: ''
+          max: null
+          min: 0
+          name: maxDepth
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: true
+          form: form
+          human_description:
+            en_US: Ignore the website sitemap when crawling.
+            ja_JP: Ignore the website sitemap when crawling.
+            pt_BR: Ignore the website sitemap when crawling.
+            zh_Hans: 爬取时忽略网站站点地图。
+          label:
+            en_US: ignore Sitemap
+            ja_JP: ignore Sitemap
+            pt_BR: ignore Sitemap
+            zh_Hans: 忽略站点地图
+          llm_description: ''
+          max: null
+          min: null
+          name: ignoreSitemap
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: boolean
+        - auto_generate: null
+          default: 5
+          form: form
+          human_description:
+            en_US: Specify the maximum number of pages to crawl. The crawler will
+              stop after reaching this limit.
+            ja_JP: Specify the maximum number of pages to crawl. The crawler will
+              stop after reaching this limit.
+            pt_BR: Specify the maximum number of pages to crawl. The crawler will
+              stop after reaching this limit.
+            zh_Hans: 指定要爬取的最大页面数。爬虫将在达到此限制后停止。
+          label:
+            en_US: Maximum pages to crawl
+            ja_JP: Maximum pages to crawl
+            pt_BR: Maximum pages to crawl
+            zh_Hans: 最大爬取页面数
+          llm_description: ''
+          max: null
+          min: 1
+          name: limit
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: false
+          form: form
+          human_description:
+            en_US: Enables the crawler to navigate from a specific URL to previously
+              linked pages. For instance, from 'example.com/product/123' back to 'example.com/product'
+            ja_JP: Enables the crawler to navigate from a specific URL to previously
+              linked pages. For instance, from 'example.com/product/123' back to 'example.com/product'
+            pt_BR: Enables the crawler to navigate from a specific URL to previously
+              linked pages. For instance, from 'example.com/product/123' back to 'example.com/product'
+            zh_Hans: 使爬虫能够从特定URL导航到之前链接的页面。例如，从'example.com/product/123'返回到'example.com/product'
+          label:
+            en_US: allow Backward Crawling
+            ja_JP: allow Backward Crawling
+            pt_BR: allow Backward Crawling
+            zh_Hans: 允许向后爬取
+          llm_description: ''
+          max: null
+          min: null
+          name: allowBackwardLinks
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: boolean
+        - auto_generate: null
+          default: false
+          form: form
+          human_description:
+            en_US: Allows the crawler to follow links to external websites.
+            ja_JP: Allows the crawler to follow links to external websites.
+            pt_BR: Allows the crawler to follow links to external websites.
+            zh_Hans: Allows the crawler to follow links to external websites.
+          label:
+            en_US: allow External Content Links
+            ja_JP: allow External Content Links
+            pt_BR: allow External Content Links
+            zh_Hans: 允许爬取外链
+          llm_description: ''
+          max: null
+          min: null
+          name: allowExternalLinks
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: boolean
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: The URL to send the webhook to. This will trigger for crawl started
+              (crawl.started) ,every page crawled (crawl.page) and when the crawl
+              is completed (crawl.completed or crawl.failed). The response will be
+              the same as the /scrape endpoint.
+            ja_JP: The URL to send the webhook to. This will trigger for crawl started
+              (crawl.started) ,every page crawled (crawl.page) and when the crawl
+              is completed (crawl.completed or crawl.failed). The response will be
+              the same as the /scrape endpoint.
+            pt_BR: The URL to send the webhook to. This will trigger for crawl started
+              (crawl.started) ,every page crawled (crawl.page) and when the crawl
+              is completed (crawl.completed or crawl.failed). The response will be
+              the same as the /scrape endpoint.
+            zh_Hans: 发送Webhook的URL。这将在开始爬取（crawl.started）、每爬取一个页面（crawl.page）以及爬取完成（crawl.completed或crawl.failed）时触发。响应将与/scrape端点相同。
+          label:
+            en_US: webhook
+            ja_JP: webhook
+            pt_BR: webhook
+            zh_Hans: webhook
+          llm_description: ''
+          max: null
+          min: null
+          name: webhook
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: 'Formats to include in the output. Available options: markdown,
+              html, rawHtml, links, screenshot'
+            ja_JP: 'Formats to include in the output. Available options: markdown,
+              html, rawHtml, links, screenshot'
+            pt_BR: 'Formats to include in the output. Available options: markdown,
+              html, rawHtml, links, screenshot'
+            zh_Hans: '输出中应包含的格式。可以填入: markdown, html, rawHtml, links, screenshot'
+          label:
+            en_US: Formats
+            ja_JP: Formats
+            pt_BR: Formats
+            zh_Hans: 结果的格式
+          llm_description: ''
+          max: null
+          min: null
+          name: formats
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: 'Headers to send with the request. Can be used to send cookies,
+              user-agent, etc. Example: {"cookies": "testcookies"}'
+            ja_JP: 'Headers to send with the request. Can be used to send cookies,
+              user-agent, etc. Example: {"cookies": "testcookies"}'
+            pt_BR: 'Headers to send with the request. Can be used to send cookies,
+              user-agent, etc. Example: {"cookies": "testcookies"}'
+            zh_Hans: '随请求发送的头部。可以用来发送cookies、用户代理等。示例：{"cookies": "testcookies"}'
+          label:
+            en_US: headers
+            ja_JP: headers
+            pt_BR: headers
+            zh_Hans: 请求头
+          llm_description: ''
+          max: null
+          min: null
+          name: headers
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: 'Only include tags, classes and ids from the page in the final
+              output. Use comma separated values. Example: script, .ad, #footer'
+            ja_JP: 'Only include tags, classes and ids from the page in the final
+              output. Use comma separated values. Example: script, .ad, #footer'
+            pt_BR: 'Only include tags, classes and ids from the page in the final
+              output. Use comma separated values. Example: script, .ad, #footer'
+            zh_Hans: '仅在最终输出中包含HTML页面的这些标签，可以通过标签名、类或ID来设定，使用逗号分隔值。示例：script, .ad,
+              #footer'
+          label:
+            en_US: Include Tags
+            ja_JP: Include Tags
+            pt_BR: Include Tags
+            zh_Hans: 仅抓取这些标签
+          llm_description: ''
+          max: null
+          min: null
+          name: includeTags
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: 'Tags, classes and ids to remove from the page. Use comma separated
+              values. Example: script, .ad, #footer'
+            ja_JP: 'Tags, classes and ids to remove from the page. Use comma separated
+              values. Example: script, .ad, #footer'
+            pt_BR: 'Tags, classes and ids to remove from the page. Use comma separated
+              values. Example: script, .ad, #footer'
+            zh_Hans: '要在最终输出中移除HTML页面的这些标签，可以通过标签名、类或ID来设定，使用逗号分隔值。示例：script, .ad,
+              #footer'
+          label:
+            en_US: Exclude Tags
+            ja_JP: Exclude Tags
+            pt_BR: Exclude Tags
+            zh_Hans: 要移除这些标签
+          llm_description: ''
+          max: null
+          min: null
+          name: excludeTags
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: false
+          form: form
+          human_description:
+            en_US: Only return the main content of the page excluding headers, navs,
+              footers, etc.
+            ja_JP: Only return the main content of the page excluding headers, navs,
+              footers, etc.
+            pt_BR: Only return the main content of the page excluding headers, navs,
+              footers, etc.
+            zh_Hans: 只返回页面的主要内容，不包括头部、导航栏、尾部等。
+          label:
+            en_US: only Main Content
+            ja_JP: only Main Content
+            pt_BR: only Main Content
+            zh_Hans: 仅抓取主要内容
+          llm_description: ''
+          max: null
+          min: null
+          name: onlyMainContent
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: boolean
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: Wait x amount of milliseconds for the page to load to fetch content.
+            ja_JP: Wait x amount of milliseconds for the page to load to fetch content.
+            pt_BR: Wait x amount of milliseconds for the page to load to fetch content.
+            zh_Hans: 等待x毫秒以使页面加载并获取内容。
+          label:
+            en_US: wait For
+            ja_JP: wait For
+            pt_BR: wait For
+            zh_Hans: 等待时间
+          llm_description: ''
+          max: null
+          min: 0
+          name: waitFor
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          allowBackwardLinks: ''
+          allowExternalLinks: ''
+          excludePaths: ''
+          excludeTags: ''
+          formats: ''
+          headers: ''
+          ignoreSitemap: ''
+          includePaths: ''
+          includeTags: ''
+          limit: ''
+          maxDepth: ''
+          onlyMainContent: ''
+          url: ''
+          waitFor: ''
+          wait_for_results: ''
+          webhook: ''
+        plugin_id: langgenius/firecrawl
+        plugin_unique_identifier: langgenius/firecrawl:0.0.3@02f037a6e82c44103d3604456f8e57b5516464183344f32d74eec3f82d6036b0
+        provider_icon: https://cloud.dify.ai/console/api/workspaces/current/plugin/icon?tenant_id=7643ab88-1e05-409b-93c0-96d19de8a77f&filename=48e81335e9c5fb6275f29e7a019e774ece91f1f63daf4b3d375f03accce99b62.svg
+        provider_id: langgenius/firecrawl/firecrawl
+        provider_name: langgenius/firecrawl/firecrawl
+        provider_type: builtin
+        selected: false
+        title: 深度爬取
+        tool_configurations: {}
+        tool_description: 递归爬取一个网址的子域名，并收集内容。
+        tool_label: 深度爬取
+        tool_name: crawl
+        tool_node_version: '2'
+        tool_parameters: {}
+        type: tool
+      height: 51
+      id: '1773752446300'
+      position:
+        x: 1064
+        y: 12
+      positionAbsolute:
+        x: 1064
+        y: 12
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 8ea30e8e-fd80-4587-8d47-50cb15ff4492
+          role: system
+          text: ''
+        selected: true
+        title: 安全服务
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1773752451732'
+      position:
+        x: 1405
+        y: 12
+      positionAbsolute:
+        x: 1405
+        y: 12
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - role: system
+          text: ''
+        selected: false
+        title: 产品实施
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1773752455196'
+      position:
+        x: 868.7142857142856
+        y: 107.2857142857143
+      positionAbsolute:
+        x: 868.7142857142856
+        y: 107.2857142857143
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        is_team_authorization: true
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: Markdown table text
+            ja_JP: Markdown table text
+            pt_BR: Markdown table text
+            zh_Hans: Markdown格式文本，必须为Markdown表格格式
+          label:
+            en_US: Markdown text
+            ja_JP: Markdown text
+            pt_BR: Markdown text
+            zh_Hans: Markdown格式文本
+          llm_description: ''
+          max: null
+          min: null
+          name: md_text
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: Optional custom output file name, and the filename suffix is not
+              required.
+            ja_JP: Optional custom output file name, and the filename suffix is not
+              required.
+            pt_BR: Optional custom output file name, and the filename suffix is not
+              required.
+            zh_Hans: 可选的自定义输出文件名，后缀名无需指定
+          label:
+            en_US: Output Filename
+            ja_JP: Output Filename
+            pt_BR: Output Filename
+            zh_Hans: 输出文件名
+          llm_description: ''
+          max: null
+          min: null
+          name: output_filename
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        params:
+          md_text: ''
+          output_filename: ''
+        plugin_id: bowenliang123/md_exporter
+        plugin_unique_identifier: bowenliang123/md_exporter:3.6.9@3f027d63e80b44d5d5a9f706871afaef37905b8f8a89a2d152dc530211a8acb1
+        provider_icon: https://cloud.dify.ai/console/api/workspaces/current/plugin/icon?tenant_id=7643ab88-1e05-409b-93c0-96d19de8a77f&filename=94713265c9473c3bd2bc8b0dd0794ad40955b7431610243bbd00ab02dae281cf.png
+        provider_id: bowenliang123/md_exporter/md_exporter
+        provider_name: bowenliang123/md_exporter/md_exporter
+        provider_type: builtin
+        selected: false
+        title: Markdown ⮕ XML
+        tool_configurations: {}
+        tool_description: 将 Markdown 转换为 XML 文件的工具
+        tool_label: Markdown ⮕ XML
+        tool_name: md_to_xml
+        tool_node_version: '2'
+        tool_parameters: {}
+        type: tool
+      height: 51
+      id: '1773752470244'
+      position:
+        x: 1766
+        y: 21
+      positionAbsolute:
+        x: 1766
+        y: 21
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        is_team_authorization: true
+        paramSchemas:
+        - auto_generate: null
+          default: null
+          form: llm
+          human_description:
+            en_US: The Mermaid diagram syntax code to convert to an image
+            ja_JP: The Mermaid diagram syntax code to convert to an image
+            pt_BR: O código de sintaxe do diagrama Mermaid para converter em imagem
+            zh_Hans: 要转换为图像的Mermaid图表语法代码
+          label:
+            en_US: Mermaid Code
+            ja_JP: Mermaid Code
+            pt_BR: Código Mermaid
+            zh_Hans: Mermaid代码
+          llm_description: Mermaid diagram syntax code that defines the structure
+            and content of the diagram to be converted to an image
+          max: null
+          min: null
+          name: mermaid_code
+          options: []
+          placeholder: null
+          precision: null
+          required: true
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: png
+          form: form
+          human_description:
+            en_US: The image format for the output file
+            ja_JP: The image format for the output file
+            pt_BR: O formato de imagem para o arquivo de saída
+            zh_Hans: 输出文件的图像格式
+          label:
+            en_US: Output Format
+            ja_JP: Output Format
+            pt_BR: Formato de Saída
+            zh_Hans: 输出格式
+          llm_description: 'Output image format: PNG for general use, JPG for photos,
+            SVG for scalable vector graphics, PDF for documents'
+          max: null
+          min: null
+          name: output_format
+          options:
+          - icon: ''
+            label:
+              en_US: PNG
+              ja_JP: PNG
+              pt_BR: PNG
+              zh_Hans: PNG
+            value: png
+          - icon: ''
+            label:
+              en_US: JPG
+              ja_JP: JPG
+              pt_BR: JPG
+              zh_Hans: JPG
+            value: jpg
+          - icon: ''
+            label:
+              en_US: SVG
+              ja_JP: SVG
+              pt_BR: SVG
+              zh_Hans: SVG
+            value: svg
+          - icon: ''
+            label:
+              en_US: PDF
+              ja_JP: PDF
+              pt_BR: PDF
+              zh_Hans: PDF
+            value: pdf
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: default
+          form: form
+          human_description:
+            en_US: Visual theme for the diagram
+            ja_JP: Visual theme for the diagram
+            pt_BR: Tema visual para o diagrama
+            zh_Hans: 图表的视觉主题
+          label:
+            en_US: Theme
+            ja_JP: Theme
+            pt_BR: Tema
+            zh_Hans: 主题
+          llm_description: Visual theme that controls the color scheme and styling
+            of the diagram
+          max: null
+          min: null
+          name: theme
+          options:
+          - icon: ''
+            label:
+              en_US: Default
+              ja_JP: Default
+              pt_BR: Default
+              zh_Hans: Default
+            value: default
+          - icon: ''
+            label:
+              en_US: Dark
+              ja_JP: Dark
+              pt_BR: Dark
+              zh_Hans: Dark
+            value: dark
+          - icon: ''
+            label:
+              en_US: Neutral
+              ja_JP: Neutral
+              pt_BR: Neutral
+              zh_Hans: Neutral
+            value: neutral
+          - icon: ''
+            label:
+              en_US: Forest
+              ja_JP: Forest
+              pt_BR: Forest
+              zh_Hans: Forest
+            value: forest
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: select
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: Background color for the image (hex color code or transparent)
+            ja_JP: Background color for the image (hex color code or transparent)
+            pt_BR: Cor de fundo para a imagem (código de cor hexadecimal ou transparente)
+            zh_Hans: 图像的背景颜色（十六进制颜色代码或透明）
+          label:
+            en_US: Background Color
+            ja_JP: Background Color
+            pt_BR: Cor de Fundo
+            zh_Hans: 背景颜色
+          llm_description: Background color as hex code (e.g., FF0000 for red) or
+            named color with ! prefix (e.g., !white)
+          max: null
+          min: null
+          name: background_color
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: string
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: Image width in pixels
+            ja_JP: Image width in pixels
+            pt_BR: Largura da imagem em pixels
+            zh_Hans: 图像宽度（像素）
+          label:
+            en_US: Width
+            ja_JP: Width
+            pt_BR: Largura
+            zh_Hans: 宽度
+          llm_description: Width of the output image in pixels
+          max: null
+          min: null
+          name: width
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        - auto_generate: null
+          default: null
+          form: form
+          human_description:
+            en_US: Image height in pixels
+            ja_JP: Image height in pixels
+            pt_BR: Altura da imagem em pixels
+            zh_Hans: 图像高度（像素）
+          label:
+            en_US: Height
+            ja_JP: Height
+            pt_BR: Altura
+            zh_Hans: 高度
+          llm_description: Height of the output image in pixels
+          max: null
+          min: null
+          name: height
+          options: []
+          placeholder: null
+          precision: null
+          required: false
+          scope: null
+          template: null
+          type: number
+        params:
+          background_color: ''
+          height: ''
+          mermaid_code: ''
+          output_format: ''
+          theme: ''
+          width: ''
+        plugin_id: hjlarry/mermaid_converter
+        plugin_unique_identifier: hjlarry/mermaid_converter:0.0.1@46e755f0d92566a1f7a6e85086eac02a735afaa41479e7a2277b150abda70b18
+        provider_icon: https://cloud.dify.ai/console/api/workspaces/current/plugin/icon?tenant_id=7643ab88-1e05-409b-93c0-96d19de8a77f&filename=bb01cde45bd66ab839c76ce5008de47990ad5cb1caf5b13fcc2abb88b5b8ae76.svg
+        provider_id: hjlarry/mermaid_converter/mermaid_converter
+        provider_name: hjlarry/mermaid_converter/mermaid_converter
+        provider_type: builtin
+        selected: false
+        title: Mermaid转换器
+        tool_configurations: {}
+        tool_description: 将Mermaid图表代码转换为各种格式的图像（PNG、JPG、PDF、SVG）
+        tool_label: Mermaid转换器
+        tool_name: mermaid_converter
+        tool_node_version: '2'
+        tool_parameters: {}
+        type: tool
+      height: 51
+      id: '1773752482653'
+      position:
+        x: 2107
+        y: 21
+      positionAbsolute:
+        x: 2107
+        y: 21
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import xml.etree.ElementTree as ET\nimport re\nfrom xml.dom import\
+          \ minidom\n\ndef prettify_xml(elem):\n    \"\"\"美化XML输出\"\"\"\n    rough_string\
+          \ = ET.tostring(elem, 'utf-8')\n    reparsed = minidom.parseString(rough_string)\n\
+          \    return reparsed.toprettyxml(indent=\"  \")\n\ndef clean_xml(xml_str):\n\
+          \    \"\"\"清洗XML字符串\"\"\"\n    try:\n        root = ET.fromstring(xml_str)\n\
+          \        return prettify_xml(root)\n    except Exception as e:\n       \
+          \ return f\"<error>Invalid XML: {str(e)}</error>\"\n\ndef markdown_to_xml(md_text):\n\
+          \    \"\"\"\n    Markdown → XML（无模板）\n    仅结构化，不做语义推理\n    \"\"\"\n    root\
+          \ = ET.Element(\"document\")\n\n    lines = md_text.split(\"\\n\")\n   \
+          \ current_section = None\n\n    for line in lines:\n        line = line.strip()\n\
+          \n        # 标题\n        if line.startswith(\"#\"):\n            level =\
+          \ len(line) - len(line.lstrip(\"#\"))\n            title_text = line.lstrip(\"\
+          #\").strip()\n\n            section = ET.SubElement(root, \"section\")\n\
+          \            section.set(\"level\", str(level))\n\n            title = ET.SubElement(section,\
+          \ \"title\")\n            title.text = title_text\n\n            current_section\
+          \ = section\n\n        # 代码块\n        elif line.startswith(\"```\"):\n \
+          \           code = ET.SubElement(root, \"codeblock\")\n            code.set(\"\
+          lang\", line.replace(\"```\", \"\").strip())\n\n        # 普通段落\n       \
+          \ elif line:\n            parent = current_section if current_section is\
+          \ not None else root\n            p = ET.SubElement(parent, \"paragraph\"\
+          )\n            p.text = line\n\n    return prettify_xml(root)\n\ndef handler(inputs:\
+          \ dict) -> dict:\n    \"\"\"\n    输入：\n        inputs[\"xml_template\"]\
+          \  -> LLM输出的“干净XML模板”\n        inputs[\"markdown\"]      -> Markdown文本\n\
+          \n    输出：\n        {\n            \"template_xml\": \"...\",\n         \
+          \   \"markdown_xml\": \"...\"\n        }\n    \"\"\"\n\n    xml_template\
+          \ = inputs.get(\"xml_template\", \"\")\n    markdown = inputs.get(\"markdown\"\
+          , \"\")\n\n    # 1️⃣ 处理模板XML（来源1）\n    template_xml = clean_xml(xml_template)\
+          \ if xml_template else \"\"\n\n    # 2️⃣ Markdown → XML（来源2）\n    markdown_xml\
+          \ = markdown_to_xml(markdown) if markdown else \"\"\n\n    return {\n  \
+          \      \"template_xml\": template_xml,\n        \"markdown_xml\": markdown_xml\n\
+          \    }"
+        code_language: python3
+        outputs:
+          result:
+            children: null
+            type: string
+        selected: false
+        title: xml模板化处理
+        type: code
+        variables:
+        - value_selector: []
+          variable: arg1
+        - value_selector: []
+          variable: arg2
+      height: 51
+      id: '1773752489596'
+      position:
+        x: 2469.4285714285716
+        y: 210
+      positionAbsolute:
+        x: 2469.4285714285716
+        y: 210
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import zipfile\nimport os\nimport tempfile\n\ndef handler(inputs: dict)\
+          \ -> dict:\n    \"\"\"\n    输入：\n        inputs[\"document_xml\"]  -> Word\
+          \ XML（必须是WordprocessingML）\n    \n    输出：\n        docx_file（二进制）\n    \"\
+          \"\"\n\n    document_xml = inputs.get(\"document_xml\")\n\n    if not document_xml:\n\
+          \        return {\"error\": \"Missing document_xml\"}\n\n    with tempfile.TemporaryDirectory()\
+          \ as tmpdir:\n        word_dir = os.path.join(tmpdir, \"word\")\n      \
+          \  rels_dir = os.path.join(tmpdir, \"_rels\")\n\n        os.makedirs(word_dir,\
+          \ exist_ok=True)\n        os.makedirs(rels_dir, exist_ok=True)\n\n     \
+          \   # 1️⃣ 写入 document.xml\n        with open(os.path.join(word_dir, \"document.xml\"\
+          ), \"w\", encoding=\"utf-8\") as f:\n            f.write(document_xml)\n\
+          \n        # 2️⃣ 必需文件：[Content_Types].xml\n        content_types = \"\"\"\
+          <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Types xmlns=\"http://schemas.openxmlformats.org/package/2006/content-types\"\
+          >\n  <Default Extension=\"rels\" ContentType=\"application/vnd.openxmlformats-package.relationships+xml\"\
+          />\n  <Default Extension=\"xml\" ContentType=\"application/xml\"/>\n  <Override\
+          \ PartName=\"/word/document.xml\" ContentType=\"application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml\"\
+          />\n</Types>\n\"\"\"\n        with open(os.path.join(tmpdir, \"[Content_Types].xml\"\
+          ), \"w\", encoding=\"utf-8\") as f:\n            f.write(content_types)\n\
+          \n        # 3️⃣ _rels/.rels\n        rels = \"\"\"<?xml version=\"1.0\"\
+          \ encoding=\"UTF-8\"?>\n<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"\
+          >\n  <Relationship Id=\"rId1\"\n    Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument\"\
+          \n    Target=\"word/document.xml\"/>\n</Relationships>\n\"\"\"\n       \
+          \ with open(os.path.join(rels_dir, \".rels\"), \"w\", encoding=\"utf-8\"\
+          ) as f:\n            f.write(rels)\n\n        # 4️⃣ 打包为 docx\n        output_path\
+          \ = os.path.join(tmpdir, \"output.docx\")\n\n        with zipfile.ZipFile(output_path,\
+          \ 'w', zipfile.ZIP_DEFLATED) as docx:\n            for foldername, subfolders,\
+          \ filenames in os.walk(tmpdir):\n                for filename in filenames:\n\
+          \                    file_path = os.path.join(foldername, filename)\n  \
+          \                  arcname = os.path.relpath(file_path, tmpdir)\n      \
+          \              docx.write(file_path, arcname)\n\n        # 5️⃣ 读取输出\n  \
+          \      with open(output_path, \"rb\") as f:\n            docx_binary = f.read()\n\
+          \n        return {\n            \"docx_file\": docx_binary\n        }"
+        code_language: python3
+        outputs:
+          result:
+            children: null
+            type: string
+        selected: false
+        title: xml->docx
+        type: code
+        variables:
+        - value_selector: []
+          variable: arg1
+        - value_selector: []
+          variable: arg2
+      height: 51
+      id: '1773752493523'
+      position:
+        x: 2809
+        y: 210
+      positionAbsolute:
+        x: 2809
+        y: 210
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        outputs: []
+        selected: false
+        title: 输出
+        type: end
+      height: 51
+      id: '1773752498076'
+      position:
+        x: 3150
+        y: 210
+      positionAbsolute:
+        x: 3150
+        y: 210
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - role: system
+          text: ''
+        selected: false
+        title: 提炼模板
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1773752626396'
+      position:
+        x: 901.4715407130659
+        y: 217
+      positionAbsolute:
+        x: 901.4715407130659
+        y: 217
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    viewport:
+      x: -156.429479558435
+      y: 335.1631959612281
+      zoom: 0.7000000000000002
+  rag_pipeline_variables: []
