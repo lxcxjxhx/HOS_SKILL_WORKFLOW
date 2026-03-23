@@ -2,6 +2,7 @@ app:
   description: HOS自动化报告撰写工具 v0.1
   icon: 8af3c832-0176-44c5-815b-7e1323528924
   icon_background: '#FFEAD5'
+  icon_type: emoji
   mode: workflow
   name: HOS自动化报告撰写工具 v0.1
   use_icon_as_answer_icon: false
@@ -48,17 +49,6 @@ workflow:
       - local_file
       - remote_url
       enabled: true
-      fileUploadConfig:
-        attachment_image_file_size_limit: 2
-        audio_file_size_limit: 50
-        batch_count_limit: 5
-        file_size_limit: 15
-        file_upload_limit: 50
-        image_file_batch_limit: 10
-        image_file_size_limit: 10
-        single_chunk_attachment_limit: 10
-        video_file_size_limit: 100
-        workflow_file_upload_limit: 10
       image:
         enabled: false
         number_limits: 3
@@ -95,11 +85,11 @@ workflow:
       zIndex: 0
     - data:
         isInLoop: false
-        sourceType: start
+        sourceType: question-classifier
         targetType: code
-      id: 1773752364237-source-1773752424789-target
-      source: '1773752364237'
-      sourceHandle: source
+      id: 1773752394996-3-1773752424789-target
+      source: '1773752394996'
+      sourceHandle: '3'
       target: '1773752424789'
       targetHandle: target
       type: custom
@@ -253,16 +243,20 @@ workflow:
         title: 用户输入
         type: start
         variables:
-        - value_selector: ["file"]
+        - label: user_input
+          type: text-input
+          value_selector:
+          - file
           variable: user_input
       height: 72
       id: '1773752364237'
       position:
-        x: 0
-        y: 196
+        x: -1.4285714285714448
+        y: 197
       positionAbsolute:
-        x: 0
-        y: 196
+        x: -1.4285714285714448
+        y: 197
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -270,16 +264,20 @@ workflow:
     - data:
         classes:
         - id: '1'
-          name: '安全服务'
+          name: 安全服务
         - id: '2'
-          name: '产品实施'
+          name: 产品实施
+        - id: '3'
+          name: 模板处理
         model:
           completion_params:
             temperature: 0.7
           mode: chat
-          name: 'deepseek-chat'
-          provider: 'langgenius/deepseek/deepseek'
-        query_variable_selector: ["1773752364237", "user_input"]
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        query_variable_selector:
+        - '1773752364237'
+        - user_input
         selected: false
         title: 问题分类器
         type: question-classifier
@@ -326,14 +324,19 @@ workflow:
           images\": images\n        }"
         code_language: python3
         outputs:
-          result:
+          images:
             children: null
-            type: string
+            type: object
+          xml_files:
+            children: null
+            type: object
         selected: false
         title: 模板文件转换
         type: code
         variables:
-        - value_selector: ["file"]
+        - value_selector:
+          - '1773752364237'
+          - user_input
           variable: file
       height: 51
       id: '1773752424789'
@@ -354,7 +357,9 @@ workflow:
           reranking_enable: false
           top_k: 4
         query_attachment_selector: []
-        query_variable_selector: ["1773752364237", "user_input"]
+        query_variable_selector:
+        - '1773752364237'
+        - user_input
         retrieval_mode: multiple
         selected: false
         title: 知识检索
@@ -373,7 +378,7 @@ workflow:
       type: custom
       width: 241
     - data:
-        is_team_authorization: false
+        is_team_authorization: true
         paramSchemas:
         - auto_generate: null
           default: null
@@ -817,21 +822,21 @@ workflow:
           template: null
           type: number
         params:
-          allowBackwardLinks: ''
-          allowExternalLinks: ''
+          allowBackwardLinks: 'false'
+          allowExternalLinks: 'false'
           excludePaths: ''
-          excludeTags: ''
-          formats: ''
+          excludeTags: 'script, .ad, #footer'
+          formats: markdown
           headers: ''
-          ignoreSitemap: ''
+          ignoreSitemap: 'true'
           includePaths: ''
           includeTags: ''
-          limit: ''
-          maxDepth: ''
-          onlyMainContent: ''
-          url: ''
-          waitFor: ''
-          wait_for_results: ''
+          limit: '10'
+          maxDepth: '2'
+          onlyMainContent: 'true'
+          url: '{{url}}'
+          waitFor: '2000'
+          wait_for_results: 'true'
           webhook: ''
         plugin_id: langgenius/firecrawl
         plugin_unique_identifier: langgenius/firecrawl:0.0.3@02f037a6e82c44103d3604456f8e57b5516464183344f32d74eec3f82d6036b0
@@ -849,7 +854,9 @@ workflow:
         tool_parameters: {}
         type: tool
         variables:
-        - value_selector: ["1773752364237", "user_input"]
+        - value_selector:
+          - '1773752364237'
+          - user_input
           variable: url
       height: 51
       id: '1773752446300'
@@ -879,34 +886,30 @@ workflow:
           role: system
           text: '你是信息安全服务专家，负责撰写安全服务部门的SOP文档。
 
-任务：
-根据用户输入和爬取的信息，生成详细的安全服务SOP文档。
+            任务： 根据用户输入和爬取的信息，生成详细的安全服务SOP文档。
 
-要求：
-1. 内容必须符合信息安全行业标准
-2. 包含完整的安全服务流程
-3. 覆盖风险评估、安全测试、漏洞管理等关键环节
-4. 提供具体的实施步骤和最佳实践
-5. 输出格式为Markdown
+            要求： 1. 内容必须符合信息安全行业标准 2. 包含完整的安全服务流程 3. 覆盖风险评估、安全测试、漏洞管理等关键环节 4. 提供具体的实施步骤和最佳实践
+            5. 输出格式为Markdown
 
-输入：
-{{user_input}}
+            输入： {{user_input}}
 
-爬取结果：
-{{crawl_result}}
+            爬取结果： {{crawl_result}}
 
-输出：
-详细的安全服务SOP文档（Markdown格式）'
-        selected: true
+            输出： 详细的安全服务SOP文档（Markdown格式）'
+        selected: false
         title: 安全服务
         type: llm
+        variables:
+        - value_selector:
+          - '1773752446300'
+          - result
+          variable: crawl_result
+        - value_selector:
+          - '1773752364237'
+          - user_input
+          variable: user_input
         vision:
           enabled: false
-        variables:
-        - value_selector: ["1773752446300", "result"]
-          variable: crawl_result
-        - value_selector: ["1773752364237", "user_input"]
-          variable: user_input
       height: 87
       id: '1773752451732'
       position:
@@ -915,7 +918,7 @@ workflow:
       positionAbsolute:
         x: 1405
         y: 12
-      selected: true
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -934,29 +937,24 @@ workflow:
         - role: system
           text: '你是AI产品实施专家，负责撰写产品实施部门的SOP文档。
 
-任务：
-根据用户输入，生成详细的产品实施SOP文档。
+            任务： 根据用户输入，生成详细的产品实施SOP文档。
 
-要求：
-1. 内容必须符合AI产品实施标准
-2. 包含完整的实施流程
-3. 覆盖需求分析、部署配置、测试验证等关键环节
-4. 提供具体的实施步骤和最佳实践
-5. 输出格式为Markdown
+            要求： 1. 内容必须符合AI产品实施标准 2. 包含完整的实施流程 3. 覆盖需求分析、部署配置、测试验证等关键环节 4. 提供具体的实施步骤和最佳实践
+            5. 输出格式为Markdown
 
-输入：
-{{user_input}}
+            输入： {{user_input}}
 
-输出：
-详细的产品实施SOP文档（Markdown格式）'
+            输出： 详细的产品实施SOP文档（Markdown格式）'
         selected: false
         title: 产品实施
         type: llm
+        variables:
+        - value_selector:
+          - '1773752364237'
+          - user_input
+          variable: user_input
         vision:
           enabled: false
-        variables:
-        - value_selector: ["1773752364237", "user_input"]
-          variable: user_input
       height: 87
       id: '1773752455196'
       position:
@@ -1025,8 +1023,8 @@ workflow:
           template: null
           type: string
         params:
-          md_text: ''
-          output_filename: ''
+          md_text: '{{1773752455196.result}}'
+          output_filename: sop_document
         plugin_id: bowenliang123/md_exporter
         plugin_unique_identifier: bowenliang123/md_exporter:3.6.9@3f027d63e80b44d5d5a9f706871afaef37905b8f8a89a2d152dc530211a8acb1
         provider_icon: https://cloud.dify.ai/console/api/workspaces/current/plugin/icon?tenant_id=7643ab88-1e05-409b-93c0-96d19de8a77f&filename=94713265c9473c3bd2bc8b0dd0794ad40955b7431610243bbd00ab02dae281cf.png
@@ -1040,10 +1038,18 @@ workflow:
         tool_label: Markdown ⮕ XML
         tool_name: md_to_xml
         tool_node_version: '2'
-        tool_parameters: {}
+        tool_parameters:
+          md_text:
+            type: mixed
+            value: '{{#1773752455196.text#}}'
+          output_filename:
+            type: mixed
+            value: null
         type: tool
         variables:
-        - value_selector: ["1773752451732", "result"]
+        - value_selector:
+          - '1773752455196'
+          - result
           variable: md_text
       height: 51
       id: '1773752470244'
@@ -1053,6 +1059,7 @@ workflow:
       positionAbsolute:
         x: 1766
         y: 21
+      selected: false
       sourcePosition: right
       targetPosition: left
       type: custom
@@ -1265,12 +1272,12 @@ workflow:
           template: null
           type: number
         params:
-          background_color: ''
-          height: ''
-          mermaid_code: ''
-          output_format: ''
-          theme: ''
-          width: ''
+          background_color: white
+          height: '600'
+          mermaid_code: '{{1773752455196.result}}'
+          output_format: png
+          theme: default
+          width: '800'
         plugin_id: hjlarry/mermaid_converter
         plugin_unique_identifier: hjlarry/mermaid_converter:0.0.1@46e755f0d92566a1f7a6e85086eac02a735afaa41479e7a2277b150abda70b18
         provider_icon: https://cloud.dify.ai/console/api/workspaces/current/plugin/icon?tenant_id=7643ab88-1e05-409b-93c0-96d19de8a77f&filename=bb01cde45bd66ab839c76ce5008de47990ad5cb1caf5b13fcc2abb88b5b8ae76.svg
@@ -1287,7 +1294,9 @@ workflow:
         tool_parameters: {}
         type: tool
         variables:
-        - value_selector: ["1773752451732", "result"]
+        - value_selector:
+          - '1773752455196'
+          - result
           variable: mermaid_code
       height: 51
       id: '1773752482653'
@@ -1331,21 +1340,29 @@ workflow:
           \ = inputs.get(\"xml_template\", \"\")\n    markdown = inputs.get(\"markdown\"\
           , \"\")\n\n    # 1️⃣ 处理模板XML（来源1）\n    template_xml = clean_xml(xml_template)\
           \ if xml_template else \"\"\n\n    # 2️⃣ Markdown → XML（来源2）\n    markdown_xml\
-          \ = markdown_to_xml(markdown) if markdown else \"\"\n\n    return {\n  \
-          \      \"template_xml\": template_xml,\n        \"markdown_xml\": markdown_xml\n\
-          \    }"
+          \ = markdown_to_xml(markdown) if markdown else \"\"\n\n    return {\n  \n          
+          \      \"template_xml\": template_xml,\n        \"markdown_xml\": markdown_xml\n\n          
+          \    }\n\n# Dify 执行入口\ndef main(**kwargs):\n    import json\n    \n    try:\n        # 使用传入的关键字参数作为输入\n        if kwargs:\n            inputs = kwargs\n        else:\n            # 测试输入\n            inputs = {\n                \"xml_template\": \"<root><section><title>Test</title></section></root>\",\n                \"markdown\": \"# Test\\nThis is a test\"\n            }\n        \n        # 调用处理函数\n        result = handler(inputs)\n        \n        # 输出结果\n        print(json.dumps(result))\n    except Exception as e:\n        # 输出错误信息\n        print(json.dumps({\"error\": str(e)}))\n\nif __name__ == \"__main__\":
+          \n    main()"
         code_language: python3
         outputs:
-          result:
+          markdown_xml:
             children: null
             type: string
-        selected: false
+          template_xml:
+            children: null
+            type: string
+        selected: true
         title: xml模板化处理
         type: code
         variables:
-        - value_selector: ["1773752626396", "result"]
+        - value_selector:
+          - '1773752626396'
+          - result
           variable: xml_template
-        - value_selector: ["1773752451732", "result"]
+        - value_selector:
+          - '1773752455196'
+          - result
           variable: markdown
       height: 51
       id: '1773752489596'
@@ -1355,22 +1372,22 @@ workflow:
       positionAbsolute:
         x: 2469.4285714285716
         y: 210
-      selected: false
+      selected: true
       sourcePosition: right
       targetPosition: left
       type: custom
       width: 241
     - data:
-        code: "import zipfile\nimport os\nimport tempfile\n\ndef handler(inputs: dict)\
-          \ -> dict:\n    \"\"\"\n    输入：\n        inputs[\"document_xml\"]  -> Word\
-          \ XML（必须是WordprocessingML）\n    \n    输出：\n        docx_file（二进制）\n    \"\
-          \"\"\n\n    document_xml = inputs.get(\"document_xml\")\n\n    if not document_xml:\n\
-          \        return {\"error\": \"Missing document_xml\"}\n\n    with tempfile.TemporaryDirectory()\
-          \ as tmpdir:\n        word_dir = os.path.join(tmpdir, \"word\")\n      \
-          \  rels_dir = os.path.join(tmpdir, \"_rels\")\n\n        os.makedirs(word_dir,\
-          \ exist_ok=True)\n        os.makedirs(rels_dir, exist_ok=True)\n\n     \
-          \   # 1️⃣ 写入 document.xml\n        with open(os.path.join(word_dir, \"document.xml\"\
-          ), \"w\", encoding=\"utf-8\") as f:\n            f.write(document_xml)\n\
+        code: "import zipfile\nimport os\nimport tempfile\nimport base64\n\ndef handler(inputs:\
+          \ dict) -> dict:\n    \"\"\"\n    输入：\n        inputs[\"document_xml\"]\
+          \  -> Word XML（必须是WordprocessingML）\n    \n    输出：\n        docx_file（二进制）\n\
+          \    \"\"\"\n\n    document_xml = inputs.get(\"document_xml\")\n\n    if\
+          \ not document_xml:\n        return {\"error\": \"Missing document_xml\"\
+          }\n\n    with tempfile.TemporaryDirectory() as tmpdir:\n        word_dir\
+          \ = os.path.join(tmpdir, \"word\")\n        rels_dir = os.path.join(tmpdir,\
+          \ \"_rels\")\n\n        os.makedirs(word_dir, exist_ok=True)\n        os.makedirs(rels_dir,\
+          \ exist_ok=True)\n\n        # 1️⃣ 写入 document.xml\n        with open(os.path.join(word_dir,\
+          \ \"document.xml\"), \"w\", encoding=\"utf-8\") as f:\n            f.write(document_xml)\n\
           \n        # 2️⃣ 必需文件：[Content_Types].xml\n        content_types = \"\"\"\
           <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Types xmlns=\"http://schemas.openxmlformats.org/package/2006/content-types\"\
           >\n  <Default Extension=\"rels\" ContentType=\"application/vnd.openxmlformats-package.relationships+xml\"\
@@ -1391,17 +1408,20 @@ workflow:
           \                  arcname = os.path.relpath(file_path, tmpdir)\n      \
           \              docx.write(file_path, arcname)\n\n        # 5️⃣ 读取输出\n  \
           \      with open(output_path, \"rb\") as f:\n            docx_binary = f.read()\n\
-          \n        return {\n            \"docx_file\": docx_binary\n        }"
+          \n        return {\n            \"docx_file\": base64.b64encode(docx_binary).decode('utf-8')\n\
+          \        }"
         code_language: python3
         outputs:
-          result:
+          docx_file:
             children: null
             type: string
         selected: false
         title: xml->docx
         type: code
         variables:
-        - value_selector: ["1773752489596", "template_xml"]
+        - value_selector:
+          - '1773752489596'
+          - template_xml
           variable: document_xml
       height: 51
       id: '1773752493523'
@@ -1448,51 +1468,42 @@ workflow:
         - role: system
           text: '你是信息安全与AI系统实施专家。
 
-任务：
-在不改变XML结构的前提下，填充模板中的空字段。
+            任务： 在不改变XML结构的前提下，填充模板中的空字段。
 
-严格要求：
-1. 不允许新增/删除XML标签
-2. 不允许改变结构层级
-3. 只填写空标签内容
-4. 输出必须是合法XML
-5. 内容符合"信息安全 + AI产品实施SOP"
+            严格要求： 1. 不允许新增/删除XML标签 2. 不允许改变结构层级 3. 只填写空标签内容 4. 输出必须是合法XML 5. 内容符合"信息安全
+            + AI产品实施SOP"
 
-填充规则：
-- background：描述业务背景 + AI应用场景
-- objectives：明确安全目标（CIA + AI安全）
-- threat_model：包含攻击面（模型/数据/API）
-- risk_analysis：结合实际风险
-- vulnerabilities：列出典型漏洞（如Prompt Injection等）
-- deployment_steps：分步骤实施
-- monitoring：包含日志/告警/AI行为监控
-- incident_response：安全响应流程
+            填充规则： - background：描述业务背景 + AI应用场景 - objectives：明确安全目标（CIA + AI安全） - threat_model：包含攻击面（模型/数据/API）
+            - risk_analysis：结合实际风险 - vulnerabilities：列出典型漏洞（如Prompt Injection等） -
+            deployment_steps：分步骤实施 - monitoring：包含日志/告警/AI行为监控 - incident_response：安全响应流程
 
-输入：
+            输入：
 
-【用户需求】
-{{user_input}}
+            【用户需求】 {{user_input}}
 
-【上下文】
-{{context_data}}
+            【上下文】 {{context_data}}
 
-【XML模板】
-{{xml_files}}
+            【XML模板】 {{xml_files}}
 
-输出：
-完整XML（仅填充值）'
+            输出： 完整XML（仅填充值）'
         selected: false
         title: AI填写器
         type: llm
+        variables:
+        - value_selector:
+          - '1773752424789'
+          - xml_files
+          variable: xml_files
+        - value_selector:
+          - '1773752364237'
+          - user_input
+          variable: user_input
+        - value_selector:
+          - '1773752364237'
+          - user_input
+          variable: context_data
         vision:
           enabled: false
-        variables:
-        - value_selector: ["1773752424789", "xml_files"]
-          variable: xml_files
-        - value_selector: ["1773752364237", "user_input"]
-          variable: user_input
-        - value_selector: ["1773752364237", "user_input"]
-          variable: context_data
       height: 87
       id: '1773752700000'
       position:
@@ -1520,28 +1531,23 @@ workflow:
         - role: system
           text: '你是XML模板专家，负责从XML文件中提炼模板。
 
-任务：
-从输入的XML文件中提炼出SOP模板，保留结构，移除具体内容。
+            任务： 从输入的XML文件中提炼出SOP模板，保留结构，移除具体内容。
 
-要求：
-1. 分析XML结构，识别SOP文档的各个部分
-2. 保留XML标签和结构，仅移除具体内容
-3. 确保生成的模板结构完整
-4. 输出格式为XML
+            要求： 1. 分析XML结构，识别SOP文档的各个部分 2. 保留XML标签和结构，仅移除具体内容 3. 确保生成的模板结构完整 4. 输出格式为XML
 
-输入：
-{{xml_content}}
+            输入： {{xml_content}}
 
-输出：
-提炼后的XML模板'
+            输出： 提炼后的XML模板'
         selected: false
         title: 提炼模板
         type: llm
+        variables:
+        - value_selector:
+          - '1773752700000'
+          - result
+          variable: xml_content
         vision:
           enabled: false
-        variables:
-        - value_selector: ["1773752700000", "result"]
-          variable: xml_content
       height: 87
       id: '1773752626396'
       position:
@@ -1556,7 +1562,7 @@ workflow:
       type: custom
       width: 241
     viewport:
-      x: -156.429479558435
-      y: 335.1631959612281
+      x: -1464.4500000000007
+      y: 274.65
       zoom: 0.7000000000000002
   rag_pipeline_variables: []
