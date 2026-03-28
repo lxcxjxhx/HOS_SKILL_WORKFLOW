@@ -1,15 +1,15 @@
-## 敏感信息处理
-要求：禁止在代码中硬编码密码、密钥等敏感信息，应使用环境变量或安全配置管理。
+## 敏感信息
+要求：禁止在代码中硬编码密钥、密码等敏感信息，应使用环境变量或安全配置管理。
 示例：```python
 # 错误做法
-db_password = "MySuperSecret123"
+api_key = "sk-live-1234567890abcdef"
 
 # 正确做法
 import os
-db_password = os.getenv('DB_PASSWORD')
+api_key = os.environ.get("API_KEY")
 ```
 
-## 危险函数调用
+## 危险函数
 要求：避免使用 `eval()`、`exec()` 等可执行任意代码的危险函数，防止代码注入。
 示例：```python
 # 错误做法
@@ -17,47 +17,47 @@ user_input = "__import__('os').system('rm -rf /')"
 result = eval(user_input)
 
 # 正确做法
-# 使用安全的替代方案，如字典映射或函数调用
+# 使用安全的替代方案，如字典映射或条件判断。
 ```
 
-## 输入验证与过滤
-要求：对所有外部输入（如用户输入、API 响应）进行严格的验证、过滤或转义。
+## 输入验证
+要求：对所有外部输入（如用户输入、API 响应）进行严格的类型、格式和范围验证。
 示例：```python
 # 错误做法
-query = f"SELECT * FROM users WHERE name = '{user_input}'"
+user_id = request.args.get('id')
+query = f"SELECT * FROM users WHERE id = {user_id}"
 
-# 正确做法（使用参数化查询）
-import sqlite3
-conn = sqlite3.connect('test.db')
-cursor = conn.cursor()
-cursor.execute("SELECT * FROM users WHERE name = ?", (user_input,))
+# 正确做法
+import re
+user_id = request.args.get('id')
+if not re.match(r'^\d{1,10}$', user_id):
+    raise ValueError("Invalid user ID")
+# 使用参数化查询
 ```
 
-## 文件操作权限
-要求：为文件操作设置最小必要权限，并验证文件路径，防止路径遍历攻击。
+## 文件权限
+要求：创建或写入文件时，应设置最小必要权限，避免使用 `0o777` 等宽松权限。
 示例：```python
 # 错误做法
-with open(user_provided_path, 'r') as f:
-    data = f.read()
+with open('config.json', 'w') as f:
+    f.write(data)
+# 默认权限可能过于宽松
 
 # 正确做法
 import os
-base_dir = '/safe/directory'
-abs_path = os.path.abspath(os.path.join(base_dir, user_filename))
-if not abs_path.startswith(base_dir):
-    raise ValueError("非法路径")
-with open(abs_path, 'r') as f:
-    data = f.read()
+with open('config.json', 'w') as f:
+    f.write(data)
+os.chmod('config.json', 0o600)  # 仅所有者可读写
 ```
 
-## 网络请求安全
-要求：发起网络请求时使用 HTTPS 并验证 TLS 证书，避免中间人攻击。
+## 网络安全
+要求：发起网络请求时，必须验证 SSL/TLS 证书，并使用超时设置防止资源耗尽。
 示例：```python
-# 错误做法（不验证证书）
+# 错误做法
 import urllib.request
-response = urllib.request.urlopen('https://example.com/data')
+urllib.request.urlopen('https://example.com')  # 默认不验证证书（某些环境）
 
-# 正确做法（默认验证证书）
+# 正确做法
 import requests
-response = requests.get('https://example.com/data', verify=True)
+response = requests.get('https://example.com', verify=True, timeout=10)
 ```

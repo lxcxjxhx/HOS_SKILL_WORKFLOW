@@ -133,16 +133,16 @@ def main():
                 prompt = ai_generator.generate_security_prompts(tool_name)
                 prompts[tool_name] = prompt
                 if not args.silent:
-                    print(f'{Fore.GREEN}  ✓ {tool_name} 提示词已生成（{len(prompt)} 字符）{Style.RESET_ALL}')
+                    print(f'{Fore.GREEN}  [OK] {tool_name} 提示词已生成（{len(prompt)} 字符）{Style.RESET_ALL}')
             except Exception as e:
                 if not args.silent:
-                    print(f'{Fore.RED}  ✗ 生成{tool_name}提示词时出错：{e}{Style.RESET_ALL}')
+                    print(f'{Fore.RED}  [ERROR] 生成{tool_name}提示词时出错：{e}{Style.RESET_ALL}')
                 import traceback
                 traceback.print_exc()
                 prompts[tool_name] = f"# {tool_name} 安全提示词（生成失败）"
         
         if not args.silent:
-            print(f'{Fore.GREEN}✓ 所有工具提示词生成完成{Style.RESET_ALL}')
+            print(f'{Fore.GREEN}[OK] 所有工具提示词生成完成{Style.RESET_ALL}')
             print(f'{Fore.GREEN}  - prompts 字典键：{list(prompts.keys())}{Style.RESET_ALL}')
         
         # 保存提示词到文件
@@ -156,10 +156,10 @@ def main():
                 with open(prompt_file, 'w', encoding='utf-8') as f:
                     f.write(prompt)
                 if not args.silent:
-                    print(f'{Fore.GREEN}  ✓ 已保存：{prompt_file}{Style.RESET_ALL}')
+                    print(f'{Fore.GREEN}  [OK] 已保存：{prompt_file}{Style.RESET_ALL}')
             except Exception as e:
                 if not args.silent:
-                    print(f'{Fore.RED}  ✗ 保存{tool_name}提示词时出错：{e}{Style.RESET_ALL}')
+                    print(f'{Fore.RED}  [ERROR] 保存{tool_name}提示词时出错：{e}{Style.RESET_ALL}')
         
         # 分析扫描结果获取实际的风险数量
         high_risk = 0
@@ -198,7 +198,7 @@ def main():
         # 将 AI 建议添加到扫描结果中
         results['ai_suggestions'] = ai_suggestions
         if not args.silent:
-            print(f'{Fore.GREEN}  ✓ AI 建议已生成并添加到结果中{Style.RESET_ALL}')
+            print(f'{Fore.GREEN}  [OK] AI 建议已生成并添加到结果中{Style.RESET_ALL}')
             print(f'{Fore.GREEN}    - Cursor 提示词长度：{len(ai_suggestions.get("cursor_prompt", ""))} 字符{Style.RESET_ALL}')
             print(f'{Fore.GREEN}    - Trae 提示词长度：{len(ai_suggestions.get("trae_prompt", ""))} 字符{Style.RESET_ALL}')
             print(f'{Fore.GREEN}    - Kiro 提示词长度：{len(ai_suggestions.get("kiro_prompt", ""))} 字符{Style.RESET_ALL}')
@@ -235,12 +235,12 @@ def main():
         report_path = generator.generate_html()
         
         if not args.silent:
-            print(f'{Fore.GREEN}✓ HTML 报告已生成：{report_path}{Style.RESET_ALL}')
+            print(f'{Fore.GREEN}[OK] HTML 报告已生成：{report_path}{Style.RESET_ALL}')
             if report_path and os.path.exists(report_path):
                 file_size = os.path.getsize(report_path)
                 print(f'{Fore.GREEN}  - 文件大小：{file_size} 字节{Style.RESET_ALL}')
             else:
-                print(f'{Fore.YELLOW}  ⚠ 报告文件不存在或路径为空{Style.RESET_ALL}')
+                print(f'{Fore.YELLOW}  [WARN] 报告文件不存在或路径为空{Style.RESET_ALL}')
     except Exception as e:
         if not args.silent:
             print(f'{Fore.RED}生成报告时出错：{e}{Style.RESET_ALL}')
@@ -282,11 +282,11 @@ def main():
         
         if not args.silent:
             print(f'{Fore.GREEN}检测完成!{Style.RESET_ALL}')
-            print(f'{Fore.GREEN}报告已生成: {report_path}{Style.RESET_ALL}')
+            print(f'{Fore.GREEN}报告已生成：{report_path}{Style.RESET_ALL}')
             
             # 检查报告文件是否存在
             if os.path.exists(report_path):
-                print(f'{Fore.GREEN}报告文件存在，大小: {os.path.getsize(report_path)} 字节{Style.RESET_ALL}')
+                print(f'{Fore.GREEN}报告文件存在，大小：{os.path.getsize(report_path)} 字节{Style.RESET_ALL}')
             else:
                 print(f'{Fore.RED}报告文件不存在，生成失败{Style.RESET_ALL}')
     except Exception as e:

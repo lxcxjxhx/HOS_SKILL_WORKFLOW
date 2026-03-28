@@ -30,7 +30,7 @@ class AISuggestionGenerator:
         self.ai_model_config = {
             "enabled": True,
             "type": "api",
-            "api_key": "sk-a4cd657d9f854d5e8bb6ccf8c167c6de",
+            "api_key": "sk-0c35376be64a4ee3a3f2c905732ddb9b",
             "api_url": "https://api.deepseek.com/v1/chat/completions",
             "model": "deepseek-chat",
             "timeout": 30,
@@ -67,10 +67,10 @@ class AISuggestionGenerator:
                 
                 summary.append(f"""
 【{severity.upper()}】{problem}
-  📁 文件：{file_path}
-  📍 行号：{line_number}
-  📝 详情：{details}
-  💻 代码：{code_snippet}
+  文件：{file_path}
+  行号：{line_number}
+  详情：{details}
+  代码：{code_snippet}
 """)
         
         return "\n".join(summary) if summary else "未发现安全问题"
@@ -223,10 +223,10 @@ Found {high_risk} high-risk issues.
         ai_response = self._call_ai_model(ai_prompt)
         
         if ai_response:
-            print(f"  ✓ AI 响应成功，长度：{len(ai_response)} 字符")
+            print(f"  [OK] AI 响应成功，长度：{len(ai_response)} 字符")
             return ai_response
         else:
-            print(f"  ⚠ AI 返回空内容，使用回退提示词")
+            print(f"  [WARN] AI 返回空内容，使用回退提示词")
             return self._get_fallback_prompts(tool_name, language)
     
     def _get_fallback_prompts(self, tool_name, language='zh'):
