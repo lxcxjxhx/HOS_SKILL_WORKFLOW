@@ -1,0 +1,729 @@
+{
+  "metadata": {
+    "target": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool",
+    "timestamp": "2026-03-30 21:45:45",
+    "duration": 47.74703502655029
+  },
+  "summary": {
+    "target": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool",
+    "total_issues": 27,
+    "high_risk": 8,
+    "medium_risk": 13,
+    "low_risk": 0,
+    "categories": {
+      "target": 0,
+      "code_security": 6,
+      "injection_security": 0,
+      "ai_security": 1,
+      "container_security": 0,
+      "cloud_security": 0,
+      "privacy_security": 0,
+      "permission_security": 0,
+      "network_security": 0,
+      "dependency_security": 10,
+      "config_security": 4
+    },
+    "ast_issues": 6,
+    "taint_issues": 0,
+    "encoding_issues": 0,
+    "sandbox_issues": 0,
+    "attack_scenarios": 8
+  },
+  "results": {
+    "target": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool",
+    "code_security": [
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\config.json",
+        "line_number": 2,
+        "issue": "硬编码敏感信息",
+        "severity": "high",
+        "details": "检测硬编码的敏感信息（API 密钥、密码、令牌等）",
+        "code_snippet": "\"api_key\": \"sk-1234567890abcdefghijklmnopqrstuvwxyz\",",
+        "match": "sk-1234567890abcdefghijklmnopqrstuvwxyz",
+        "detection_method": "regex",
+        "confidence": 0.95,
+        "weight": 1.5,
+        "cwe": "CWE-798",
+        "owasp": "A07:2021",
+        "fix": "移除硬编码的敏感信息，使用环境变量或配置文件存储",
+        "category": "code_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 5,
+        "issue": "硬编码敏感信息",
+        "severity": "high",
+        "details": "检测硬编码的敏感信息（API 密钥、密码、令牌等）",
+        "code_snippet": "api_key = \"sk-1234567890abcdefghijklmnopqrstuvwxyz\"",
+        "match": "api_key = \"sk-1234567890abcdefghijklmnopqrstuvwxyz\"",
+        "detection_method": "regex",
+        "confidence": 0.95,
+        "weight": 1.5,
+        "cwe": "CWE-798",
+        "owasp": "A07:2021",
+        "fix": "移除硬编码的敏感信息，使用环境变量或配置文件存储",
+        "category": "code_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 8,
+        "issue": "硬编码敏感信息",
+        "severity": "high",
+        "details": "检测硬编码的敏感信息（API 密钥、密码、令牌等）",
+        "code_snippet": "password = \"mysecretpassword123\"",
+        "match": "password = \"mysecretpassword123\"",
+        "detection_method": "regex",
+        "confidence": 0.95,
+        "weight": 1.5,
+        "cwe": "CWE-798",
+        "owasp": "A07:2021",
+        "fix": "移除硬编码的敏感信息，使用环境变量或配置文件存储",
+        "category": "code_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 11,
+        "issue": "硬编码敏感信息",
+        "severity": "high",
+        "details": "检测硬编码的敏感信息（API 密钥、密码、令牌等）",
+        "code_snippet": "token = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+        "match": "token = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+        "detection_method": "regex",
+        "confidence": 0.95,
+        "weight": 1.5,
+        "cwe": "CWE-798",
+        "owasp": "A07:2021",
+        "fix": "移除硬编码的敏感信息，使用环境变量或配置文件存储",
+        "category": "code_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 5,
+        "issue": "硬编码敏感信息",
+        "severity": "high",
+        "details": "检测硬编码的敏感信息（API 密钥、密码、令牌等）",
+        "code_snippet": "api_key = \"sk-1234567890abcdefghijklmnopqrstuvwxyz\"",
+        "match": "sk-1234567890abcdefghijklmnopqrstuvwxyz",
+        "detection_method": "regex",
+        "confidence": 0.95,
+        "weight": 1.5,
+        "cwe": "CWE-798",
+        "owasp": "A07:2021",
+        "fix": "移除硬编码的敏感信息，使用环境变量或配置文件存储",
+        "category": "code_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 20,
+        "issue": "网络访问代码",
+        "severity": "medium",
+        "details": "检测网络访问代码，需要适当的安全验证",
+        "code_snippet": "response = requests.get(\"https://api.example.com\")",
+        "match": "requests.get(",
+        "detection_method": "regex",
+        "confidence": 0.75,
+        "weight": 1.0,
+        "cwe": "CWE-939",
+        "owasp": "A05:2021",
+        "fix": "确保网络访问代码有适当的错误处理、超时设置和 SSL 验证",
+        "category": "code_security",
+        "final_confidence": 0.8500000000000001
+      }
+    ],
+    "injection_security": [],
+    "ai_security": [
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 2,
+        "issue": "对抗性后缀",
+        "severity": "medium",
+        "details": "检测自动生成的对抗性后缀",
+        "code_snippet": "# 测试文件，包含各种安全问题",
+        "match": "测试文件，包含各种安全问题",
+        "detection_method": "regex",
+        "confidence": 0.75,
+        "weight": 1.0,
+        "cwe": "CWE-1333",
+        "owasp": "LLM01:2023",
+        "fix": "检测特殊字符/Unicode 混淆",
+        "category": "ai_security",
+        "final_confidence": 0.8500000000000001
+      }
+    ],
+    "container_security": [],
+    "cloud_security": [],
+    "privacy_security": [],
+    "permission_security": [],
+    "network_security": [],
+    "dependency_security": [
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 5,
+        "issue": "依赖版本未固定",
+        "severity": "medium",
+        "details": "检测依赖库版本未固定",
+        "code_snippet": "api_key = \"sk-1234567890abcdefghijklmnopqrstuvwxyz\"",
+        "match": "api_key = \"sk-1234567890abcdefghijklmnopqrstuvwxyz\"\n",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.0,
+        "cwe": "CWE-1104",
+        "owasp": "A06:2021",
+        "fix": "固定依赖库版本，避免自动更新引入安全问题",
+        "category": "dependency_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 8,
+        "issue": "依赖版本未固定",
+        "severity": "medium",
+        "details": "检测依赖库版本未固定",
+        "code_snippet": "password = \"mysecretpassword123\"",
+        "match": "password = \"mysecretpassword123\"\n",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.0,
+        "cwe": "CWE-1104",
+        "owasp": "A06:2021",
+        "fix": "固定依赖库版本，避免自动更新引入安全问题",
+        "category": "dependency_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 11,
+        "issue": "依赖版本未固定",
+        "severity": "medium",
+        "details": "检测依赖库版本未固定",
+        "code_snippet": "token = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+        "match": "token = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"\n",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.0,
+        "cwe": "CWE-1104",
+        "owasp": "A06:2021",
+        "fix": "固定依赖库版本，避免自动更新引入安全问题",
+        "category": "dependency_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 14,
+        "issue": "依赖版本未固定",
+        "severity": "medium",
+        "details": "检测依赖库版本未固定",
+        "code_snippet": "import os",
+        "match": "import os",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.0,
+        "cwe": "CWE-1104",
+        "owasp": "A06:2021",
+        "fix": "固定依赖库版本，避免自动更新引入安全问题",
+        "category": "dependency_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 15,
+        "issue": "依赖版本未固定",
+        "severity": "medium",
+        "details": "检测依赖库版本未固定",
+        "code_snippet": "exec(\"print('Hello World')\")",
+        "match": "exec(\"print('Hello World')\")",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.0,
+        "cwe": "CWE-1104",
+        "owasp": "A06:2021",
+        "fix": "固定依赖库版本，避免自动更新引入安全问题",
+        "category": "dependency_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 16,
+        "issue": "依赖版本未固定",
+        "severity": "medium",
+        "details": "检测依赖库版本未固定",
+        "code_snippet": "system(\"echo 'This is a test'\")",
+        "match": "system(\"echo 'This is a test'\")\n",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.0,
+        "cwe": "CWE-1104",
+        "owasp": "A06:2021",
+        "fix": "固定依赖库版本，避免自动更新引入安全问题",
+        "category": "dependency_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 19,
+        "issue": "依赖版本未固定",
+        "severity": "medium",
+        "details": "检测依赖库版本未固定",
+        "code_snippet": "import requests",
+        "match": "import requests",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.0,
+        "cwe": "CWE-1104",
+        "owasp": "A06:2021",
+        "fix": "固定依赖库版本，避免自动更新引入安全问题",
+        "category": "dependency_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 20,
+        "issue": "依赖版本未固定",
+        "severity": "medium",
+        "details": "检测依赖库版本未固定",
+        "code_snippet": "response = requests.get(\"https://api.example.com\")",
+        "match": "response = requests.get(\"https://api.example.com\")\n",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.0,
+        "cwe": "CWE-1104",
+        "owasp": "A06:2021",
+        "fix": "固定依赖库版本，避免自动更新引入安全问题",
+        "category": "dependency_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 23,
+        "issue": "依赖版本未固定",
+        "severity": "medium",
+        "details": "检测依赖库版本未固定",
+        "code_snippet": "server_ip = \"192.168.1.1\"",
+        "match": "server_ip = \"192.168.1.1\"",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.0,
+        "cwe": "CWE-1104",
+        "owasp": "A06:2021",
+        "fix": "固定依赖库版本，避免自动更新引入安全问题",
+        "category": "dependency_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 24,
+        "issue": "依赖版本未固定",
+        "severity": "medium",
+        "details": "检测依赖库版本未固定",
+        "code_snippet": "server_port = 8080",
+        "match": "server_port = 8080\n",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.0,
+        "cwe": "CWE-1104",
+        "owasp": "A06:2021",
+        "fix": "固定依赖库版本，避免自动更新引入安全问题",
+        "category": "dependency_security",
+        "final_confidence": 1.0
+      }
+    ],
+    "config_security": [
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 5,
+        "issue": "配置包含敏感信息",
+        "severity": "high",
+        "details": "检测配置文件中包含敏感信息",
+        "code_snippet": "api_key = \"sk-1234567890abcdefghijklmnopqrstuvwxyz\"",
+        "match": "api_key = \"sk-1234567890abcdefghijklmnopqrstuvwxyz\"",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.5,
+        "cwe": "CWE-798",
+        "owasp": "A07:2021",
+        "fix": "移除敏感信息，使用环境变量存储",
+        "category": "config_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 8,
+        "issue": "配置包含敏感信息",
+        "severity": "high",
+        "details": "检测配置文件中包含敏感信息",
+        "code_snippet": "password = \"mysecretpassword123\"",
+        "match": "password = \"mysecretpassword123\"",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.5,
+        "cwe": "CWE-798",
+        "owasp": "A07:2021",
+        "fix": "移除敏感信息，使用环境变量存储",
+        "category": "config_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 11,
+        "issue": "配置包含敏感信息",
+        "severity": "high",
+        "details": "检测配置文件中包含敏感信息",
+        "code_snippet": "token = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+        "match": "token = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+        "detection_method": "regex",
+        "confidence": 0.9,
+        "weight": 1.5,
+        "cwe": "CWE-798",
+        "owasp": "A07:2021",
+        "fix": "移除敏感信息，使用环境变量存储",
+        "category": "config_security",
+        "final_confidence": 1.0
+      },
+      {
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py",
+        "line_number": 5,
+        "issue": "AI 配置",
+        "severity": "medium",
+        "details": "检测 AI 特定配置",
+        "code_snippet": "api_key = \"sk-1234567890abcdefghijklmnopqrstuvwxyz\"",
+        "match": "api_key =",
+        "detection_method": "regex",
+        "confidence": 0.8,
+        "weight": 1.0,
+        "cwe": "CWE-798",
+        "owasp": "A05:2021",
+        "fix": "确保配置安全，避免硬编码敏感信息",
+        "category": "config_security",
+        "final_confidence": 0.9000000000000001
+      }
+    ],
+    "ast_analysis": [
+      {
+        "line_number": 5,
+        "severity": "HIGH",
+        "issue": "硬编码敏感信息：api_key",
+        "details": "敏感信息应该存储在环境变量或配置文件中",
+        "code_snippet": "api_key = \"sk-1234567890abcdefghijklmnopqrstuvwxyz\"",
+        "category": "ast_analysis",
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py"
+      },
+      {
+        "line_number": 8,
+        "severity": "HIGH",
+        "issue": "硬编码敏感信息：password",
+        "details": "敏感信息应该存储在环境变量或配置文件中",
+        "code_snippet": "password = \"mysecretpassword123\"",
+        "category": "ast_analysis",
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py"
+      },
+      {
+        "line_number": 11,
+        "severity": "HIGH",
+        "issue": "硬编码敏感信息：token",
+        "details": "敏感信息应该存储在环境变量或配置文件中",
+        "code_snippet": "token = \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+        "category": "ast_analysis",
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py"
+      },
+      {
+        "line_number": 15,
+        "severity": "HIGH",
+        "issue": "危险函数调用：exec()",
+        "details": "使用 exec() 可能导致代码注入",
+        "code_snippet": "exec(\"print('Hello World')\")",
+        "category": "ast_analysis",
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py"
+      },
+      {
+        "line_number": 20,
+        "severity": "LOW",
+        "issue": "网络请求缺少超时设置",
+        "details": "requests 请求应该设置 timeout 参数",
+        "code_snippet": "response = requests.get(\"https://api.example.com\")",
+        "category": "ast_analysis",
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py"
+      },
+      {
+        "line_number": 20,
+        "severity": "MEDIUM",
+        "issue": "网络请求缺少 SSL 验证",
+        "details": "requests 请求应该设置 verify=True",
+        "code_snippet": "response = requests.get(\"https://api.example.com\")",
+        "category": "ast_analysis",
+        "file": "c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\tests\\test-ai-tool\\test.py"
+      }
+    ],
+    "taint_analysis": [],
+    "encoding_detection": [],
+    "ai_advice": "### **安全修复建议**\n\n**核心问题：** 代码中硬编码了大量高敏感凭据（API密钥、密码、JWT令牌），且依赖管理松散，存在严重的信息泄露风险。\n\n---\n\n### **一、 高风险问题修复（立即处理）**\n\n**问题归类：** 所有“硬编码敏感信息”及“配置包含敏感信息”均属同一核心漏洞。\n\n**风险：** 凭据随代码库（如Git）泄露，攻击者可直接窃取身份、盗用API服务、造成数据泄露与财务损失。\n\n**修复方案：** 使用环境变量或安全的密钥管理服务存储凭据。\n\n**修复步骤：**\n\n1.  **从代码中移除所有硬编码凭据。**\n    *   `config.json`：删除 `api_key` 字段及其值。\n    *   `test.py`：删除第5、8、11行中直接赋值的 `api_key`、`password`、`token` 变量。\n\n2.  **创建环境变量配置文件（`.env` 文件）并加入 `.gitignore`。**\n    *   在项目根目录（`c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\`）创建 `.env` 文件。\n    *   在 `.gitignore` 文件中添加一行 `.env`。\n    *   `.env` 文件内容示例：\n        ```ini\n        # .env 文件 - 切勿提交至版本库\n        AI_API_KEY=sk-1234567890abcdefghijklmnopqrstuvwxyz\n        DB_PASSWORD=mysecretpassword123\n        AUTH_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\n        ```\n\n3.  **修改代码以从环境变量读取凭据。**\n    *   安装Python库：`pip install python-dotenv`\n    *   修改 `test.py` 代码示例：\n        ```python\n        import os\n        from dotenv import load_dotenv\n        import requests\n\n        # 加载 .env 文件中的环境变量\n        load_dotenv()\n\n        # 从环境变量安全读取凭据\n        api_key = os.getenv('AI_API_KEY')  # 原第5行\n        password = os.getenv('DB_PASSWORD') # 原第8行\n        token = os.getenv('AUTH_TOKEN')     # 原第11行\n\n        # 使用示例\n        headers = {'Authorization': f'Bearer {token}'}\n        response = requests.get(\"https://api.example.com\", headers=headers)\n        ```\n    *   修改 `config.json`，可改为读取环境变量或移除敏感字段。\n\n**验证方法：**\n1.  确保 `.env` 文件不在Git版本控制中：`git status` 检查不应显示 `.env`。\n2.  在未设置环境变量的新环境中运行代码，应抛出清晰的错误（如 `KeyError`），而非使用默认硬编码凭据。\n3.  使用代码安全扫描工具（如 `gitguardian`、`trufflehog`）对代码库重新扫描，确认无硬编码凭据。\n\n---\n\n### **二、 中风险问题修复（次要处理）**\n\n#### **1. 依赖版本未固定**\n**风险：** 依赖库自动更新至不兼容或存在新漏洞的版本，导致应用崩溃或引入安全风险。\n\n**修复步骤：**\n*   生成并维护 `requirements.txt` 文件，固定所有依赖版本。\n    ```bash\n    pip freeze > requirements.txt\n    ```\n*   检查 `requirements.txt`，确保关键库有明确版本号，例如：\n    ```txt\n    requests==2.31.0\n    python-dotenv==1.0.0\n    ```\n*   使用 `pip install -r requirements.txt` 进行安装。\n\n**验证方法：** 在全新虚拟环境中，使用 `requirements.txt` 安装依赖并运行测试，确保环境一致、功能正常。\n\n#### **2. 网络访问代码缺乏安全验证**\n**风险：** 可能遭受SSRF攻击、或与不可信端点通信导致数据泄露。\n\n**修复步骤：**\n*   对URL进行白名单验证（如果适用）。\n*   为 `requests` 调用设置超时和TLS验证。\n    ```python\n    # 修改原第20行\n    try:\n        response = requests.get(\"https://api.example.com\",\n                                timeout=10,          # 设置连接/读取超时\n                                verify=True)         # 启用TLS证书验证\n        response.raise_for_status()  # 检查HTTP错误",
+    "ai_prompt": "# Cursor IDE 安全提示词（精简版）\n\n## 1. 敏感信息保护\n要求：禁止在代码中硬编码密钥、密码等敏感信息，应使用环境变量或安全配置管理。\n示例：```python\n# 错误做法\nAPI_KEY = \"sk_live_123456789\"\n\n# 正确做法\nimport os\nAPI_KEY = os.getenv(\"API_KEY\")\n```\n\n## 2. 危险函数限制\n要求：避免使用 `eval()`、`exec()` 等动态执行函数，防止代码注入攻击。\n示例：```python\n# 错误做法\nuser_input = \"os.system('rm -rf /')\"\neval(user_input)\n\n# 正确做法\n# 使用安全的替代方案，如字典映射或条件判断\n```\n\n## 3. 输入验证过滤\n要求：对所有用户输入进行严格的验证和过滤，防止注入攻击。\n示例：```python\n# 错误做法\nquery = f\"SELECT * FROM users WHERE name = '{user_input}'\"\n\n# 正确做法\nimport sqlite3\nconn = sqlite3.connect('db.sqlite3')\ncursor = conn.cursor()\ncursor.execute(\"SELECT * FROM users WHERE name = ?\", (user_input,))\n```\n\n## 4. 文件权限控制\n要求：设置最小必要文件权限，避免过度授权导致安全风险。\n示例：```python\n# 错误做法\nimport os\nos.chmod(\"/etc/passwd\", 0o777)\n\n# 正确做法\n# 仅授予必要的最小权限\nos.chmod(\"user_data.txt\", 0o600)  # 仅所有者可读写\n```\n\n## 5. 网络安全配置\n要求：使用 HTTPS 加密传输，避免明文传输敏感数据。\n示例：```python\n# 错误做法\nimport requests\nresponse = requests.get(\"http://api.example.com/data\")\n\n# 正确做法\nresponse = requests.get(\"https://api.example.com/data\", verify=True)\n```",
+    "attack_scenarios": {
+      "file_exfiltration": {
+        "name": "文件外传攻击",
+        "description": "Agent 读取敏感文件并外传到外部服务器",
+        "steps": [
+          "1. 扫描系统中的敏感文件（.env, credentials, etc.）",
+          "2. 读取文件内容",
+          "3. 压缩/编码数据",
+          "4. 通过 HTTP/HTTPS 外传到攻击者服务器"
+        ],
+        "detection_points": [
+          "敏感文件访问检测",
+          "异常网络外联检测",
+          "数据压缩行为检测"
+        ],
+        "severity": "CRITICAL"
+      },
+      "credential_theft": {
+        "name": "凭证窃取",
+        "description": "Agent 收集系统凭证并发送",
+        "steps": [
+          "1. 搜索系统中的凭证文件",
+          "2. 提取密码、API Key、Token",
+          "3. 存储到临时位置",
+          "4. 外传到 C2 服务器"
+        ],
+        "detection_points": [
+          "凭证文件访问检测",
+          "敏感关键词提取检测",
+          "异常外联检测"
+        ],
+        "severity": "CRITICAL"
+      },
+      "persistence": {
+        "name": "持久化访问",
+        "description": "Agent 建立持久化访问机制",
+        "steps": [
+          "1. 添加启动项",
+          "2. 创建计划任务",
+          "3. 安装后台服务",
+          "4. 修改注册表（Windows）"
+        ],
+        "detection_points": [
+          "启动项修改检测",
+          "计划任务创建检测",
+          "服务安装检测"
+        ],
+        "severity": "HIGH"
+      },
+      "lateral_movement": {
+        "name": "横向移动",
+        "description": "Agent 在内网中横向移动",
+        "steps": [
+          "1. 扫描内网主机",
+          "2. 尝试弱口令/漏洞利用",
+          "3. 建立跳板",
+          "4. 扩大控制范围"
+        ],
+        "detection_points": [
+          "内网扫描检测",
+          "异常连接检测",
+          "多主机访问检测"
+        ],
+        "severity": "HIGH"
+      },
+      "data_manipulation": {
+        "name": "数据篡改",
+        "description": "Agent 篡改系统数据",
+        "steps": [
+          "1. 定位关键数据文件",
+          "2. 修改数据内容",
+          "3. 清除修改痕迹",
+          "4. 可能进行勒索"
+        ],
+        "detection_points": [
+          "文件修改检测",
+          "数据完整性校验",
+          "异常写入行为检测"
+        ],
+        "severity": "CRITICAL"
+      },
+      "resource_abuse": {
+        "name": "资源滥用",
+        "description": "Agent 滥用系统资源",
+        "steps": [
+          "1. 占用大量 CPU/内存",
+          "2. 进行加密货币挖矿",
+          "3. 发起 DDoS 攻击",
+          "4. 发送垃圾邮件"
+        ],
+        "detection_points": [
+          "资源使用率监控",
+          "异常进程检测",
+          "网络流量分析"
+        ],
+        "severity": "MEDIUM"
+      },
+      "supply_chain": {
+        "name": "供应链攻击",
+        "description": "Agent 通过依赖包传播",
+        "steps": [
+          "1. 感染常用依赖包",
+          "2. 等待项目安装",
+          "3. 执行恶意代码",
+          "4. 传播到其他项目"
+        ],
+        "detection_points": [
+          "依赖包完整性检测",
+          "安装脚本分析",
+          "异常导入检测"
+        ],
+        "severity": "HIGH"
+      },
+      "model_poisoning": {
+        "name": "模型投毒",
+        "description": "Agent 污染 AI 模型",
+        "steps": [
+          "1. 访问模型文件",
+          "2. 修改模型参数",
+          "3. 植入后门",
+          "4. 触发恶意行为"
+        ],
+        "detection_points": [
+          "模型文件修改检测",
+          "参数异常检测",
+          "行为漂移监控"
+        ],
+        "severity": "CRITICAL"
+      }
+    },
+    "sandbox_analysis": []
+  },
+  "ai_advice": "### **安全修复建议**\n\n**核心问题：** 代码中硬编码了大量高敏感凭据（API密钥、密码、JWT令牌），且依赖管理松散，存在严重的信息泄露风险。\n\n---\n\n### **一、 高风险问题修复（立即处理）**\n\n**问题归类：** 所有“硬编码敏感信息”及“配置包含敏感信息”均属同一核心漏洞。\n\n**风险：** 凭据随代码库（如Git）泄露，攻击者可直接窃取身份、盗用API服务、造成数据泄露与财务损失。\n\n**修复方案：** 使用环境变量或安全的密钥管理服务存储凭据。\n\n**修复步骤：**\n\n1.  **从代码中移除所有硬编码凭据。**\n    *   `config.json`：删除 `api_key` 字段及其值。\n    *   `test.py`：删除第5、8、11行中直接赋值的 `api_key`、`password`、`token` 变量。\n\n2.  **创建环境变量配置文件（`.env` 文件）并加入 `.gitignore`。**\n    *   在项目根目录（`c:\\1AAA_PROJECT\\HOS\\HOS-LS\\HOS-LS\\`）创建 `.env` 文件。\n    *   在 `.gitignore` 文件中添加一行 `.env`。\n    *   `.env` 文件内容示例：\n        ```ini\n        # .env 文件 - 切勿提交至版本库\n        AI_API_KEY=sk-1234567890abcdefghijklmnopqrstuvwxyz\n        DB_PASSWORD=mysecretpassword123\n        AUTH_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\n        ```\n\n3.  **修改代码以从环境变量读取凭据。**\n    *   安装Python库：`pip install python-dotenv`\n    *   修改 `test.py` 代码示例：\n        ```python\n        import os\n        from dotenv import load_dotenv\n        import requests\n\n        # 加载 .env 文件中的环境变量\n        load_dotenv()\n\n        # 从环境变量安全读取凭据\n        api_key = os.getenv('AI_API_KEY')  # 原第5行\n        password = os.getenv('DB_PASSWORD') # 原第8行\n        token = os.getenv('AUTH_TOKEN')     # 原第11行\n\n        # 使用示例\n        headers = {'Authorization': f'Bearer {token}'}\n        response = requests.get(\"https://api.example.com\", headers=headers)\n        ```\n    *   修改 `config.json`，可改为读取环境变量或移除敏感字段。\n\n**验证方法：**\n1.  确保 `.env` 文件不在Git版本控制中：`git status` 检查不应显示 `.env`。\n2.  在未设置环境变量的新环境中运行代码，应抛出清晰的错误（如 `KeyError`），而非使用默认硬编码凭据。\n3.  使用代码安全扫描工具（如 `gitguardian`、`trufflehog`）对代码库重新扫描，确认无硬编码凭据。\n\n---\n\n### **二、 中风险问题修复（次要处理）**\n\n#### **1. 依赖版本未固定**\n**风险：** 依赖库自动更新至不兼容或存在新漏洞的版本，导致应用崩溃或引入安全风险。\n\n**修复步骤：**\n*   生成并维护 `requirements.txt` 文件，固定所有依赖版本。\n    ```bash\n    pip freeze > requirements.txt\n    ```\n*   检查 `requirements.txt`，确保关键库有明确版本号，例如：\n    ```txt\n    requests==2.31.0\n    python-dotenv==1.0.0\n    ```\n*   使用 `pip install -r requirements.txt` 进行安装。\n\n**验证方法：** 在全新虚拟环境中，使用 `requirements.txt` 安装依赖并运行测试，确保环境一致、功能正常。\n\n#### **2. 网络访问代码缺乏安全验证**\n**风险：** 可能遭受SSRF攻击、或与不可信端点通信导致数据泄露。\n\n**修复步骤：**\n*   对URL进行白名单验证（如果适用）。\n*   为 `requests` 调用设置超时和TLS验证。\n    ```python\n    # 修改原第20行\n    try:\n        response = requests.get(\"https://api.example.com\",\n                                timeout=10,          # 设置连接/读取超时\n                                verify=True)         # 启用TLS证书验证\n        response.raise_for_status()  # 检查HTTP错误",
+  "ai_prompt": "# Cursor IDE 安全提示词（精简版）\n\n## 1. 敏感信息保护\n要求：禁止在代码中硬编码密钥、密码等敏感信息，应使用环境变量或安全配置管理。\n示例：```python\n# 错误做法\nAPI_KEY = \"sk_live_123456789\"\n\n# 正确做法\nimport os\nAPI_KEY = os.getenv(\"API_KEY\")\n```\n\n## 2. 危险函数限制\n要求：避免使用 `eval()`、`exec()` 等动态执行函数，防止代码注入攻击。\n示例：```python\n# 错误做法\nuser_input = \"os.system('rm -rf /')\"\neval(user_input)\n\n# 正确做法\n# 使用安全的替代方案，如字典映射或条件判断\n```\n\n## 3. 输入验证过滤\n要求：对所有用户输入进行严格的验证和过滤，防止注入攻击。\n示例：```python\n# 错误做法\nquery = f\"SELECT * FROM users WHERE name = '{user_input}'\"\n\n# 正确做法\nimport sqlite3\nconn = sqlite3.connect('db.sqlite3')\ncursor = conn.cursor()\ncursor.execute(\"SELECT * FROM users WHERE name = ?\", (user_input,))\n```\n\n## 4. 文件权限控制\n要求：设置最小必要文件权限，避免过度授权导致安全风险。\n示例：```python\n# 错误做法\nimport os\nos.chmod(\"/etc/passwd\", 0o777)\n\n# 正确做法\n# 仅授予必要的最小权限\nos.chmod(\"user_data.txt\", 0o600)  # 仅所有者可读写\n```\n\n## 5. 网络安全配置\n要求：使用 HTTPS 加密传输，避免明文传输敏感数据。\n示例：```python\n# 错误做法\nimport requests\nresponse = requests.get(\"http://api.example.com/data\")\n\n# 正确做法\nresponse = requests.get(\"https://api.example.com/data\", verify=True)\n```",
+  "attack_scenarios": {
+    "file_exfiltration": {
+      "name": "文件外传攻击",
+      "description": "Agent 读取敏感文件并外传到外部服务器",
+      "steps": [
+        "1. 扫描系统中的敏感文件（.env, credentials, etc.）",
+        "2. 读取文件内容",
+        "3. 压缩/编码数据",
+        "4. 通过 HTTP/HTTPS 外传到攻击者服务器"
+      ],
+      "detection_points": [
+        "敏感文件访问检测",
+        "异常网络外联检测",
+        "数据压缩行为检测"
+      ],
+      "severity": "CRITICAL"
+    },
+    "credential_theft": {
+      "name": "凭证窃取",
+      "description": "Agent 收集系统凭证并发送",
+      "steps": [
+        "1. 搜索系统中的凭证文件",
+        "2. 提取密码、API Key、Token",
+        "3. 存储到临时位置",
+        "4. 外传到 C2 服务器"
+      ],
+      "detection_points": [
+        "凭证文件访问检测",
+        "敏感关键词提取检测",
+        "异常外联检测"
+      ],
+      "severity": "CRITICAL"
+    },
+    "persistence": {
+      "name": "持久化访问",
+      "description": "Agent 建立持久化访问机制",
+      "steps": [
+        "1. 添加启动项",
+        "2. 创建计划任务",
+        "3. 安装后台服务",
+        "4. 修改注册表（Windows）"
+      ],
+      "detection_points": [
+        "启动项修改检测",
+        "计划任务创建检测",
+        "服务安装检测"
+      ],
+      "severity": "HIGH"
+    },
+    "lateral_movement": {
+      "name": "横向移动",
+      "description": "Agent 在内网中横向移动",
+      "steps": [
+        "1. 扫描内网主机",
+        "2. 尝试弱口令/漏洞利用",
+        "3. 建立跳板",
+        "4. 扩大控制范围"
+      ],
+      "detection_points": [
+        "内网扫描检测",
+        "异常连接检测",
+        "多主机访问检测"
+      ],
+      "severity": "HIGH"
+    },
+    "data_manipulation": {
+      "name": "数据篡改",
+      "description": "Agent 篡改系统数据",
+      "steps": [
+        "1. 定位关键数据文件",
+        "2. 修改数据内容",
+        "3. 清除修改痕迹",
+        "4. 可能进行勒索"
+      ],
+      "detection_points": [
+        "文件修改检测",
+        "数据完整性校验",
+        "异常写入行为检测"
+      ],
+      "severity": "CRITICAL"
+    },
+    "resource_abuse": {
+      "name": "资源滥用",
+      "description": "Agent 滥用系统资源",
+      "steps": [
+        "1. 占用大量 CPU/内存",
+        "2. 进行加密货币挖矿",
+        "3. 发起 DDoS 攻击",
+        "4. 发送垃圾邮件"
+      ],
+      "detection_points": [
+        "资源使用率监控",
+        "异常进程检测",
+        "网络流量分析"
+      ],
+      "severity": "MEDIUM"
+    },
+    "supply_chain": {
+      "name": "供应链攻击",
+      "description": "Agent 通过依赖包传播",
+      "steps": [
+        "1. 感染常用依赖包",
+        "2. 等待项目安装",
+        "3. 执行恶意代码",
+        "4. 传播到其他项目"
+      ],
+      "detection_points": [
+        "依赖包完整性检测",
+        "安装脚本分析",
+        "异常导入检测"
+      ],
+      "severity": "HIGH"
+    },
+    "model_poisoning": {
+      "name": "模型投毒",
+      "description": "Agent 污染 AI 模型",
+      "steps": [
+        "1. 访问模型文件",
+        "2. 修改模型参数",
+        "3. 植入后门",
+        "4. 触发恶意行为"
+      ],
+      "detection_points": [
+        "模型文件修改检测",
+        "参数异常检测",
+        "行为漂移监控"
+      ],
+      "severity": "CRITICAL"
+    }
+  }
+}
