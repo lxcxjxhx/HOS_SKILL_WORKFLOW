@@ -499,6 +499,79 @@ class EnhancedSecurityScanner:
                 
                 issue['final_confidence'] = min(max(base_confidence, 0.0), 1.0)
     
+    def scan_code(self, code: str) -> List[Dict[str, Any]]:
+        """扫描代码内容
+        
+        Args:
+            code: 要扫描的代码内容
+            
+        Returns:
+            扫描结果列表
+        """
+        issues = []
+        
+        # 应用预编译规则
+        for category, rules in self.compiled_rules.items():
+            for rule_name, rule_data in rules.items():
+                compiled_patterns = rule_data['compiled_patterns']
+                rule = rule_data['rule']
+                severity = rule.get('severity', 'MEDIUM').lower()
+                exclude_patterns = rule.get('exclude_patterns', [])
+                
+                lines = code.splitlines()
+                
+                for compiled_pattern in compiled_patterns:
+                    try:
+                        matches = compiled_pattern.finditer(code)
+                        
+                        for match in matches:
+                            line_number = code[:match.start()].count('\n') + 1
+                            code_snippet = lines[line_number - 1] if line_number <= len(lines) else ''
+                            
+                            if self._matches_exclude(code, line_number, exclude_patterns):
+                                continue
+                            
+                            issue = {
+                                'rule_id': f"{category}.{rule_name}",
+                                'file': 'code_content',
+                                'line_number': line_number,
+                                'issue': rule.get('name', rule_name),
+                                'severity': severity,
+                                'details': rule.get('description', ''),
+                                'code_snippet': code_snippet.strip(),
+                                'match': match.group(0),
+                                'detection_method': 'compiled_regex',
+                                'confidence': rule.get('confidence', 0.7),
+                                'category': category
+                            }
+                            
+                            issues.append(issue)
+                    except re.error as e:
+                        logger.debug(f"正则表达式错误：{e}")
+        
+        # 过滤误报
+        code_patterns = self.false_positive_filters.get('code_patterns', [])
+        filtered_issues = []
+        
+        for issue in issues:
+            is_fp = False
+            code_snippet = issue.get('code_snippet', '')
+            
+            for pattern in code_patterns:
+                try:
+                    if re.search(pattern, code_snippet, re.IGNORECASE):
+                        is_fp = True
+                        break
+                except re.error:
+                    if pattern in code_snippet:
+                        is_fp = True
+                        break
+            
+            if not is_fp:
+                filtered_issues.append(issue)
+        
+        return filtered_issues
+
     def get_summary(self) -> Dict[str, Any]:
         """获取扫描摘要"""
         total_issues = sum(

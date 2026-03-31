@@ -27,6 +27,10 @@ from attack_simulator import AttackSimulator
 from report_generator import ReportGenerator
 from sandbox_analyzer import SandboxAnalyzer
 
+# 添加规则验证功能导入
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'rule_validation'))
+from run_validation import RuleValidator
+
 
 def print_section(title):
     """打印章节标题"""
@@ -43,7 +47,7 @@ def print_step(step_num, description):
 def run_comprehensive_test():
     """运行全功能综合测试"""
     # 配置路径
-    target_dir = r"c:\1AAA_PROJECT\HOS\HOS-LS\openclaw-main"
+    target_dir = r"c:\1AAA_PROJECT\HOS\HOS-LS\HOS-LS\tests\test-ai-tool"
     output_dir = r"c:\1AAA_PROJECT\HOS\HOS-LS\HOS-LS\tests\test-output"
     
     # 确保输出目录存在
@@ -238,15 +242,56 @@ def run_comprehensive_test():
         all_summary['sandbox_issues'] = len(sandbox_results)
         all_summary['total_issues'] += len(sandbox_results)
         
-        # ==================== 第八部分：生成报告 ====================
-        print_section("第八部分：生成测试报告")
+        # ==================== 第八部分：规则验证 ====================
+        print_section("第八部分：规则验证")
         step = 70
         
-        elapsed_time = time.time() - start_time
+        # 生成时间戳
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         
+        print_step(step, "初始化规则验证器")
+        # 配置规则验证器路径
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        rules_file = os.path.join(project_root, 'rules', 'security_rules.json')
+        test_cases_dir = os.path.join(project_root, 'rule_validation', 'test_cases')
+        
+        print_step(step + 1, "执行规则验证测试")
+        validator = RuleValidator(rules_file, test_cases_dir)
+        validation_results = validator.run_all_tests()
+        
+        print_step(step + 2, "计算验证指标")
+        validation_metrics = validator.calculate_metrics()
+        
+        print_step(step + 3, "生成验证报告")
+        validation_report_file = os.path.join(output_dir, f'rule_validation_report_{timestamp}.json')
+        validator.save_report(validation_report_file, output_format='json')
+        
+        # 保存验证结果到总结果中
+        all_results['rule_validation'] = {
+            'results': validation_results,
+            'metrics': validation_metrics,
+            'report_file': validation_report_file
+        }
+        
+        # 添加验证统计到摘要
+        all_summary['validation_passed'] = validation_metrics.get('overall', {}).get('passed_tests', 0)
+        all_summary['validation_total'] = validation_metrics.get('overall', {}).get('total_tests', 0)
+        
+        # ==================== 第九部分：生成报告 ====================
+        print_section("第九部分：生成测试报告")
+        step = 80
+        
+        elapsed_time = time.time() - start_time
+        
         print_step(step, "准备报告数据")
+        # 将 rule_results 中的内容展开合并到顶层，以便 report_generator 能正确识别
         report_results = all_results.copy()
+        if 'rule_results' in report_results:
+            rule_data = report_results.pop('rule_results')
+            # 将 rule_results 中的各个类别合并到顶层
+            for key, value in rule_data.items():
+                if key not in report_results:
+                    report_results[key] = value
         report_results['ai_suggestions'] = {
             'risk_assessment': ai_advice[:500] if ai_advice else '正在生成...',
             'specific_suggestions': [
@@ -312,6 +357,7 @@ def run_comprehensive_test():
         print(f"  编码问题：{all_summary['encoding_issues']}")
         print(f"  沙盒问题：{all_summary['sandbox_issues']}")
         print(f"  攻击场景：{all_summary['attack_scenarios']}")
+        print(f"  规则验证：{all_summary.get('validation_passed', 0)}/{all_summary.get('validation_total', 0)}")
         print(f"\n  报告文件:")
         print(f"    HTML: {html_report}")
         print(f"    MD:   {md_report}")

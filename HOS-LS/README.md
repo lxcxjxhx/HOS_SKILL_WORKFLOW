@@ -1,12 +1,13 @@
 # 🛡️ HOS-LS v2.0 - AI 安全审计平台
 
 > **从"规则扫描器"升级为"AI 安全审计平台"**  
-> 版本：v2.0 Enhanced | 更新时间：2026-03-30 | Python 3.8+
+> 版本：v2.0 Enhanced | 更新时间：2026-10-21 | Python 3.8+
 
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Rules](https://img.shields.io/badge/rules-74+-orange.svg)](rules/security_rules.json)
-[![AI Security](https://img.shields.io/badge/AI%20security-11%20rules-red.svg)](rules/security_rules.json)
+[![AI Security](https://img.shields.io/badge/AI%20security-20%20rules-red.svg)](rules/security_rules.json)
+[![Test Cases](https://img.shields.io/badge/test%20cases-300+-green.svg)](tests/rule_validation/)
 
 ---
 
@@ -48,9 +49,14 @@
 ### 🆕 v2.0 Enhanced 最新升级
 
 - **74+ 条规则**（持续增长中）
-- **AI 安全专属规则 11 条**
+- **AI 安全专属规则 20+ 条**
 - **编码检测模块**（Base64/Hex/URL）
 - **数据流分析模块**（污点追踪）
+- **完整测试用例体系**（300+ 测试用例）
+- **提示词质量优化**（4 个优化模板）
+- **验证 Harness**（自动化规则验证）
+- **防编造机制**（确保规则真实性）
+- **质量门禁**（严格质量标准）
 
 ---
 
@@ -63,7 +69,8 @@
 | 总规则数 | **74+ 条** | +23% |
 | 安全类别 | **10 个** | 全面覆盖 |
 | 规则集 | **14 个** | 场景化检测 |
-| AI 安全规则 | **11 条** | +175% |
+| AI 安全规则 | **20+ 条** | +264% |
+| 测试用例 | **300+ 个** | 全面覆盖 |
 
 ### 2️⃣ 新增 5 大安全类别
 
@@ -196,6 +203,98 @@ for result in results:
     print()
 ```
 
+### 使用提示词模板（新增🆕）
+
+```bash
+# 使用规则生成提示词
+python src/generate_rule.py \
+  --prompt prompts/rule_generation_v2.0.txt \
+  --input input/detection_target.json \
+  --output output/generated_rule.json
+
+# 使用规则优化提示词
+python src/optimize_rule.py \
+  --prompt prompts/rule_optimization_v2.0.txt \
+  --input input/rule_to_optimize.json \
+  --output output/optimized_rule.json
+
+# 使用测试用例生成提示词
+python src/generate_tests.py \
+  --prompt prompts/test_generation_v2.0.txt \
+  --input input/rule_for_tests.json \
+  --output output/test_cases.json
+```
+
+### 使用验证 Harness（新增🆕）
+
+```python
+from src.rule_validation_harness import RuleValidationHarness
+
+# 初始化验证器
+harness = RuleValidationHarness(
+    rules_file='rules/security_rules.json',
+    test_cases_dir='tests/rule_validation/'
+)
+
+# 运行所有测试
+results = harness.run_all_tests()
+
+# 计算质量指标
+metrics = harness.calculate_metrics()
+
+# 生成验证报告
+harness.save_report('validation_report.html', 'html')
+
+# 检查质量门禁
+quality_gate = harness.check_quality_gate(metrics)
+print(f"质量门禁：{'通过' if quality_gate['all_passed'] else '未通过'}")
+```
+
+### 使用防编造追踪器（新增🆕）
+
+```python
+from src.rule_provenance_tracker import RuleProvenanceTracker
+
+# 初始化追踪器
+tracker = RuleProvenanceTracker()
+
+# 记录规则生成过程
+tracker.record_rule_generation(rule_data, generation_info)
+
+# 验证规则真实性
+verification = tracker.verify_rule_authenticity(rule_data)
+print(f"真实性验证：{'通过' if verification['verified'] else '未通过'}")
+print(f"真实性评分：{verification.get('authenticity_score', 0):.2%}")
+
+# 生成来源报告
+report = tracker.generate_provenance_report(rule_id)
+print(report)
+```
+
+### 使用质量门禁检查器（新增🆕）
+
+```python
+from src.quality_gate import QualityGateChecker
+
+# 初始化检查器
+checker = QualityGateChecker()
+
+# 检查质量门禁
+quality_gate = checker.check_quality_gate(metrics)
+
+# 生成优化建议
+suggestions = checker.generate_optimization_suggestions(metrics, rule_data)
+
+# 生成质量报告
+checker.save_report(metrics, 'quality_report.md', rule_data)
+
+# 版本对比
+old_metrics = {...}
+new_metrics = {...}
+comparison = checker.compare_versions(old_metrics, new_metrics)
+print(f"整体改进：{comparison['overall_improvement']:+.2%}")
+```
+
 ---
 
 ## 📊 规则集选择
@@ -230,6 +329,9 @@ python src/main.py --rule-set ai_security
 - ✅ 工具调用滥用（2 条规则）
 - ✅ Prompt 泄露（1 条规则）
 - ✅ RAG 数据泄露（1 条规则）
+- ✅ AI 生成代码安全（5 条规则）
+- ✅ Agent 安全（2 条规则）
+- ✅ AI 数据处理安全（2 条规则）
 
 #### 🌐 OWASP Top 10
 
@@ -390,11 +492,16 @@ password = "example"    # safe
 
 ## 🧪 运行测试
 
+### 运行综合测试
+
 ```bash
-# 运行综合测试
 cd HOS-LS
 python tests/test_enhanced_scanner.py
+```
 
+### 运行模块测试
+
+```bash
 # 运行 AST 扫描器测试
 python src/ast_scanner.py /path/to/test
 
@@ -403,6 +510,29 @@ python src/taint_analyzer.py /path/to/test
 
 # 运行编码检测测试
 python src/encoding_detector.py
+```
+
+### 测试用例验证
+
+```bash
+# 运行规则验证测试
+python tests/rule_validation/run_tests.py
+
+# 查看测试用例编写指南
+cat tests/rule_validation/TEST_CASE_GUIDE.md
+```
+
+### 测试用例目录结构
+
+```
+tests/rule_validation/
+├── TEST_CASE_GUIDE.md     # 测试用例编写指南
+├── code_security/         # 代码安全测试用例
+├── ai_security/           # AI 安全测试用例
+├── injection_security/    # 注入安全测试用例
+├── container_security/    # 容器安全测试用例
+├── cloud_security/        # 云安全测试用例
+└── supply_chain_security/ # 供应链安全测试用例
 ```
 
 ---
@@ -647,6 +777,10 @@ git pull origin main
 | 编码检测 | ❌ | ✅ | **新增** |
 | 上下文感知 | ❌ | ✅ | **新增** |
 | 误报过滤 | 基础 | 增强 | **优化** |
+| 提示词质量优化 | ❌ | ✅ | **新增** |
+| 验证 Harness | ❌ | ✅ | **新增** |
+| 防编造机制 | ❌ | ✅ | **新增** |
+| 质量门禁 | ❌ | ✅ | **新增** |
 
 ---
 
@@ -658,6 +792,10 @@ git pull origin main
 - ✅ **编码检测** + **数据流追踪** + **AST 分析**
 - ✅ **74+ 规则** 持续增长
 - ✅ **可商业化部署**
+- ✅ **提示词质量优化** 提升 AI 生成规则质量
+- ✅ **验证 Harness** 确保规则质量稳定
+- ✅ **防编造机制** 确保规则真实性
+- ✅ **质量门禁** 严格质量标准
 
 ---
 
