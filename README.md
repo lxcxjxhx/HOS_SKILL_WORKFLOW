@@ -41,21 +41,6 @@
 
 **适用场景**：任何需要将 AI 能力对外暴露的生产环境。
 
-### 3. HOS-LS v2.0 —— AI 安全审计平台（已成熟）
-**专为 AI 生成代码打造的安全审计平台**，从「规则扫描器」升级为完整 AI 安全审计系统。
+### 3. HOS-LS v2.0 —— AI 安全审计平台
 
-**核心能力**：
-- 74+ 条安全规则（持续增长），覆盖 10 大安全类别
-- 20+ 条 AI 专属安全规则（Prompt 注入、越狱攻击、工具调用滥用、RAG 泄露等）
-- AST 抽象语法树分析 + 数据流追踪（污点分析）
-- 多重编码检测（Base64 / Hex / URL）
-- 14 个场景化规则集（默认、高安全、AI 安全、OWASP Top 10、容器安全、云安全等）
-- 误报过滤、置信度评分（0.0-1.0）、质量门禁、规则验证 Harness、防编造追踪
-
-**快速使用**（详见 `HOS-LS/README.md`）：
-```bash
-# 基础扫描
-python HOS-LS/src/main.py
-
-# 使用 AI 安全规则集
-python HOS-LS/src/main.py --rule-set ai_security
+#### 转移到单独仓库：https://github.com/lxcxjxhx/HOS-LS
