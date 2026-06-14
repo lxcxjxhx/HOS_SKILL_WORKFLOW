@@ -1,0 +1,462 @@
+# AI Native Product Engineering (ANPE) Skill
+
+## Metadata
+- **name**: AI Native Product Engineering
+- **version**: 1.0.0
+- **keywords**: ai-first-design, configuration-driven, asset-management, maintainability
+- **activation**: auto
+- **applicability**: project-setup, architecture-design
+- **prerequisites**: TFE skill recommended
+
+## Core Philosophy
+
+Design for AI understanding, not human convenience.
+
+**Traditional approach**: Code organized for human developers
+**AI-native approach**: Code + config + knowledge organized for AI comprehension
+
+Future state: When an AI agent joins your team, it can:
+- Understand the entire project in 2K tokens
+- Make correct architectural decisions
+- Maintain code without context thrashing
+
+## Six Foundational Principles
+
+### Principle 1: Centralized Configuration Management
+**All configuration in one place: `project.yaml`**
+
+One source of truth for:
+- Model & API settings
+- Workflow definitions
+- Permission rules
+- Agent configurations
+
+```yaml
+# project.yaml
+project:
+  name: my-service
+  version: 1.0.0
+  aiNative: true
+
+models:
+  default: claude-haiku-4.5
+  reasoning: claude-opus
+  embedding: claude-3-small
+
+api:
+  timeout: 30s
+  retries: 3
+  baseUrl: ${env:API_BASE_URL}
+
+workflows:
+  auth: workflows/auth.yaml
+  payment: workflows/payment.yaml
+  notification: workflows/notification.yaml
+
+permissions:
+  rulesFile: config/rules.yaml
+  roleHierarchy: config/roles.yaml
+
+agents:
+  codeReview: agents/code-review.yaml
+  testing: agents/testing.yaml
+  documentation: agents/docs.yaml
+
+storage:
+  type: postgres
+  connectionString: ${env:DB_URL}
+  migrations: db/migrations/
+```
+
+Benefits:
+- Single point of change
+- Environment-safe (use `${env:KEY}` interpolation)
+- Version-controlled
+- Machine-readable
+
+### Principle 2: Business Rules as Configuration
+**Prohibit: Hard-coded business logic**
+**Mandate: Rules as data files**
+
+Wrong approach:
+```javascript
+function calculateDiscount(user, order) {
+  if (user.isPremium && order.total > 100) return 0.2;
+  if (user.isStudent && order.total > 50) return 0.15;
+  if (order.isFirstTime) return 0.1;
+  return 0;
+}
+```
+
+Right approach:
+```yaml
+# config/discount-rules.yaml
+rules:
+  premium_large_order:
+    condition: "user.isPremium && order.total > 100"
+    discount: 0.2
+    priority: 10
+  
+  student_medium_order:
+    condition: "user.isStudent && order.total > 50"
+    discount: 0.15
+    priority: 9
+  
+  first_time_buyer:
+    condition: "order.isFirstTime"
+    discount: 0.1
+    priority: 8
+  
+  seasonal_promotion:
+    condition: "now() in [2026-12-01, 2026-12-31] && order.total > 30"
+    discount: 0.25
+    priority: 11
+```
+
+```javascript
+// src/rules/discount.js (30 lines)
+const yaml = require('yaml');
+const fs = require('fs');
+const rules = yaml.parse(fs.readFileSync('config/discount-rules.yaml', 'utf-8'));
+
+function calculateDiscount(user, order) {
+  const applicable = rules.rules
+    .filter(r => evaluateCondition(r.condition, { user, order }))
+    .sort((a, b) => b.priority - a.priority);
+  
+  return applicable[0]?.discount ?? 0;
+}
+```
+
+Benefits:
+- Business team can modify rules without code changes
+- No deployment needed for rule updates
+- Easy A/B testing
+- Audit trail in git
+
+### Principle 3: Prompt Asset Management
+**Centralize all prompts in `prompts/` directory**
+
+Structure:
+```
+prompts/
+├── coding.md
+├── review.md
+├── refactor.md
+├── test.md
+├── documentation.md
+└── security.md
+```
+
+Each prompt file format:
+```markdown
+# [Purpose]
+
+## Context
+[What the agent needs to know]
+
+## Instructions
+1. [Step 1]
+2. [Step 2]
+...
+
+## Output Format
+[Specify exact output structure]
+
+## Constraints
+- [Constraint 1]
+- [Constraint 2]
+
+## Success Criteria
+- [Criterion 1]
+- [Criterion 2]
+```
+
+Example:
+```markdown
+# Code Review Prompt
+
+## Context
+You are reviewing code for security vulnerabilities, performance issues, and maintainability.
+
+## Instructions
+1. Scan for OWASP Top 10 vulnerabilities
+2. Check for memory leaks
+3. Verify error handling completeness
+4. Assess maintainability
+
+## Output Format
+- **Issues Found**: [List with severity]
+- **Security Risks**: [If any]
+- **Recommendations**: [Actionable improvements]
+- **Approved**: Yes/No
+
+## Constraints
+- Must complete in <2 minutes
+- Focus on critical issues first
+- No style preferences
+
+## Success Criteria
+- All vulnerabilities identified
+- False positives < 5%
+```
+
+Usage:
+```javascript
+const fs = require('fs');
+const prompts = {
+  review: fs.readFileSync('prompts/review.md', 'utf-8'),
+  test: fs.readFileSync('prompts/test.md', 'utf-8'),
+};
+
+// Later: pass prompts to AI agents
+agent.setSystemPrompt(prompts.review);
+```
+
+### Principle 4: Skill Asset Management
+**Centralize reusable expertise in `skills/` directory**
+
+Each skill file documents:
+- When to use
+- How to apply
+- Common patterns
+- Anti-patterns
+
+```
+skills/
+├── backend.skill      # API design, database, microservices
+├── frontend.skill     # UI/UX, component patterns, state
+├── security.skill     # Auth, encryption, vulnerability patterns
+├── rag.skill          # Vector DB, embedding, retrieval patterns
+├── agent.skill        # Agent design, tool definition, orchestration
+└── devops.skill       # CI/CD, infrastructure, deployment
+```
+
+Each `.skill` file contains:
+- Metadata (version, keywords, applicability)
+- Core principles
+- Implementation patterns
+- Anti-patterns
+- Code examples
+- Decision trees
+
+### Principle 5: Knowledge Asset Management
+**Build institutional memory in `knowledge/` directory**
+
+Structure:
+```
+knowledge/
+├── architecture.md     # System design, component relationships
+├── workflow.md         # Business processes, state machines
+├── api.md              # All API contracts, endpoints, schemas
+├── faq.md              # Common questions, troubleshooting
+├── decisions.md        # Architecture Decision Records (ADRs)
+└── glossary.md         # Domain-specific terminology
+```
+
+Format (example: architecture.md):
+```markdown
+# System Architecture
+
+## High-Level Overview
+[ASCII diagram or SVG of components]
+
+## Component Graph
+- **Auth Service**: Responsible for user authentication
+  - Dependencies: Database, Redis
+  - Clients: API Gateway, Mobile App
+  - Ports: 3001 (internal), 443 (external)
+
+- **Payment Service**: Processes transactions
+  - Dependencies: Auth Service, Database, Payment Gateway
+  - Clients: Order Service
+  - Ports: 3002 (internal)
+
+## Data Flow
+[Describe main information flows]
+
+## Scaling Strategy
+[How each component scales]
+
+## Failure Modes
+[What breaks and how to recover]
+```
+
+### Principle 6: AI-First Architecture
+**Every module must have `README.md` optimized for AI**
+
+Format (strict):
+```markdown
+# [Module Name]
+
+## Purpose
+One sentence: What does this module do?
+
+## Input
+- **Type**: [data structure]
+- **Schema**: [specification or JSON example]
+- **Constraints**: [Valid ranges, required fields]
+
+## Output
+- **Type**: [data structure]
+- **Schema**: [specification or JSON example]
+- **Side effects**: [What changes in the system]
+
+## Dependencies
+- Internal: [List of local modules used]
+- External: [Library versions required]
+- Services: [External services needed]
+
+## Risks & Mitigations
+- **Risk 1**: [Description]
+  - **Mitigation**: [How to prevent]
+  - **If occurs**: [Recovery steps]
+
+## Testing Strategy
+- Unit tests: [Coverage %]
+- Integration tests: [What they cover]
+- Edge cases: [Known difficult scenarios]
+
+## Examples
+
+### Normal Case
+Input: [example]
+Output: [example]
+
+### Error Case
+Input: [edge case]
+Output: [error response]
+```
+
+Example implementation:
+```markdown
+# Payment Service
+
+## Purpose
+Processes customer transactions and manages payment state.
+
+## Input
+```json
+{
+  "orderId": "uuid",
+  "amount": 99.99,
+  "currency": "USD",
+  "customerId": "uuid",
+  "paymentMethod": "card|wallet|bank"
+}
+```
+
+## Output
+```json
+{
+  "transactionId": "uuid",
+  "status": "pending|success|failed",
+  "amount": 99.99,
+  "timestamp": "2026-06-13T...",
+  "metadata": {}
+}
+```
+
+## Dependencies
+- Internal: auth, database, logging
+- External: stripe>=5.0, ioredis>=5.0
+- Services: Stripe API, database
+
+## Risks & Mitigations
+- **Risk**: Payment gateway timeout
+  - **Mitigation**: Implement circuit breaker, retry logic
+  - **If occurs**: Payment marked as pending, manual reconciliation
+
+- **Risk**: Duplicate transaction submission
+  - **Mitigation**: Idempotency keys, transaction locks
+  - **If occurs**: Detect & refund duplicate
+
+## Examples
+
+### Success
+Input: Valid card, $99.99
+Output: Transaction ID, status=success
+
+### Fraud Decline
+Input: Stolen card detected
+Output: Transaction ID, status=failed, reason=fraud_detected
+```
+
+## Integration: The ANPE Checklist
+
+When starting a new project:
+
+- [ ] **Create `project.yaml`** with all configuration
+- [ ] **Extract `config/` directory** with rules, roles, workflows
+- [ ] **Build `prompts/` directory** with reusable prompts
+- [ ] **Organize `skills/` directory** with team expertise
+- [ ] **Build `knowledge/` directory** with architecture, workflows, APIs
+- [ ] **Every module gets `README.md`** with Purpose/Input/Output/Dependencies/Risks format
+- [ ] **Enable environment variable interpolation** in configs
+- [ ] **Version control all configs** (commit config changes like code)
+- [ ] **Document ADRs** (Architecture Decision Records) in knowledge/
+
+## Example Project Structure
+
+```
+my-service/
+├── project.yaml                 # Single source of truth
+├── config/
+│   ├── rules.yaml              # Business rules
+│   ├── roles.yaml              # Permission hierarchy
+│   └── workflows/
+│       ├── auth.yaml           # Auth flow definition
+│       ├── payment.yaml        # Payment flow
+│       └── notification.yaml   # Notification flow
+├── prompts/
+│   ├── coding.md               # Code generation prompt
+│   ├── review.md               # Code review prompt
+│   ├── refactor.md             # Refactoring guidance
+│   ├── test.md                 # Testing approach
+│   └── security.md             # Security review prompt
+├── skills/
+│   ├── backend.skill           # Backend patterns
+│   ├── frontend.skill          # Frontend patterns
+│   ├── security.skill          # Security patterns
+│   └── rag.skill               # RAG patterns
+├── knowledge/
+│   ├── architecture.md         # System design
+│   ├── workflow.md             # Business processes
+│   ├── api.md                  # API documentation
+│   ├── decisions.md            # ADRs
+│   └── glossary.md             # Domain terminology
+├── src/
+│   ├── auth/
+│   │   ├── README.md           # AI-first module doc
+│   │   ├── auth.service.js
+│   │   └── auth.test.js
+│   ├── payment/
+│   │   ├── README.md
+│   │   ├── payment.service.js
+│   │   └── payment.test.js
+│   └── ...
+└── ...
+```
+
+## Benefits for AI Agents
+
+When an AI agent inherits this project:
+
+1. **Reads `project.yaml`** — Understands entire project in <500 tokens
+2. **Reads `knowledge/architecture.md`** — Knows system design
+3. **Reads module `README.md`** — Understands specific module contracts
+4. **Consults `skills/` + `prompts/`** — Knows how to implement
+5. **Checks `config/` rules** — Knows business logic without reading code
+
+Result: **Can work autonomously without context thrashing**
+
+## Related Skills
+- TFE (Token First Engineering): Efficient implementation
+- MRA (Minimal Refactor Architecture): Retrofitting existing projects
+- CCE (Context Compression Engineering): For large codebases
+
+## Key Takeaway
+
+> Traditional projects require developers to read and understand code.
+> AI-native projects require reading configuration, knowledge, and minimal code.
+> This 10x reduces AI onboarding time and context requirements.
