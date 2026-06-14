@@ -329,21 +329,6 @@ before submitting changes.
 
 ---
 
-## Star History
-
-```mermaid
-xychart-beta
-
-title GitHub Growth
-
-x-axis [v1,v2,v3,v4]
-
-y-axis Stars
-
-bar [10,100,1000,10000]
-```
-
----
 
 ## License
 
