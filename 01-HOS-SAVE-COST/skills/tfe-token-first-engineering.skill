@@ -1,0 +1,252 @@
+# Token First Engineering (TFE) Skill
+
+## Metadata
+- **name**: Token First Engineering
+- **version**: 1.0.0
+- **keywords**: token-optimization, efficiency, minimal-context, cost-reduction
+- **activation**: auto
+- **applicability**: all-tasks
+
+## Core Principles
+
+### 1. Prohibition on Wheel Reinvention
+**Never implement what already exists.**
+
+Before coding, check:
+- [ ] Does PIP/NPM/SDK/API already provide this?
+- [ ] Can we import existing library?
+- [ ] Is there a standard solution in the ecosystem?
+
+Action: Search registry first. 90% of features exist somewhere.
+
+### 2. Prohibit Large Prompts
+**Structure > Volume**
+
+Wrong format (wasteful):
+```
+Generate a complete authentication system with:
+- User registration with email verification
+- Password reset flow with token expiry
+- OAuth2 integration with multiple providers
+- Role-based access control
+- Session management with refresh tokens
+- [1000+ more words...]
+```
+
+Right format (efficient):
+```
+target: Multi-provider OAuth2 authentication
+input: provider config, user request, token storage
+output: authenticated user object, refresh token
+constraints: 
+  - Token TTL: 1hr access, 7d refresh
+  - Fail on invalid provider
+  - Log all auth attempts
+```
+
+Maximum 4 sections. 100 tokens max.
+
+### 3. Prohibit Full Codebase Context
+**Surgical analysis only.**
+
+Wrong approach:
+- Read entire project structure
+- Analyze all dependencies
+- Review every module
+
+Right approach:
+- Target specific directory: `src/auth/`
+- Read only relevant files
+- Focus on interaction points
+
+Benefit: 10x context reduction.
+
+### 4. Prohibit Large Files
+**Single file < 500 lines. Period.**
+
+When file exceeds 500 lines:
+1. Identify cohesive modules
+2. Extract to separate files
+3. Use clear interfaces between them
+4. Keep total size manageable
+
+Large files = unmaintainable + high refactor cost.
+
+### 5. Prioritize Configuration-Driven Design
+**Replace if-else with YAML.**
+
+Wrong pattern:
+```javascript
+if (env === 'prod') { 
+  if (user.role === 'admin') { 
+    if (feature.flag === 'enabled') {
+      // 10 nested levels...
+    }
+  }
+}
+```
+
+Right pattern:
+```yaml
+# config/rules.yaml
+workflows:
+  admin_prod:
+    - check: role == 'admin'
+    - check: env == 'prod'
+    - check: feature.flag == 'enabled'
+    - execute: action
+```
+
+Benefits:
+- No code recompilation for rule changes
+- Non-developers can modify rules
+- Testable as data
+- Version controllable
+
+## Pre-Coding Output Format
+
+Before writing ANY code, output this assessment:
+
+```
+## Token Efficiency Assessment
+
+**Token Estimate**: X tokens (estimated)
+- Prompt generation: A tokens
+- Context inclusion: B tokens  
+- Response parsing: C tokens
+
+**Complexity Score**: [Simple|Moderate|Complex]
+- File count: N
+- Lines of code: M
+- Dependencies: P
+
+**Maintenance Cost**: [Low|Medium|High]
+- Configuration drift risk: Yes/No
+- Testing coverage needed: %
+- Documentation gaps: List
+
+**Refactor Cost**: [Low|Medium|High]
+- Breaking changes: Yes/No
+- Migration path complexity: [Simple|Moderate|Complex]
+- Rollback difficulty: [Easy|Medium|Hard]
+
+**Action Plan**:
+1. [First step with token cost]
+2. [Second step with token cost]
+3. ...
+```
+
+## Decision Tree
+
+When tasked with implementation:
+
+```
+START
+├─ Does library solve 90%+?
+│  ├─ YES → Use it, configure, move on
+│  └─ NO → Continue
+├─ Can we use configuration instead of code?
+│  ├─ YES → Write config (YAML/JSON)
+│  └─ NO → Continue
+├─ Is context needed from >3 files?
+│  ├─ YES → Reduce scope or refactor
+│  └─ NO → Proceed
+├─ Will file exceed 500 lines?
+│  ├─ YES → Plan modularization first
+│  └─ NO → Write code
+└─ OUTPUT: Code + tests + docs
+```
+
+## Token Budgeting by Task Type
+
+| Task Type | Token Budget | Context Limit | Max Prompt Size |
+|-----------|-------------|---------------|-----------------|
+| Bug fix | 5K | 2 files | 200 tokens |
+| Feature (small) | 15K | 3-5 files | 300 tokens |
+| Feature (medium) | 50K | 5-8 files | 400 tokens |
+| Refactor | 30K | 4-6 files | 350 tokens |
+| Architecture | 100K | 10+ files + diagrams | 500 tokens |
+
+Exceed budget? → Break into smaller tasks.
+
+## Implementation Checklist
+
+Before committing code:
+
+- [ ] Library/existing solution checked (search registry)
+- [ ] Prompt structured (target/input/output/constraints)
+- [ ] Context surgically scoped (max 5 files)
+- [ ] All files <500 lines (planned splits if needed)
+- [ ] Configuration extracted (rules in YAML/JSON)
+- [ ] Token estimate provided
+- [ ] Maintenance cost assessed
+- [ ] Tests included (if applicable)
+- [ ] Documentation in README format (if new module)
+
+## Example Application
+
+**Task**: Add rate limiting to API
+
+**TFE Analysis**:
+1. Library exists? → Yes: `express-rate-limit`
+2. Use config? → Yes: `redis` + `config.yaml`
+3. Context needed? → `src/middleware/` only
+4. File size? → New file ~80 lines
+5. Token estimate: 3K tokens
+
+**Token Budget Output**:
+```
+Token Estimate: 3,200 tokens
+- Library research: 200
+- Config design: 400
+- Implementation: 1,500
+- Tests: 800
+- Review: 300
+
+Complexity: Simple
+Files: 1 new file (~80 lines)
+Dependencies: express-rate-limit, redis
+
+Maintenance: Low
+- No custom logic
+- Standard library
+- Config-driven
+```
+
+**Code Output**:
+```javascript
+// src/middleware/rateLimit.js (65 lines)
+const rateLimit = require('express-rate-limit');
+const RedisStore = require('rate-limit-redis');
+const redis = require('redis');
+
+const client = redis.createClient(config.redis);
+
+module.exports = rateLimit({
+  store: new RedisStore({ client }),
+  windowMs: config.rateLimit.windowMs,
+  max: config.rateLimit.maxRequests,
+  message: config.rateLimit.message,
+});
+```
+
+```yaml
+# config/rateLimit.yaml
+rateLimit:
+  windowMs: 900000  # 15 minutes
+  maxRequests: 100
+  message: "Too many requests"
+redis:
+  host: localhost
+  port: 6379
+```
+
+## Related Skills
+- ANPE (AI Native Product Engineering): Configuration asset management
+- MRA (Minimal Refactor Architecture): When refactoring existing code
+- CCE (Context Compression Engineering): For large codebases >100K LOC
+
+## References
+- https://nodejs.org/en/docs/ (check before coding Node.js)
+- https://www.npmjs.com (search for existing solutions)
+- YAML specification for config files
