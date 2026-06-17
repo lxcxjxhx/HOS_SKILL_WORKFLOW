@@ -1,0 +1,52 @@
+{
+  "name": "hos-audit-core",
+  "version": "0.1.0",
+  "description": "HOS-Audit-Core: AI Code Audit Rule Engine - Not a vulnerability knowledge base, but a rule-based system to enhance AI audit quality",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "generate:skill": "ts-node src/generators/build-skill.ts",
+    "generate:diagnostics": "ts-node src/generators/build-diagnostics.ts",
+    "generate:all": "ts-node src/generators/index.ts"
+  },
+  "keywords": [
+    "security",
+    "code-audit",
+    "rule-engine",
+    "penetration-testing",
+    "vulnerability-detection",
+    "compliance",
+    "sast"
+  ],
+  "author": "HOS Team",
+  "license": "Proprietary",
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.0.0",
+    "ts-node": "^10.0.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HOS-Team/hos-audit-core.git"
+  },
+  "homepage": "https://github.com/HOS-Team/hos-audit-core",
+  "bugs": {
+    "url": "https://github.com/HOS-Team/hos-audit-core/issues"
+  }
+}
