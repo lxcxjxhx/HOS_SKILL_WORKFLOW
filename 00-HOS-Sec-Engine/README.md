@@ -4,6 +4,63 @@
 
 ---
 
+## Install as AI Agent Skill
+
+> Requires Node.js 18+. Supports 71+ agents: Claude Code, Cursor, Codex, GitHub Copilot, Cline, Trae, Windsurf, etc.
+
+```bash
+# Interactive install (recommended) - select skills and agents
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/00-HOS-Sec-Engine/skills
+
+# Install to all supported agents (non-interactive)
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/00-HOS-Sec-Engine/skills --skill HOS-Sec-Engine -a '*' -y
+
+# Install to a specific agent (e.g., Claude Code)
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/00-HOS-Sec-Engine/skills --skill HOS-Sec-Engine -a claude-code -y
+
+# Global install (available across all projects)
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/00-HOS-Sec-Engine/skills --skill HOS-Sec-Engine -a '*' -g -y
+
+# List available skills without installing
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/00-HOS-Sec-Engine/skills --list
+```
+
+### Installation Options
+
+| Option | Flag | Example |
+|--------|------|---------|
+| Scope | (default) `-g` | Project-level (current) / Global (all projects) |
+| Agent | `-a` | `claude-code`, `cursor`, `codex`, `copilot`, `trae`, `*` (all) |
+| Skill | `--skill` | `HOS-Sec-Engine` (包含审计+渗透+诊断) |
+
+### Installation Methods
+
+| Method | Description |
+|--------|-------------|
+| **Symlink** (default) | Creates symlinks from each agent to a canonical copy. Single source of truth, easy updates. |
+| **Copy** | Creates independent copies for each agent. Use when symlinks aren't supported. |
+
+After installation, the skill will be automatically loaded by your AI agent when relevant security tasks are detected.
+
+---
+
+## Quick Start (Developer)
+
+```bash
+# Install dependencies
+npm install
+
+# Build the project (compiles TypeScript to dist/)
+npm run build
+
+# Generate all platform outputs + skills/ directory
+npm run generate:all
+```
+
+Generated output files appear in the `dist/` directory. Skills are generated to the parent `skills/` directory.
+
+---
+
 ## Core Philosophy
 
 > **代码审计 (White Box)**: 从源码出发，系统化检查每一个安全控制点
@@ -99,27 +156,6 @@ dist/                            Generated output files (skill.md, skill-audit.m
 | PD-004 | Configuration & Deployment Defects | High | 系统化诊断安全配置缺陷，不安全默认设置、暴露面、部署问题 |
 | PD-005 | Dependency & Supply Chain Defects | High | 系统化诊断依赖供应链缺陷，CVE映射、构建链完整性 |
 | PD-006 | Business Logic Defects | High | 系统化诊断业务逻辑缺陷，工作流绕过、状态机、竞态条件 |
-
----
-
-## Quick Start
-
-```bash
-# Install dependencies
-npm install
-
-# Build the project
-npm run build
-
-# Generate all platform outputs (combined mode - default)
-npm run generate:all
-
-# Or generate specific mode
-npm run generate:skill      # Generate combined skill.md
-npm run generate:diagnostics # Generate skill-diagnostics.md
-```
-
-Generated output files appear in the `dist/` directory.
 
 ---
 
