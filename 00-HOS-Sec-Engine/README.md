@@ -1,4 +1,4 @@
-# HOS-Audit-Core: AI Code Audit & Penetration Testing Dual Engine
+# HOS-Sec-Engine
 
 **A rule-based system for both white-box code audit and black-box penetration testing.**
 
@@ -79,7 +79,7 @@ Generated output files appear in the `dist/` directory. Skills are generated to 
 项目采用7层结构，支持代码审计和渗透测试双模式：
 
 ```
-HOS-Audit-Core/
+HOS-Sec-Engine/
 |
 +-- Layer 1: schemas/            Core type definitions (AuditRule, ReviewRule, EvidenceStandard, AttackPath)
 +-- Layer 2: audit-rules/        10 audit rules (AR-001~AR-010) - 白盒检查方法
@@ -206,7 +206,7 @@ dist/                            Generated output files (skill.md, skill-audit.m
 
 ## Dual Core Value Proposition
 
-| 维度 | 仅代码审计 | 仅渗透测试 | HOS-Audit-Core 双引擎 |
+| 维度 | 仅代码审计 | 仅渗透测试 | HOS-Sec-Engine 双引擎 |
 |------|-----------|-----------|----------------------|
 | **覆盖范围** | 仅源码可见问题 | 仅运行时可见问题 | 全部覆盖 |
 | **误报率** | 可能较高 | 较低（已验证） | 白盒发现+黑盒验证=低误报 |

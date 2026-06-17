@@ -1,7 +1,7 @@
 {
-  "name": "hos-audit-core",
-  "version": "0.1.0",
-  "description": "HOS-Audit-Core: AI Code Audit Rule Engine - Not a vulnerability knowledge base, but a rule-based system to enhance AI audit quality",
+  "name": "hos-sec-engine",
+  "version": "0.3.0",
+  "description": "HOS-Sec-Engine: AI Code Audit & Penetration Testing Dual Engine - A rule-based system for security evaluation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -21,7 +21,8 @@
     "penetration-testing",
     "vulnerability-detection",
     "compliance",
-    "sast"
+    "sast",
+    "hos-sec-engine"
   ],
   "author": "HOS Team",
   "license": "Proprietary",
@@ -43,10 +44,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/HOS-Team/hos-audit-core.git"
+    "url": "https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW.git"
   },
-  "homepage": "https://github.com/HOS-Team/hos-audit-core",
+  "homepage": "https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW",
   "bugs": {
-    "url": "https://github.com/HOS-Team/hos-audit-core/issues"
+    "url": "https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/issues"
   }
 }
