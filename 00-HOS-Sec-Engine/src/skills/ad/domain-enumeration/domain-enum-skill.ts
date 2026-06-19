@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Active Directory Domain Enumeration Skills
  */
 
@@ -166,6 +166,8 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['domain-pentest'],
+        phase: 'user-enumeration',
         enabled: true,
     },
 ];

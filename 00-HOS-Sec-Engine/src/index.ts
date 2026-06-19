@@ -24,6 +24,19 @@ export type {
   ExecuteQuery
 } from './types/result';
 
+export type {
+  Playbook,
+  PlaybookMetadata,
+  PlaybookPhase,
+  Finding,
+  FlowContext,
+  PhaseResult,
+  FlowSummary,
+  OrchestrationResult,
+  FlowStatus,
+  PlaybookConfig
+} from './types/playbook';
+
 // 核心类导出
 export { HosSecEngine } from './core/engine';
 export { SkillValidator } from './core/validator';
@@ -31,6 +44,8 @@ export { SkillMatcher } from './core/matcher';
 export { SkillScorer } from './core/scorer';
 export { SkillFormatter } from './core/formatter';
 export { SkillLoader } from './core/loader';
+export { FlowOrchestrator } from './core/orchestrator';
+export { ReportGenerator } from './core/report';
 
 // 预设 Skill 导出（自动发现）
 export {
@@ -47,3 +62,15 @@ export {
   kubernetesSkills,
   codeReviewSkills,
 } from './skills';
+
+// 预定义流程导出
+export {
+  allPlaybooks,
+  getPlaybooksByCategory,
+  getPlaybookById,
+  webPentestFull,
+  apiSecurityReview,
+  domainPentest,
+  cloudConfigAudit,
+  codeReviewJava,
+} from './playbooks';

@@ -128,4 +128,8 @@ export interface AttackDefenseSkill {
   quality?: Quality;
   /** 是否启用 */
   enabled?: boolean;
+  /** 所属流程 ID 列表 */
+  playbooks?: string[];
+  /** 在流程中的阶段归属 */
+  phase?: string;
 }

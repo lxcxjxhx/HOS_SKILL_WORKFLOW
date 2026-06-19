@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - IAM Privilege Escalation Techniques
  * IAM 权限提升专项 Skill
  */
@@ -481,6 +481,8 @@ export const iamPrivilegeEscalationSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['cloud-config-audit'],
+        phase: 'permission-testing',
         enabled: true,
     },
 ];

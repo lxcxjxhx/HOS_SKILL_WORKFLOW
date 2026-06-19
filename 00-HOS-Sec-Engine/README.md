@@ -16,9 +16,34 @@
 
 ## 安装
 
-### 方式一：npx skills 安装（推荐 - AI 编辑器兼容）
+### 方式一：交互式 CLI 安装（推荐 - 选择性安装）
 
-将 22 个 Skill 一键安装到 Claude Code、Trae IDE、Cursor、Codex、Copilot 等 18+ AI 编辑器：
+使用 `npx hos-skills` 启动交互式安装界面，支持浏览、搜索、按领域一键安装：
+
+```bash
+# 启动交互式安装
+npx hos-skills
+
+# 非交互模式 - 安装指定 Skill
+npx hos-skills --skills web-sqli-001,web-xss-001 --target trae --repo https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW
+
+# 非交互模式 - 按领域一键安装
+npx hos-skills --bundle web-bundle --target claude-code --repo https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW
+
+# 非交互模式 - 安装全部
+npx hos-skills --all --target cursor --repo https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW
+```
+
+**交互模式支持以下功能：**
+- **浏览所有 Skill** - 按分类展示 22 个 Skill，空格多选安装
+- **搜索 Skill** - 关键词搜索（支持 ID、名称、标签、分类模糊匹配）
+- **按领域一键安装** - 选择领域包（web-bundle、api-bundle、cloud-bundle 等）
+- **安装全部** - 一键安装所有 22 个 Skill
+- **查看 Skill 详情** - 查看单个 Skill 的详细信息
+
+### 方式二：npx skills 全量安装
+
+使用 `npx skills` 命令行工具全量安装到 AI 编辑器：
 
 ```bash
 # 一键安装全部 Skill（默认安装到当前项目）
@@ -31,6 +56,27 @@ npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW -s hos-sec-engine 
 
 # 全局安装（所有项目可用）
 npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW -s hos-sec-engine -g -y
+```
+
+**交互式安装示例：**
+```
+███████╗██╗  ██╗██╗██╗     ██╗     ███████╗
+██╔════╝██║ ██╔╝██║██║     ██║     ██╔════╝
+███████╗█████╔╝ ██║██║     ██║     ███████╗
+╚════██║██╔═██╗ ██║██║     ██║     ╚════██║
+███████║██║  ██╗██║███████╗███████╗███████║
+╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝
+    HOS Skills Installer
+
+已加载 22 个 Skill
+
+选择安装方式：
+❯ 1. 浏览所有 Skill（分类选择）
+  2. 搜索 Skill（关键词搜索）
+  3. 按领域一键安装
+  4. 安装全部 Skill
+  5. 查看 Skill 详情
+  6. 退出
 ```
 
 安装后，在 AI 编辑器对话中直接提及 Skill 名称或描述相关场景即可触发：
@@ -480,7 +526,9 @@ npm run generate-skills-md
 │   │   ├── scorer.ts         # 评分计算
 │   │   ├── validator.ts      # Skill 验证器
 │   │   ├── formatter.ts      # 结果格式化
-│   │   └── loader.ts         # 递归加载器
+│   │   ├── loader.ts         # 递归加载器
+│   │   ├── orchestrator.ts   # 流程编排引擎（V3）
+│   │   └── report.ts         # 报告生成器（V3）
 │   ├── types/                # 类型定义
 │   │   ├── skill.ts          # Skill 类型
 │   │   └── result.ts         # 结果类型
@@ -544,6 +592,85 @@ npm run generate-skills-md
 | 域安全 | domain-enumeration | 1 | AD 域信息收集 |
 | 移动安全 | android-apk | 1 | Android APK 逆向分析 |
 | 代码审计 | java-deserialization | 1 | Java 反序列化审计 |
+
+## 流程编排（V3 新增）
+
+在 Skill Engine 基础上，V3 新增了**流程编排层**，将离散 Skill 组织为标准攻防流程：
+
+```
+FlowOrchestrator
+    ├── loadPlaybook()   → 加载 Playbook 定义
+    ├── executeFlow()    → 按阶段顺序执行（阶段间传递上下文）
+    ├── pause()/resume() → 暂停/恢复
+    ├── skipPhase()      → 跳过阶段
+    ├── rollbackTo()     → 回滚到指定阶段
+    └── visualizeStatus() → 流程可视化
+```
+
+### 预定义流程模板
+
+| 流程 ID | 名称 | 分类 | 难度 | 预估时间 |
+|---------|------|------|------|----------|
+| `web-pentest-full` | 完整 Web 应用渗透测试 | web | 中级 | 4-8小时 |
+| `api-security-review` | API 安全审计 | api | 中级 | 2-4小时 |
+| `domain-pentest` | AD 域渗透测试 | intranet | 高级 | 8-16小时 |
+| `cloud-config-audit` | 云配置审计 | cloud | 中级 | 2-4小时 |
+| `code-review-java` | Java 代码审计 | audit | 中级 | 4-8小时 |
+
+### 快速开始
+
+```typescript
+import { HosSecEngine, getPlaybookById } from 'hos-sec-engine';
+import { allPlaybooks } from 'hos-sec-engine/playbooks';
+
+const engine = new HosSecEngine();
+
+// 查看所有预定义流程
+console.log('预定义流程:', allPlaybooks.map(p => p.name));
+
+// 加载并执行流程
+const playbook = getPlaybookById('web-pentest-full');
+engine.loadPlaybook(playbook);
+
+const result = await engine.executeFlow({
+  target: 'https://target.example.com',
+  findings: [],
+  accessLevel: 'anonymous',
+  history: [],
+  customData: {}
+});
+
+console.log(result.summary);
+console.log(result.report);
+```
+
+### 流程控制
+
+```typescript
+// 跳过某个阶段
+engine.getOrchestrator().skipPhase('vulnerability-scan');
+
+// 暂停执行（人工确认后恢复）
+engine.getOrchestrator().pause();
+
+// 恢复执行
+const resumedResult = await engine.getOrchestrator().resume();
+
+// 回滚到指定阶段
+const rolledBack = await engine.getOrchestrator().rollbackTo('recon');
+
+// 可视化当前流程状态
+console.log(engine.getOrchestrator().visualizeStatus());
+```
+
+### PLAYBOOK.md 生成
+
+编译后自动生成 Playbook Markdown 文档：
+
+```bash
+npm run build
+# 自动在 dist/playbooks/{category}/{playbook-id}/PLAYBOOK.md 生成
+```
 
 ## SKILL.md 生成
 

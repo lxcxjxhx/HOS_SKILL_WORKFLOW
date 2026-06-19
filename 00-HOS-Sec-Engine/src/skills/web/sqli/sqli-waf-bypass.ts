@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - SQL Injection WAF Bypass Skills
  * SQL 注入 WAF 绕过专项 Skill 集合
  */
@@ -242,6 +242,8 @@ export const sqliWafBypassSkills: AttackDefenseSkill[] = [
       tested: true,
       lastVerified: '2026-06',
     },
+    playbooks: ['web-pentest-full'],
+    phase: 'exploitation',
     enabled: true,
   },
 ];

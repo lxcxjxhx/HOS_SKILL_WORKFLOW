@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Windows Privilege Escalation Skills
  */
 
@@ -181,6 +181,8 @@ export const windowsPrivEscSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['web-pentest-full'],
+        phase: 'privilege-escalation',
         enabled: true,
     },
 ];

@@ -1,0 +1,20 @@
+{
+  "name": "hos-skills",
+  "version": "1.0.0",
+  "description": "HOS-Sec-Engine 交互式 Skill 安装器",
+  "main": "index.js",
+  "bin": {
+    "hos-skills": "index.js"
+  },
+  "keywords": ["security", "skills", "installer", "hos-sec-engine"],
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "@inquirer/prompts": "^5.0.0",
+    "@inquirer/checkbox": "^2.3.0",
+    "@inquirer/search": "^1.0.0",
+    "@inquirer/select": "^2.3.0",
+    "@inquirer/confirm": "^3.1.0",
+    "@inquirer/input": "^2.1.0"
+  }
+}

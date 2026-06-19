@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - OAuth Attack Skills
  * OAuth 流程攻击技术专?Skill 集合
  */
@@ -442,6 +442,8 @@ export const oauthAttackSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['api-security-review'],
+        phase: 'auth-testing',
         enabled: true,
     },
 ];

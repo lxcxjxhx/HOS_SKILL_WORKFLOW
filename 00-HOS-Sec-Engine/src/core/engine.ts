@@ -1,9 +1,11 @@
 import { AttackDefenseSkill } from '../types/skill';
 import { SkillResult, ExecuteQuery, EngineConfig } from '../types/result';
+import { Playbook, FlowContext, OrchestrationResult } from '../types/playbook';
 import { SkillValidator } from './validator';
 import { SkillMatcher } from './matcher';
 import { SkillFormatter } from './formatter';
 import { SkillLoader } from './loader';
+import { FlowOrchestrator } from './orchestrator';
 
 /**
  * 默认配置
@@ -24,11 +26,15 @@ export class HosSecEngine {
   private config: Required<EngineConfig>;
   private skills: Map<string, AttackDefenseSkill>;
   private matcher: SkillMatcher;
+  private orchestrator: FlowOrchestrator;
+  private playbooks: Map<string, Playbook>;
 
   constructor(config: EngineConfig = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.skills = new Map();
+    this.playbooks = new Map();
     this.matcher = new SkillMatcher(this.config);
+    this.orchestrator = new FlowOrchestrator(this);
 
     if (this.config.loadPresetSkills) {
       this.loadPresetSkills();
@@ -186,5 +192,79 @@ export class HosSecEngine {
    */
   clearSkills(): void {
     this.skills.clear();
+  }
+
+  // ==================== 流程编排能力 ====================
+
+  /**
+   * 加载流程定义
+   * @param playbook 流程定义对象
+   */
+  loadPlaybook(playbook: Playbook): void {
+    this.playbooks.set(playbook.id, playbook);
+    this.orchestrator.loadPlaybook(playbook);
+  }
+
+  /**
+   * 获取所有已加载的流程
+   * @returns 流程列表
+   */
+  getPlaybooks(): Playbook[] {
+    return Array.from(this.playbooks.values());
+  }
+
+  /**
+   * 根据 ID 获取已加载的流程
+   * @param id 流程 ID
+   * @returns 流程定义或 undefined
+   */
+  getPlaybookById(id: string): Playbook | undefined {
+    return this.playbooks.get(id);
+  }
+
+  /**
+   * 获取流程关联的 Skill 列表
+   * @param playbookId 流程 ID
+   * @returns 关联的 Skill 列表
+   */
+  getSkillsByPlaybook(playbookId: string): AttackDefenseSkill[] {
+    const playbook = this.playbooks.get(playbookId);
+    if (!playbook) {
+      return [];
+    }
+
+    const skillIds = new Set<string>();
+    for (const phase of playbook.phases) {
+      for (const skillId of phase.skills) {
+        skillIds.add(skillId);
+      }
+    }
+
+    const result: AttackDefenseSkill[] = [];
+    for (const skillId of skillIds) {
+      const skill = this.skills.get(skillId);
+      if (skill) {
+        result.push(skill);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * 执行流程
+   * @param context 流程上下文
+   * @returns 流程执行结果
+   */
+  async executeFlow(context: FlowContext): Promise<OrchestrationResult> {
+    return this.orchestrator.executeFlow(context);
+  }
+
+  /**
+   * 获取流程编排器实例
+   * @returns FlowOrchestrator 实例
+   */
+  getOrchestrator(): FlowOrchestrator {
+    return this.orchestrator;
   }
 }

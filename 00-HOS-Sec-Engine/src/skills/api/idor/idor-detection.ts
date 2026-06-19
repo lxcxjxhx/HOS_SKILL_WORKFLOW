@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - IDOR Detection Skills
  * IDOR（不安全的直接对象引用）检测与利用专项 Skill 集合
  */
@@ -430,6 +430,8 @@ export const idorDetectionSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['api-security-review'],
+        phase: 'authorization-testing',
         enabled: true,
     },
 ];

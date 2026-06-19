@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Docker Container Escape Skills
  */
 
@@ -163,6 +163,8 @@ export const dockerEscapeSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['cloud-config-audit'],
+        phase: 'container-audit',
         enabled: true,
     },
 ];

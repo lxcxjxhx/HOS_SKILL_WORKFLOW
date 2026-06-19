@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Linux Privilege Escalation Skills
  */
 
@@ -188,6 +188,8 @@ export const linuxPrivEscSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['web-pentest-full'],
+        phase: 'privilege-escalation',
         enabled: true,
     },
 ];

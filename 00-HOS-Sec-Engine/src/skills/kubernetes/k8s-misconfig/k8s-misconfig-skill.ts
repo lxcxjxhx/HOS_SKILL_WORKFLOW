@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Kubernetes Misconfiguration Skills
  */
 
@@ -182,6 +182,8 @@ export const k8sMisconfigSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['cloud-config-audit'],
+        phase: 'container-audit',
         enabled: true,
     },
 ];

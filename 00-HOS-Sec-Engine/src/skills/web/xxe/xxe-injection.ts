@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - XXE Injection Skills
  * XXE 注入攻击专项 Skill 集合
  */
@@ -363,6 +363,8 @@ export const xxeInjectionSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['web-pentest-full'],
+        phase: 'vulnerability-scanning',
         enabled: true,
     },
 ];

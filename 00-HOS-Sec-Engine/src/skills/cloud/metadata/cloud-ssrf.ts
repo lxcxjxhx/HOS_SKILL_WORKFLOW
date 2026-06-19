@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Cloud Metadata SSRF Exploitation
  * 云元数据 SSRF 利用专项 Skill
  */
@@ -442,6 +442,8 @@ export const cloudMetadataSSRFSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['cloud-config-audit'],
+        phase: 'asset-discovery',
         enabled: true,
     },
 ];

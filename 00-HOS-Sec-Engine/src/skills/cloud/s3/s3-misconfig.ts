@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - S3/OSS Bucket Misconfiguration Exploitation
  * S3/OSS Bucket 配置错误利用专项 Skill
  */
@@ -386,6 +386,8 @@ export const s3MisconfigSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['cloud-config-audit'],
+        phase: 'asset-discovery',
         enabled: true,
     },
 ];

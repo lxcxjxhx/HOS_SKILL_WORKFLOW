@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Command Injection Skills
  * 命令注入攻击专项 Skill 集合
  */
@@ -406,6 +406,8 @@ export const commandInjectionSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['web-pentest-full'],
+        phase: 'exploitation',
         enabled: true,
     },
 ];

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - JWT Attack Skills
  * JWT 攻击与绕过技术专?Skill 集合
  */
@@ -426,6 +426,8 @@ x5u 注入同理:
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['api-security-review'],
+        phase: 'auth-testing',
         enabled: true,
     },
 ];

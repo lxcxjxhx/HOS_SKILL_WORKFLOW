@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Android APK Security Skills
  */
 
@@ -177,6 +177,8 @@ export const androidApkSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: [],
+        phase: undefined,
         enabled: true,
     },
 ];

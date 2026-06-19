@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Rate Limit Bypass Skills
  * 速率限制绕过技术专?Skill 集合
  */
@@ -577,6 +577,8 @@ curl, requests, httpx, aiohttp 有不?JA3 指纹
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['api-security-review'],
+        phase: 'rate-limit-testing',
         enabled: true,
     },
 ];

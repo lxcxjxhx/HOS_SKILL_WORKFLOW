@@ -1,0 +1,82 @@
+import type { Playbook } from '../../types/playbook';
+
+/**
+ * API 安全审计流程
+ * 针对 RESTful API、GraphQL 等接口的安全测试流程
+ */
+export const apiSecurityReview: Playbook = {
+  id: 'api-security-review',
+  name: 'API 安全审计',
+  description: '针对 RESTful API 和 GraphQL 接口的全面安全审计，覆盖认证、鉴权、越权、速率限制等测试',
+  category: 'api',
+  phases: [
+    {
+      id: 'api-discovery',
+      name: 'API 发现',
+      order: 1,
+      description: '发现并枚举所有 API 端点、方法和参数，构建完整的 API 资产清单',
+      skills: [
+        'api-discovery-001',
+        'api-schema-enum-001',
+        'api-docs-analysis-001',
+        'api-endpoint-fuzz-001'
+      ],
+      outputSchema: ['apiEndpoints', 'apiMethods', 'apiParameters', 'apiSchemas']
+    },
+    {
+      id: 'auth-testing',
+      name: '认证鉴权测试',
+      order: 2,
+      description: '测试 JWT、OAuth 2.0、API Key 等认证机制的安全性',
+      skills: [
+        'api-jwt-001',
+        'api-oauth-001'
+      ],
+      outputSchema: ['authFlaws', 'tokenWeaknesses', 'sessionIssues'],
+      nextPhaseCondition: 'authFlaws'
+    },
+    {
+      id: 'authorization-testing',
+      name: '越权测试',
+      order: 3,
+      description: '测试水平越权（IDOR）和垂直越权（BOLA），验证访问控制是否有效',
+      skills: [
+        'api-idor-001'
+      ],
+      condition: 'authFlaws',
+      outputSchema: ['idorFindings', 'privilegeEscalations', 'accessControlFlaws'],
+      nextPhaseCondition: 'idorFindings'
+    },
+    {
+      id: 'rate-limit-testing',
+      name: '速率限制测试',
+      order: 4,
+      description: '测试 API 的速率限制、暴力破解防护和拒绝服务防护',
+      skills: [
+        'api-ratelimit-001'
+      ],
+      outputSchema: ['rateLimitBypasses', 'bruteForceResults', 'dosVectors']
+    },
+    {
+      id: 'input-validation',
+      name: '输入验证测试',
+      order: 5,
+      description: '测试 API 输入参数验证，包括 SQL 注入、XSS、命令注入等',
+      skills: [
+        'api-sqli-001',
+        'api-xss-001',
+        'api-injection-001',
+        'api-mass-assignment-001',
+        'api-xxe-001'
+      ],
+      outputSchema: ['injectionFindings', 'validationFlaws', 'inputAbuse']
+    }
+  ],
+  metadata: {
+    version: '1.0.0',
+    difficulty: 'intermediate',
+    estimatedTime: '3-6小时',
+    prerequisites: ['API 接口文档或端点列表', '测试账号（不同权限级别）'],
+    targetEnvironment: ['RESTful API', 'GraphQL API', 'gRPC 服务']
+  }
+};

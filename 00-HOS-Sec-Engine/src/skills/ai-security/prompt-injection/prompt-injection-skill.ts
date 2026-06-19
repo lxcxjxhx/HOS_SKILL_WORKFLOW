@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Prompt Injection Skills
  */
 
@@ -153,6 +153,8 @@ export const promptInjectionSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: [],
+        phase: undefined,
         enabled: true,
     },
 ];

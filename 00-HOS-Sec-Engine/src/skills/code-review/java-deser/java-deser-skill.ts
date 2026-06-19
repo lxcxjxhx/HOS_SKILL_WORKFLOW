@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - Java Deserialization Code Audit Skills
  */
 
@@ -178,6 +178,8 @@ export const javaDeserSkills: AttackDefenseSkill[] = [
             tested: true,
             lastVerified: '2026-06',
         },
+        playbooks: ['code-review-java'],
+        phase: 'deserialization-audit',
         enabled: true,
     },
 ];

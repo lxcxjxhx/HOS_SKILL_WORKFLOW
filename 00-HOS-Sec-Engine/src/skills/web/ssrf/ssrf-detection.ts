@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - SSRF Detection and Exploitation Skills
  * SSRF 检测与利用专项 Skill 集合
  */
@@ -341,11 +341,13 @@ export const ssrfDetectionSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.90,
-            reviewed: true,
-            tested: true,
-            lastVerified: '2026-06',
-        },
-        enabled: true,
+      confidence: 0.90,
+      reviewed: true,
+      tested: true,
+      lastVerified: '2026-06',
     },
+    playbooks: ['web-pentest-full'],
+    phase: 'reconnaissance',
+    enabled: true,
+  },
 ];
