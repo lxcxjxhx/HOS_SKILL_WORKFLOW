@@ -543,6 +543,57 @@ export function generateSkillsMdFiles(
   generated.push(flatRefPath);
   console.log(`  [FLAT]   ${flatRefPath}`);
 
+  // Copy the hos-sec-master skill (unified entry point)
+  // When running from dist/src/scripts/, go up 3 levels to project root, then src/skills/
+  const projectRoot = path.resolve(__dirname, '..', '..', '..');
+  const repoRoot = path.resolve(projectRoot, '..');  // HOS-SEC-SKILL/ (repo root for npx skills add)
+  const masterSkillPath = path.join(projectRoot, 'src', 'skills', 'hos-sec-master', 'SKILL.md');
+  if (fs.existsSync(masterSkillPath)) {
+    const nestedMasterDir = path.join(nestedDir, 'master', 'hos-sec-master');
+    const nestedMasterPath = path.join(nestedMasterDir, 'SKILL.md');
+    writeOutput(nestedMasterPath, fs.readFileSync(masterSkillPath, 'utf-8'));
+    generated.push(nestedMasterPath);
+    console.log(`  [MASTER] ${nestedMasterPath}`);
+
+    const flatMasterDir = path.join(flatDir, 'hos-sec-master');
+    const flatMasterPath = path.join(flatMasterDir, 'SKILL.md');
+    writeOutput(flatMasterPath, fs.readFileSync(masterSkillPath, 'utf-8'));
+    generated.push(flatMasterPath);
+    console.log(`  [MASTER] ${flatMasterPath}`);
+  } else {
+    console.warn(`  [WARN] Master skill not found at ${masterSkillPath}`);
+  }
+
+  // Sync all flat skills + master to repo root skills/ directory
+  // This is CRITICAL: npx skills add looks for skills/ at the REPO ROOT, not in a subdirectory
+  const repoRootSkillsDir = path.join(repoRoot, 'skills');
+  for (const skill of skills) {
+    const srcFlatPath = path.join(flatDir, skill.metadata.id, 'SKILL.md');
+    if (fs.existsSync(srcFlatPath)) {
+      const destDir = path.join(repoRootSkillsDir, skill.metadata.id);
+      const destPath = path.join(destDir, 'SKILL.md');
+      writeOutput(destPath, fs.readFileSync(srcFlatPath, 'utf-8'));
+      generated.push(destPath);
+    }
+  }
+  // Also sync master skill to repo root
+  if (fs.existsSync(masterSkillPath)) {
+    const repoMasterDir = path.join(repoRootSkillsDir, 'hos-sec-master');
+    const repoMasterPath = path.join(repoMasterDir, 'SKILL.md');
+    writeOutput(repoMasterPath, fs.readFileSync(masterSkillPath, 'utf-8'));
+    generated.push(repoMasterPath);
+    console.log(`  [ROOT]   ${repoMasterPath}`);
+  }
+  // Also sync references to repo root
+  const srcRefPath = path.join(flatDir, 'references', 'REFERENCE.md');
+  if (fs.existsSync(srcRefPath)) {
+    const destRefDir = path.join(repoRootSkillsDir, 'references');
+    const destRefPath = path.join(destRefDir, 'REFERENCE.md');
+    writeOutput(destRefPath, fs.readFileSync(srcRefPath, 'utf-8'));
+    generated.push(destRefPath);
+    console.log(`  [ROOT]   ${destRefPath}`);
+  }
+
   console.log(`\nDone. Generated ${generated.length} file(s) in ${nestedDir} and ${flatDir}`);
   return generated;
 }

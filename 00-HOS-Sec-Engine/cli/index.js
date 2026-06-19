@@ -187,6 +187,16 @@ async function askInstallTarget() {
 }
 
 /**
+ * 询问是否全局安装
+ */
+async function askGlobalInstall() {
+  return confirm({
+    message: '是否全局安装？（所有项目可用）',
+    default: false,
+  });
+}
+
+/**
  * 询问仓库地址
  */
 async function askRepoUrl() {
@@ -226,6 +236,9 @@ async function executeInstallation(selectedSkills, target, indexData) {
   // 询问安装目标（如果未指定）
   const installTarget = target || (await askInstallTarget());
 
+  // 询问是否全局安装
+  const isGlobal = await askGlobalInstall();
+
   // 询问仓库地址
   const repoUrl = await askRepoUrl();
 
@@ -236,16 +249,18 @@ async function executeInstallation(selectedSkills, target, indexData) {
 
   const hasCLI = hasSkillsCLI();
 
+  const globalFlag = isGlobal ? '-g' : '';
+
   for (const skillId of selectedSkills) {
     for (const tgt of targets) {
-      const cmd = `npx skills add ${repoUrl} -s ${skillId} -a ${tgt}`;
+      const cmd = `npx skills add ${repoUrl} -s ${skillId} -a ${tgt} ${globalFlag} -y`.trim();
       console.log(`  ${chalk.gray('$')} ${cmd}`);
 
       // 如果系统已安装 npx skills，自动执行
       if (hasCLI) {
         try {
           console.log(chalk.gray('  正在执行...'));
-          execSync(cmd, { stdio: 'inherit', timeout: 60000 });
+          execSync(cmd, { stdio: 'inherit', timeout: 120000 });
           console.log(chalk.green('  ✓ 安装成功'));
         } catch (e) {
           console.log(chalk.red(`  ✗ 安装失败: ${e.message}`));
@@ -455,6 +470,7 @@ function parseArgs() {
     all: false,
     target: null,
     repo: null,
+    global: false,
   };
 
   for (let i = 0; i < args.length; i++) {
@@ -469,6 +485,8 @@ function parseArgs() {
       options.target = args[++i];
     } else if (arg === '--repo' && i + 1 < args.length) {
       options.repo = args[++i];
+    } else if (arg === '--global' || arg === '-g') {
+      options.global = true;
     } else if (arg === '--help' || arg === '-h') {
       printHelp();
       process.exit(0);
@@ -494,10 +512,11 @@ ${ASCII_TITLE}
   --all                             安装全部 Skill
   --target <target>                 安装目标（claude-code / trae / cursor / all）
   --repo <url>                      Skill 仓库地址
+  --global, -g                      全局安装（所有项目可用）
 
 示例:
-  hos-skills --skills web-sqli-001,web-xss-001 --target claude-code --repo https://github.com/xxx
-  hos-skills --bundle web-bundle --target trae --repo https://github.com/xxx
+  hos-skills --skills web-sqli-001,web-xss-001 --target trae --repo https://github.com/xxx --global
+  hos-skills --bundle web-bundle --target trae --repo https://github.com/xxx --global
   hos-skills --all --target claude-code --repo https://github.com/xxx
 `);
 }
@@ -565,6 +584,8 @@ async function nonInteractiveMode(options, indexData) {
       ? ['claude-code', 'trae', 'cursor']
       : [options.target || 'claude-code'];
 
+  const globalFlag = options.global ? '-g' : '';
+
   console.log(`\n${chalk.cyan.bold('安装目标:')}: ${targets.join(', ')}`);
   console.log(`${chalk.cyan.bold('仓库地址:')}: ${options.repo}\n`);
 
@@ -572,13 +593,13 @@ async function nonInteractiveMode(options, indexData) {
 
   for (const skillId of selectedSkills) {
     for (const tgt of targets) {
-      const cmd = `npx skills add ${options.repo} -s ${skillId} -a ${tgt}`;
+      const cmd = `npx skills add ${options.repo} -s ${skillId} -a ${tgt} ${globalFlag} -y`.trim();
       console.log(`${chalk.gray('$')} ${cmd}`);
 
       if (hasCLI) {
         try {
           console.log(chalk.gray('  正在执行...'));
-          execSync(cmd, { stdio: 'inherit', timeout: 60000 });
+          execSync(cmd, { stdio: 'inherit', timeout: 120000 });
           console.log(chalk.green('  ✓ 安装成功'));
         } catch (e) {
           console.log(chalk.red(`  ✗ 安装失败: ${e.message}`));
