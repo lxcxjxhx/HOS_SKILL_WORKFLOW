@@ -1,303 +1,580 @@
-# HOS-Sec-Engine
+# HOS-Sec-Engine V2 攻防专项 Skill Engine
 
-**A rule-based system for both white-box code audit and black-box penetration testing.**
+将真实攻防经验转化为标准化的 Skill 知识库，使 AI 大模型（即使是能力较弱的模型）也能获得专业攻防交付能力。
 
----
+> 区别于传统渗透测试流程工具，本引擎聚焦于真实场景的解决方案和实战经验沉淀。
 
-## Install as AI Agent Skill
+## 特性
 
-> Requires Node.js 18+. Supports 71+ agents: Claude Code, Cursor, Codex, GitHub Copilot, Cline, Trae, Windsurf, etc.
+- **实战导向**：基于真实攻防项目积累的经验，非抽象流程
+- **六层结构**：Metadata、Trigger、Knowledge、Action、Validation、Defense
+- **多维度匹配**：场景、关键词、别名、指标四维触发匹配
+- **类型安全**：纯 TypeScript 编写，完整的类型定义
+- **自动加载**：递归扫描 `skills/**/*.ts`，新增 Skill 无需修改索引
+- **质量控制**：confidence、reviewed、tested、lastVerified 质量字段
+- **双重输出**：支持文本和 JSON 格式输出
+
+## 安装
+
+### 方式一：npx skills 安装（推荐 - AI 编辑器兼容）
+
+将 22 个 Skill 一键安装到 Claude Code、Trae IDE、Cursor、Codex、Copilot 等 18+ AI 编辑器：
 
 ```bash
-# Interactive install (recommended) - select skills and agents
-npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/00-HOS-Sec-Engine/skills
+# 一键安装全部 Skill（默认安装到当前项目）
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW -s hos-sec-engine -y
 
-# Install to all supported agents (non-interactive)
-npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/00-HOS-Sec-Engine/skills --skill HOS-Sec-Engine -a '*' -y
+# 安装到指定编辑器
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW -s hos-sec-engine -a claude-code -y
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW -s hos-sec-engine -a trae -y
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW -s hos-sec-engine -a cursor -y
 
-# Install to a specific agent (e.g., Claude Code)
-npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/00-HOS-Sec-Engine/skills --skill HOS-Sec-Engine -a claude-code -y
-
-# Global install (available across all projects)
-npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/00-HOS-Sec-Engine/skills --skill HOS-Sec-Engine -a '*' -g -y
-
-# List available skills without installing
-npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/00-HOS-Sec-Engine/skills --list
+# 全局安装（所有项目可用）
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW -s hos-sec-engine -g -y
 ```
 
-### Installation Options
+安装后，在 AI 编辑器对话中直接提及 Skill 名称或描述相关场景即可触发：
+- "使用 web-sqli-001 进行 SQL 注入 WAF 绕过测试"
+- "目标有 WAF 防护，SQL 注入被拦截了，帮我绕过"
 
-| Option | Flag | Example |
-|--------|------|---------|
-| Scope | (default) `-g` | Project-level (current) / Global (all projects) |
-| Agent | `-a` | `claude-code`, `cursor`, `codex`, `copilot`, `trae`, `*` (all) |
-| Skill | `--skill` | `HOS-Sec-Engine` (包含审计+渗透+诊断) |
-
-### Installation Methods
-
-| Method | Description |
-|--------|-------------|
-| **Symlink** (default) | Creates symlinks from each agent to a canonical copy. Single source of truth, easy updates. |
-| **Copy** | Creates independent copies for each agent. Use when symlinks aren't supported. |
-
-After installation, the skill will be automatically loaded by your AI agent when relevant security tasks are detected.
-
----
-
-## Quick Start (Developer)
+### 方式二：npm 包安装（TypeScript Engine）
 
 ```bash
-# Install dependencies
+npm install hos-sec-engine
+npm run build
+```
+
+## 快速开始
+
+```typescript
+import { HosSecEngine } from 'hos-sec-engine';
+
+const engine = new HosSecEngine();
+
+const result = engine.execute({
+  scenario: '目标网站有WAF防护，SQL注入被拦截了，需要绕过WAF'
+});
+
+console.log(result);
+```
+
+## API 文档
+
+### HosSecEngine
+
+#### 构造函数
+
+```typescript
+new HosSecEngine(config?: EngineConfig)
+```
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| strictMode | boolean | true | 严格模式，Skill 验证失败时抛出错误 |
+| maxResults | number | 10 | 最大匹配结果数量 |
+| minMatchScore | number | 0.1 | 最低匹配分数阈值 (0-1) |
+| loadPresetSkills | boolean | true | 是否加载预设 Skill |
+| customSkillsDir | string | '' | 自定义 Skill 目录路径 |
+
+#### 方法
+
+| 方法 | 说明 |
+|------|------|
+| `execute(query, format?)` | 执行查询，返回文本或 JSON 格式结果 |
+| `executeRaw(query)` | 执行查询，返回原始 SkillResult[] |
+| `registerSkill(skill)` | 注册单个 Skill |
+| `registerSkills(skills)` | 批量注册 Skill |
+| `getSkills()` | 获取所有已加载的 Skill |
+| `getSkillById(id)` | 根据 ID 获取 Skill |
+| `getSkillCount()` | 获取 Skill 数量 |
+| `enableSkill(id)` | 启用指定 Skill |
+| `disableSkill(id)` | 禁用指定 Skill |
+| `removeSkill(id)` | 移除指定 Skill |
+| `clearSkills()` | 清空所有 Skill |
+
+#### EngineConfig
+
+```typescript
+interface EngineConfig {
+  strictMode?: boolean;        // 严格模式（默认 true）
+  maxResults?: number;         // 最大匹配结果数量（默认 10）
+  minMatchScore?: number;      // 最低匹配分数（默认 0.1）
+  customSkillsDir?: string;    // 自定义 Skill 目录
+  loadPresetSkills?: boolean;  // 是否加载预设 Skill（默认 true）
+}
+```
+
+#### ExecuteQuery
+
+```typescript
+interface ExecuteQuery {
+  scenario: string;           // 场景描述或关键词
+  categories?: string[];      // 按分类过滤（如 ['web', 'api']）
+  subCategories?: string[];   // 按子分类过滤
+  riskLevels?: RiskLevel[];   // 按风险等级过滤
+  tags?: string[];            // 按标签过滤
+}
+```
+
+#### RiskLevel
+
+```typescript
+type RiskLevel = 'critical' | 'high' | 'medium' | 'low' | 'info';
+```
+
+#### 输出格式
+
+```typescript
+engine.execute(query, 'text');  // 文本格式（默认）
+engine.execute(query, 'json');  // JSON 格式
+```
+
+## AttackDefenseSkill 六层结构
+
+每个 Skill 包含六层结构：
+
+```typescript
+interface AttackDefenseSkill {
+  metadata: Metadata;       // 管理与分类
+  trigger: Trigger;         // 多维度触发条件
+  knowledge: Knowledge;     // 实战经验知识（核心）
+  action: Action;           // 操作思路与技术
+  validation: Validation;   // 结果验证标准
+  defense: Defense;         // 防御建议
+  quality?: Quality;        // 质量控制
+  enabled?: boolean;        // 是否启用
+}
+```
+
+### Metadata 层
+
+```typescript
+interface Metadata {
+  id: string;           // 唯一标识，如 "web-sqli-001"
+  name: string;         // Skill 名称
+  category: string;     // 一级分类，如 "web", "api", "cloud"
+  subCategory: string;  // 二级分类，如 "sql-injection", "jwt"
+  riskLevel: RiskLevel; // 风险等级
+  confidence: number;   // 置信度 0-1
+  updatedAt: string;    // 更新时间，如 "2026-06"
+  author?: string;      // 作者
+  tags: string[];       // 标签
+}
+```
+
+### Trigger 层
+
+```typescript
+interface Trigger {
+  scenarios: string[];  // 触发场景描述
+  keywords: string[];   // 关键词
+  aliases: string[];    // 别名/变体名称
+  indicators: string[]; // 指标/信号（如 "403", "blocked"）
+}
+```
+
+### Knowledge 层
+
+```typescript
+interface Knowledge {
+  description: string;          // 详细描述
+  symptoms: string[];           // 症状/现象
+  rootCauses: string[];         // 根因分析
+  observations: string[];       // 实战观察
+  commonMistakes: string[];     // 常见错误
+  notes: string[];              // 补充说明
+}
+```
+
+### Action 层
+
+```typescript
+interface Action {
+  checklist: string[];    // 操作检查清单
+  techniques: string[];   // 技术手段
+  examples: Example[];    // 具体示例
+}
+
+interface Example {
+  name: string;
+  description: string;
+  content: string;
+  applicableScenarios?: string[];
+}
+```
+
+### Validation 层
+
+```typescript
+interface Validation {
+  indicators: string[];           // 验证指标
+  successSigns: string[];         // 成功标志
+  falsePositiveSigns: string[];   // 误报标志
+}
+```
+
+### Defense 层
+
+```typescript
+interface Defense {
+  recommendations: string[];  // 推荐做法
+  mitigations: string[];      // 缓解措施
+  references: string[];       // 参考链接
+}
+```
+
+### Quality 层
+
+```typescript
+interface Quality {
+  confidence: number;      // 置信度 0-1
+  reviewed: boolean;       // 是否经过人工审查
+  tested: boolean;         // 是否经过实战验证
+  lastVerified: string;    // 最后验证时间
+}
+```
+
+## Skill 开发规范
+
+### AI 自动维护流程
+
+新增 Skill 只需 **1 步**，AI 可完全自主完成：
+
+> **零索引维护**：`SkillLoader` 会在编译时递归扫描 `skills/` 目录下所有 `.js` 文件，自动发现并加载所有 Skill。新增 Skill 文件后，编译即可自动注册，**无需修改任何 index 文件**。
+
+#### 步骤 1: 创建 Skill 文件
+
+在 `src/skills/` 目录下任意子目录中创建 `.ts` 文件，导出以 `Skills` 结尾的数组：
+
+```typescript
+import { AttackDefenseSkill } from '../../../types/skill';
+
+export const myDomainSkills: AttackDefenseSkill[] = [
+  {
+    metadata: {
+      id: 'domain-skill-001',
+      name: 'Skill 名称',
+      category: 'domain',
+      subCategory: 'subcategory',
+      riskLevel: 'high',
+      confidence: 0.9,
+      updatedAt: '2026-06',
+      author: 'HOS-Sec-Engine',
+      tags: ['tag1', 'tag2'],
+    },
+    trigger: {
+      scenarios: ['触发场景描述'],
+      keywords: ['关键词1', '关键词2'],
+      aliases: ['别名1'],
+      indicators: ['403', 'blocked'],
+    },
+    knowledge: {
+      description: '详细描述...',
+      symptoms: ['症状1'],
+      rootCauses: ['根因1'],
+      observations: ['观察1'],
+      commonMistakes: ['常见错误1'],
+      notes: ['补充说明1'],
+    },
+    action: {
+      checklist: ['检查项1', '检查项2'],
+      techniques: ['技术1', '技术2'],
+      examples: [
+        {
+          name: '示例名称',
+          description: '示例说明',
+          content: '示例内容',
+        },
+      ],
+    },
+    validation: {
+      indicators: ['验证指标'],
+      successSigns: ['成功标志'],
+      falsePositiveSigns: ['误报标志'],
+    },
+    defense: {
+      recommendations: ['推荐做法'],
+      mitigations: ['缓解措施'],
+      references: ['https://...'],
+    },
+    quality: {
+      confidence: 0.9,
+      reviewed: true,
+      tested: true,
+      lastVerified: '2026-06',
+    },
+    enabled: true,
+  },
+];
+```
+
+就这么简单！编译后自动发现，无需修改 `skills/index.ts`。
+
+### 自动发现机制
+
+```
+创建 .ts 文件
+    ↓
+npm run build (TypeScript 编译)
+    ↓
+SkillLoader 递归扫描 dist/src/skills/ 下的所有 .js 文件
+    ↓
+自动提取所有以 "Skills" 结尾的导出数组
+    ↓
+Skill 自动注册到引擎
+```
+
+- SkillLoader 跳过 `index.js` 文件，避免循环加载
+- 只加载已编译的 `.js` 文件，确保类型安全
+- 自动按 `metadata.category` 分类导出
+- 新增领域无需修改任何代码
+
+### Skill 命名规范
+
+- **领域目录**：小写-连字符，如 `ai-security`, `code-review`
+- **子目录**：小写-连字符，如 `prompt-injection`, `java-deser`
+- **Skill ID**：`{领域}-{子类}-{序号}` 格式，如 `web-sqli-001`, `ai-prompt-injection-001`
+- **导出名**：以 `Skills` 结尾的驼峰命名，如 `sqliWafBypassSkills`
+
+### 风险等级 (RiskLevel)
+
+| 等级 | 说明 |
+|------|------|
+| `critical` | 严重 |
+| `high` | 高危 |
+| `medium` | 中危 |
+| `low` | 低危 |
+| `info` | 信息 |
+
+## 使用示例
+
+### 场景查询
+
+```typescript
+// WAF 绕过查询
+const result1 = engine.execute({
+  scenario: '目标网站有WAF防护，SQL注入被拦截了',
+  categories: ['web']
+});
+
+// 容器安全查询
+const result2 = engine.execute({
+  scenario: 'Docker 容器逃逸',
+  categories: ['container']
+});
+
+// 按风险等级过滤
+const result3 = engine.execute({
+  scenario: '发现SQL注入漏洞',
+  riskLevels: ['critical', 'high']
+});
+
+// JSON 格式输出
+const result4 = engine.execute({
+  scenario: 'AI prompt injection',
+  categories: ['ai-security']
+}, 'json');
+```
+
+### 自定义 Skill 注册
+
+```typescript
+import { HosSecEngine, AttackDefenseSkill } from 'hos-sec-engine';
+
+const engine = new HosSecEngine();
+
+const customSkill: AttackDefenseSkill = {
+  metadata: {
+    id: 'custom-001',
+    name: '特定API接口测试',
+    category: 'api',
+    subCategory: 'authorization',
+    riskLevel: 'medium',
+    confidence: 0.85,
+    updatedAt: '2026-06',
+    author: 'HOS Team',
+    tags: ['api', 'authorization'],
+  },
+  trigger: {
+    scenarios: ['测试未授权访问内部API接口'],
+    keywords: ['内部api', '未授权'],
+    aliases: ['unauthorized access'],
+    indicators: ['200 OK', 'data returned'],
+  },
+  knowledge: {
+    description: '测试未授权访问内部 API 接口',
+    symptoms: ['API 返回数据无认证要求'],
+    rootCauses: ['未配置认证中间件'],
+    observations: ['常见于内部管理系统'],
+    commonMistakes: ['只测试登录用户的接口'],
+    notes: ['注意检查所有 API 端点'],
+  },
+  action: {
+    checklist: ['确认 API 端点', '移除认证头测试', '观察响应'],
+    techniques: ['未授权访问测试', '水平越权测试'],
+    examples: [
+      {
+        name: '未授权访问测试',
+        description: '不带 Authorization 头访问 API',
+        content: 'GET /internal/api/users (不带Authorization头)',
+      },
+    ],
+  },
+  validation: {
+    indicators: ['返回 HTTP 200', '响应包含数据'],
+    successSigns: ['成功获取数据'],
+    falsePositiveSigns: ['返回空数据集'],
+  },
+  defense: {
+    recommendations: ['配置认证中间件', '实施 RBAC'],
+    mitigations: ['添加审计日志'],
+    references: ['https://owasp.org/'],
+  },
+  quality: {
+    confidence: 0.85,
+    reviewed: true,
+    tested: true,
+    lastVerified: '2026-06',
+  },
+  enabled: true,
+};
+
+engine.registerSkill(customSkill);
+```
+
+## 编译与运行
+
+```bash
+# 安装依赖
 npm install
 
-# Build the project (compiles TypeScript to dist/)
+# 编译 + 自动生成 SKILL.md（嵌套 + 扁平化双重输出）
 npm run build
 
-# Generate all platform outputs + skills/ directory
-npm run generate:all
+# 运行示例
+npm start
+
+# 开发模式（监听文件变化自动编译）
+npm run dev
+
+# 单独生成 SKILL.md 文件
+npm run generate-skills-md
 ```
 
-Generated output files appear in the `dist/` directory. Skills are generated to the parent `skills/` directory.
+**构建自动化**：`npm run build` 会先编译 TypeScript，然后自动生成两种格式的 SKILL.md 文件：
+- **嵌套结构**：`dist/skills/{category}/{skill-id}/SKILL.md`（TypeScript Engine 使用）
+- **扁平结构**：`skills/{skill-id}/SKILL.md`（npx skills CLI 使用，可直接提交到 GitHub）
 
----
-
-## Core Philosophy
-
-> **代码审计 (White Box)**: 从源码出发，系统化检查每一个安全控制点
-> **渗透测试 (Black Box)**: 模拟攻击者视角，从外到内验证真实可利用性
-
-- **Rules over Knowledge** - 定义审计流程，而非漏洞定义
-- **Process over Conclusion** - 系统化检查流，而非一句话判断
-- **Evidence over Assertion** - 每个发现都需要完整的证据链
-- **Dual Core** - 白盒代码审计 + 黑盒渗透测试，互为补充
-- **Multi-platform Output** - 一次编写，多端输出(Claude/Cursor/OpenHands/OpenCode)
-
----
-
-## Architecture
-
-项目采用7层结构，支持代码审计和渗透测试双模式：
+## 项目结构
 
 ```
-HOS-Sec-Engine/
-|
-+-- Layer 1: schemas/            Core type definitions (AuditRule, ReviewRule, EvidenceStandard, AttackPath)
-+-- Layer 2: audit-rules/        10 audit rules (AR-001~AR-010) - 白盒检查方法
-+-- Layer 3: review-rules/       5 review rules (RR-001~RR-005) - 误报过滤
-+-- Layer 4: evidence-rules/     6 evidence rules (ER-001~ER-006) - 证据链标准
-+-- Layer 5: penetration-test/   7 pentest rules (PT-001~PT-007) - 黑盒攻击模拟
-+-- Layer 5b: problems/          6 problem categories (PD-001~PD-006) - 问题分类与诊断
-+-- Layer 6: templates/          Output templates (Finding, Report, PentestReport, PoC, DiagnosticReport)
-+-- Layer 7: examples/           Real-world cases - Before/after comparisons
-+-- Layer 8: generators/         Code generators - Multi-platform output (audit/pentest/combined/diagnostics)
-
-dist/                            Generated output files (skill.md, skill-audit.md, skill-pentest.md, etc.)
+00-HOS-Sec-Engine/
+├── package.json
+├── tsconfig.json
+├── README.md
+├── src/
+│   ├── index.ts              # 主入口
+│   ├── core/                 # 核心引擎
+│   │   ├── engine.ts         # Skill Engine 核心
+│   │   ├── matcher.ts        # 多维匹配器
+│   │   ├── scorer.ts         # 评分计算
+│   │   ├── validator.ts      # Skill 验证器
+│   │   ├── formatter.ts      # 结果格式化
+│   │   └── loader.ts         # 递归加载器
+│   ├── types/                # 类型定义
+│   │   ├── skill.ts          # Skill 类型
+│   │   └── result.ts         # 结果类型
+│   ├── skills/               # TypeScript 源码 Skill 库（自动发现，零维护）
+│   │   ├── index.ts          # SkillLoader 自动扫描入口
+│   │   ├── web/              # Web 安全（SQLi, XSS, SSRF, XXE, Upload, RCE）
+│   │   ├── api/              # API 安全（JWT, OAuth, IDOR, Rate Limit）
+│   │   ├── cloud/            # 云安全（S3, IAM, Metadata）
+│   │   ├── windows/          # Windows 安全（权限提升）
+│   │   ├── linux/            # Linux 安全（权限提升）
+│   │   ├── ai-security/      # AI 安全（Prompt 注入）
+│   │   ├── ad/               # 域安全（信息收集）
+│   │   ├── mobile/           # 移动安全（Android APK）
+│   │   ├── container/        # 容器安全（Docker 逃逸）
+│   │   ├── kubernetes/       # K8s 安全（配置审计）
+│   │   ├── code-review/      # 代码审计（Java 反序列化）
+│   │   ├── reverse/          # 逆向工程
+│   │   ├── malware-analysis/ # 恶意代码分析
+│   │   ├── threat-hunting/   # 威胁狩猎
+│   │   └── defense/          # 防御策略
+│   └── scripts/              # 脚本工具
+│       └── generate-skills-md.ts
+├── skills/                   # npx skills 兼容的扁平化 SKILL.md 目录
+│   ├── web-sqli-001/
+│   │   └── SKILL.md
+│   ├── web-xss-001/
+│   │   └── SKILL.md
+│   ├── ... (其他 22 个 Skill)
+│   └── references/
+│       └── REFERENCE.md
+├── examples/
+│   └── usage.ts              # 使用示例
+└── dist/                     # 编译输出
+    ├── src/                  # TypeScript 编译产物（JS/DTS）
+    └── skills/               # 嵌套结构 SKILL.md（按领域分类）
 ```
 
----
+## 预设 Skill 库
 
-## Rule Inventory
+| 领域 | 分类 | Skill 数量 | 说明 |
+|------|------|------------|------|
+| Web 安全 | sql-injection | 1 | SQL 注入 WAF 绕过技术 |
+| Web 安全 | xss | 0 | XSS 过滤器绕过 |
+| Web 安全 | ssrf | 0 | SSRF 检测与利用 |
+| Web 安全 | xxe | 0 | XXE 注入攻击 |
+| Web 安全 | upload | 0 | 文件上传绕过 |
+| Web 安全 | rce | 0 | 远程代码执行 |
+| Web 安全 | deserialization | 0 | 反序列化攻击 |
+| API 安全 | jwt | 0 | JWT 攻击 |
+| API 安全 | idor | 0 | IDOR 越权访问 |
+| API 安全 | oauth | 0 | OAuth 漏洞 |
+| API 安全 | rate-limit | 0 | 速率限制绕过 |
+| 云安全 | s3 | 0 | S3 存储桶 misconfig |
+| 云安全 | iam | 0 | IAM 权限提升 |
+| 云安全 | metadata | 0 | 元数据 SSRF |
+| Windows 安全 | privilege-escalation | 1 | Windows 权限提升 |
+| Linux 安全 | privilege-escalation | 1 | Linux 权限提升 |
+| AI 安全 | prompt-injection | 1 | Prompt 注入绕过 |
+| 容器安全 | docker-escape | 1 | Docker 容器逃逸 |
+| K8s 安全 | k8s-misconfig | 1 | Kubernetes 配置审计 |
+| 域安全 | domain-enumeration | 1 | AD 域信息收集 |
+| 移动安全 | android-apk | 1 | Android APK 逆向分析 |
+| 代码审计 | java-deserialization | 1 | Java 反序列化审计 |
 
-### Audit Rules (AR-001 ~ AR-010) - 白盒代码审计
+## SKILL.md 生成
 
-| ID | Name | Description |
-|----|------|-------------|
-| AR-001 | Taint Analysis | 跟踪用户输入到敏感操作的数据流，识别未消毒的路径 |
-| AR-002 | Input Validation | 检查输入验证机制，发现缺失、不完整或可绕过的验证 |
-| AR-003 | Authentication Check | 检查认证实现，发现绕过、弱凭证、会话管理缺陷 |
-| AR-004 | Cryptography Check | 识别弱算法、硬编码密钥、不安全的IV/Nonce、弱随机数 |
-| AR-005 | SQL Query Inspection | 检查SQL查询构造和参数处理的注入风险（5步流程） |
-| AR-006 | Deserialization Check | 检查反序列化操作，识别不安全的模式和小工具链风险 |
-| AR-007 | XXE Check | 检查XML解析配置，识别外部实体注入和实体扩展攻击 |
-| AR-008 | SSRF Check | 检查服务端请求伪造风险，识别不安全的URL请求和代理模式 |
-| AR-009 | Command Injection | 检查OS命令注入风险，识别不安全的命令执行和Shell调用 |
-| AR-010 | Expression Language Injection | 检查EL注入和SSTI风险，识别不安全的模板渲染 |
+引擎支持将 Skill 转换为标准 SKILL.md 格式（agentskills.io 兼容）：
 
-### Penetration Test Rules (PT-001 ~ PT-007) - 黑盒渗透测试
+```bash
+# 编译后自动生成（嵌套 + 扁平化双重输出）
+npm run build
 
-| ID | Name | Description |
-|----|------|-------------|
-| PT-001 | Reconnaissance | 信息收集：检测信息泄露、API文档暴露、技术栈暴露 |
-| PT-002 | Authentication Bypass | 认证绕过：弱密码、JWT篡改、Session固定、暴力破解 |
-| PT-003 | Privilege Escalation | 权限提升：IDOR、水平/垂直越权、角色参数操纵 |
-| PT-004 | Business Logic Flaws | 业务逻辑：竞态条件、状态机绕过、负数金额、优惠券滥用 |
-| PT-005 | API Abuse | API滥用：批量赋值、过度数据暴露、GraphQL滥用、分页滥用 |
-| PT-006 | Social Engineering | 社会工程：XSS、开放重定向、CSRF、邮件/SMS注入、文件上传 |
-| PT-007 | Infrastructure Attack | 基础设施攻击：云凭证泄露、容器提权、CI/CD注入、供应链攻击 |
-
-### Review Rules (RR-001 ~ RR-005) - 审核规则
-
-| ID | Name | Description |
-|----|------|-------------|
-| RR-001 | False Positive Detection | 系统化问题清单，确认发现是否为真实漏洞 |
-| RR-002 | Reachability Analysis | 控制流分析和调用链追踪，验证代码路径是否真正可达 |
-| RR-003 | Exploitability Assessment | 从攻击者角度评估真实可利用性，分析攻击复杂度 |
-| RR-004 | Severity Calibration | 基于业务上下文、技术环境和现有防御动态校准严重级别 |
-| RR-005 | Context Analysis | 分析业务上下文、部署环境和架构，识别上下文特定风险 |
-
-### Evidence Rules (ER-001 ~ ER-006) - 证据标准
-
-| ID | Name | Description |
-|----|------|-------------|
-| ER-001 | Source Code Evidence | 规范源代码证据采集 - 准确文件路径、行号、代码上下文 |
-| ER-002 | Data Flow Evidence | 规范数据流跟踪证据 - 从源头到目标的每一步都可追溯 |
-| ER-003 | Configuration Evidence | 规范配置证据 - 框架设置、安全配置、环境变量 |
-| ER-004 | API Evidence | 规范API级别证据 - API定义、认证、输入/输出、权限 |
-| ER-005 | Dependency Evidence | 规范依赖证据 - 库版本、CVE映射、依赖树分析 |
-| ER-006 | Runtime Evidence | 规范运行时行为证据 - 日志、网络流量、内存状态 |
-
-### Problem Categories & Diagnostics (PD-001 ~ PD-006) - 问题分类与诊断
-
-| ID | Category | Default Severity | Description |
-|----|----------|------------------|-------------|
-| PD-001 | Input Validation Defects | High | 系统化诊断输入验证缺陷，识别缺失、不完整或可绕过的验证 |
-| PD-002 | Auth & Authorization Defects | Critical | 系统化诊断认证授权缺陷，包括凭证管理、会话处理、越权路径 |
-| PD-003 | Data Protection Defects | Critical | 系统化诊断数据保护缺陷，弱加密、密钥管理、数据泄露 |
-| PD-004 | Configuration & Deployment Defects | High | 系统化诊断安全配置缺陷，不安全默认设置、暴露面、部署问题 |
-| PD-005 | Dependency & Supply Chain Defects | High | 系统化诊断依赖供应链缺陷，CVE映射、构建链完整性 |
-| PD-006 | Business Logic Defects | High | 系统化诊断业务逻辑缺陷，工作流绕过、状态机、竞态条件 |
-
----
-
-## Usage Scenarios
-
-### 代码审计 (Code Audit) - 白盒
-
-```
-输入:   目标项目源代码
-加载:   AR-001~AR-010 + RR-001~RR-005 + ER-001~ER-006
-输出:   精确漏洞位置、低误报率、完整证据链、根因分析
+# 手动生成
+npm run generate-skills-md
 ```
 
-### 渗透测试 (Penetration Testing) - 黑盒
+输出位置：
+- `dist/skills/{category}/{skill-id}/SKILL.md` - 嵌套结构（TypeScript Engine 使用）
+- `skills/{skill-id}/SKILL.md` - 扁平结构（npx skills CLI 使用）
+
+### npx skills 兼容性
+
+`skills/` 目录采用扁平化结构，兼容 `npx skills` CLI 标准：
 
 ```
-输入:   目标系统（API端点、Web界面）
-加载:   PT-001~PT-007 + 攻击路径分析
-输出:   攻击面识别、漏洞利用链、影响范围评估、PoC
+skills/
+├── web-sqli-001/SKILL.md
+├── web-xss-001/SKILL.md
+├── ... (其他 22 个 Skill)
+└── references/REFERENCE.md
 ```
 
-### 综合模式 (Combined) - 白盒+黑盒
+提交到 GitHub 后，用户可通过以下命令一键安装：
 
+```bash
+npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW -s hos-sec-engine -y
 ```
-输入:   目标项目源代码 + 运行环境
-加载:   AR-001~AR-010 + PT-001~PT-007 + RR-001~RR-005
-输出:   白盒发现引导黑盒测试，黑盒验证确认白盒发现
-```
-
-### 漏洞验证 (Vulnerability Verification)
-
-```
-输入:   已有漏洞报告
-加载:   RR-001 (False Positive Detection) + ER-001~ER-006 (Evidence Verification)
-输出:   误报过滤、证据完整性验证、根因确认
-```
-
-### 问题诊断 (Problems & Diagnostics) - 发现→诊断→修复→验证
-
-```
-输入:   AR/PT规则发现的潜在问题
-加载:   PD-001~PD-006 (问题分类与诊断规则)
-输出:   系统化诊断流程、根因分析、修复方案、验证步骤
-流程:   问题识别 → 分类定级 → 深度诊断 → 修复指导 → 验证确认
-```
-
----
-
-## Dual Core Value Proposition
-
-| 维度 | 仅代码审计 | 仅渗透测试 | HOS-Sec-Engine 双引擎 |
-|------|-----------|-----------|----------------------|
-| **覆盖范围** | 仅源码可见问题 | 仅运行时可见问题 | 全部覆盖 |
-| **误报率** | 可能较高 | 较低（已验证） | 白盒发现+黑盒验证=低误报 |
-| **漏报率** | 较低 | 可能较高 | 系统化检查=低漏报 |
-| **根因分析** | 深入（有源码） | 表面（无源码） | 源码级根因+运行时验证 |
-| **利用验证** | 推测 | 实际验证 | 推测+实际验证 |
-
-**核心优势**: 白盒发现引导黑盒测试方向，黑盒验证确认白盒发现，两者互补形成完整的安全评估。
-
----
-
-## Output Formats
-
-规则一次维护，多端输出：
-
-| Format | File | Target Platform |
-|--------|------|-----------------|
-| Combined Skill | `dist/skill.md` | 综合模式（审计+渗透） |
-| Audit Skill | `dist/skill-audit.md` | 仅代码审计 |
-| Pentest Skill | `dist/skill-pentest.md` | 仅渗透测试 |
-| Diagnostics | `dist/skill-diagnostics.md` | 问题分类与诊断规则 |
-| Claude Skill | `dist/claude-skill.md` | Claude (Anthropic) |
-| Cursor Rules | `dist/cursor-rule.md` | Cursor IDE |
-| OpenHands | `dist/openhands-rule.md` | OpenHands Agent |
-| OpenCode | `dist/opencode-rule.md` | OpenCode |
-
----
-
-## Key Design Principles
-
-**1. Rules over Knowledge**
-- 错误: "SQL注入是当用户输入未经处理直接拼接到SQL查询时..."
-- 正确: "检查查询是否使用字符串拼接，参数是否可控，是否使用参数化查询"
-
-**2. Process over Conclusion**
-- 错误: "发现SQL注入 -> 危险 -> 修复"
-- 正确: "发现 -> 验证参数来源 -> 检查可控性 -> 检查防护 -> 结论"
-
-**3. Evidence over Assertion**
-- 错误: "检测到Runtime.exec() -> RCE漏洞"
-- 正确: "XYZ.java:45的Runtime.exec(cmd) -> 参数来自请求 -> 无验证 -> 高风险RCE"
-
-**4. Dual Core**
-- 白盒代码审计发现源码级问题
-- 黑盒渗透测试验证真实可利用性
-- 两者互补，形成完整安全评估
-
-**5. Multi-platform, Single Source**
-- 规则一次维护，生成Claude、Cursor、OpenHands、OpenCode等多端输出
-
-**6. Discovery → Diagnosis → Remediation → Verification**
-- 白盒/黑盒发现潜在问题后，自动匹配问题分类规则（PD）
-- 系统化诊断流程引导深入分析根因
-- 提供具体修复方案和验证步骤，形成完整闭环
-
----
-
-## Adding New Rules
-
-1. 复制现有规则文件作为模板 (如 `src/audit-rules/sql-query-check.ts`)
-2. 使用标准schema定义规则: `id`, `name`, `description`, `checks`, `evidence_requirements`, `remediations`
-3. 每条规则应包含3-7个检查步骤，每个步骤有具体问题和失败指标
-4. 从对应的 `index.ts` 导出规则
-5. 在 `src/examples/` 创建匹配的案例演示规则效果
-
-典型时间: 每条规则2-3小时。
-
----
-
-## Project Metrics
-
-| Metric | Target | Status |
-|--------|--------|--------|
-| **Audit Rules** | 10 | Implemented |
-| **Pentest Rules** | 7 | Implemented |
-| **Review Rules** | 5 | Implemented |
-| **Evidence Rules** | 6 | Implemented |
-| **Problem Categories** | 6 | Implemented |
-| **Code Size** | < 8000 lines | In progress |
-| **Case Studies** | 3-5 | 3 completed |
-| **Output Formats** | 8 | Implemented |
-| **Version** | 0.3.0 | Beta - Dual Core + Diagnostics |
-
----
-
-## License
-
-This project is for authorized security audit and penetration testing use.
-
-**All security conclusions require human expert review.**
-
----
-
-**Version:** 0.3.0 (Dual Core + Diagnostics) | **Author:** HOS Team | **Date:** June 17, 2026

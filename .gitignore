@@ -1,0 +1,25 @@
+﻿# Build and cache directories
+node_modules/
+dist/
+__pycache__/
+*.py[cod]
+.cache/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# AI editor skill directories
+.trae/
+.claude/
+.agents/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Spec documents
+.trae/specs/

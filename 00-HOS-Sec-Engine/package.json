@@ -1,53 +1,39 @@
 {
   "name": "hos-sec-engine",
-  "version": "0.3.0",
-  "description": "HOS-Sec-Engine: AI Code Audit & Penetration Testing Dual Engine - A rule-based system for security evaluation",
+  "version": "1.0.0",
+  "description": "HOS攻防实战规则引擎 - 将实战经验转化为标准化、可执行的攻防规则",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "hos-sec-engine": "bin/deploy-skills.js",
+    "deploy-hos-skills": "bin/deploy-skills.js"
+  },
   "scripts": {
     "build": "tsc",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "lint": "eslint src/**/*.ts",
-    "format": "prettier --write src/**/*.ts",
-    "generate:skill": "ts-node src/generators/build-skill.ts",
-    "generate:diagnostics": "ts-node src/generators/build-diagnostics.ts",
-    "generate:all": "ts-node src/generators/index.ts"
+    "start": "node dist/examples/usage.js",
+    "dev": "tsc --watch",
+    "postbuild": "node dist/src/scripts/generate-skills-md.js",
+    "generate-skills-md": "node dist/src/scripts/generate-skills-md.js",
+    "deploy": "node bin/deploy-skills.js",
+    "deploy:global": "node bin/deploy-skills.js --global",
+    "deploy:claude": "node bin/deploy-skills.js --claude",
+    "deploy:trae": "node bin/deploy-skills.js --trae",
+    "postinstall": "node bin/deploy-skills.js || echo 'Skill deployment skipped (run npm run deploy to deploy skills manually)'"
   },
-  "keywords": [
-    "security",
-    "code-audit",
-    "rule-engine",
-    "penetration-testing",
-    "vulnerability-detection",
-    "compliance",
-    "sast",
-    "hos-sec-engine"
+  "keywords": ["security", "offense-defense", "rule-engine", "waf-bypass", "vulnerability"],
+  "author": "HOS-Sec",
+  "license": "MIT",
+  "files": [
+    "dist/**/*",
+    "skills/**/*",
+    "src/types/**/*",
+    "bin/**/*"
   ],
-  "author": "HOS Team",
-  "license": "Proprietary",
   "devDependencies": {
-    "@types/jest": "^29.0.0",
-    "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0",
-    "jest": "^29.0.0",
-    "prettier": "^3.0.0",
-    "ts-jest": "^29.0.0",
-    "ts-node": "^10.0.0",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.3.0",
+    "@types/node": "^20.0.0"
   },
   "engines": {
-    "node": ">=16.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW.git"
-  },
-  "homepage": "https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW",
-  "bugs": {
-    "url": "https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/issues"
+    "node": ">=18.0.0"
   }
 }
