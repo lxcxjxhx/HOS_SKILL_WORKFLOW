@@ -46,8 +46,4 @@ export {
   containerSkills,
   kubernetesSkills,
   codeReviewSkills,
-  reverseSkills,
-  malwareAnalysisSkills,
-  threatHuntingSkills,
-  defenseSkills,
 } from './skills';

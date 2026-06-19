@@ -38,7 +38,3 @@ export const mobileSkills = autoDiscoveredSkills.filter(s => s.metadata.category
 export const containerSkills = autoDiscoveredSkills.filter(s => s.metadata.category === 'container');
 export const kubernetesSkills = autoDiscoveredSkills.filter(s => s.metadata.category === 'kubernetes');
 export const codeReviewSkills = autoDiscoveredSkills.filter(s => s.metadata.category === 'code-review');
-export const reverseSkills = autoDiscoveredSkills.filter(s => s.metadata.category === 'reverse');
-export const malwareAnalysisSkills = autoDiscoveredSkills.filter(s => s.metadata.category === 'malware-analysis');
-export const threatHuntingSkills = autoDiscoveredSkills.filter(s => s.metadata.category === 'threat-hunting');
-export const defenseSkills = autoDiscoveredSkills.filter(s => s.metadata.category === 'defense');

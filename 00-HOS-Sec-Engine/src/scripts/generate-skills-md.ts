@@ -28,9 +28,9 @@ import { allSkills } from '../skills';
 /** Nested output directory for TypeScript Engine (dist/skills/) */
 const DEFAULT_OUTPUT_DIR = path.resolve(__dirname, '..', '..', '..', 'dist', 'skills');
 
-/** Flat output directory for npx skills CLI (project-root/skills/) */
-// __dirname = dist/src/scripts/, so go up 4 levels to project root, then into skills/
-const FLAT_OUTPUT_DIR = path.resolve(__dirname, '..', '..', '..', '..', 'skills');
+/** Flat output directory for npx skills CLI (00-HOS-Sec-Engine/skills/) */
+// __dirname = dist/src/scripts/, so go up 3 levels to 00-hos-sec-engine/, then into skills/
+const FLAT_OUTPUT_DIR = path.resolve(__dirname, '..', '..', '..', 'skills');
 
 // ---------------------------------------------------------------------------
 // Helpers
