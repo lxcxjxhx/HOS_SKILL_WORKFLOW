@@ -3,7 +3,7 @@
 > Complete technical reference for all loaded skills.
 >
 > Generated on 2026-06-20
-> Total skills: 27
+> Total skills: 28
 
 ## Table of Contents
 
@@ -34,6 +34,7 @@
   - [Command Injection Techniques](#web-rce-001)
   - [SQL Injection WAF Bypass Techniques](#web-sqli-001)
   - [SSRF Detection and Exploitation](#web-ssrf-001)
+  - [Test Verification Skill](#test-verify-001)
   - [File Upload Restriction Bypass](#web-upload-001)
   - [XSS Filter Bypass Techniques](#web-xss-001)
   - [XXE Injection Techniques](#web-xxe-001)
@@ -703,7 +704,7 @@
 
 ## web
 
-**Skills:** 11
+**Skills:** 12
 
 ### Web Authentication Bypass 0day
 
@@ -1038,6 +1039,44 @@
 
 - Reviewed: Yes
 - Tested: Yes
+- Last Verified: 2026-06
+
+---
+
+### Test Verification Skill
+
+| Property | Value |
+|----------|-------|
+| ID | `test-verify-001` |
+| Category | web |
+| Sub-Category | test |
+| Risk Level | low |
+| Confidence | 0.9 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | test, ai-auto-create, verification |
+
+**Triggers:**
+
+- 用于验证 AI 自主创建技能能力
+- 测试 SKILL.md 模板编译流程
+- 验证 skill 注册和部署流程
+
+**Techniques:**
+
+- 验证TS文件语法正确
+- 验证编译输出目录结构
+- 验证SKILL.md内容完整性
+
+**Root Causes:**
+
+- 测试流程验证
+- 验证编译系统能否正确处理新skill
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
 - Last Verified: 2026-06
 
 ---

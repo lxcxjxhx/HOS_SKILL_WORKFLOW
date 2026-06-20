@@ -64,6 +64,7 @@ metadata:
 - [web-rce-001](skills/web-rce-001.md) - Command Injection Techniques
 - [web-sqli-001](skills/web-sqli-001.md) - SQL Injection WAF Bypass Techniques
 - [web-ssrf-001](skills/web-ssrf-001.md) - SSRF Detection and Exploitation
+- [test-verify-001](skills/test-verify-001.md) - Test Verification Skill
 - [web-upload-001](skills/web-upload-001.md) - File Upload Restriction Bypass
 - [web-xss-001](skills/web-xss-001.md) - XSS Filter Bypass Techniques
 - [web-xxe-001](skills/web-xxe-001.md) - XXE Injection Techniques
@@ -125,6 +126,7 @@ metadata:
 | `web-rce-001` | Command Injection Techniques | 应用调用系统命令处理用户输入（如 ping、nslookup、tracert、convert、ffmpeg |
 | `web-sqli-001` | SQL Injection WAF Bypass Techniques | 目标存在 SQL 注入点但常规 payload 被 WAF 拦截返回 403 |
 | `web-ssrf-001` | SSRF Detection and Exploitation | 应用存在 URL 参数用于获取远程资源（如图片下载、PDF 生成、Webhook 回调 |
+| `test-verify-001` | Test Verification Skill | 用于验证 AI 自主创建技能能力 |
 | `web-upload-001` | File Upload Restriction Bypass | 应用提供文件上传功能（头像、文档、图片、附件等 |
 | `web-xss-001` | XSS Filter Bypass Techniques | 目标页面存在用户输入反射但未触发经典 XSS payload |
 | `web-xxe-001` | XXE Injection Techniques | 应用接收 XML 格式的请求体（如 SOAP API、XML-RPC、SAML |
@@ -198,44 +200,3 @@ metadata:
 - 优先使用低风险方法验证漏洞存在性
 - 发现高危漏洞后及时报告，不要继续深入
 - 记录所有操作和发现，便于后续报告
-
----
-
-## AI 自主维护指南
-
-> 本段面向 AI Agent，说明如何编译、扩展和维护本 skill。
-
-### 目录结构
-```
-skills/hos-sec-engine/
-├── SKILL.md          ← 本文件（主 skill 入口）
-├── skills/           ← 26 个子技能 .md 文件（被 SKILL.md 引用）
-├── 0day-skills/      ← 0day 技能 TypeScript 源码
-└── references/       ← 技术参考文档
-```
-
-### 新增子 Skill（无需编译）
-1. 在 `skills/hos-sec-engine/skills/` 下创建 `新 skill-id.md`
-2. 写入标准格式：`# 标题` → `**ID**` → `## 触发场景` → `## 操作步骤` → `## Payload`
-3. 在本文件的"技能索引"和"完整技能列表"中添加对应条目
-
-### 新增子 Skill（完整流程，含源码）
-1. 克隆 GitHub 仓库: `git clone https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW.git`
-2. 进入 `00-HOS-Sec-Engine/` 目录
-3. `npm install` 安装依赖
-4. 在 `src/skills/` 对应分类下新增 TypeScript skill
-5. `npm run build` 编译，自动生成 `skills/` 目录下的 SKILL.md
-6. `npm run deploy` 部署到编辑器
-
-### 编译命令
-```bash
-npm install          # 安装依赖
-npm run build        # TypeScript → JavaScript + 生成 SKILL.md
-npm run deploy       # 部署 skill 到 .trae/skills/ 和 .claude/skills/
-npm run deploy:global # 全局部署
-```
-
-### 安装方式
-- **方案 A (npm 包)**: `npm install hos-sec-engine && npx hos-skills install`
-- **方案 B (npx skills add)**: `npx skills add lxcxjxhx/HOS_SKILL_WORKFLOW --skill hos-sec-engine`
-- **方案 C (直接使用)**: 复制本目录到 `.trae/skills/` 或 `.claude/skills/`

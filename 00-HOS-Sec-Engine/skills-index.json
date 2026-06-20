@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-06-20T02:07:44.890Z",
-  "totalSkills": 27,
+  "generatedAt": "2026-06-20T09:02:29.692Z",
+  "totalSkills": 28,
   "skills": [
     {
       "id": "ad-domain-enum-001",
@@ -472,6 +472,22 @@
       "author": "HOS-Sec-Engine"
     },
     {
+      "id": "test-verify-001",
+      "name": "Test Verification Skill",
+      "category": "web",
+      "subCategory": "test",
+      "tags": [
+        "test",
+        "ai-auto-create",
+        "verification"
+      ],
+      "riskLevel": "low",
+      "confidence": 0.9,
+      "description": "验证AI能否仅凭SKILL",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
       "id": "web-upload-001",
       "name": "File Upload Restriction Bypass",
       "category": "web",
@@ -612,6 +628,7 @@
         "web-rce-001",
         "web-sqli-001",
         "web-ssrf-001",
+        "test-verify-001",
         "web-upload-001",
         "web-xss-001",
         "web-xxe-001"
@@ -647,7 +664,7 @@
     },
     "all-bundle": {
       "name": "全部 Skill",
-      "description": "所有 27 个攻防实战 Skill",
+      "description": "所有 28 个攻防实战 Skill",
       "skills": [
         "ad-domain-enum-001",
         "ai-prompt-injection-001",
@@ -672,6 +689,7 @@
         "web-rce-001",
         "web-sqli-001",
         "web-ssrf-001",
+        "test-verify-001",
         "web-upload-001",
         "web-xss-001",
         "web-xxe-001",

@@ -6,19 +6,56 @@
 
 ## 快速开始
 
-### 一键安装（推荐）
+### 一行命令安装全部（零依赖）
 
 ```bash
-npm install hos-sec-engine
+# 一步安装全部 skill 到 Trae IDE（全局可用）
+node <(curl -s https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/scripts/install-lite.js) -- --target trae --global --all
 ```
 
-安装完成后 skill 会自动部署到你的 AI 编辑器。
+或者直接下载后运行：
+
+```bash
+# 下载安装器（只需一次）
+curl -o install-lite.js https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/scripts/install-lite.js
+
+# 运行安装
+node install-lite.js --target trae --global --all
+```
+
+**就这么简单，不需要 clone 仓库，不需要 npm install，一步到位。**
 
 ---
 
 ## 三种安装方式
 
-### 方式一：npm 包安装（推荐，含完整源码）
+### 方式一：零依赖一键安装（最简单）
+
+**适合人群**：只需要 skill 指令文件的用户（大多数场景）
+
+**Windows PowerShell：**
+```powershell
+# 下载安装器
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/scripts/install-lite.js" -OutFile "install-lite.js"
+
+# 运行安装
+node install-lite.js --target trae --global --all
+```
+
+**Linux/macOS：**
+```bash
+node <(curl -s https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/scripts/install-lite.js) -- --target trae --global --all
+```
+
+**安装选项：**
+- `--target trae` — Trae IDE
+- `--target claude-code` — Claude Code
+- `--target cursor` — Cursor
+- `--global` — 全局安装（所有项目可用）
+- `--all` — 安装全部 28 个 skill
+- `--skill web-sqli-001,web-xss-001` — 安装指定 skill
+
+### 方式二：npm 包安装（含完整源码）
 
 **适合人群**：需要使用完整功能、修改源码、新增自定义 skill 的开发者
 
