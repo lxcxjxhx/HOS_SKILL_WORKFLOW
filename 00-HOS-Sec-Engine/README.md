@@ -29,31 +29,29 @@ node install-lite.js --target trae --global --all
 
 ## 三种安装方式
 
-### 方式一：零依赖一键安装（最简单）
+### 方式一：一键安装（最简单）
 
-**适合人群**：只需要 skill 指令文件的用户（大多数场景）
+**Windows 用户：双击运行**
 
-**Windows PowerShell：**
 ```powershell
-# 下载安装器
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/scripts/install-lite.js" -OutFile "install-lite.js"
-
-# 运行安装
-node install-lite.js --target trae --global --all
+# 下载安装器，双击运行
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/one-click-install.bat" -OutFile "install.bat"
+.\install.bat
 ```
 
-**Linux/macOS：**
-```bash
+**一行命令直接安装：**
+
+```powershell
 node <(curl -s https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/scripts/install-lite.js) -- --target trae --global --all
 ```
 
-**安装选项：**
-- `--target trae` — Trae IDE
-- `--target claude-code` — Claude Code
-- `--target cursor` — Cursor
-- `--global` — 全局安装（所有项目可用）
-- `--all` — 安装全部 28 个 skill
-- `--skill web-sqli-001,web-xss-001` — 安装指定 skill
+**Linux/macOS：**
+
+```bash
+curl -s https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/scripts/install-lite.js | node -s --target trae --global --all
+```
+
+**就这么简单，不需要 clone 仓库，不需要 npm install。**
 
 ### 方式二：npm 包安装（含完整源码）
 

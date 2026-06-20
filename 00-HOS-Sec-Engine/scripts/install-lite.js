@@ -77,9 +77,16 @@ function fetchUrl(url) {
   });
 }
 
-async function fetchFile(relativePath) {
+async function fetchFile(relativePath, retries = 3) {
   const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${BASE_PATH}/${relativePath}`;
-  return fetchUrl(url);
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fetchUrl(url);
+    } catch (e) {
+      if (i === retries - 1) throw e;
+      await new Promise(r => setTimeout(r, 500 * (i + 1)));
+    }
+  }
 }
 
 // ============================================================================
