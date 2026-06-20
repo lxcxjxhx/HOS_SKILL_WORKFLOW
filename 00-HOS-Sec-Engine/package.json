@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "bin": {
     "hos-sec-engine": "dist/src/scripts/deploy-skills.js",
-    "deploy-hos-skills": "dist/src/scripts/deploy-skills.js"
+    "deploy-hos-skills": "dist/src/scripts/deploy-skills.js",
+    "hos-skills": "scripts/install-skills.js"
   },
   "scripts": {
     "build": "tsc",
@@ -21,7 +22,8 @@
     "deploy:global": "node dist/src/scripts/deploy-skills.js --global",
     "deploy:claude": "node dist/src/scripts/deploy-skills.js --claude",
     "deploy:trae": "node dist/src/scripts/deploy-skills.js --trae",
-    "postinstall": "node dist/src/scripts/deploy-skills.js || echo 'Skill deployment skipped (run npm run deploy to deploy skills manually)'"
+    "install:skills": "node scripts/install-skills.js install",
+    "postinstall": "node scripts/install-skills.js install --no-source || node dist/src/scripts/deploy-skills.js || echo 'Skill deployment skipped (run npm run deploy to deploy skills manually)'"
   },
   "keywords": ["security", "offense-defense", "rule-engine", "waf-bypass", "vulnerability", "skill", "claude-code", "penetration-testing"],
   "author": "HOS-Sec",

@@ -198,3 +198,44 @@ metadata:
 - 优先使用低风险方法验证漏洞存在性
 - 发现高危漏洞后及时报告，不要继续深入
 - 记录所有操作和发现，便于后续报告
+
+---
+
+## AI 自主维护指南
+
+> 本段面向 AI Agent，说明如何编译、扩展和维护本 skill。
+
+### 目录结构
+```
+skills/hos-sec-engine/
+├── SKILL.md          ← 本文件（主 skill 入口）
+├── skills/           ← 26 个子技能 .md 文件（被 SKILL.md 引用）
+├── 0day-skills/      ← 0day 技能 TypeScript 源码
+└── references/       ← 技术参考文档
+```
+
+### 新增子 Skill（无需编译）
+1. 在 `skills/hos-sec-engine/skills/` 下创建 `新 skill-id.md`
+2. 写入标准格式：`# 标题` → `**ID**` → `## 触发场景` → `## 操作步骤` → `## Payload`
+3. 在本文件的"技能索引"和"完整技能列表"中添加对应条目
+
+### 新增子 Skill（完整流程，含源码）
+1. 克隆 GitHub 仓库: `git clone https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW.git`
+2. 进入 `00-HOS-Sec-Engine/` 目录
+3. `npm install` 安装依赖
+4. 在 `src/skills/` 对应分类下新增 TypeScript skill
+5. `npm run build` 编译，自动生成 `skills/` 目录下的 SKILL.md
+6. `npm run deploy` 部署到编辑器
+
+### 编译命令
+```bash
+npm install          # 安装依赖
+npm run build        # TypeScript → JavaScript + 生成 SKILL.md
+npm run deploy       # 部署 skill 到 .trae/skills/ 和 .claude/skills/
+npm run deploy:global # 全局部署
+```
+
+### 安装方式
+- **方案 A (npm 包)**: `npm install hos-sec-engine && npx hos-skills install`
+- **方案 B (npx skills add)**: `npx skills add lxcxjxhx/HOS_SKILL_WORKFLOW --skill hos-sec-engine`
+- **方案 C (直接使用)**: 复制本目录到 `.trae/skills/` 或 `.claude/skills/`
