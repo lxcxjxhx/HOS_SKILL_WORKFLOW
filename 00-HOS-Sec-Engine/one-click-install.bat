@@ -52,3 +52,4 @@ REM Cleanup
 rmdir /s /q "%SCRIPT_DIR%" >nul 2>&1
 
 pause
+

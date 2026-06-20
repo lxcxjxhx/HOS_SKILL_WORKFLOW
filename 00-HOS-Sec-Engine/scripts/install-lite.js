@@ -21,6 +21,11 @@ const path = require('path');
 const os = require('os');
 const readline = require('readline');
 
+// Enable UTF-8 on Windows
+if (process.platform === 'win32') {
+  process.stdout.setEncoding('utf8');
+}
+
 // ============================================================================
 // Config
 // ============================================================================
@@ -342,6 +347,12 @@ async function main() {
   console.log(`\n${COLORS.green(COLORS.bold('=== 安装完成 ==='))}`);
   console.log(`已安装 ${installed.length} 个 skill 到 ${targetDir}`);
   console.log(COLORS.gray('在 IDE 对话中描述安全场景即可自动匹配对应技能'));
+
+  if (installed.length === 0) {
+    console.log(`\n${COLORS.yellow('提示:')} 安装失败可能是权限问题。`);
+    console.log(`请尝试以管理员身份运行，或安装到局部目录:`);
+    console.log(`  node install-lite.js --target trae --all`);
+  }
 
   // Print next steps
   if (!isGlobal) {
