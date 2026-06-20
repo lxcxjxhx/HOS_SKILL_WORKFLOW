@@ -65,7 +65,6 @@ metadata:
 - [web-sqli-001](skills/web-sqli-001.md) - SQL Injection WAF Bypass Techniques
 - [web-ssrf-001](skills/web-ssrf-001.md) - SSRF Detection and Exploitation
 - [test-verify-001](skills/test-verify-001.md) - Test Verification Skill
-- [web-upload-001](skills/web-upload-001.md) - File Upload Restriction Bypass
 - [web-xss-001](skills/web-xss-001.md) - XSS Filter Bypass Techniques
 - [web-xxe-001](skills/web-xxe-001.md) - XXE Injection Techniques
 - [windows-priv-esc-001](skills/windows-priv-esc-001.md) - Windows Privilege Escalation Techniques
@@ -127,7 +126,6 @@ metadata:
 | `web-sqli-001` | SQL Injection WAF Bypass Techniques | 目标存在 SQL 注入点但常规 payload 被 WAF 拦截返回 403 |
 | `web-ssrf-001` | SSRF Detection and Exploitation | 应用存在 URL 参数用于获取远程资源（如图片下载、PDF 生成、Webhook 回调 |
 | `test-verify-001` | Test Verification Skill | 用于验证 AI 自主创建技能能力 |
-| `web-upload-001` | File Upload Restriction Bypass | 应用提供文件上传功能（头像、文档、图片、附件等 |
 | `web-xss-001` | XSS Filter Bypass Techniques | 目标页面存在用户输入反射但未触发经典 XSS payload |
 | `web-xxe-001` | XXE Injection Techniques | 应用接收 XML 格式的请求体（如 SOAP API、XML-RPC、SAML |
 

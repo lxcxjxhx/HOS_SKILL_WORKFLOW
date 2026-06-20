@@ -3,7 +3,7 @@
  * IDOR（不安全的直接对象引用）检测与利用专项 Skill 集合
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const idorDetectionSkills: AttackDefenseSkill[] = [
     {
@@ -433,5 +433,14 @@ export const idorDetectionSkills: AttackDefenseSkill[] = [
         playbooks: ['api-security-review'],
         phase: 'authorization-testing',
         enabled: true,
+        runtime: {
+            requiresAgent: false,
+            agentCount: 1,
+            parallelizable: true,
+            requiresNetwork: true,
+            requiresSandbox: false,
+            dependencies: [],
+            estimatedTokens: 3000,
+        },
     },
 ];

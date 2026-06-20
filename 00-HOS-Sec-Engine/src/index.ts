@@ -14,7 +14,8 @@ export type {
   Defense,
   Quality,
   Example,
-  RiskLevel
+  RiskLevel,
+  SkillRuntime
 } from './types/skill';
 
 export type {
@@ -37,6 +38,29 @@ export type {
   PlaybookConfig
 } from './types/playbook';
 
+// V4 Runtime types
+export type {
+  AIProviderConfig,
+  RuntimeConfig,
+  SandboxConfig,
+  SkillRuntime as SkillRuntimeConfig,
+  ProviderType
+} from './config/types';
+
+export type {
+  SubAgent,
+  AgentTask,
+  AgentResult,
+  AgentStatus,
+  AgentCoordination
+} from './agents/types';
+
+export type {
+  ExecutionContext as RuntimeExecutionContext,
+  ExecutionLog,
+  ServerConfig
+} from './runtime/types';
+
 // 核心类导出
 export { HosSecEngine } from './core/engine';
 export { SkillValidator } from './core/validator';
@@ -46,6 +70,16 @@ export { SkillFormatter } from './core/formatter';
 export { SkillLoader } from './core/loader';
 export { FlowOrchestrator } from './core/orchestrator';
 export { ReportGenerator } from './core/report';
+
+// V4 Runtime 类导出
+export { ProviderManager } from './config/provider-manager';
+export { ConfigLoader } from './config/config-loader';
+export { AgentCoordinator } from './agents/coordinator';
+export { AgentPool } from './agents/agent-pool';
+export { SubAgentImpl } from './agents/sub-agent';
+export { ExecutionContextManager } from './runtime/execution-context';
+export { Sandbox, TimeoutError, SecurityError } from './runtime/sandbox';
+export { AgentServer } from './runtime/server';
 
 // 预设 Skill 导出（自动发现）
 export {

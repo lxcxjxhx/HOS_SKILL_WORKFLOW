@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-06-20T09:02:29.692Z",
-  "totalSkills": 28,
+  "generatedAt": "2026-06-20T15:51:39.363Z",
+  "totalSkills": 27,
   "skills": [
     {
       "id": "ad-domain-enum-001",
@@ -488,26 +488,6 @@
       "author": "HOS-Sec-Engine"
     },
     {
-      "id": "web-upload-001",
-      "name": "File Upload Restriction Bypass",
-      "category": "web",
-      "subCategory": "file-upload",
-      "tags": [
-        "file-upload",
-        "upload-bypass",
-        "mime-bypass",
-        "extension-bypass",
-        "polyglot",
-        "htaccess",
-        "webshell"
-      ],
-      "riskLevel": "high",
-      "confidence": 0.88,
-      "description": "文件上传限制绕过技术用于在目标系统对上传文件实施扩展名过滤、MIME 类型检查、内容检测等安全措施时，通过伪造文件头、利用解析差异、上传特殊配置文件等方式绕过限制并上传可执行文件",
-      "updatedAt": "2026-06",
-      "author": "HOS-Sec-Engine"
-    },
-    {
       "id": "web-xss-001",
       "name": "XSS Filter Bypass Techniques",
       "category": "web",
@@ -629,7 +609,6 @@
         "web-sqli-001",
         "web-ssrf-001",
         "test-verify-001",
-        "web-upload-001",
         "web-xss-001",
         "web-xxe-001"
       ]
@@ -664,7 +643,7 @@
     },
     "all-bundle": {
       "name": "全部 Skill",
-      "description": "所有 28 个攻防实战 Skill",
+      "description": "所有 27 个攻防实战 Skill",
       "skills": [
         "ad-domain-enum-001",
         "ai-prompt-injection-001",
@@ -690,7 +669,6 @@
         "web-sqli-001",
         "web-ssrf-001",
         "test-verify-001",
-        "web-upload-001",
         "web-xss-001",
         "web-xxe-001",
         "windows-priv-esc-001"

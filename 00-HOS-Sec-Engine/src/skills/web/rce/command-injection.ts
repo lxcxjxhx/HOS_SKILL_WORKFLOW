@@ -3,7 +3,7 @@
  * 命令注入攻击专项 Skill 集合
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const commandInjectionSkills: AttackDefenseSkill[] = [
     {
@@ -409,5 +409,14 @@ export const commandInjectionSkills: AttackDefenseSkill[] = [
         playbooks: ['web-pentest-full'],
         phase: 'exploitation',
         enabled: true,
+        runtime: {
+            requiresAgent: false,
+            agentCount: 1,
+            parallelizable: true,
+            requiresNetwork: true,
+            requiresSandbox: true,
+            dependencies: [],
+            estimatedTokens: 3000,
+        },
     },
 ];

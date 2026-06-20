@@ -3,7 +3,7 @@
  * XSS 过滤器绕过专项 Skill 集合
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const xssFilterBypassSkills: AttackDefenseSkill[] = [
   {
@@ -280,5 +280,14 @@ export const xssFilterBypassSkills: AttackDefenseSkill[] = [
     playbooks: ['web-pentest-full'],
     phase: 'vulnerability-scanning',
     enabled: true,
+    runtime: {
+      requiresAgent: false,
+      agentCount: 1,
+      parallelizable: true,
+      requiresNetwork: true,
+      requiresSandbox: false,
+      dependencies: [],
+      estimatedTokens: 3000,
+    },
   },
 ];

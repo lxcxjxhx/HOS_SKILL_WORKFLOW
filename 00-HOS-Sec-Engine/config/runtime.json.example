@@ -1,0 +1,16 @@
+{
+  "activeProvider": "openai",
+  "providers": [],
+  "fallbackProviders": ["claude"],
+  "maxConcurrentAgents": 3,
+  "agentTimeout": 600000,
+  "sandbox": {
+    "enabled": true,
+    "networkAccess": "restricted",
+    "allowedHosts": [],
+    "fileSystemAccess": "read",
+    "maxMemoryMB": 512,
+    "maxCpuPercent": 80,
+    "timeout": 300000
+  }
+}

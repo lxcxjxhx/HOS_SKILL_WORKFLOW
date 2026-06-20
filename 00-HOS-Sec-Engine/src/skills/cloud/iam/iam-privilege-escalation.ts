@@ -3,7 +3,7 @@
  * IAM 权限提升专项 Skill
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const iamPrivilegeEscalationSkills: AttackDefenseSkill[] = [
     {
@@ -484,5 +484,14 @@ export const iamPrivilegeEscalationSkills: AttackDefenseSkill[] = [
         playbooks: ['cloud-config-audit'],
         phase: 'permission-testing',
         enabled: true,
+        runtime: {
+            requiresAgent: false,
+            agentCount: 1,
+            parallelizable: true,
+            requiresNetwork: true,
+            requiresSandbox: false,
+            dependencies: [],
+            estimatedTokens: 3000,
+        },
     },
 ];

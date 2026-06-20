@@ -3,7 +3,7 @@
  * 速率限制绕过技术专?Skill 集合
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const rateLimitBypassSkills: AttackDefenseSkill[] = [
     {
@@ -580,5 +580,14 @@ curl, requests, httpx, aiohttp 有不?JA3 指纹
         playbooks: ['api-security-review'],
         phase: 'rate-limit-testing',
         enabled: true,
+        runtime: {
+            requiresAgent: false,
+            agentCount: 1,
+            parallelizable: true,
+            requiresNetwork: true,
+            requiresSandbox: false,
+            dependencies: [],
+            estimatedTokens: 3000,
+        },
     },
 ];

@@ -3,7 +3,7 @@
  * SQL 注入 WAF 绕过专项 Skill 集合
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const sqliWafBypassSkills: AttackDefenseSkill[] = [
   {
@@ -245,5 +245,14 @@ export const sqliWafBypassSkills: AttackDefenseSkill[] = [
     playbooks: ['web-pentest-full'],
     phase: 'exploitation',
     enabled: true,
+    runtime: {
+      requiresAgent: false,
+      agentCount: 1,
+      parallelizable: true,
+      requiresNetwork: true,
+      requiresSandbox: false,
+      dependencies: [],
+      estimatedTokens: 3000,
+    },
   },
 ];

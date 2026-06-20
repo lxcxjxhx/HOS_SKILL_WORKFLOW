@@ -3,7 +3,7 @@
  * S3/OSS Bucket 配置错误利用专项 Skill
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const s3MisconfigSkills: AttackDefenseSkill[] = [
     {
@@ -389,5 +389,14 @@ export const s3MisconfigSkills: AttackDefenseSkill[] = [
         playbooks: ['cloud-config-audit'],
         phase: 'asset-discovery',
         enabled: true,
+        runtime: {
+            requiresAgent: false,
+            agentCount: 1,
+            parallelizable: true,
+            requiresNetwork: true,
+            requiresSandbox: false,
+            dependencies: [],
+            estimatedTokens: 3000,
+        },
     },
 ];

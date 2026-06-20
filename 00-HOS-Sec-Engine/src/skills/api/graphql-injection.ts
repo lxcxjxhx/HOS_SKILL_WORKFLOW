@@ -6,7 +6,7 @@
  * AI可通过参照此模板在任意分类目录下创建新的skill文件。
  */
 
-import { AttackDefenseSkill } from '../../types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../types/skill';
 
 export const graphQLSkills: AttackDefenseSkill[] = [
   {
@@ -187,5 +187,14 @@ export const graphQLSkills: AttackDefenseSkill[] = [
     playbooks: ['api-security-review'],
     phase: 'exploitation',
     enabled: true,
+    runtime: {
+      requiresAgent: false,
+      agentCount: 1,
+      parallelizable: true,
+      requiresNetwork: true,
+      requiresSandbox: false,
+      dependencies: [],
+      estimatedTokens: 3000,
+    },
   },
 ];

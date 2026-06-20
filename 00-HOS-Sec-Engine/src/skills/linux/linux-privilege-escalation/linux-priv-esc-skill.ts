@@ -2,7 +2,7 @@
  * HOS-Sec-Engine V2 - Linux Privilege Escalation Skills
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const linuxPrivEscSkills: AttackDefenseSkill[] = [
     {
@@ -191,5 +191,14 @@ export const linuxPrivEscSkills: AttackDefenseSkill[] = [
         playbooks: ['web-pentest-full'],
         phase: 'privilege-escalation',
         enabled: true,
+        runtime: {
+            requiresAgent: false,
+            agentCount: 1,
+            parallelizable: false,
+            requiresNetwork: false,
+            requiresSandbox: true,
+            dependencies: [],
+            estimatedTokens: 3000,
+        },
     },
 ];

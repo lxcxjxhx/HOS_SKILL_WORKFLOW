@@ -2,7 +2,7 @@
  * HOS-Sec-Engine V2 - Active Directory Domain Enumeration Skills
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const domainEnumSkills: AttackDefenseSkill[] = [
     {

@@ -3,7 +3,7 @@
  * JWT 攻击与绕过技术专?Skill 集合
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const jwtAttackSkills: AttackDefenseSkill[] = [
     {
@@ -429,5 +429,14 @@ x5u 注入同理:
         playbooks: ['api-security-review'],
         phase: 'auth-testing',
         enabled: true,
+        runtime: {
+            requiresAgent: false,
+            agentCount: 1,
+            parallelizable: true,
+            requiresNetwork: true,
+            requiresSandbox: false,
+            dependencies: [],
+            estimatedTokens: 3000,
+        },
     },
 ];

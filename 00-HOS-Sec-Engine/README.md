@@ -346,10 +346,21 @@ npx hos-skills install --no-source                # 不安装源码
 ### hos-sec-engine（引擎 CLI）
 
 ```bash
+# 部署 skill（原有功能）
 npx hos-sec-engine deploy                         # 部署 skill
 npx hos-sec-engine deploy --global                # 全局部署
 npx hos-sec-engine deploy --claude                # 仅 Claude Code
 npx hos-sec-engine deploy --trae                  # 仅 Trae IDE
+
+# V4 独立运行模式（新增）
+npx hos-sec-engine server --port 3000             # 启动 Agent 通信服务器
+npx hos-sec-engine run --skill web-sqli-001 \     # 独立执行 Skill
+  --target "https://example.com"
+npx hos-sec-engine run --skills web-sqli-001,web-xss-001 \  # 并行执行
+  --parallel --target "https://example.com"
+npx hos-sec-engine run --skill web-sqli-001 \     # 导出结果
+  --output report.json
+npx hos-sec-engine run --help                     # 查看帮助
 ```
 
 ### npm scripts
@@ -362,6 +373,75 @@ npx hos-sec-engine deploy --trae                  # 仅 Trae IDE
 | `npm run deploy:global` | 全局部署 |
 | `npm run generate-skills-md` | 重新生成所有 SKILL.md |
 | `npm run generate-skills-index` | 生成 skills-index.json |
+
+---
+
+## V4 独立 Skill 运行时
+
+### 架构演进
+
+V4 将 HOS-Sec-Engine 从**纯 IDE 提示词工具**升级为**可独立运行的攻防 Skill 生态系统**。
+
+```
+传统模式（V1-V3）：
+  AI IDE → Skill 作为提示词 → AI 生成建议
+
+独立模式（V4）：
+  AI IDE / CLI → Skill Engine → 子 Agent 编排 → 独立执行 → 结果聚合
+```
+
+### AI Provider 配置
+
+支持 OpenAI、Anthropic、本地模型等多 Provider，API Key 加密存储：
+
+```bash
+# 方式一：环境变量（推荐）
+export OPENAI_API_KEY=sk-...
+export ANTHROPIC_API_KEY=sk-ant-...
+
+# 方式二：配置文件
+cp config/providers.json.example config/providers.json
+# 编辑配置，填入 API Key
+```
+
+### 多 Agent 协同场景
+
+**场景 1：并发漏洞扫描**
+```
+主 Agent
+  ├── 子 Agent 1 (SQL注入) → 扫描 /login
+  ├── 子 Agent 2 (XSS)     → 扫描 /search
+  └── 子 Agent 3 (SSRF)    → 扫描 /api/proxy
+  ↓
+结果聚合 → 统一报告
+```
+
+**场景 2：串行渗透测试**
+```
+阶段 1：信息收集 → 发现登录接口
+  ↓
+阶段 2：SQL 注入 → 获取数据库凭据
+  ↓
+阶段 3：权限提升 → 使用凭据登录管理后台
+```
+
+### 独立运行示例
+
+```bash
+# 配置环境变量
+export OPENAI_API_KEY=sk-...
+export HOS_SEC_TARGET=https://example.com
+
+# 执行单个 Skill
+npx hos-sec-engine run --skill web-sqli-001 --target "https://example.com"
+
+# 并行执行多个 Skill
+npx hos-sec-engine run --skills web-sqli-001,web-xss-001,web-ssrf-001 \
+  --parallel --target "https://example.com" --output report.json
+
+# 启动 Agent 服务器（供子 Agent 通信）
+npx hos-sec-engine server --port 3000
+```
 
 ---
 

@@ -6,6 +6,15 @@ import { SkillMatcher } from './matcher';
 import { SkillFormatter } from './formatter';
 import { SkillLoader } from './loader';
 import { FlowOrchestrator } from './orchestrator';
+import { RuntimeConfig, DEFAULT_RUNTIME_CONFIG } from '../config/types';
+import { ProviderManager } from '../config/provider-manager';
+import { ConfigLoader } from '../config/config-loader';
+import { AgentCoordination, AgentTask, AgentResult } from '../agents/types';
+import { AgentCoordinator } from '../agents/coordinator';
+import { ExecutionContextManager } from '../runtime/execution-context';
+import type { ExecutionContext } from '../runtime/execution-context';
+import { Sandbox } from '../runtime/sandbox';
+import { AgentServer } from '../runtime/server';
 
 /**
  * 默认配置
@@ -29,12 +38,25 @@ export class HosSecEngine {
   private orchestrator: FlowOrchestrator;
   private playbooks: Map<string, Playbook>;
 
+  // V4 Runtime
+  private runtimeConfig: RuntimeConfig;
+  private providerManager: ProviderManager;
+  private agentCoordinator: AgentCoordinator;
+  private contextManager: ExecutionContextManager | null = null;
+  private agentServer: AgentServer | null;
+
   constructor(config: EngineConfig = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.skills = new Map();
     this.playbooks = new Map();
     this.matcher = new SkillMatcher(this.config);
     this.orchestrator = new FlowOrchestrator(this);
+
+    // V4 Runtime initialization
+    this.runtimeConfig = DEFAULT_RUNTIME_CONFIG;
+    this.providerManager = new ProviderManager();
+    this.agentCoordinator = new AgentCoordinator();
+    this.agentServer = null;
 
     if (this.config.loadPresetSkills) {
       this.loadPresetSkills();
@@ -266,5 +288,141 @@ export class HosSecEngine {
    */
   getOrchestrator(): FlowOrchestrator {
     return this.orchestrator;
+  }
+
+  // ==================== V4 独立运行时能力 ====================
+
+  /**
+   * 初始化运行时配置
+   */
+  async initializeRuntime(config: RuntimeConfig): Promise<void> {
+    this.runtimeConfig = config;
+
+    // 加载 Provider 配置
+    for (const provider of config.providers) {
+      try {
+        this.providerManager.registerProvider(provider);
+      } catch (error) {
+        console.warn(`Provider [${provider.id}] 注册失败: ${error}`);
+      }
+    }
+
+    // 尝试从环境变量加载额外 Provider
+    this.providerManager.loadFromEnv();
+
+    // 如果没有活跃 Provider，使用第一个可用的
+    if (!this.runtimeConfig.activeProvider) {
+      const ids = this.providerManager.getProviderIds();
+      if (ids.length > 0) {
+        this.runtimeConfig.activeProvider = ids[0];
+      }
+    }
+  }
+
+  /**
+   * 获取 Agent 协调器实例
+   */
+  getAgentCoordinator(): AgentCoordination {
+    return this.agentCoordinator;
+  }
+
+  /**
+   * 在沙箱中执行 Skill
+   */
+  async executeSkillInSandbox(
+    skill: AttackDefenseSkill,
+    context: ExecutionContext
+  ): Promise<AgentResult> {
+    const startTime = Date.now();
+    const runtime = skill.runtime;
+    const sandboxConfig = {
+      ...this.runtimeConfig.sandbox,
+      enabled: runtime?.requiresSandbox ?? this.runtimeConfig.sandbox.enabled,
+    };
+
+    const sandbox = new Sandbox(sandboxConfig);
+
+    try {
+      const result = await sandbox.execute(async () => {
+        // 模拟 Skill 执行
+        context.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: `执行 Skill: ${skill.metadata.id}`,
+          source: 'engine',
+        });
+
+        // 检查网络访问需求
+        if (runtime?.requiresNetwork && sandboxConfig.networkAccess === 'none') {
+          throw new Error(`Skill ${skill.metadata.id} 需要网络访问，但沙箱已禁用网络`);
+        }
+
+        // 返回模拟结果
+        return {
+          taskId: context.runId,
+          status: 'success' as const,
+          output: `Skill ${skill.metadata.id} 执行完成`,
+          findings: [],
+          evidence: [],
+          duration: Date.now() - startTime,
+        };
+      });
+
+      return result;
+    } catch (error) {
+      return {
+        taskId: context.runId,
+        status: 'failed',
+        output: '',
+        findings: [],
+        evidence: [],
+        duration: Date.now() - startTime,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
+  /**
+   * 启动 Agent 通信服务器
+   */
+  async startServer(port: number): Promise<void> {
+    if (this.agentServer) {
+      await this.agentServer.stop();
+    }
+
+    this.agentServer = new AgentServer({ port });
+    await this.agentServer.start();
+    console.log(`Agent 服务器已启动，端口: ${port}`);
+  }
+
+  /**
+   * 停止 Agent 通信服务器
+   */
+  async stopServer(): Promise<void> {
+    if (this.agentServer) {
+      await this.agentServer.stop();
+      this.agentServer = null;
+    }
+  }
+
+  /**
+   * 获取 Provider 管理器
+   */
+  getProviderManager(): ProviderManager {
+    return this.providerManager;
+  }
+
+  /**
+   * 获取当前运行时配置
+   */
+  getRuntimeConfig(): RuntimeConfig {
+    return this.runtimeConfig;
+  }
+
+  /**
+   * 创建执行上下文
+   */
+  createExecutionContext(target: string): ExecutionContext {
+    return ExecutionContextManager.create(target, this.runtimeConfig);
   }
 }

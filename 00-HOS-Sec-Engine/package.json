@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "hos-sec-engine": "dist/src/scripts/deploy-skills.js",
+    "hos-sec-engine": "dist/src/cli/index.js",
     "deploy-hos-skills": "dist/src/scripts/deploy-skills.js",
     "hos-skills": "scripts/install-skills.js"
   },

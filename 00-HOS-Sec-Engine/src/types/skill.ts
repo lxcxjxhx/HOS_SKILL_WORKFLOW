@@ -110,6 +110,35 @@ export interface Quality {
   lastVerified: string;
 }
 
+/** Skill 运行时配置 */
+export interface SkillRuntime {
+  /** 是否需要子 Agent 执行 */
+  requiresAgent: boolean;
+  /** 建议的子 Agent 数量 */
+  agentCount: number;
+  /** 是否支持并行执行 */
+  parallelizable: boolean;
+  /** 是否需要网络访问 */
+  requiresNetwork: boolean;
+  /** 是否需要沙箱隔离 */
+  requiresSandbox: boolean;
+  /** 依赖的其他 Skill IDs */
+  dependencies: string[];
+  /** 预估 Token 消耗 */
+  estimatedTokens: number;
+}
+
+/** 默认 Skill 运行时配置 */
+export const DEFAULT_SKILL_RUNTIME: SkillRuntime = {
+  requiresAgent: false,
+  agentCount: 1,
+  parallelizable: true,
+  requiresNetwork: false,
+  requiresSandbox: false,
+  dependencies: [],
+  estimatedTokens: 2000,
+};
+
 /** 攻防 Skill 六层结构 */
 export interface AttackDefenseSkill {
   /** 管理与分类 */
@@ -132,4 +161,6 @@ export interface AttackDefenseSkill {
   playbooks?: string[];
   /** 在流程中的阶段归属 */
   phase?: string;
+  /** 运行时配置（V4 新增） */
+  runtime?: SkillRuntime;
 }

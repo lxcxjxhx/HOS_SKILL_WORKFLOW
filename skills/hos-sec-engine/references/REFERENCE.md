@@ -3,7 +3,7 @@
 > Complete technical reference for all loaded skills.
 >
 > Generated on 2026-06-20
-> Total skills: 28
+> Total skills: 27
 
 ## Table of Contents
 
@@ -35,7 +35,6 @@
   - [SQL Injection WAF Bypass Techniques](#web-sqli-001)
   - [SSRF Detection and Exploitation](#web-ssrf-001)
   - [Test Verification Skill](#test-verify-001)
-  - [File Upload Restriction Bypass](#web-upload-001)
   - [XSS Filter Bypass Techniques](#web-xss-001)
   - [XXE Injection Techniques](#web-xxe-001)
 - [kubernetes](#kubernetes)
@@ -704,7 +703,7 @@
 
 ## web
 
-**Skills:** 12
+**Skills:** 11
 
 ### Web Authentication Bypass 0day
 
@@ -1077,59 +1076,6 @@
 
 - Reviewed: No
 - Tested: No
-- Last Verified: 2026-06
-
----
-
-### File Upload Restriction Bypass
-
-| Property | Value |
-|----------|-------|
-| ID | `web-upload-001` |
-| Category | web |
-| Sub-Category | file-upload |
-| Risk Level | high |
-| Confidence | 0.88 |
-| Author | HOS-Sec-Engine |
-| Updated | 2026-06 |
-| Tags | file-upload, upload-bypass, mime-bypass, extension-bypass, polyglot, htaccess, webshell |
-
-**Triggers:**
-
-- 应用提供文件上传功能（头像、文档、图片、附件等
-- 上传功能对文件类型进行限制（扩展名白名单/黑名单、MIME 类型检查）
-- 上传的文件存储在 Web 可访问目
-- 存在文件重命名逻辑但保留原始扩展名
-- 使用客户?JavaScript 进行文件类型验证
-- 上传目录存在执行权限（如 PHP/JSP/ASP 可被执行?
-
-**Techniques:**
-
-- 扩展名黑名单绕过：使用未被列入黑名单的可执行扩展
-- MIME 类型伪造：修改 Content-Type 请求头绕过服务端检
-- 文件头伪造：在可执行文件前添加图片头（GIF89a）绕过内容检
-- Polyglot 文件：构造同时满足多种文件格式的文件
-- .htaccess 上传：修改目录解析规则使?PHP 文件被当?PHP 执行
-- 双扩展名绕过：利用后端解析时取最后一个扩展名的逻辑
-- 空字节注入：利用 %00 截断文件名（旧版?PHP/Java
-- 大小写绕过：某些系统不区分大小写，但过滤器区
-- 特殊字符绕过：shell.php.（Windows 自动去除末尾点）
-- Apache 多扩展名解析：shell.php.xyz 可能被解析为 PHP
-
-**Root Causes:**
-
-- 扩展名黑名单不完整（遗漏 .phtml?php5?phar 等变体）
-- MIME 类型仅检?Content-Type 请求头（客户端可控）
-- 文件头检查只验证前几个字节，后续内容未检
-- Web 服务器（Apache/Nginx/IIS）对文件扩展名的解析与后端语言不一
-- 上传目录的执行权限配置错误或被攻击者修改（.htaccess
-- 文件名未正确过滤，存在空字节注入、双扩展名等绕过方式
-- 图像重处理库（GD/ImageMagick）在特定条件下可保留嵌入代码
-
-**Quality:**
-
-- Reviewed: Yes
-- Tested: Yes
 - Last Verified: 2026-06
 
 ---
