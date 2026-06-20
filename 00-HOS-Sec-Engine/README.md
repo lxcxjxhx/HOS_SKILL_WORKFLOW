@@ -29,29 +29,29 @@ node install-lite.js --target trae --global --all
 
 ## 三种安装方式
 
-### 方式一：一键安装（最简单）
+### 方式一：一行命令安装（最简单）
 
-**Windows 用户：双击运行**
-
+**Windows PowerShell：**
 ```powershell
-# 下载安装器，双击运行
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/one-click-install.bat" -OutFile "install.bat"
-.\install.bat
-```
-
-**一行命令直接安装：**
-
-```powershell
-node <(curl -s https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/scripts/install-lite.js) -- --target trae --global --all
+irm https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/install-lite.js -OutFile install.js; node install.js --target trae --global --all
 ```
 
 **Linux/macOS：**
-
 ```bash
-curl -s https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/scripts/install-lite.js | node -s --target trae --global --all
+curl -sL https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/install-lite.js | node -s --target trae --global --all
 ```
 
-**就这么简单，不需要 clone 仓库，不需要 npm install。**
+**Windows 用户双击运行：**
+1. 下载 [one-click-install.bat](https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/one-click-install.bat)
+2. 双击运行
+
+**安装选项：**
+- `--target trae` / `--target claude-code` / `--target cursor`
+- `--global` — 全局安装（所有项目可用）
+- `--all` — 安装全部 28 个 skill
+- `--skill web-sqli-001,web-xss-001` — 安装指定 skill
+
+**不需要 clone 仓库，不需要 npm install。**
 
 ### 方式二：npm 包安装（含完整源码）
 
