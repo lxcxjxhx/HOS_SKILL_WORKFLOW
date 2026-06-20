@@ -23,6 +23,15 @@ if (process.platform === 'win32') {
   process.stdout.setEncoding('utf8');
 }
 
+function detectPlatform() {
+  switch (process.platform) {
+    case 'win32': return { name: 'Windows', version: `NT ${os.release()}` };
+    case 'darwin': return { name: 'macOS', version: os.release() };
+    case 'linux': return { name: 'Linux', version: os.release() };
+    default: return { name: process.platform, version: os.release() };
+  }
+}
+
 const GITHUB_OWNER = 'lxcxjxhx';
 const GITHUB_REPO = 'HOS_SKILL_WORKFLOW';
 const GITHUB_BRANCH = 'main';
@@ -69,8 +78,13 @@ async function fetchFile(relativePath, retries = 3) {
   }
 }
 
+function getHomeDir() {
+  // Cross-platform home directory detection
+  return process.env.USERPROFILE || process.env.HOME || os.homedir();
+}
+
 function getTargetDir(target, isGlobal) {
-  const home = process.env.USERPROFILE || process.env.HOME || os.homedir();
+  const home = getHomeDir();
   if (isGlobal) {
     switch (target) {
       case 'trae': return path.join(home, '.trae-cn', 'skills');
@@ -184,10 +198,21 @@ Usage: Download and install skills directly from GitHub
 
 Options:
   --target <editor>     Target editor: trae / claude-code / cursor
-  --global, -g          Global install
+  --global, -g          Global install (all projects)
   --all                 Install all skills
   --skill <id1,id2>     Install specific skills
   --help, -h            Show help
+
+One-line install commands (copy and run):
+
+  Windows PowerShell:
+    irm https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/install-lite.js -OutFile install.js; node install.js --target trae --global --all
+
+  Linux:
+    curl -sL https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/install-lite.js | node -s --target trae --global --all
+
+  macOS:
+    curl -sL https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/install-lite.js | node -s --target trae --global --all
 
 Examples:
   # Install all skills to Trae IDE (global)
@@ -233,6 +258,12 @@ async function main() {
 
   console.log(COLORS.cyan(TITLE));
 
+  const platform = detectPlatform();
+  const nodeVersion = process.version;
+  console.log(`${COLORS.gray(`Platform: ${platform.name} (${platform.version})`)} `);
+  console.log(`${COLORS.gray(`Node.js: ${nodeVersion}`)}`);
+  console.log('');
+
   let target = opt.target;
   if (!target) { target = await ask('Select target editor:', ['trae', 'claude-code', 'cursor']); }
 
@@ -276,7 +307,11 @@ async function main() {
 
   if (installed.length === 0) {
     console.log(`\n${COLORS.yellow('Note:')} Installation failed, possibly due to permissions.`);
-    console.log(`Try running as administrator, or install locally:`);
+    if (process.platform === 'win32') {
+      console.log(`Try running PowerShell as Administrator, or install locally:`);
+    } else {
+      console.log(`Try running with sudo, or install locally:`);
+    }
     console.log(`  node install-lite.js --target trae --all`);
   }
 

@@ -31,12 +31,17 @@ node install-lite.js --target trae --global --all
 
 ### 方式一：一行命令安装（最简单）
 
-**Windows PowerShell：**
+**Windows PowerShell**（需要 Node.js >= 18）：
 ```powershell
 irm https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/install-lite.js -OutFile install.js; node install.js --target trae --global --all
 ```
 
-**Linux/macOS：**
+**Linux**（需要 Node.js >= 18 + curl）：
+```bash
+curl -sL https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/install-lite.js | node -s --target trae --global --all
+```
+
+**macOS**（需要 Node.js >= 18 + curl）：
 ```bash
 curl -sL https://raw.githubusercontent.com/lxcxjxhx/HOS_SKILL_WORKFLOW/main/00-HOS-Sec-Engine/install-lite.js | node -s --target trae --global --all
 ```
@@ -362,9 +367,12 @@ npx hos-sec-engine deploy --trae                  # 仅 Trae IDE
 
 ## 环境要求
 
-- Node.js >= 18.0.0
-- 支持平台：Windows / macOS / Linux
-- 兼容编辑器：Claude Code / Trae IDE / Cursor
+| 平台 | 要求 |
+|------|------|
+| **Windows** | Node.js >= 18.0.0, PowerShell 5+ |
+| **Linux** | Node.js >= 18.0.0, curl |
+| **macOS** | Node.js >= 18.0.0, curl |
+| **AI 编辑器** | Claude Code / Trae IDE / Cursor |
 
 ## License
 

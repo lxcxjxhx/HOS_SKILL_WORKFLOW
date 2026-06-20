@@ -26,6 +26,15 @@ if (process.platform === 'win32') {
   process.stdout.setEncoding('utf8');
 }
 
+function detectPlatform() {
+  switch (process.platform) {
+    case 'win32': return { name: 'Windows', version: `NT ${os.release()}` };
+    case 'darwin': return { name: 'macOS', version: os.release() };
+    case 'linux': return { name: 'Linux', version: os.release() };
+    default: return { name: process.platform, version: os.release() };
+  }
+}
+
 // ============================================================================
 // Config
 // ============================================================================
@@ -98,8 +107,13 @@ async function fetchFile(relativePath, retries = 3) {
 // Target directories
 // ============================================================================
 
+function getHomeDir() {
+  // Cross-platform home directory detection
+  return process.env.USERPROFILE || process.env.HOME || os.homedir();
+}
+
 function getTargetDir(target, isGlobal) {
-  const home = process.env.USERPROFILE || process.env.HOME || os.homedir();
+  const home = getHomeDir();
   if (isGlobal) {
     switch (target) {
       case 'trae': return path.join(home, '.trae-cn', 'skills');
@@ -291,6 +305,12 @@ async function main() {
 
   console.log(COLORS.cyan(TITLE));
 
+  const platform = detectPlatform();
+  const nodeVersion = process.version;
+  console.log(`${COLORS.gray(`Platform: ${platform.name} (${platform.version})`)}`);
+  console.log(`${COLORS.gray(`Node.js: ${nodeVersion}`)}`);
+  console.log('');
+
   // Determine target
   let target = opt.target;
   if (!target) {
@@ -350,7 +370,11 @@ async function main() {
 
   if (installed.length === 0) {
     console.log(`\n${COLORS.yellow('提示:')} 安装失败可能是权限问题。`);
-    console.log(`请尝试以管理员身份运行，或安装到局部目录:`);
+    if (process.platform === 'win32') {
+      console.log(`请尝试以管理员身份运行 PowerShell，或安装到局部目录:`);
+    } else {
+      console.log(`请尝试使用 sudo，或安装到局部目录:`);
+    }
     console.log(`  node install-lite.js --target trae --all`);
   }
 
