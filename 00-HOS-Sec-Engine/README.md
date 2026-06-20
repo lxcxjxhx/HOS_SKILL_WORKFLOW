@@ -25,8 +25,12 @@ npm install hos-sec-engine
 ```bash
 # 安装 npm 包（自动部署 skill 到编辑器）
 npm install hos-sec-engine
+```
 
-# 手动安装 skill 到指定编辑器
+安装完成后，可通过以下命令管理 skill：
+
+```bash
+# 通过 npx 调用安装器（npm install 后可用）
 npx hos-skills install --target trae          # Trae IDE
 npx hos-skills install --target claude-code   # Claude Code
 npx hos-skills install --target cursor        # Cursor
@@ -36,9 +40,17 @@ npx hos-skills install --global --target trae
 
 # 指定安装单个 skill
 npx hos-skills install --skill web-sqli-001,web-xss-001
+```
 
-# 安装源码到项目本地（用于二次开发）
-npx hos-skills install  # 默认包含源码，生成 hos-sec-engine-src/ 目录
+> **注意**: `npx hos-skills` 仅在 `npm install hos-sec-engine` 后可用。
+> 本地开发时请使用 `node scripts/install-skills.js install` 代替。
+
+**本地开发模式**（克隆仓库后）：
+
+```bash
+cd 00-HOS-Sec-Engine
+npm install                           # 安装依赖
+node scripts/install-skills.js install # 本地运行安装器
 ```
 
 **安装内容**：
@@ -279,9 +291,11 @@ AI 可以直接：
 
 ### hos-skills（交互式安装器）
 
+> 通过 `npm install hos-sec-engine` 安装后可用。本地开发时请用 `node scripts/install-skills.js` 代替 `npx hos-skills`。
+
 ```bash
-npx hos-skills                                    # 交互模式
-npx hos-skills install                            # 整合安装
+node scripts/install-skills.js install                          # 本地开发
+npx hos-skills install                            # npm 安装后
 npx hos-skills install --target trae              # 指定编辑器
 npx hos-skills install --global                   # 全局安装
 npx hos-skills install --skill web-sqli-001       # 安装指定 skill

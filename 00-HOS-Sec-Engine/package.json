@@ -35,6 +35,15 @@
     "cli/**/*",
     "tsconfig.json"
   ],
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "@inquirer/prompts": "^5.0.0",
+    "@inquirer/checkbox": "^2.3.0",
+    "@inquirer/search": "^1.0.0",
+    "@inquirer/select": "^2.3.0",
+    "@inquirer/confirm": "^3.1.0",
+    "@inquirer/input": "^2.1.0"
+  },
   "devDependencies": {
     "typescript": "^5.3.0",
     "@types/node": "^20.0.0"
