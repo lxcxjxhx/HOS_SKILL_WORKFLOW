@@ -479,6 +479,25 @@ function writeOutput(filePath: string, content: string): void {
 }
 
 /**
+ * Copy directory recursively (files only, no sub-directory nesting beyond one level).
+ */
+function copyDirRecursive(srcDir: string, destDir: string): void {
+  if (!fs.existsSync(srcDir)) return;
+  ensureDir(destDir);
+
+  const entries = fs.readdirSync(srcDir, { withFileTypes: true });
+  for (const entry of entries) {
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+    if (entry.isDirectory()) {
+      copyDirRecursive(srcPath, destPath);
+    } else {
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+}
+
+/**
  * Main generator function.
  * 
  * @param engine HosSecEngine instance with skills loaded (or undefined to use allSkills directly)
@@ -560,6 +579,28 @@ export function generateSkillsMdFiles(
     writeOutput(flatMasterPath, fs.readFileSync(masterSkillPath, 'utf-8'));
     generated.push(flatMasterPath);
     console.log(`  [MASTER] ${flatMasterPath}`);
+
+    // Sync 0day-skills directory
+    const master0daySrc = path.join(projectRoot, 'src', 'skills', 'hos-sec-master', '0day-skills');
+    if (fs.existsSync(master0daySrc)) {
+      // Copy nested 0day-skills
+      const nested0dayDest = path.join(nestedDir, 'master', 'hos-sec-master', '0day-skills');
+      copyDirRecursive(master0daySrc, nested0dayDest);
+      generated.push(nested0dayDest);
+      console.log(`  [MASTER-0DAY] ${nested0dayDest}`);
+
+      // Copy flat 0day-skills
+      const flat0dayDest = path.join(flatDir, 'hos-sec-master', '0day-skills');
+      copyDirRecursive(master0daySrc, flat0dayDest);
+      generated.push(flat0dayDest);
+      console.log(`  [MASTER-0DAY] ${flat0dayDest}`);
+
+      // Copy to repo root
+      const repo0dayDest = path.join(repoRoot, 'skills', 'hos-sec-master', '0day-skills');
+      copyDirRecursive(master0daySrc, repo0dayDest);
+      generated.push(repo0dayDest);
+      console.log(`  [MASTER-0DAY-ROOT] ${repo0dayDest}`);
+    }
   } else {
     console.warn(`  [WARN] Master skill not found at ${masterSkillPath}`);
   }

@@ -2,8 +2,8 @@
 
 > Complete technical reference for all loaded skills.
 >
-> Generated on 2026-06-19
-> Total skills: 22
+> Generated on 2026-06-20
+> Total skills: 27
 
 ## Table of Contents
 
@@ -12,6 +12,7 @@
 - [ai-security](#ai-security)
   - [Prompt Injection Bypass Techniques](#ai-prompt-injection-001)
 - [api](#api)
+  - [GraphQL Injection Detection and Exploitation](#api-graphql-injection-001)
   - [IDOR Detection and Exploitation](#api-idor-001)
   - [JWT Attack and Bypass Techniques](#api-jwt-001)
   - [OAuth Flow Attack Techniques](#api-oauth-001)
@@ -24,13 +25,11 @@
   - [Java Deserialization Vulnerability Code Audit](#code-review-java-deser-001)
 - [container](#container)
   - [Docker Container Escape Techniques](#container-docker-escape-001)
-- [kubernetes](#kubernetes)
-  - [Kubernetes Cluster Misconfiguration Exploitation](#k8s-misconfig-001)
-- [linux](#linux)
-  - [Linux Privilege Escalation Techniques](#linux-priv-esc-001)
-- [mobile](#mobile)
-  - [Android APK Reverse Engineering and Security Analysis](#mobile-android-apk-001)
 - [web](#web)
+  - [Web Authentication Bypass 0day](#web-auth-bypass-0day)
+  - [Web Deserialization 0day](#web-deser-0day)
+  - [Web WAF Bypass 0day](#web-waf-bypass-0day)
+  - [Web XSS Filter 0day](#web-xss-0day)
   - [Insecure Deserialization Exploitation](#web-deser-001)
   - [Command Injection Techniques](#web-rce-001)
   - [SQL Injection WAF Bypass Techniques](#web-sqli-001)
@@ -38,6 +37,12 @@
   - [File Upload Restriction Bypass](#web-upload-001)
   - [XSS Filter Bypass Techniques](#web-xss-001)
   - [XXE Injection Techniques](#web-xxe-001)
+- [kubernetes](#kubernetes)
+  - [Kubernetes Cluster Misconfiguration Exploitation](#k8s-misconfig-001)
+- [linux](#linux)
+  - [Linux Privilege Escalation Techniques](#linux-priv-esc-001)
+- [mobile](#mobile)
+  - [Android APK Reverse Engineering and Security Analysis](#mobile-android-apk-001)
 - [windows](#windows)
   - [Windows Privilege Escalation Techniques](#windows-priv-esc-001)
 
@@ -148,7 +153,50 @@
 
 ## api
 
-**Skills:** 4
+**Skills:** 5
+
+### GraphQL Injection Detection and Exploitation
+
+| Property | Value |
+|----------|-------|
+| ID | `api-graphql-injection-001` |
+| Category | api |
+| Sub-Category | graphql |
+| Risk Level | high |
+| Confidence | 0.85 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | graphql, injection, api, introspection, dos, batching |
+
+**Triggers:**
+
+- 目标 API 使用 GraphQL 端点（/graphql, /graphiql, /api/graphql）
+- 存在 GraphQL introspection 查询可获取完整 schema
+- GraphQL 查询中用户输入未经过滤直接拼接到 resolver 逻辑
+- 支持批量查询（batching）可能导致 DoS 或权限绕过
+
+**Techniques:**
+
+- Introspection 查询获取完整 schema
+- 嵌套查询深度攻击（depth-first DoS）
+- Alias 批量绕过字段限制
+- Batch query 绕过速率限制
+- Resolver 层 SQL/NoSQL 注入测试
+
+**Root Causes:**
+
+- GraphQL introspection 在生产环境未禁用
+- Resolver 层未对用户输入进行安全校验
+- 查询复杂度限制（depth/complexity）未配置
+- 字段级权限控制依赖客户端而非服务端
+
+**Quality:**
+
+- Reviewed: Yes
+- Tested: Yes
+- Last Verified: 2026-06
+
+---
 
 ### IDOR Detection and Exploitation
 
@@ -653,171 +701,145 @@
 
 ---
 
-## kubernetes
-
-**Skills:** 1
-
-### Kubernetes Cluster Misconfiguration Exploitation
-
-| Property | Value |
-|----------|-------|
-| ID | `k8s-misconfig-001` |
-| Category | kubernetes |
-| Sub-Category | k8s-misconfig |
-| Risk Level | critical |
-| Confidence | 0.91 |
-| Author | HOS-Sec-Engine |
-| Updated | 2026-06 |
-| Tags | kubernetes, k8s, misconfiguration, rbac, pod-escape, cluster-admin |
-
-**Triggers:**
-
-- 发现 Kubernetes API Server 未授权访
-- ServiceAccount 权限配置过高
-- Pod 以特权模式运
-- ClusterRole 绑定过于宽松
-- etcd 未加密或可匿名访?
-
-**Techniques:**
-
-- ServiceAccount token 提取和使
-- RBAC 权限提升 (escalate, bind, impersonate)
-- 特权 Pod 创建和宿主机挂载
-- kubelet API 匿名访问利用
-- etcd 数据提取
-- 网络策略绕过
-
-**Root Causes:**
-
-- RBAC 配置过于宽松，授予不必要的权
-- API Server 未启用认证或授权
-- 缺少 Pod 安全策略 (PSP) ?PodSecurity Admission
-- etcd 数据未加
-- kubelet 启用了匿名认
-- 默认命名空间未做安全加固
-
-**Quality:**
-
-- Reviewed: Yes
-- Tested: Yes
-- Last Verified: 2026-06
-
----
-
----
-
-## linux
-
-**Skills:** 1
-
-### Linux Privilege Escalation Techniques
-
-| Property | Value |
-|----------|-------|
-| ID | `linux-priv-esc-001` |
-| Category | linux |
-| Sub-Category | privilege-escalation |
-| Risk Level | critical |
-| Confidence | 0.93 |
-| Author | HOS-Sec-Engine |
-| Updated | 2026-06 |
-| Tags | linux, privilege-escalation, sudo, capability, cron, suid, priv-esc |
-
-**Triggers:**
-
-- 获取普通用?shell 后需要提升到 root
-- 发现 sudo 配置不当可执行特权命
-- 发现 SUID 二进制文件可被滥
-- 发现可写?cron 任务或脚
-- 发现危险?Linux Capability 配置
-
-**Techniques:**
-
-- sudo 命令滥用 (GTFOBins)
-- SUID 二进制利
-- Capability 滥用 (cap_setuid, cap_sys_ptrace)
-- cron 任务劫持
-- 环境变量劫持 (PATH, LD_PRELOAD)
-- Docker/LXD 组成员提
-- 内核漏洞利用
-- 可写 /etc/passwd 利用
-
-**Root Causes:**
-
-- sudoers 配置允许 NOPASSWD 执行危险命令
-- SUID 二进制存在已知可利用行为
-- Linux Capability 分配过于宽松
-- cron 脚本权限配置不当
-- 用户被加入特权组 (docker, lxd)
-- 内核存在可利用的本地提权漏洞
-
-**Quality:**
-
-- Reviewed: Yes
-- Tested: Yes
-- Last Verified: 2026-06
-
----
-
----
-
-## mobile
-
-**Skills:** 1
-
-### Android APK Reverse Engineering and Security Analysis
-
-| Property | Value |
-|----------|-------|
-| ID | `mobile-android-apk-001` |
-| Category | mobile |
-| Sub-Category | android-apk |
-| Risk Level | medium |
-| Confidence | 0.87 |
-| Author | HOS-Sec-Engine |
-| Updated | 2026-06 |
-| Tags | android, apk, reverse-engineering, mobile-security, deobfuscation, frida |
-
-**Triggers:**
-
-- 需要对 Android APK 进行安全审计
-- 发现可疑应用需要逆向分析
-- API 接口加密需要提取密
-- 应用存在数据泄露风险需要验
-- 需要绕过应用的安全检测机?
-
-**Techniques:**
-
-- APK 反编?(jadx, apktool)
-- Smali 代码分析
-- Frida 动?Hook
-- SSL Pinning Bypass
-- Root Detection Bypass
-- Intent 劫持测试
-- Deep Link 安全测试
-- Native 库分?
-
-**Root Causes:**
-
-- 开发者将密钥硬编码在代码或资源文件中
-- 未正确配?AndroidManifest.xml 中的 exported 属
-- 未使?HTTPS 或证书验证不完整
-- 缺少代码混淆或仅使用 ProGuard 基础规则
-- 未对敏感数据进行加密存储
-
-**Quality:**
-
-- Reviewed: Yes
-- Tested: Yes
-- Last Verified: 2026-06
-
----
-
----
-
 ## web
 
-**Skills:** 7
+**Skills:** 11
+
+### Web Authentication Bypass 0day
+
+| Property | Value |
+|----------|-------|
+| ID | `web-auth-bypass-0day` |
+| Category | web |
+| Sub-Category | authentication |
+| Risk Level | critical |
+| Confidence | 0.7 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | authentication, bypass, 0day, login, session, token |
+
+**Triggers:**
+
+- TODO: 由 AI 自主维护更新 - 填入最新认证绕过 0day 的触发场景
+- 示例: 目标使用最新版本的 JWT/OAuth/Session 认证，存在未公开的绕过方式
+
+**Techniques:**
+
+- TODO: 由 AI 自主维护更新 - 填入技术手段
+
+**Root Causes:**
+
+- TODO: 由 AI 自主维护更新 - 填入根因分析
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
+- Last Verified: 2026-06
+
+---
+
+### Web Deserialization 0day
+
+| Property | Value |
+|----------|-------|
+| ID | `web-deser-0day` |
+| Category | web |
+| Sub-Category | deserialization |
+| Risk Level | critical |
+| Confidence | 0.7 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | deserialization, 0day, rce, gadget-chain, java, php, python |
+
+**Triggers:**
+
+- TODO: 由 AI 自主维护更新 - 填入最新反序列化 0day 的触发场景
+- 示例: 目标使用最新版本的序列化库，存在未公开的 gadget chain
+
+**Techniques:**
+
+- TODO: 由 AI 自主维护更新 - 填入技术手段
+
+**Root Causes:**
+
+- TODO: 由 AI 自主维护更新 - 填入根因分析
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
+- Last Verified: 2026-06
+
+---
+
+### Web WAF Bypass 0day
+
+| Property | Value |
+|----------|-------|
+| ID | `web-waf-bypass-0day` |
+| Category | web |
+| Sub-Category | waf-bypass |
+| Risk Level | high |
+| Confidence | 0.7 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | waf, bypass, 0day, firewall, evasion, filter-bypass |
+
+**Triggers:**
+
+- TODO: 由 AI 自主维护更新 - 填入最新 WAF 绕过 0day 的触发场景
+- 示例: 目标使用最新版本的 Cloudflare/阿里云 WAF/ModSecurity，存在未公开的绕过技术
+
+**Techniques:**
+
+- TODO: 由 AI 自主维护更新 - 填入技术手段
+
+**Root Causes:**
+
+- TODO: 由 AI 自主维护更新 - 填入根因分析
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
+- Last Verified: 2026-06
+
+---
+
+### Web XSS Filter 0day
+
+| Property | Value |
+|----------|-------|
+| ID | `web-xss-0day` |
+| Category | web |
+| Sub-Category | xss |
+| Risk Level | high |
+| Confidence | 0.7 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | xss, 0day, filter-bypass, csp-bypass, dom-xss, stored-xss |
+
+**Triggers:**
+
+- TODO: 由 AI 自主维护更新 - 填入最新 XSS 过滤 0day 的触发场景
+- 示例: 目标使用最新的 CSP 策略/WAF XSS 过滤，存在未公开的绕过方式
+
+**Techniques:**
+
+- TODO: 由 AI 自主维护更新 - 填入技术手段
+
+**Root Causes:**
+
+- TODO: 由 AI 自主维护更新 - 填入根因分析
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
+- Last Verified: 2026-06
+
+---
 
 ### Insecure Deserialization Exploitation
 
@@ -1168,6 +1190,168 @@
 - 应用?XML 解析结果直接返回给客户端
 - 文件上传?XML 类文件（SVG、DOCX、XLSX）被直接解析
 - XML 转换（XSLT）中未限制文档函数访?
+
+**Quality:**
+
+- Reviewed: Yes
+- Tested: Yes
+- Last Verified: 2026-06
+
+---
+
+---
+
+## kubernetes
+
+**Skills:** 1
+
+### Kubernetes Cluster Misconfiguration Exploitation
+
+| Property | Value |
+|----------|-------|
+| ID | `k8s-misconfig-001` |
+| Category | kubernetes |
+| Sub-Category | k8s-misconfig |
+| Risk Level | critical |
+| Confidence | 0.91 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | kubernetes, k8s, misconfiguration, rbac, pod-escape, cluster-admin |
+
+**Triggers:**
+
+- 发现 Kubernetes API Server 未授权访
+- ServiceAccount 权限配置过高
+- Pod 以特权模式运
+- ClusterRole 绑定过于宽松
+- etcd 未加密或可匿名访?
+
+**Techniques:**
+
+- ServiceAccount token 提取和使
+- RBAC 权限提升 (escalate, bind, impersonate)
+- 特权 Pod 创建和宿主机挂载
+- kubelet API 匿名访问利用
+- etcd 数据提取
+- 网络策略绕过
+
+**Root Causes:**
+
+- RBAC 配置过于宽松，授予不必要的权
+- API Server 未启用认证或授权
+- 缺少 Pod 安全策略 (PSP) ?PodSecurity Admission
+- etcd 数据未加
+- kubelet 启用了匿名认
+- 默认命名空间未做安全加固
+
+**Quality:**
+
+- Reviewed: Yes
+- Tested: Yes
+- Last Verified: 2026-06
+
+---
+
+---
+
+## linux
+
+**Skills:** 1
+
+### Linux Privilege Escalation Techniques
+
+| Property | Value |
+|----------|-------|
+| ID | `linux-priv-esc-001` |
+| Category | linux |
+| Sub-Category | privilege-escalation |
+| Risk Level | critical |
+| Confidence | 0.93 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | linux, privilege-escalation, sudo, capability, cron, suid, priv-esc |
+
+**Triggers:**
+
+- 获取普通用?shell 后需要提升到 root
+- 发现 sudo 配置不当可执行特权命
+- 发现 SUID 二进制文件可被滥
+- 发现可写?cron 任务或脚
+- 发现危险?Linux Capability 配置
+
+**Techniques:**
+
+- sudo 命令滥用 (GTFOBins)
+- SUID 二进制利
+- Capability 滥用 (cap_setuid, cap_sys_ptrace)
+- cron 任务劫持
+- 环境变量劫持 (PATH, LD_PRELOAD)
+- Docker/LXD 组成员提
+- 内核漏洞利用
+- 可写 /etc/passwd 利用
+
+**Root Causes:**
+
+- sudoers 配置允许 NOPASSWD 执行危险命令
+- SUID 二进制存在已知可利用行为
+- Linux Capability 分配过于宽松
+- cron 脚本权限配置不当
+- 用户被加入特权组 (docker, lxd)
+- 内核存在可利用的本地提权漏洞
+
+**Quality:**
+
+- Reviewed: Yes
+- Tested: Yes
+- Last Verified: 2026-06
+
+---
+
+---
+
+## mobile
+
+**Skills:** 1
+
+### Android APK Reverse Engineering and Security Analysis
+
+| Property | Value |
+|----------|-------|
+| ID | `mobile-android-apk-001` |
+| Category | mobile |
+| Sub-Category | android-apk |
+| Risk Level | medium |
+| Confidence | 0.87 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | android, apk, reverse-engineering, mobile-security, deobfuscation, frida |
+
+**Triggers:**
+
+- 需要对 Android APK 进行安全审计
+- 发现可疑应用需要逆向分析
+- API 接口加密需要提取密
+- 应用存在数据泄露风险需要验
+- 需要绕过应用的安全检测机?
+
+**Techniques:**
+
+- APK 反编?(jadx, apktool)
+- Smali 代码分析
+- Frida 动?Hook
+- SSL Pinning Bypass
+- Root Detection Bypass
+- Intent 劫持测试
+- Deep Link 安全测试
+- Native 库分?
+
+**Root Causes:**
+
+- 开发者将密钥硬编码在代码或资源文件中
+- 未正确配?AndroidManifest.xml 中的 exported 属
+- 未使?HTTPS 或证书验证不完整
+- 缺少代码混淆或仅使用 ProGuard 基础规则
+- 未对敏感数据进行加密存储
 
 **Quality:**
 

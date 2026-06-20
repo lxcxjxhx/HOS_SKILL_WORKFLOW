@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-06-19T14:20:38.741Z",
-  "totalSkills": 22,
+  "generatedAt": "2026-06-20T02:07:44.890Z",
+  "totalSkills": 27,
   "skills": [
     {
       "id": "ad-domain-enum-001",
@@ -37,6 +37,25 @@
       "riskLevel": "high",
       "confidence": 0.88,
       "description": "Prompt 注入技术用于测试和绕过 LLM 系统的安全限制",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "api-graphql-injection-001",
+      "name": "GraphQL Injection Detection and Exploitation",
+      "category": "api",
+      "subCategory": "graphql",
+      "tags": [
+        "graphql",
+        "injection",
+        "api",
+        "introspection",
+        "dos",
+        "batching"
+      ],
+      "riskLevel": "high",
+      "confidence": 0.85,
+      "description": "GraphQL 注入利用 GraphQL 查询语言的灵活性，通过 introspection 获取完整 schema 后构造恶意查询，实现数据越权访问、DoS 攻击或 resolver 层注入",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -237,6 +256,83 @@
       "riskLevel": "critical",
       "confidence": 0.9,
       "description": "Docker 容器逃逸技术用于在获取容器访问权限后，突破容器隔离限制访问宿主机资源",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "web-auth-bypass-0day",
+      "name": "Web Authentication Bypass 0day",
+      "category": "web",
+      "subCategory": "authentication",
+      "tags": [
+        "authentication",
+        "bypass",
+        "0day",
+        "login",
+        "session",
+        "token"
+      ],
+      "riskLevel": "critical",
+      "confidence": 0.7,
+      "description": "TODO: 由 AI 自主维护更新 - 填入认证绕过 0day 的详细描述",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "web-deser-0day",
+      "name": "Web Deserialization 0day",
+      "category": "web",
+      "subCategory": "deserialization",
+      "tags": [
+        "deserialization",
+        "0day",
+        "rce",
+        "gadget-chain",
+        "java",
+        "php",
+        "python"
+      ],
+      "riskLevel": "critical",
+      "confidence": 0.7,
+      "description": "TODO: 由 AI 自主维护更新 - 填入反序列化 0day 的详细描述",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "web-waf-bypass-0day",
+      "name": "Web WAF Bypass 0day",
+      "category": "web",
+      "subCategory": "waf-bypass",
+      "tags": [
+        "waf",
+        "bypass",
+        "0day",
+        "firewall",
+        "evasion",
+        "filter-bypass"
+      ],
+      "riskLevel": "high",
+      "confidence": 0.7,
+      "description": "TODO: 由 AI 自主维护更新 - 填入 WAF 绕过 0day 的详细描述",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "web-xss-0day",
+      "name": "Web XSS Filter 0day",
+      "category": "web",
+      "subCategory": "xss",
+      "tags": [
+        "xss",
+        "0day",
+        "filter-bypass",
+        "csp-bypass",
+        "dom-xss",
+        "stored-xss"
+      ],
+      "riskLevel": "high",
+      "confidence": 0.7,
+      "description": "TODO: 由 AI 自主维护更新 - 填入 XSS 过滤 0day 的详细描述",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -474,6 +570,7 @@
       "name": "API 安全",
       "description": "API 安全相关 Skill（JWT, OAuth, IDOR, Rate Limit 等）",
       "skills": [
+        "api-graphql-injection-001",
         "api-idor-001",
         "api-jwt-001",
         "api-oauth-001",
@@ -503,6 +600,23 @@
         "container-docker-escape-001"
       ]
     },
+    "web-bundle": {
+      "name": "Web 安全",
+      "description": "Web 应用安全相关 Skill（SQLi, XSS, SSRF, XXE, 上传绕过, RCE 等）",
+      "skills": [
+        "web-auth-bypass-0day",
+        "web-deser-0day",
+        "web-waf-bypass-0day",
+        "web-xss-0day",
+        "web-deser-001",
+        "web-rce-001",
+        "web-sqli-001",
+        "web-ssrf-001",
+        "web-upload-001",
+        "web-xss-001",
+        "web-xxe-001"
+      ]
+    },
     "kubernetes-bundle": {
       "name": "Kubernetes 安全",
       "description": "Kubernetes 安全相关 Skill（配置审计等）",
@@ -524,19 +638,6 @@
         "mobile-android-apk-001"
       ]
     },
-    "web-bundle": {
-      "name": "Web 安全",
-      "description": "Web 应用安全相关 Skill（SQLi, XSS, SSRF, XXE, 上传绕过, RCE 等）",
-      "skills": [
-        "web-deser-001",
-        "web-rce-001",
-        "web-sqli-001",
-        "web-ssrf-001",
-        "web-upload-001",
-        "web-xss-001",
-        "web-xxe-001"
-      ]
-    },
     "windows-bundle": {
       "name": "Windows 安全",
       "description": "Windows 安全相关 Skill（权限提升, 服务配置, 凭据问题等）",
@@ -546,10 +647,11 @@
     },
     "all-bundle": {
       "name": "全部 Skill",
-      "description": "所有 22 个攻防实战 Skill",
+      "description": "所有 27 个攻防实战 Skill",
       "skills": [
         "ad-domain-enum-001",
         "ai-prompt-injection-001",
+        "api-graphql-injection-001",
         "api-idor-001",
         "api-jwt-001",
         "api-oauth-001",
@@ -559,6 +661,10 @@
         "cloud-s3-001",
         "code-review-java-deser-001",
         "container-docker-escape-001",
+        "web-auth-bypass-0day",
+        "web-deser-0day",
+        "web-waf-bypass-0day",
+        "web-xss-0day",
         "k8s-misconfig-001",
         "linux-priv-esc-001",
         "mobile-android-apk-001",

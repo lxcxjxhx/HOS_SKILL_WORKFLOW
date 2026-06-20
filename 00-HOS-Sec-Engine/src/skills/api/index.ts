@@ -1,4 +1,4 @@
-﻿/**
+/**
  * HOS-Sec-Engine V2 - API Security Skills Index
  */
 
@@ -37,11 +37,21 @@ try {
   // Skill file unavailable (may be blocked by security software)
 }
 
+let graphQLSkills: AttackDefenseSkill[] = [];
+
+try {
+  const mod = require('./graphql-injection');
+  graphQLSkills = mod.graphQLSkills || [];
+} catch (e) {
+  // Skill file unavailable (may be blocked by security software)
+}
+
 export const apiSkills: AttackDefenseSkill[] = [
   ...jwtSkills,
   ...idorSkills,
   ...oauthSkills,
   ...rateLimitSkills,
+  ...graphQLSkills,
 ];
 
-export { jwtSkills, idorSkills, oauthSkills, rateLimitSkills };
+export { jwtSkills, idorSkills, oauthSkills, rateLimitSkills, graphQLSkills };

@@ -16,37 +16,59 @@
 
 ## 安装
 
-### 方式一：交互式 CLI 安装（推荐 - 选择性安装）
+### 方式一：交互式 CLI 安装（推荐 - 统一整合 Skill）
 
-使用 `npx hos-skills` 启动交互式安装界面，支持浏览、搜索、按领域一键安装：
+使用 `npx hos-skills` 启动交互式安装界面，直接复制文件到目标编辑器的 `.trae/skills/` 目录：
 
 ```bash
-# 启动交互式安装
+# 启动交互式安装（默认安装统一整合 skill）
 npx hos-skills
 
-# 非交互模式 - 安装指定 Skill
-npx hos-skills --skills web-sqli-001,web-xss-001 --target trae --repo https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW
+# 安装到指定编辑器
+npx hos-skills --target trae
 
-# 非交互模式 - 按领域一键安装
-npx hos-skills --bundle web-bundle --target claude-code --repo https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW
+# 安装独立 skill（不整合）
+npx hos-skills --skills web-sqli-001 --target trae --mode standalone
 
-# 非交互模式 - 安装全部
-npx hos-skills --all --target cursor --repo https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW
+# 按领域一键安装
+npx hos-skills --bundle web-bundle --target claude-code
+
+# 安装全部独立 skill
+npx hos-skills --all --target cursor --mode standalone
+
+# 全局安装（所有项目可用）
+npx hos-skills --target trae --global
 ```
 
 **交互模式支持以下功能：**
-- **浏览所有 Skill** - 按分类展示 22 个 Skill，空格多选安装
+- **整合安装（默认）** - 安装统一的 `hos-sec-engine` skill，包含所有 22 个 skill 的知识
+- **浏览独立 Skill** - 按分类展示 22 个 Skill，空格多选安装独立版本
 - **搜索 Skill** - 关键词搜索（支持 ID、名称、标签、分类模糊匹配）
 - **按领域一键安装** - 选择领域包（web-bundle、api-bundle、cloud-bundle 等）
 - **安装全部** - 一键安装所有 22 个 Skill
 - **查看 Skill 详情** - 查看单个 Skill 的详细信息
 
-### 方式二：npx skills 全量安装
+> **重要**：推荐使用整合模式安装。TRAE/Claude/Cursor 等 IDE 只读取 `.trae/skills/` 一级目录，整合模式将所有 skill 合并为单个文件夹，避免技能面板混乱。
+
+**整合 Skill 结构：**
+```
+.trae/skills/hos-sec-engine/
+├── SKILL.md              # 统一入口 + 场景路由指令
+├── skills/               # 子技能详情（按需加载）
+│   ├── web-sqli-001.md
+│   ├── web-xss-001.md
+│   └── ... (其他 skill 详情)
+├── references/
+│   └── REFERENCE.md
+└── 0day-skills/          # 0day 专属技能（AI 自主维护）
+```
+
+### 方式二：npx skills 全量安装（兼容模式）
 
 使用 `npx skills` 命令行工具全量安装到 AI 编辑器：
 
 ```bash
-# 一键安装全部 Skill（默认安装到当前项目）
+# 一键安装整合 skill（默认安装到当前项目）
 npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW -s hos-sec-engine -y
 
 # 安装到指定编辑器
@@ -60,28 +82,25 @@ npx skills add https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW -s hos-sec-engine 
 
 **交互式安装示例：**
 ```
-███████╗██╗  ██╗██╗██╗     ██╗     ███████╗
-██╔════╝██║ ██╔╝██║██║     ██║     ██╔════╝
-███████╗█████╔╝ ██║██║     ██║     ███████╗
-╚════██║██╔═██╗ ██║██║     ██║     ╚════██║
-███████║██║  ██╗██║███████╗███████╗███████║
-╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚══════╝
-    HOS Skills Installer
+HOS Skills Installer
+====================
 
 已加载 22 个 Skill
 
 选择安装方式：
-❯ 1. 浏览所有 Skill（分类选择）
-  2. 搜索 Skill（关键词搜索）
-  3. 按领域一键安装
-  4. 安装全部 Skill
-  5. 查看 Skill 详情
-  6. 退出
+❯ 1. 整合安装（推荐，所有 skill 合并为一个）
+  2. 浏览独立 Skill（分类选择）
+  3. 搜索 Skill（关键词搜索）
+  4. 按领域一键安装
+  5. 安装全部独立 Skill
+  6. 查看 Skill 详情
+  7. 退出
 ```
 
-安装后，在 AI 编辑器对话中直接提及 Skill 名称或描述相关场景即可触发：
-- "使用 web-sqli-001 进行 SQL 注入 WAF 绕过测试"
-- "目标有 WAF 防护，SQL 注入被拦截了，帮我绕过"
+安装后，在 AI 编辑器对话中直接描述场景即可触发：
+- "帮我绕过这个 WAF 的 SQL 注入防护" → 自动匹配 `web-sqli-001` 子技能
+- "测试这个 API 的 JWT 认证" → 自动匹配 `api-jwt-001` 子技能
+- "/hos-sec-master" → 进入统一攻防入口，AI 自动选择最合适的 skill
 
 ### 方式二：npm 包安装（TypeScript Engine）
 
