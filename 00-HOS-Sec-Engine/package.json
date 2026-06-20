@@ -28,8 +28,10 @@
   "license": "MIT",
   "files": [
     "dist/**/*",
+    "src/**/*",
     "skills/**/*",
-    "src/types/**/*"
+    "cli/**/*",
+    "tsconfig.json"
   ],
   "devDependencies": {
     "typescript": "^5.3.0",
