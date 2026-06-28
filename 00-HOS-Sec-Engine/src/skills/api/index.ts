@@ -43,7 +43,7 @@ try {
   const mod = require('./graphql-injection');
   graphQLSkills = mod.graphQLSkills || [];
 } catch (e) {
-  // Skill file unavailable (may be blocked by security software)
+  // Skill file unavailable
 }
 
 export const apiSkills: AttackDefenseSkill[] = [

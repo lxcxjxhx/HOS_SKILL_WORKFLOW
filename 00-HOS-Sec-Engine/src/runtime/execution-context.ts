@@ -1,6 +1,12 @@
+import { AsyncLocalStorage } from 'async_hooks';
+import * as crypto from 'crypto';
 import { ExecutionContext, ExecutionLog, Finding, EvidenceItem } from './types';
 
-let _currentContext: ExecutionContext | null = null;
+const MAX_FINDINGS = 1000;
+const MAX_EVIDENCE = 500;
+const MAX_LOGS = 2000;
+
+const asyncLocalStorage = new AsyncLocalStorage<ExecutionContext>();
 
 export class ExecutionContextManager {
   private context: ExecutionContext;
@@ -19,23 +25,32 @@ export class ExecutionContextManager {
 
   static create(target: string, config: any = {}): ExecutionContext {
     const manager = new ExecutionContextManager(target, config);
-    _currentContext = manager.context;
+    asyncLocalStorage.enterWith(manager.context);
     return manager.context;
   }
 
   static getCurrent(): ExecutionContext | null {
-    return _currentContext;
+    return asyncLocalStorage.getStore() ?? null;
+  }
+
+  static run<T>(context: ExecutionContext, fn: () => T): T {
+    return asyncLocalStorage.run(context, fn);
   }
 
   addFinding(finding: Finding): void {
+    if (this.context.findings.length >= MAX_FINDINGS) return;
     this.context.findings.push(finding);
   }
 
   addEvidence(evidence: EvidenceItem): void {
+    if (this.context.evidence.length >= MAX_EVIDENCE) return;
     this.context.evidence.push(evidence);
   }
 
   log(message: string, level: ExecutionLog['level'] = 'info', source?: string): void {
+    if (this.context.logs.length >= MAX_LOGS) {
+      this.context.logs.shift();
+    }
     this.context.logs.push({
       timestamp: new Date().toISOString(),
       level,

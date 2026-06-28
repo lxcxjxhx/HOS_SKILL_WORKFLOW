@@ -20,7 +20,7 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
         trigger: {
             scenarios: [
                 '成功获取域内主机访问权限后需要收集域信息',
-                '需要绘?AD 域拓扑结构和信任关系',
+                '需要绘制 AD 域拓扑结构和信任关系',
                 '寻找域管理员和特权账',
                 '发现域内服务账号和委派配',
                 '需要识别域内潜在的攻击路径',
@@ -66,7 +66,7 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
                 'PowerShell 内置 AD 模块可查询域信息',
             ],
             observations: [
-                'BloodHound 是最强大?AD 分析工具，可自动识别攻击路径',
+                'BloodHound 是最强大的 AD 分析工具，可自动识别攻击路径',
                 '普通域用户即可获取大量 AD 信息',
                 'LDAP 查询是最隐蔽的信息收集方',
                 'Kerberos 预认证请求可用于用户枚举',
@@ -75,7 +75,7 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
                 '使用 Loud 方式 (?net group) 触发告警',
                 '忽略服务账号和委派配',
                 '只关注用户而忽略计算机对象',
-                '未分?ACL ?ACE 权限',
+                '未分析 ACL 和 ACE 权限',
             ],
             notes: [
                 '信息收集应尽量使用隐蔽方式避免触发告',
@@ -85,9 +85,9 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
         },
         action: {
             checklist: [
-                '获取当前用户域信?(whoami /all)',
+                '获取当前用户域信息(whoami /all)',
                 '定位域控制器 (nltest /dsgetdc)',
-                '枚举域用户和?(net user /domain)',
+                '枚举域用户和组(net user /domain)',
                 '枚举域计算机 (net group "domain computers" /domain)',
                 '查询 SPN (setspn -T domain -Q */*)',
                 '使用 BloodHound 收集器收集数',
@@ -102,12 +102,12 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
                 'SPN 扫描',
                 'GPO 分析',
                 'ACL/ACE 权限分析',
-                '域信任关系枚?',
+                '域信任关系枚举',
             ],
             examples: [
                 {
                     name: 'LDAP 查询域管理员',
-                    description: '使用 LDAP 过滤器查?Domain Admins 组成',
+                    description: '使用 LDAP 过滤器查询Domain Admins 组成',
                     content: '# PowerShell LDAP 查询\n' +
                         '$searcher = New-Object DirectoryServices.DirectorySearcher\n' +
                         '$searcher.Filter = "(&(objectClass=user)(memberOf=CN=Domain Admins,CN=Users,DC=domain,DC=com))"\n' +
@@ -115,10 +115,10 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
                 },
                 {
                     name: 'BloodHound 数据收集',
-                    description: '使用 SharpHound 收集器收?AD 数据用于攻击路径分析',
+                    description: '使用 SharpHound 收集器收集AD 数据用于攻击路径分析',
                     content: '# 使用 SharpHound 收集\n' +
                         '.\\SharpHound.exe -c All -d domain.com\n' +
-                        '# 或使?PowerShell\n' +
+                        '# 或使用 PowerShell\n' +
                         'Import-Module .\\SharpHound.ps1\n' +
                         'Invoke-BloodHound -CollectionMethod All -Domain domain.com',
                 },
@@ -134,7 +134,7 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
             successSigns: [
                 'LDAP 查询返回有效结果',
                 'BloodHound 生成完整的攻击路径图',
-                '识别出高价值目标账?',
+                '识别出高价值目标账号',
             ],
             falsePositiveSigns: [
                 '查询返回空结果可能因权限不足而非无数',
@@ -143,7 +143,7 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
         },
         defense: {
             recommendations: [
-                '限制域用?LDAP 查询权限',
+                '限制域用户的 LDAP 查询权限',
                 '启用 LDAP 签名和通道绑定',
                 '部署 AD 审计和监',
                 '实施最小权限原',
@@ -168,6 +168,11 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
         },
         playbooks: ['domain-pentest'],
         phase: 'user-enumeration',
+        runtime: {
+          ...DEFAULT_SKILL_RUNTIME,
+          requiresNetwork: true,
+          estimatedTokens: 2500,
+        },
         enabled: true,
     },
 ];

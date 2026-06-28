@@ -488,6 +488,69 @@ async function main() {
   console.log(chalk.bold('安装源码:'), options.installSource ? '是' : '否');
   console.log('');
   
+  // 交互模式: 显示菜单
+  if (!options.install && !options.skill && options.mode === 'bundled') {
+    const { default: select } = require('@inquirer/select').default ? {} : require('@inquirer/select');
+    const menuChoice = await select({
+      message: '选择安装方式：',
+      choices: [
+        { name: '📦 整合安装 (hos-sec-engine + 全部子技能)', value: 'bundled', description: '推荐：一次性安装所有技能' },
+        { name: '📂 浏览安装（按分类选择）', value: 'browse', description: '按分类浏览并选择要安装的技能' },
+        { name: '🔍 搜索安装（关键词搜索）', value: 'search', description: '通过关键词搜索技能' },
+        { name: '📋 安装全部独立 Skill', value: 'all', description: '安装所有独立 skill（不含整合包）' },
+      ],
+    });
+
+    if (menuChoice === 'bundled') {
+      options.mode = 'bundled';
+    } else if (menuChoice === 'all') {
+      options.mode = 'standalone';
+      const skillsDir = getSkillsSourceDir(projectRoot);
+      if (skillsDir) {
+        options.skill = fs.readdirSync(skillsDir, { withFileTypes: true })
+          .filter(e => e.isDirectory() && e.name !== 'hos-sec-engine' && e.name !== 'references')
+          .map(e => e.name);
+      }
+    } else if (menuChoice === 'browse' || menuChoice === 'search') {
+      const skillsIndex = getSkillsIndexPath(projectRoot);
+      if (!skillsIndex) {
+        console.error(chalk.red('[错误] 无法找到 skills-index.json'));
+        process.exit(1);
+      }
+      const indexData = JSON.parse(fs.readFileSync(skillsIndex, 'utf-8'));
+
+      let skillsList = indexData.skills || [];
+      if (menuChoice === 'search') {
+        const { default: input } = require('@inquirer/input');
+        const keyword = await input({ message: '输入搜索关键词：' });
+        const kw = keyword.toLowerCase();
+        skillsList = skillsList.filter(s =>
+          s.id.toLowerCase().includes(kw) ||
+          (s.description || '').toLowerCase().includes(kw) ||
+          (s.tags || []).some(t => t.toLowerCase().includes(kw))
+        );
+        console.log(chalk.gray(`找到 ${skillsList.length} 个匹配的 skill`));
+      }
+
+      const { default: checkbox } = require('@inquirer/checkbox');
+      const choices = skillsList.map(s => ({
+        name: `${(s.id || '').padEnd(30)} ${(s.description || '').substring(0, 50)}`,
+        value: s.id,
+      }));
+      const selected = await checkbox({
+        message: menuChoice === 'browse' ? '选择要安装的 Skill：' : '选择要安装的 Skill（搜索结果）：',
+        choices,
+        pageSize: 15,
+      });
+
+      if (!selected || selected.length === 0) {
+        console.log(chalk.yellow('未选择任何 Skill。'));
+        process.exit(0);
+      }
+      options.skill = selected;
+    }
+  }
+
   if (options.mode === 'bundled' || options.skill) {
     const success = installFull(projectRoot, targetDir, options);
     if (success) {

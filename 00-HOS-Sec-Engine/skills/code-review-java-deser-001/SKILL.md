@@ -1,6 +1,6 @@
 ---
 name: code-review-java-deser-001
-description: "Java 反序列化漏洞是代码审计中的高危发现 适用于: 代码审计中发?Java 反序列化入口; 应用使用 ObjectInputStream.readObject(); 发现不安全的反序列化库配"
+description: "Java 反序列化漏洞是代码审计中的高危发现 适用于: 代码审计中发现 Java 反序列化入口; 应用使用 ObjectInputStream.readObject(); 发现不安全的反序列化库配"
 license: MIT
 metadata:
   author: HOS-Sec-Engine
@@ -17,15 +17,15 @@ metadata:
   confidence: 0.93
 ---
 # Java Deserialization Vulnerability Code Audit
-Java 反序列化漏洞是代码审计中的高危发现。当应用对用户可控数据进行反序列化时，攻击者可构造恶意序列化数据，利用已?gadget chain 执行任意代码。Java 反序列化漏洞的关键在于找到反序列化入口点和可利用?gadget chain
+Java 反序列化漏洞是代码审计中的高危发现。当应用对用户可控数据进行反序列化时，攻击者可构造恶意序列化数据，利用已知gadget chain 执行任意代码。Java 反序列化漏洞的关键在于找到反序列化入口点和可利用的gadget chain
 ## 何时使用
 
 ### 触发场景
 
-- 代码审计中发?Java 反序列化入口
+- 代码审计中发现 Java 反序列化入口
 - 应用使用 ObjectInputStream.readObject()
 - 发现不安全的反序列化库配
-- 需要识?gadget chain 可利用的依赖
+- 需要识别 gadget chain 可利用的依赖
 - 发现 RMI/JMX 接口暴露
 
 ### 关键词
@@ -49,11 +49,11 @@ Java 反序列化漏洞是代码审计中的高危发现。当应用对用户可
 
 1. 搜索 ObjectInputStream ?readObject() 调用
 2. 检查反序列化数据来源是否可
-3. 分析项目依赖中是否存在危?gadget 
-4. 检?XML/JSON 反序列化库配
-5. 检?RMI/JMX 接口安全
+3. 分析项目依赖中是否存在危险 gadget
+4. 检查 XML/JSON 反序列化库配置
+5. 检查 RMI/JMX 接口安全
 6. 使用工具扫描已知反序列化漏洞依赖
-7. 验证是否实施了反序列化过?
+7. 验证是否实施了反序列化过滤
 
 ## 技术手段
 
@@ -68,17 +68,17 @@ Java 反序列化漏洞是代码审计中的高危发现。当应用对用户可
 
 ### 症状
 
-- 代码中使?ObjectInputStream 读取用户输入
+- 代码中使用 ObjectInputStream 读取用户输入
 - HTTP 请求 body 包含序列化对
 - RMI/JMX 接口可被未授权访
-- 日志中出?ClassNotFoundException 后跟异常行为
+- 日志中出现 ClassNotFoundException 后跟异常行为
 - 应用使用旧版 commons-collections 等已知危险库
 
 ### 根因分析
 
 - ObjectInputStream.readObject() 未验证输入来
-- 使用了包含危?gadget 的第三方
-- 自定?readObject() 方法执行危险操作
+- 使用了包含危险 gadget 的第三方库
+- 自定义 readObject() 方法执行危险操作
 - XML/JSON 反序列化库配置不安全
 - RMI 注册表未绑定安全策略
 
@@ -91,10 +91,10 @@ Java 反序列化漏洞是代码审计中的高危发现。当应用对用户可
 
 ### 常见错误
 
-- 只检?ObjectInputStream 忽略其他反序列化入口
-- 未检查第三方库版本是否存在已?gadget
+- 只检查 ObjectInputStream 忽略其他反序列化入口
+- 未检查第三方库版本是否存在已知 gadget
 - 忽略 XML 反序列化 (XMLDecoder, XStream)
-- 未考虑 RMI/JMX 接口的反序列化风?
+- 未考虑 RMI/JMX 接口的反序列化风险
 
 ### 补充说明
 
@@ -116,7 +116,7 @@ public Object deserialize(byte[] data) {
     return ois.readObject(); // 直接反序列化用户数据
 }
 
-// 修复方案：使?ObjectInputFilter
+// 修复方案：使用 ObjectInputFilter
 public Object safeDeserialize(byte[] data) {
     ObjectInputFilter filter = ObjectInputFilter.allowFilter(
         clazz -> allowedClasses.contains(clazz.getName()),
@@ -132,14 +132,14 @@ public Object safeDeserialize(byte[] data) {
 通过依赖版本判断可利用的 gadget chain
 
 ```
-# 使用 ysoserial 检查可?gadget
+# 使用 ysoserial 检查可用 gadget
 java -jar ysoserial.jar CommonsCollections5 "calc"
 
 # 常见危险依赖版本:
 # - commons-collections <= 3.2.1
 # - commons-beanutils <= 1.9.2
 # - spring-aop <= 4.3.18
-# - groovy-all (所有版?
+# - groovy-all (所有版本)
 ```
 
 ## 验证标准
@@ -149,18 +149,18 @@ java -jar ysoserial.jar CommonsCollections5 "calc"
 - 成功利用 gadget chain 执行命令
 - ysoserial payload 触发异常
 - 网络回连成功
-- 应用日志中出?gadget chain 执行痕迹
+- 应用日志中出现 gadget chain 执行痕迹
 
 ### 成功标志
 
 - 反序列化入口点可触发 gadget 执行
 - Payload 导致预期命令执行
-- 应用崩溃或返回异常响?
+- 应用崩溃或返回异常响应
 
 ### 误报标志
 
 - 反序列化失败但非 gadget chain 原因
-- 依赖版本存在?gadget 不可利用
+- 依赖版本存在但 gadget 不可利用
 
 ## 防御建议
 
@@ -169,14 +169,14 @@ java -jar ysoserial.jar CommonsCollections5 "calc"
 - 避免反序列化不可信数
 - 使用 ObjectInputFilter 限制可反序列化的
 - 升级到无危险 gadget 的依赖版
-- 使用替代方案?JSON 替代 Java 序列
-- 实施网络层隔离限?RMI/JMX 访问
+- 使用替代方案如 JSON 替代 Java 序列
+- 实施网络层隔离限制 RMI/JMX 访问
 
 ### 缓解措施
 
 - 部署 RASP 检测反序列化攻
 - 使用 WAF 规则拦截 ysoserial payload
-- 定期更新第三方依?
+- 定期更新第三方依赖
 
 ## 参考链接
 

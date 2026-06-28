@@ -2,7 +2,7 @@
  * HOS-Sec-Engine V2 - Android APK Security Skills
  */
 
-import { AttackDefenseSkill } from '\.\./\.\./\.\./types/skill';
+import { AttackDefenseSkill, DEFAULT_SKILL_RUNTIME } from '../../../types/skill';
 
 export const androidApkSkills: AttackDefenseSkill[] = [
     {
@@ -23,7 +23,7 @@ export const androidApkSkills: AttackDefenseSkill[] = [
                 '发现可疑应用需要逆向分析',
                 'API 接口加密需要提取密',
                 '应用存在数据泄露风险需要验',
-                '需要绕过应用的安全检测机?',
+                '需要绕过应用的安全检测机制',
             ],
             keywords: [
                 'apk reverse',
@@ -59,54 +59,54 @@ export const androidApkSkills: AttackDefenseSkill[] = [
             ],
             rootCauses: [
                 '开发者将密钥硬编码在代码或资源文件中',
-                '未正确配?AndroidManifest.xml 中的 exported 属',
-                '未使?HTTPS 或证书验证不完整',
+                '未正确配置 AndroidManifest.xml 中的 exported 属性',
+                '未使用 HTTPS 或证书验证不完整',
                 '缺少代码混淆或仅使用 ProGuard 基础规则',
                 '未对敏感数据进行加密存储',
             ],
             observations: [
-                '大部?APK 可以通过工具轻松反编',
+                '大多数 APK 可以通过工具轻松反编',
                 '代码混淆不能阻止逆向，只增加分析难度',
-                'Frida 是最强大?Android 动?Hook 框架',
+                'Frida 是最强大的 Android 动态 Hook 框架',
                 '许多应用忽略 SSL Pinning 或实现不完整',
             ],
             commonMistakes: [
                 '仅做静态分析忽略动态行',
-                '忽略 Native ?(so 文件) 的安全分',
-                '未检?Intent 劫持风险',
+                '忽略 Native 库(so 文件) 的安全分',
+                '未检查 Intent 劫持风险',
                 '忽略 Deep Link 安全配置',
             ],
             notes: [
                 'APK 分析需要结合静态和动态方',
-                '注意应用?Anti-Debug ?Anti-Hook 机制',
-                'Android 12+ 引入了新的安全特?',
+                '注意应用的 Anti-Debug ?Anti-Hook 机制',
+                'Android 12+ 引入了新的安全特性',
             ],
         },
         action: {
             checklist: [
                 '解压 APK 文件分析目录结构',
-                '反编?classes.dex 获取 Java 代码',
+                '反编译 classes.dex 获取 Java 代码',
                 '分析 AndroidManifest.xml 组件配置',
                 '搜索硬编码密钥和敏感信息',
                 '检查网络通信安全',
                 '检查数据存储安全',
-                '使用 Frida 进行动?Hook 测试',
-                '检?Root 检测和模拟器检?',
+                '使用 Frida 进行动态 Hook 测试',
+                '检查 Root 检测和模拟器检测',
             ],
             techniques: [
-                'APK 反编?(jadx, apktool)',
+                'APK 反编译(jadx, apktool)',
                 'Smali 代码分析',
-                'Frida 动?Hook',
+                'Frida 动态 Hook',
                 'SSL Pinning Bypass',
                 'Root Detection Bypass',
                 'Intent 劫持测试',
                 'Deep Link 安全测试',
-                'Native 库分?',
+                'Native 库分析',
             ],
             examples: [
                 {
                     name: 'APK 反编译分',
-                    description: '使用 jadx 反编?APK 获取 Java 源码',
+                    description: '使用 jadx 反编译APK 获取 Java 源码',
                     content: '# 使用 jadx 反编译\n' +
                         'jadx -d output_dir target.apk\n' +
                         '# 使用 apktool 反编译\n' +
@@ -116,7 +116,7 @@ export const androidApkSkills: AttackDefenseSkill[] = [
                 },
                 {
                     name: 'Frida SSL Pinning Bypass',
-                    description: '使用 Frida 脚本绕过 SSL Pinning 检',
+                    description: '使用 Frida 脚本绕过 SSL Pinning 检测',
                     content: '# Frida SSL Pinning Bypass 脚本\n' +
                         'frida -U -f com.target.app \\\n' +
                         '  --no-pause \\\n' +
@@ -135,10 +135,10 @@ export const androidApkSkills: AttackDefenseSkill[] = [
         },
         validation: {
             indicators: [
-                '成功反编?APK 并获取可读代',
+                '成功反编译 APK 并获取可读代码',
                 '发现硬编码密钥或敏感信息',
                 '成功绕过安全检测机',
-                '可以拦截和修改应用网络请?',
+                '可以拦截和修改应用网络请求',
             ],
             successSigns: [
                 '反编译代码可读性良',
@@ -148,7 +148,7 @@ export const androidApkSkills: AttackDefenseSkill[] = [
             ],
             falsePositiveSigns: [
                 '反编译代码因混淆难以理解但安全机制仍',
-                'Hook 成功但应用检测到 Hook 并退?',
+                'Hook 成功但应用检测到 Hook 并退出',
             ],
         },
         defense: {
@@ -156,10 +156,10 @@ export const androidApkSkills: AttackDefenseSkill[] = [
                 '使用代码混淆 (ProGuard/R8) 增加逆向难度',
                 '不要在代码中硬编码密',
                 '实施 SSL Pinning',
-                '正确配置 AndroidManifest.xml ?exported 属',
+                '正确配置 AndroidManifest.xml ?exported 属性',
                 '使用 Android Keystore 存储敏感数据',
                 '实施 Root 和模拟器检',
-                '使用 Integrity API 验证应用完整?',
+                '使用 Integrity API 验证应用完整性',
             ],
             mitigations: [
                 '实施 Anti-Tampering 检',
@@ -179,6 +179,11 @@ export const androidApkSkills: AttackDefenseSkill[] = [
         },
         playbooks: [],
         phase: undefined,
+        runtime: {
+          ...DEFAULT_SKILL_RUNTIME,
+          requiresNetwork: false,
+          estimatedTokens: 3000,
+        },
         enabled: true,
     },
 ];

@@ -2,7 +2,7 @@
 
 **ID**: `k8s-misconfig-001` | **分类**: kubernetes | **风险等级**: critical
 
-Kubernetes 配置审计和利用技术用于发现集群中不安全的配置，并通过 RBAC 权限提升、Pod 逃逸等技术获取更高权限。K8s 配置复杂，常见错误包?API Server 暴露、RBAC 过度授权、Pod 安全策略缺失等
+Kubernetes 配置审计和利用技术用于发现集群中不安全的配置，并通过 RBAC 权限提升、Pod 逃逸等技术获取更高权限。K8s 配置复杂，常见错误包括API Server 暴露、RBAC 过度授权、Pod 安全策略缺失等
 
 ## 触发场景
 
@@ -10,18 +10,18 @@ Kubernetes 配置审计和利用技术用于发现集群中不安全的配置，
 - ServiceAccount 权限配置过高
 - Pod 以特权模式运
 - ClusterRole 绑定过于宽松
-- etcd 未加密或可匿名访?
+- etcd 未加密或可匿名访问
 
 ## 操作检查清单
 
-1. 检?API Server 认证和授权配
-2. 检?RBAC 角色和角色绑
-3. 检?ServiceAccount 配置?token 挂载
-4. 检?Pod 安全配置 (securityContext)
-5. 检查网络策?(NetworkPolicy)
-6. 检?etcd 加密配置
-7. 检?kubelet 配置
-8. 检?admission controllers
+1. 检查 API Server 认证和授权配
+2. 检查 RBAC 角色和角色绑定定
+3. 检查 ServiceAccount 配置的 token 挂载
+4. 检查 Pod 安全配置 (securityContext)
+5. 检查网络策略(NetworkPolicy)
+6. 检查 etcd 加密配置
+7. 检查 kubelet 配置
+8. 检查 admission controllers
 
 ## 技术手段
 
@@ -35,10 +35,10 @@ Kubernetes 配置审计和利用技术用于发现集群中不安全的配置，
 ## 症状
 
 - API Server 可匿名访问或接受默认凭据
-- ServiceAccount 自动挂载?Pod
+- ServiceAccount 自动挂载到Pod
 - Pod ?root 用户运行
 - ClusterRoleBinding 授予过宽权限
-- NetworkPolicy 未限?Pod 间通信
+- NetworkPolicy 未限制 Pod 间通信
 
 ## 根因分析
 
@@ -53,7 +53,7 @@ Kubernetes 配置审计和利用技术用于发现集群中不安全的配置，
 
 ### ServiceAccount Token 权限提升
 
-利用挂载?Pod ?ServiceAccount token 访问 K8s API
+利用挂载到Pod ?ServiceAccount token 访问 K8s API
 
 ```
 # 提取 token
@@ -95,11 +95,11 @@ spec:
 
 - kubectl auth can-i 返回 yes
 - 成功创建 ClusterRoleBinding
-- Pod 可以挂载宿主机文件系?
+- Pod 可以挂载宿主机文件系统
 
 ## 防御建议
 
-- 启用并配?RBAC 严格模式
+- 启用并配置 RBAC 严格模式
 - 禁用匿名认证
 - 配置 PodSecurity Admission 限制特权 Pod
 - 加密 etcd 数据

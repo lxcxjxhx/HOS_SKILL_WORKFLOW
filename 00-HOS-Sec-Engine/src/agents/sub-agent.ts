@@ -25,8 +25,25 @@ export class SubAgentImpl implements SubAgent {
     this._currentTaskId = input.id;
     const taskStart = Date.now();
 
-    return new Promise<AgentResult>((resolve) => {
-      // Timeout handling
+    // Promise race: execution vs timeout
+    const execution = new Promise<AgentResult>((resolve) => {
+      // Simulated execution — real impl would call an AI provider here
+      const duration = Date.now() - taskStart;
+      setTimeout(() => {
+        this.status = 'completed';
+        this._currentTaskId = undefined;
+        resolve({
+          taskId: input.id,
+          status: 'success',
+          output: `Agent [${this.name}] executed skill [${input.skillId}] successfully`,
+          findings: [],
+          evidence: [],
+          duration,
+        });
+      }, 0); // yield one tick so the race binds
+    });
+
+    const timeout = new Promise<AgentResult>((resolve) => {
       this._timeoutTimer = setTimeout(() => {
         this.status = 'failed';
         this._currentTaskId = undefined;
@@ -40,27 +57,13 @@ export class SubAgentImpl implements SubAgent {
           error: 'Task execution timeout',
         });
       }, input.timeout);
+    });
 
-      // Simulate task execution
-      // In production, this would invoke the actual skill execution
-      setTimeout(() => {
-        if (this._timeoutTimer) {
-          clearTimeout(this._timeoutTimer);
-        }
-
-        const duration = Date.now() - taskStart;
-        this.status = 'completed';
-        this._currentTaskId = undefined;
-
-        resolve({
-          taskId: input.id,
-          status: 'success',
-          output: `Agent [${this.name}] executed skill [${input.skillId}] successfully`,
-          findings: [],
-          evidence: [],
-          duration,
-        });
-      }, Math.min(100, input.timeout));
+    return Promise.race([execution, timeout]).finally(() => {
+      if (this._timeoutTimer) {
+        clearTimeout(this._timeoutTimer);
+        this._timeoutTimer = undefined;
+      }
     });
   }
 
@@ -79,6 +82,15 @@ export class SubAgentImpl implements SubAgent {
       this._timeoutTimer = undefined;
     }
     this.status = 'failed';
+    this._currentTaskId = undefined;
+  }
+
+  reset(): void {
+    if (this._timeoutTimer) {
+      clearTimeout(this._timeoutTimer);
+      this._timeoutTimer = undefined;
+    }
+    this.status = 'idle';
     this._currentTaskId = undefined;
   }
 }

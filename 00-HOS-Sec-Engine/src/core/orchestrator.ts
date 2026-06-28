@@ -1,4 +1,4 @@
-import { HosSecEngine } from './engine';
+import type { AttackDefenseSkill } from '../types/skill';
 import {
   Playbook,
   PlaybookPhase,
@@ -10,15 +10,39 @@ import {
   FlowSummary,
   PlaybookConfig
 } from '../types/playbook';
-import type { SkillResult } from '../types/result';
+import type { SkillResult, ExecuteQuery } from '../types/result';
+import { SkillDeriver, skillDeriver } from './skill-deriver';
+
+/**
+ * Minimal facade interface used by FlowOrchestrator.
+ * Breaks the circular dependency between engine.ts and orchestrator.ts
+ * by only importing the type that orchestrator actually needs.
+ */
+export interface EngineFacade {
+  getSkillById(id: string): AttackDefenseSkill | undefined;
+  executeRaw(query: ExecuteQuery): SkillResult[];
+}
 
 /**
  * HOS-Sec-Engine V3 - 流程执行引擎
  * 攻防流程编排核心实现，支持阶段执行、上下文传递、暂停/恢复、回滚
  */
+
+/** 最大阶段迭代次数，防止异常流程定义导致无限循环 */
+export const MAX_PHASE_ITERATIONS = 200;
+
+/** 最大 findings 数量，防止异常数据导致性能问题 */
+export const MAX_FINDINGS = 1000;
+
+/** 最大 recommendations 数量 */
+export const MAX_RECOMMENDATIONS = 200;
+
 export class FlowOrchestrator {
-  private engine: HosSecEngine;
+  private engine: EngineFacade;
   private playbook: Playbook | null = null;
+  private playbookConfig: PlaybookConfig | null = null;
+  private originalContextTarget: string = '';
+  private originalContextAccessLevel: string = '';
   private status: FlowStatus = {
     playbookId: '',
     currentPhaseId: null,
@@ -27,20 +51,24 @@ export class FlowOrchestrator {
     skippedPhases: [],
     totalFindings: 0
   };
+  private skippedPhasesSet: Set<string> = new Set();
   private phaseResults: Map<string, PhaseResult> = new Map();
   private isPaused = false;
   private pausedAtPhase: string | null = null;
+  private cachedSortedPhases: PlaybookPhase[] | null = null;
 
-  constructor(engine: HosSecEngine) {
+  constructor(engine: EngineFacade) {
     this.engine = engine;
   }
 
   /**
    * 加载流程定义
    * @param playbook 流程定义对象
+   * @param config 可选的流程配置
    */
-  loadPlaybook(playbook: Playbook): void {
+  loadPlaybook(playbook: Playbook, config?: PlaybookConfig): void {
     this.playbook = playbook;
+    this.playbookConfig = config || null;
     this.status = {
       playbookId: playbook.id,
       currentPhaseId: null,
@@ -49,9 +77,11 @@ export class FlowOrchestrator {
       skippedPhases: [],
       totalFindings: 0
     };
+    this.skippedPhasesSet.clear();
     this.phaseResults.clear();
     this.isPaused = false;
     this.pausedAtPhase = null;
+    this.cachedSortedPhases = [...playbook.phases].sort((a, b) => a.order - b.order);
   }
 
   /**
@@ -64,86 +94,30 @@ export class FlowOrchestrator {
       throw new Error('未加载流程定义，请先调用 loadPlaybook()');
     }
 
+    // 保存原始上下文信息供 resume 使用
+    this.originalContextTarget = context.target;
+    this.originalContextAccessLevel = context.accessLevel;
+
     const startTime = new Date().toISOString();
     this.status.status = 'running';
 
-    // 按 order 排序阶段
-    const sortedPhases = [...this.playbook.phases].sort((a, b) => a.order - b.order);
-
+    const sortedPhases = this.cachedSortedPhases!;
     let currentContext: FlowContext = { ...context };
     const results: PhaseResult[] = [];
-    let stopped = false;
 
-    for (const phase of sortedPhases) {
-      // 检查是否被跳过
-      if (this.status.skippedPhases.includes(phase.id)) {
-        results.push({
-          phaseId: phase.id,
-          phaseName: phase.name,
-          skillsExecuted: [],
-          findings: [],
-          duration: '0ms',
-          status: 'skipped'
-        });
-        continue;
-      }
-
-      // 检查条件
-      if (phase.condition && !this.checkCondition(phase.condition, currentContext)) {
-        results.push({
-          phaseId: phase.id,
-          phaseName: phase.name,
-          skillsExecuted: [],
-          findings: [],
-          duration: '0ms',
-          status: 'skipped'
-        });
-        continue;
-      }
-
-      // 检查下一阶段条件（前置检查）
-      if (phase.nextPhaseCondition && !this.checkCondition(phase.nextPhaseCondition, currentContext)) {
-        // 不满足条件，跳过当前及后续所有阶段
-        results.push({
-          phaseId: phase.id,
-          phaseName: phase.name,
-          skillsExecuted: [],
-          findings: [],
-          duration: '0ms',
-          status: 'skipped'
-        });
-        break;
-      }
-
-      // 执行阶段
-      this.status.currentPhaseId = phase.id;
-      const phaseResult = await this.executePhaseInternal(phase, currentContext);
-      results.push(phaseResult);
-      this.phaseResults.set(phase.id, phaseResult);
-      this.status.completedPhases.push(phase.id);
-
-      // 合并发现结果到上下文
-      currentContext.findings = [...currentContext.findings, ...phaseResult.findings];
-      currentContext.history = [...currentContext.history, phaseResult];
-      this.status.totalFindings = currentContext.findings.length;
-
-      // 检查是否出现 critical 级别需要停止
-      const hasCritical = phaseResult.findings.some(f => f.severity === 'critical');
-      if (hasCritical && this.shouldStopOnCritical()) {
-        stopped = true;
-        break;
-      }
-
-      // 检查暂停状态
-      if (this.isPaused) {
-        this.pausedAtPhase = phase.id;
-        this.status.status = 'paused';
-        const endTime = new Date().toISOString();
-        return this.buildResult(currentContext, results, startTime, endTime, stopped ? 'partial' : 'paused');
-      }
-    }
+    const { stopped, paused } = await this._executePhaseLoop(
+      sortedPhases,
+      currentContext,
+      results,
+      true, // checkNextPhaseCondition
+      () => { this.pausedAtPhase = this.status.currentPhaseId; }
+    );
 
     const endTime = new Date().toISOString();
+    if (paused) {
+      return this.buildResult(currentContext, results, startTime, endTime, 'paused');
+    }
+
     this.status.status = stopped ? 'paused' : 'completed';
     this.status.currentPhaseId = null;
 
@@ -167,6 +141,125 @@ export class FlowOrchestrator {
     }
 
     return this.executePhaseInternal(phase, context);
+  }
+
+  /**
+   * 构建跳过状态的 PhaseResult
+   */
+  private _buildSkippedResult(phase: PlaybookPhase): PhaseResult {
+    return {
+      phaseId: phase.id,
+      phaseName: phase.name,
+      skillsExecuted: [],
+      findings: [],
+      duration: '0ms',
+      status: 'skipped'
+    };
+  }
+
+  /**
+   * 处理阶段执行后的结果：更新上下文、状态、检查 critical 和暂停
+   * @returns true 表示需要中断循环
+   */
+  private _processPhaseResult(
+    phase: PlaybookPhase,
+    phaseResult: PhaseResult,
+    context: FlowContext,
+    results: PhaseResult[],
+    onPaused: () => void
+  ): boolean {
+    results.push(phaseResult);
+    this.phaseResults.set(phase.id, phaseResult);
+    this.status.completedPhases.push(phase.id);
+
+    context.findings = [...context.findings, ...phaseResult.findings];
+    context.history = [...context.history, phaseResult];
+    this.status.totalFindings = context.findings.length;
+
+    // 检查是否出现 critical 级别需要停止
+    const hasCritical = phaseResult.findings.some(f => f.severity === 'critical');
+    if (hasCritical && this.shouldStopOnCritical()) {
+      return true;
+    }
+
+    // 检查暂停状态
+    if (this.isPaused) {
+      this.pausedAtPhase = phase.id;
+      this.status.status = 'paused';
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * 检查阶段是否应跳过（通过 skip 集合或条件不满足）
+   * @returns { shouldSkip: boolean, shouldBreak: boolean } - shouldBreak 仅在 nextPhaseCondition 不满足时为 true
+   */
+  private _trySkipPhase(
+    phase: PlaybookPhase,
+    context: FlowContext,
+    results: PhaseResult[],
+    checkNextPhaseCondition: boolean = false
+  ): { shouldSkip: boolean; shouldBreak: boolean } {
+    if (this.skippedPhasesSet.has(phase.id)) {
+      results.push(this._buildSkippedResult(phase));
+      return { shouldSkip: true, shouldBreak: false };
+    }
+
+    if (phase.condition && !this.checkCondition(phase.condition, context)) {
+      results.push(this._buildSkippedResult(phase));
+      return { shouldSkip: true, shouldBreak: false };
+    }
+
+    if (checkNextPhaseCondition && phase.nextPhaseCondition && !this.checkCondition(phase.nextPhaseCondition, context)) {
+      results.push(this._buildSkippedResult(phase));
+      return { shouldSkip: true, shouldBreak: true };
+    }
+
+    return { shouldSkip: false, shouldBreak: false };
+  }
+
+  /**
+   * 通用阶段循环执行逻辑
+   */
+  private async _executePhaseLoop(
+    phases: PlaybookPhase[],
+    context: FlowContext,
+    results: PhaseResult[],
+    checkNextPhaseCondition: boolean = false,
+    onPaused: () => void = () => {}
+  ): Promise<{ stopped: boolean; paused: boolean }> {
+    let stopped = false;
+    let paused = false;
+    let iterationCount = 0;
+
+    for (const phase of phases) {
+      // 最大迭代次数保护，防止异常流程定义导致无限循环
+      if (++iterationCount > MAX_PHASE_ITERATIONS) {
+        console.warn(`[FlowOrchestrator] 达到最大阶段迭代次数 (${MAX_PHASE_ITERATIONS})，终止执行`);
+        stopped = true;
+        break;
+      }
+
+      const skipResult = this._trySkipPhase(phase, context, results, checkNextPhaseCondition);
+      if (skipResult.shouldSkip) {
+        if (skipResult.shouldBreak) {
+          break;
+        }
+        continue;
+      }
+
+      this.status.currentPhaseId = phase.id;
+      const phaseResult = await this.executePhaseInternal(phase, context);
+      const shouldBreak = this._processPhaseResult(phase, phaseResult, context, results, onPaused);
+      if (shouldBreak) {
+        stopped = true;
+        break;
+      }
+    }
+
+    return { stopped, paused };
   }
 
   /**
@@ -233,13 +326,19 @@ export class FlowOrchestrator {
     const findings: Finding[] = [];
 
     for (const result of results) {
+      if (findings.length >= MAX_FINDINGS) {
+        console.warn(`[FlowOrchestrator] Findings 数量超出上限 (${MAX_FINDINGS})，终止转换`);
+        break;
+      }
       const { skill, matchScore } = result;
       if (matchScore > 0.5 && (skill.metadata.riskLevel === 'high' || skill.metadata.riskLevel === 'critical')) {
+        const description = skill.knowledge?.description || '无描述';
+        const observations = skill.knowledge?.observations;
         findings.push({
           skillId: skill.metadata.id,
           severity: skill.metadata.riskLevel,
-          description: skill.knowledge.description,
-          evidence: skill.knowledge.observations.join('; ') || skill.knowledge.description,
+          description,
+          evidence: (observations && observations.length > 0) ? observations.join('; ') : description,
           timestamp: new Date().toISOString()
         });
       }
@@ -248,20 +347,32 @@ export class FlowOrchestrator {
     return findings;
   }
 
+  /** 抽象条件词：检查是否有 findings 即可 */
+  private static readonly FINDINGS_CONDITIONS = new Set([
+    'vulnerabilities', 'vulns', 'findings', 'misconfigurations', 'issues',
+    'credentials', 'users', 'tokens', 'hashes', 'dcaccess',
+  ]);
+
+  /** 后缀匹配抽象条件：以这些结尾的词也通过 findings 判断 */
+  private static readonly FINDINGS_SUFFIXES = ['flaws', 'findings', 'vulns', 'vulnerabilities'];
+
   /**
    * 条件检查：智能语义匹配
-   * - 抽象关键词（如 "vulnerabilities"）：检查 context.findings 是否有内容
+   * - 抽象关键词（如 "vulnerabilities", "credentials"）：检查 context.findings 是否有内容
    * - "accessGained"：检查 accessLevel 不是 "anonymous"
    * - "highPrivilege"：检查 accessLevel 包含 admin/root/system
+   * - 以 flaws/findings/vulns/vulnerabilities 结尾：检查 findings 是否有内容
    * - 其他：使用字符串包含匹配
    */
   private checkCondition(condition: string, context: FlowContext): boolean {
-    const cond = condition.toLowerCase();
+    const cond = condition.toLowerCase().trim();
+    if (!cond) return true; // empty condition = pass
 
-    // 抽象关键词：检查是否有发现
-    if (['vulnerabilities', 'vulns', 'findings', 'misconfigurations', 'issues'].includes(cond)) {
-      return context.findings.length > 0;
-    }
+    const hasFindings = context.findings.length > 0;
+
+    // 抽象关键词和 findings 相关词
+    if (FlowOrchestrator.FINDINGS_CONDITIONS.has(cond)) return hasFindings;
+    if (FlowOrchestrator.FINDINGS_SUFFIXES.some(s => cond.endsWith(s))) return hasFindings;
 
     // accessGained：检查不是匿名访问
     if (cond === 'accessgained') {
@@ -274,37 +385,18 @@ export class FlowOrchestrator {
       return level.includes('admin') || level.includes('root') || level.includes('system');
     }
 
-    // authFlaws / idorFindings / deserializationVulns / injectionPoints 等：检查是否有相关 findings
-    if (cond.endsWith('flaws') || cond.endsWith('findings') || cond.endsWith('vulns') || cond.endsWith('vulnerabilities')) {
-      return context.findings.length > 0;
-    }
-
-    // credentials / users / tokens 等：检查 findings 中是否有相关内容
-    if (['credentials', 'users', 'tokens', 'hashes', 'dcaccess'].includes(cond)) {
-      return context.findings.length > 0;
-    }
-
     // 其他：使用字符串包含匹配
-    const targetMatch = context.target.toLowerCase().includes(cond);
-    if (targetMatch) return true;
-
-    const accessMatch = context.accessLevel.toLowerCase().includes(cond);
-    if (accessMatch) return true;
-
-    const findingMatch = context.findings.some(f =>
-      f.description.toLowerCase().includes(cond)
-    );
-    if (findingMatch) return true;
-
-    return false;
+    return context.target.toLowerCase().includes(cond)
+      || context.accessLevel.toLowerCase().includes(cond)
+      || context.findings.some(f => f.description.toLowerCase().includes(cond));
   }
 
   /**
    * 检查是否配置了 stopOnCritical
    */
   private shouldStopOnCritical(): boolean {
-    // 默认开启 stopOnCritical
-    return true;
+    // 从 PlaybookConfig 读取，默认关闭
+    return this.playbookConfig?.stopOnCritical ?? false;
   }
 
   /**
@@ -328,80 +420,46 @@ export class FlowOrchestrator {
     this.pausedAtPhase = null;
     this.status.status = 'running';
 
-    // 找到暂停点之后的阶段继续执行
-    const sortedPhases = [...this.playbook.phases].sort((a, b) => a.order - b.order);
+    // 找到暂停点之后的阶段继续执行（已缓存排序）
+    const sortedPhases = this.cachedSortedPhases!;
     const startIndex = sortedPhases.findIndex(p => p.id === pausedPhaseId);
+    if (startIndex === -1) {
+      throw new Error(`无法找到暂停点阶段: ${pausedPhaseId}`);
+    }
     const remainingPhases = sortedPhases.slice(startIndex + 1);
 
-    // 构建已有结果
+    // 一次性构建已有结果和恢复的 findings
     const existingResults: PhaseResult[] = [];
-    for (const phase of sortedPhases.slice(0, startIndex + 1)) {
-      const result = this.phaseResults.get(phase.id);
+    const findings: Finding[] = [];
+    for (let i = 0; i <= startIndex; i++) {
+      const result = this.phaseResults.get(sortedPhases[i].id);
       if (result) {
         existingResults.push(result);
+        findings.push(...result.findings);
       }
     }
 
     // 恢复上下文
     const resumedContext: FlowContext = {
-      target: '',
-      findings: [],
-      accessLevel: '',
+      target: this.originalContextTarget,
+      findings,
+      accessLevel: this.originalContextAccessLevel,
       history: [...existingResults],
       customData: {}
     };
 
-    // 从已有结果恢复上下文
-    for (const result of existingResults) {
-      resumedContext.findings = [...resumedContext.findings, ...result.findings];
-    }
-
     let currentContext: FlowContext = { ...resumedContext };
     const newResults: PhaseResult[] = [];
 
-    for (const phase of remainingPhases) {
-      if (this.status.skippedPhases.includes(phase.id)) {
-        newResults.push({
-          phaseId: phase.id,
-          phaseName: phase.name,
-          skillsExecuted: [],
-          findings: [],
-          duration: '0ms',
-          status: 'skipped'
-        });
-        continue;
-      }
-
-      if (phase.condition && !this.checkCondition(phase.condition, currentContext)) {
-        newResults.push({
-          phaseId: phase.id,
-          phaseName: phase.name,
-          skillsExecuted: [],
-          findings: [],
-          duration: '0ms',
-          status: 'skipped'
-        });
-        continue;
-      }
-
-      this.status.currentPhaseId = phase.id;
-      const phaseResult = await this.executePhaseInternal(phase, currentContext);
-      newResults.push(phaseResult);
-      this.phaseResults.set(phase.id, phaseResult);
-      this.status.completedPhases.push(phase.id);
-
-      currentContext.findings = [...currentContext.findings, ...phaseResult.findings];
-      currentContext.history = [...currentContext.history, phaseResult];
-      this.status.totalFindings = currentContext.findings.length;
-
-      const hasCritical = phaseResult.findings.some(f => f.severity === 'critical');
-      if (hasCritical && this.shouldStopOnCritical()) {
-        break;
-      }
-    }
+    await this._executePhaseLoop(
+      remainingPhases,
+      currentContext,
+      newResults,
+      false // resume does NOT check nextPhaseCondition
+    );
 
     const allResults = [...existingResults, ...newResults];
-    const startTime = existingResults[0]?.skillsExecuted[0]?.skill.metadata.updatedAt || new Date().toISOString();
+    const startTime = new Date().toISOString();
     const endTime = new Date().toISOString();
 
     this.status.status = 'completed';
@@ -415,8 +473,9 @@ export class FlowOrchestrator {
    * @param phaseId 阶段 ID
    */
   skipPhase(phaseId: string): void {
-    if (!this.status.skippedPhases.includes(phaseId)) {
-      this.status.skippedPhases.push(phaseId);
+    if (!this.skippedPhasesSet.has(phaseId)) {
+      this.skippedPhasesSet.add(phaseId);
+      this.status.skippedPhases = Array.from(this.skippedPhasesSet);
     }
   }
 
@@ -431,7 +490,7 @@ export class FlowOrchestrator {
       throw new Error('未加载流程定义');
     }
 
-    const sortedPhases = [...this.playbook.phases].sort((a, b) => a.order - b.order);
+    const sortedPhases = this.cachedSortedPhases!;
     const targetIndex = sortedPhases.findIndex(p => p.id === phaseId);
     if (targetIndex === -1) {
       throw new Error(`阶段 ${phaseId} 不存在`);
@@ -447,12 +506,11 @@ export class FlowOrchestrator {
     this.status.completedPhases = this.status.completedPhases.filter(id => !phasesToRemove.includes(id));
     this.status.currentPhaseId = phaseId;
 
-    // 构建回滚后的上下文和结果
+    // 一次性构建回滚后的结果、发现和上下文
     const keptResults: PhaseResult[] = [];
     const findings: Finding[] = [];
-
-    for (const phase of sortedPhases.slice(0, targetIndex)) {
-      const result = this.phaseResults.get(phase.id);
+    for (let i = 0; i < targetIndex; i++) {
+      const result = this.phaseResults.get(sortedPhases[i].id);
       if (result) {
         keptResults.push(result);
         findings.push(...result.findings);
@@ -460,9 +518,9 @@ export class FlowOrchestrator {
     }
 
     const context: FlowContext = {
-      target: '',
+      target: this.originalContextTarget,
       findings,
-      accessLevel: '',
+      accessLevel: this.originalContextAccessLevel,
       history: keptResults,
       customData: {}
     };
@@ -497,7 +555,7 @@ export class FlowOrchestrator {
     lines.push(`状态: ${this.getStatusText(this.status.status)}`);
     lines.push('');
 
-    const sortedPhases = [...this.playbook.phases].sort((a, b) => a.order - b.order);
+    const sortedPhases = this.cachedSortedPhases!;
 
     for (const phase of sortedPhases) {
       const icon = this.getPhaseIcon(phase.id);
@@ -510,7 +568,7 @@ export class FlowOrchestrator {
         if (findingCount > 0) {
           detail += ` 发现: ${findingCount}`;
         }
-      } else if (this.status.skippedPhases.includes(phase.id)) {
+      } else if (this.skippedPhasesSet.has(phase.id)) {
         detail = ' [已跳过]';
       }
 
@@ -541,6 +599,27 @@ export class FlowOrchestrator {
     const report = this.buildReport(phaseResults, summary);
     const recommendations = this.buildRecommendations(phaseResults);
 
+    // ========== 自动技能衍生 (Finding → Skill) ==========
+    try {
+      const allFindings: Finding[] = [];
+      for (const result of phaseResults) {
+        allFindings.push(...result.findings);
+      }
+      if (allFindings.length >= 2) {
+        const deriveResults = skillDeriver.analyzeAndDerive(allFindings);
+        if (deriveResults.length > 0) {
+          const successCount = deriveResults.filter(r => r.success).length;
+          if (successCount > 0) {
+            console.log(`[FlowOrchestrator] 🧬 自动衍生了 ${successCount}/${deriveResults.length} 个新技能`);
+            skillDeriver.persist();
+          }
+        }
+      }
+    } catch (err) {
+      // 技能衍生不应阻塞主流程
+      console.warn('[FlowOrchestrator] 技能衍生失败（非致命）:', err);
+    }
+
     return {
       playbookId: this.playbook.id,
       playbookName: this.playbook.name,
@@ -569,6 +648,7 @@ export class FlowOrchestrator {
     for (const result of phaseResults) {
       totalSkills += result.skillsExecuted.length;
       for (const finding of result.findings) {
+        if (exploited.length >= MAX_FINDINGS) break;
         switch (finding.severity) {
           case 'critical':
             critical++;
@@ -586,6 +666,7 @@ export class FlowOrchestrator {
             break;
         }
       }
+      if (exploited.length >= MAX_FINDINGS) break;
     }
 
     return {
@@ -603,57 +684,56 @@ export class FlowOrchestrator {
    * 构建审计报告
    */
   private buildReport(phaseResults: PhaseResult[], summary: FlowSummary): string {
-    const lines: string[] = [];
+    const phaseSections = phaseResults.map(result => {
+      const findingsSection = result.findings.length > 0
+        ? `  发现 (${result.findings.length}):\n${result.findings.map(f => {
+            const desc = f.description.length > 100 ? f.description.substring(0, 100) + '...' : f.description;
+            return `    - [${f.severity.toUpperCase()}] ${f.skillId}: ${desc}`;
+          }).join('\n')}`
+        : '';
 
-    lines.push('=== HOS-Sec-Engine 审计报告 ===');
-    lines.push('');
-    lines.push(`流程 ID: ${this.playbook?.id ?? ''}`);
-    lines.push(`流程名称: ${this.playbook?.name ?? ''}`);
-    lines.push('');
-    lines.push('--- 执行摘要 ---');
-    lines.push(`总执行 Skill 数: ${summary.totalSkillsExecuted}`);
-    lines.push(`Critical: ${summary.criticalFindings}`);
-    lines.push(`High: ${summary.highFindings}`);
-    lines.push(`Medium: ${summary.mediumFindings}`);
-    lines.push(`Low: ${summary.lowFindings}`);
-    lines.push(`达到的访问级别: ${summary.achievedAccessLevel}`);
-    lines.push('');
+      return `[${result.status.toUpperCase()}] ${result.phaseName} (${result.phaseId})
+  持续时间: ${result.duration}
+  执行 Skill 数: ${result.skillsExecuted.length}${findingsSection ? '\n' + findingsSection : ''}`;
+    }).join('\n');
 
-    lines.push('--- 阶段详情 ---');
-    for (const result of phaseResults) {
-      lines.push(`\n[${result.status.toUpperCase()}] ${result.phaseName} (${result.phaseId})`);
-      lines.push(`  持续时间: ${result.duration}`);
-      lines.push(`  执行 Skill 数: ${result.skillsExecuted.length}`);
+    return `=== HOS-Sec-Engine 审计报告 ===
 
-      if (result.findings.length > 0) {
-        lines.push(`  发现 (${result.findings.length}):`);
-        for (const finding of result.findings) {
-          lines.push(`    - [${finding.severity.toUpperCase()}] ${finding.skillId}: ${finding.description.substring(0, 100)}...`);
-        }
-      }
-    }
+流程 ID: ${this.playbook?.id ?? ''}
+流程名称: ${this.playbook?.name ?? ''}
 
-    return lines.join('\n');
+--- 执行摘要 ---
+总执行 Skill 数: ${summary.totalSkillsExecuted}
+Critical: ${summary.criticalFindings}
+High: ${summary.highFindings}
+Medium: ${summary.mediumFindings}
+Low: ${summary.lowFindings}
+达到的访问级别: ${summary.achievedAccessLevel}
+
+--- 阶段详情 ---
+
+${phaseSections}`;
   }
 
   /**
    * 构建修复建议
    */
   private buildRecommendations(phaseResults: PhaseResult[]): string[] {
-    const recommendations: string[] = [];
+    const recSet = new Set<string>();
 
     for (const result of phaseResults) {
+      if (recSet.size >= MAX_RECOMMENDATIONS) break;
       for (const skillResult of result.skillsExecuted) {
+        if (recSet.size >= MAX_RECOMMENDATIONS) break;
         const recs = skillResult.skill.defense?.recommendations ?? [];
         for (const rec of recs) {
-          if (!recommendations.includes(rec)) {
-            recommendations.push(rec);
-          }
+          recSet.add(rec);
+          if (recSet.size >= MAX_RECOMMENDATIONS) break;
         }
       }
     }
 
-    return recommendations;
+    return Array.from(recSet);
   }
 
   /**
@@ -677,7 +757,7 @@ export class FlowOrchestrator {
     if (this.status.completedPhases.includes(phaseId)) {
       return '[√]';
     }
-    if (this.status.skippedPhases.includes(phaseId)) {
+    if (this.skippedPhasesSet.has(phaseId)) {
       return '[-]';
     }
     if (this.status.currentPhaseId === phaseId) {

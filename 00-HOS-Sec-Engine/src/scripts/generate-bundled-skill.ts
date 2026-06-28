@@ -1,34 +1,30 @@
 /**
  * HOS-Sec-Engine - Bundled Skill Generator
- * 
- * Generates a unified `hos-sec-engine` skill that contains all 22 skills
- * merged into a single folder for clean IDE skill panel organization.
- * 
+ *
+ * Generates a unified `hos-sec-engine` skill that references all sub-skills
+ * in a single folder for clean IDE skill panel organization.
+ *
  * Output:
- *   - dist/skills/hos-sec-engine/ (nested, for TypeScript Engine)
  *   - skills/hos-sec-engine/ (flat, for npx skills / IDE installation)
+ *
+ * Source of Truth: TypeScript skill definitions in src/skills/
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 import { allSkills } from '../skills';
 import type { AttackDefenseSkill } from '../types/skill';
+import { CATEGORY_NAMES } from '../config/skill-categories';
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
-/** Nested output directory (dist/skills/) */
-const NESTED_OUTPUT_DIR = path.resolve(__dirname, '..', '..', '..', 'dist', 'skills');
-
-/** Flat output directory (skills/) */
-const FLAT_OUTPUT_DIR = path.resolve(__dirname, '..', '..', '..', 'skills');
+/** Output directory for generated bundled skill (project root skills/) */
+const OUTPUT_DIR = path.resolve(__dirname, '..', '..', '..', 'skills');
 
 /** Project root */
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..', '..');
-
-/** Repo root (parent of 00-HOS-Sec-Engine) */
-const REPO_ROOT = path.resolve(PROJECT_ROOT, '..');
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -44,24 +40,6 @@ function writeOutput(filePath: string, content: string): void {
   ensureDir(path.dirname(filePath));
   fs.writeFileSync(filePath, content, 'utf-8');
 }
-
-const CATEGORY_NAMES: Record<string, string> = {
-  web: 'Web 安全',
-  api: 'API 安全',
-  cloud: '云安全',
-  windows: 'Windows 安全',
-  linux: 'Linux 安全',
-  'ai-security': 'AI 安全',
-  ad: '域安全',
-  mobile: '移动安全',
-  container: '容器安全',
-  kubernetes: 'Kubernetes 安全',
-  'code-review': '代码审计',
-  reverse: '逆向工程',
-  'malware-analysis': '恶意代码分析',
-  'threat-hunting': '威胁狩猎',
-  defense: '防御策略',
-};
 
 // ---------------------------------------------------------------------------
 // Generate main SKILL.md for bundled skill
@@ -101,11 +79,11 @@ function generateBundledSkillMd(skills: AttackDefenseSkill[]): string {
 
   return `---
 name: hos-sec-engine
-description: HOS-Sec-Engine 统一攻防引擎，包含 22 个实战安全技能。根据用户描述的场景自动匹配最合适的技能，支持 SQL 注入 WAF 绕过、XSS、SSRF、XXE、文件上传绕过、RCE、反序列化、JWT 攻击、OAuth 漏洞、IDOR、速率限制绕过、云配置错误、IAM 权限提升、元数据 SSRF、Windows/Linux 提权、AD 域信息收集、代码审计、Docker 容器逃逸、K8s 配置审计、Prompt 注入、Android APK 分析等攻防能力。
+description: HOS-Sec-Engine 统一攻防引擎。根据用户描述的场景自动匹配最合适的攻防技能，支持完整渗透测试流程编排。包含 ${skills.length} 个实战攻防技能（含 4 个 0day 技能），覆盖 Web、API、云、系统、容器、移动和 AI 安全领域。
 license: MIT
 metadata:
   author: HOS Team
-  version: "3.0.0"
+  version: "3.1.0"
   tags:
     - security
     - offense-defense
@@ -123,7 +101,11 @@ metadata:
 
 # HOS-Sec-Engine 统一攻防引擎
 
-> 包含 22 个攻防实战技能，根据场景自动路由到最合适的技能。
+> 包含 ${skills.length} 个实战攻防技能（含 4 个 0day 技能），根据场景自动路由到最合适的技能。
+
+## Role
+
+你是一个专业的网络安全攻防专家，拥有 HOS-Sec-Engine 知识库中的实战技能。根据用户描述的场景，你应自动判断并选择最合适的技能来解决问题。你可以自主维护和扩展技能库，在任意分类下新增技能。
 
 ## 使用方式
 
@@ -186,6 +168,38 @@ ${skillTableLines.join('\n')}
 ## 云安全审计流程
 1. **资产发现** → \`cloud-s3-001\`, \`cloud-meta-001\`
 2. **权限测试** → \`cloud-iam-001\`
+
+## Skill 自主维护与扩展
+
+作为攻防专家，你可以自主维护和扩展 HOS-Sec-Engine 的技能库。本系统支持在**任意大类**下新增 skill（不限于 0day），包括 Web、API、Cloud、Windows、Linux、AI、Container、Kubernetes、Mobile 等所有分类。
+
+### 技能扩展流程
+
+#### 第一步：确定 skill 所属大类
+根据新技能的技术领域，选择对应的源码目录（\`src/skills/{category}/\`）。
+
+#### 第二步：创建 TS 文件
+参照现有 skill 模板（如 \`src/skills/web/sqli/sqli-waf-bypass.ts\`），创建包含完整 AttackDefenseSkill 六层结构的 TS 文件。
+
+#### 第三步：注册到 index.ts
+在该大类的 \`index.ts\` 中添加加载逻辑（参照现有模式）。
+
+#### 第四步：编译生成
+\`\`\`bash
+npm run build
+\`\`\`
+编译后自动完成：TypeScript 编译 → 生成 SKILL.md → 更新索引。
+
+#### 第五步：部署到 IDE
+\`\`\`bash
+npm run deploy -- --trae --global
+\`\`\`
+
+### Skill 维护原则
+- 只维护**真实存在且可验证**的漏洞信息，不编造
+- 每个 skill 必须包含可执行的验证方法
+- 定期更新已有 skill 的 metadata.updatedAt
+- skill 可以添加到**任意大类**下，不限于 0day
 
 ## 注意事项
 - 所有操作应在**授权范围内**进行
@@ -280,47 +294,6 @@ function generateSubSkillMd(skill: AttackDefenseSkill): string {
 }
 
 // ---------------------------------------------------------------------------
-// Copy 0day-skills directory from source
-// ---------------------------------------------------------------------------
-
-function copyDirSync(src: string, dest: string): void {
-  if (!fs.existsSync(src)) return;
-  fs.mkdirSync(dest, { recursive: true });
-  const items = fs.readdirSync(src, { withFileTypes: true });
-  for (const item of items) {
-    const srcPath = path.join(src, item.name);
-    const destPath = path.join(dest, item.name);
-    if (item.isDirectory()) {
-      copyDirSync(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
-    }
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Generate 0day-skills placeholder structure (fallback)
-// ---------------------------------------------------------------------------
-
-function generate0daySkillsPlaceholder(): string {
-  return `---
-name: 0day-skills
-description: HOS-Sec-Engine 0day 专属技能目录。由 /hos-sec-master 自主维护更新热门 0day 漏洞专属技能。
----
-
-# 0day 专属技能
-
-> 本目录由 AI 通过 /hos-sec-master 自主维护，包含最新热门 0day 漏洞的专属攻防技能。
->
-> **维护流程**:
-> 1. 在 \`src/skills/hos-sec-master/0day-skills/\` 下创建 .ts 文件
-> 2. 参照现有 TS skill 模板的 AttackDefenseSkill 六层结构
-> 3. 运行 \`npm run build\` 编译并生成 SKILL.md
-> 4. 运行 \`npm run deploy\` 部署到 IDE
-`;
-}
-
-// ---------------------------------------------------------------------------
 // Main entry
 // ---------------------------------------------------------------------------
 
@@ -336,113 +309,46 @@ export function generateBundledSkill(): string[] {
 
   console.log(`[bundled-skill] Generating unified hos-sec-engine skill for ${skills.length} skills...`);
 
-  // 1. Generate main SKILL.md
+  // 1. Generate main SKILL.md -> skills/hos-sec-engine/SKILL.md
   const bundledContent = generateBundledSkillMd(skills);
-
-  // Nested: dist/skills/hos-sec-engine/SKILL.md
-  const nestedDir = path.join(NESTED_OUTPUT_DIR, 'hos-sec-engine');
-  const nestedMdPath = path.join(nestedDir, 'SKILL.md');
-  writeOutput(nestedMdPath, bundledContent);
-  generated.push(nestedMdPath);
-  console.log(`  [NESTED] ${nestedMdPath}`);
-
-  // Flat: skills/hos-sec-engine/SKILL.md
-  const flatDir = path.join(FLAT_OUTPUT_DIR, 'hos-sec-engine');
+  const flatDir = path.join(OUTPUT_DIR, 'hos-sec-engine');
   const flatMdPath = path.join(flatDir, 'SKILL.md');
   writeOutput(flatMdPath, bundledContent);
   generated.push(flatMdPath);
-  console.log(`  [FLAT]   ${flatMdPath}`);
+  console.log(`  [SKILL.md] ${flatMdPath}`);
 
-  // 2. Generate sub-skill detail files
-  const nestedSkillsDir = path.join(nestedDir, 'skills');
+  // 2. Generate sub-skill detail files -> skills/hos-sec-engine/skills/
   const flatSkillsDir = path.join(flatDir, 'skills');
-
   for (const skill of skills) {
     const subSkillContent = generateSubSkillMd(skill);
     const fileName = `${skill.metadata.id}.md`;
-
-    const nestedSubPath = path.join(nestedSkillsDir, fileName);
-    writeOutput(nestedSubPath, subSkillContent);
-    generated.push(nestedSubPath);
-
     const flatSubPath = path.join(flatSkillsDir, fileName);
     writeOutput(flatSubPath, subSkillContent);
     generated.push(flatSubPath);
   }
   console.log(`  Generated ${skills.length} sub-skill detail files`);
 
-  // 3. Sync 0day-skills directory from source
-  const src0dayDir = path.join(PROJECT_ROOT, 'src', 'skills', 'hos-sec-master', '0day-skills');
-  const nested0dayDir = path.join(nestedDir, '0day-skills');
-  const flat0dayDir = path.join(flatDir, '0day-skills');
-
-  if (fs.existsSync(src0dayDir)) {
-    copyDirSync(src0dayDir, nested0dayDir);
-    generated.push(nested0dayDir);
-    console.log(`  [0DAY-NESTED] Copied 0day-skills to ${nested0dayDir}`);
-
-    copyDirSync(src0dayDir, flat0dayDir);
-    generated.push(flat0dayDir);
-    console.log(`  [0DAY-FLAT] Copied 0day-skills to ${flat0dayDir}`);
-  } else {
-    writeOutput(path.join(nested0dayDir, 'README.md'), generate0daySkillsPlaceholder());
-    writeOutput(path.join(flat0dayDir, 'README.md'), generate0daySkillsPlaceholder());
-  }
-
-  // 4. Sync references
-  const nestedRefDir = path.join(nestedDir, 'references');
-  const nestedRefPath = path.join(nestedRefDir, 'REFERENCE.md');
-  // Copy from existing reference if available
-  const existingRefPath = path.join(NESTED_OUTPUT_DIR, 'references', 'REFERENCE.md');
-  if (fs.existsSync(existingRefPath)) {
-    writeOutput(nestedRefPath, fs.readFileSync(existingRefPath, 'utf-8'));
-    generated.push(nestedRefPath);
-  }
-
+  // 3. Sync references -> skills/hos-sec-engine/references/REFERENCE.md
   const flatRefDir = path.join(flatDir, 'references');
   const flatRefPath = path.join(flatRefDir, 'REFERENCE.md');
-  const existingFlatRefPath = path.join(FLAT_OUTPUT_DIR, 'references', 'REFERENCE.md');
-  if (fs.existsSync(existingFlatRefPath)) {
-    writeOutput(flatRefPath, fs.readFileSync(existingFlatRefPath, 'utf-8'));
+  const existingRefPath = path.join(OUTPUT_DIR, 'references', 'REFERENCE.md');
+  if (fs.existsSync(existingRefPath)) {
+    writeOutput(flatRefPath, fs.readFileSync(existingRefPath, 'utf-8'));
     generated.push(flatRefPath);
   }
 
-  // 5. Sync to repo root skills/ directory
-  const repoRootSkillsDir = path.join(REPO_ROOT, 'skills', 'hos-sec-engine');
-  const repoMdPath = path.join(repoRootSkillsDir, 'SKILL.md');
-  writeOutput(repoMdPath, bundledContent);
-  generated.push(repoMdPath);
-
-  const repoSkillsDir = path.join(repoRootSkillsDir, 'skills');
-  for (const skill of skills) {
-    const fileName = `${skill.metadata.id}.md`;
-    const srcPath = path.join(flatSkillsDir, fileName);
-    if (fs.existsSync(srcPath)) {
-      const destPath = path.join(repoSkillsDir, fileName);
-      writeOutput(destPath, fs.readFileSync(srcPath, 'utf-8'));
-      generated.push(destPath);
-    }
-  }
-
-  const repo0dayDir = path.join(repoRootSkillsDir, '0day-skills');
-  if (fs.existsSync(src0dayDir)) {
-    copyDirSync(src0dayDir, repo0dayDir);
-    generated.push(repo0dayDir);
-    console.log(`  [0DAY-ROOT] Copied 0day-skills to ${repo0dayDir}`);
-  } else {
-    const repo0dayPlaceholder = path.join(repo0dayDir, 'README.md');
-    writeOutput(repo0dayPlaceholder, generate0daySkillsPlaceholder());
-    generated.push(repo0dayPlaceholder);
-  }
-
-  const repoRefDir = path.join(repoRootSkillsDir, 'references');
-  if (fs.existsSync(flatRefPath)) {
-    const repoRefPath = path.join(repoRefDir, 'REFERENCE.md');
-    writeOutput(repoRefPath, fs.readFileSync(flatRefPath, 'utf-8'));
-    generated.push(repoRefPath);
-  }
-
   console.log(`[bundled-skill] Done. Generated ${generated.length} file(s).`);
+
+  // Generate legacy hos-sec-master as a copy of hos-sec-engine for backward compatibility
+  const enginePath = path.join(OUTPUT_DIR, 'hos-sec-engine', 'SKILL.md');
+  const masterDir = path.join(OUTPUT_DIR, 'hos-sec-master');
+  const masterPath = path.join(masterDir, 'SKILL.md');
+  if (fs.existsSync(enginePath)) {
+    ensureDir(masterDir);
+    fs.copyFileSync(enginePath, masterPath);
+    console.log(`  [LEGACY] ${masterPath}`);
+  }
+
   return generated;
 }
 

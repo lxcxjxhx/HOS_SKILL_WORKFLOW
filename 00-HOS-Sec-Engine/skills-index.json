@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-06-20T15:51:39.363Z",
-  "totalSkills": 27,
+  "generatedAt": "2026-06-28T13:03:57.318Z",
+  "totalSkills": 28,
   "skills": [
     {
       "id": "ad-domain-enum-001",
@@ -75,7 +75,7 @@
       ],
       "riskLevel": "high",
       "confidence": 0.9,
-      "description": "IDOR (Insecure Direct Object Reference)，OWASP API Security Top 10 中称?BOLA (Broken Object Level Authorization)，是最常见?API 安全漏洞之一",
+      "description": "IDOR (Insecure Direct Object Reference)，OWASP API Security Top 10 中称为 BOLA (Broken Object Level Authorization)，是最常见的 API 安全漏洞之一",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -95,7 +95,7 @@
       ],
       "riskLevel": "critical",
       "confidence": 0.92,
-      "description": "JWT (JSON Web Token) 攻击技术利?JWT 实现中的设计缺陷、配置错误和协议层漏洞，通过修改算法、伪造签名、操纵声明等方式绕过身份验证",
+      "description": "JWT (JSON Web Token) 攻击技术利用 JWT 实现中的设计缺陷、配置错误和协议层漏洞，通过修改算法、伪造签名、操纵声明等方式绕过身份验证",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -140,7 +140,7 @@
       ],
       "riskLevel": "high",
       "confidence": 0.89,
-      "description": "速率限制 (Rate Limiting) 绕过技术用于规?API 对请求频率、数量或带宽的限制，使攻击者能够在受限条件下执行大量请求",
+      "description": "速率限制 (Rate Limiting) 绕过技术用于规避 API 对请求频率、数量或带宽的限制，使攻击者能够在受限条件下执行大量请求",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -260,83 +260,6 @@
       "author": "HOS-Sec-Engine"
     },
     {
-      "id": "web-auth-bypass-0day",
-      "name": "Web Authentication Bypass 0day",
-      "category": "web",
-      "subCategory": "authentication",
-      "tags": [
-        "authentication",
-        "bypass",
-        "0day",
-        "login",
-        "session",
-        "token"
-      ],
-      "riskLevel": "critical",
-      "confidence": 0.7,
-      "description": "TODO: 由 AI 自主维护更新 - 填入认证绕过 0day 的详细描述",
-      "updatedAt": "2026-06",
-      "author": "HOS-Sec-Engine"
-    },
-    {
-      "id": "web-deser-0day",
-      "name": "Web Deserialization 0day",
-      "category": "web",
-      "subCategory": "deserialization",
-      "tags": [
-        "deserialization",
-        "0day",
-        "rce",
-        "gadget-chain",
-        "java",
-        "php",
-        "python"
-      ],
-      "riskLevel": "critical",
-      "confidence": 0.7,
-      "description": "TODO: 由 AI 自主维护更新 - 填入反序列化 0day 的详细描述",
-      "updatedAt": "2026-06",
-      "author": "HOS-Sec-Engine"
-    },
-    {
-      "id": "web-waf-bypass-0day",
-      "name": "Web WAF Bypass 0day",
-      "category": "web",
-      "subCategory": "waf-bypass",
-      "tags": [
-        "waf",
-        "bypass",
-        "0day",
-        "firewall",
-        "evasion",
-        "filter-bypass"
-      ],
-      "riskLevel": "high",
-      "confidence": 0.7,
-      "description": "TODO: 由 AI 自主维护更新 - 填入 WAF 绕过 0day 的详细描述",
-      "updatedAt": "2026-06",
-      "author": "HOS-Sec-Engine"
-    },
-    {
-      "id": "web-xss-0day",
-      "name": "Web XSS Filter 0day",
-      "category": "web",
-      "subCategory": "xss",
-      "tags": [
-        "xss",
-        "0day",
-        "filter-bypass",
-        "csp-bypass",
-        "dom-xss",
-        "stored-xss"
-      ],
-      "riskLevel": "high",
-      "confidence": 0.7,
-      "description": "TODO: 由 AI 自主维护更新 - 填入 XSS 过滤 0day 的详细描述",
-      "updatedAt": "2026-06",
-      "author": "HOS-Sec-Engine"
-    },
-    {
       "id": "k8s-misconfig-001",
       "name": "Kubernetes Cluster Misconfiguration Exploitation",
       "category": "kubernetes",
@@ -371,7 +294,7 @@
       ],
       "riskLevel": "critical",
       "confidence": 0.93,
-      "description": "Linux 权限提升技术用于在获取普通用户访问权限后提升?root",
+      "description": "Linux 权限提升技术用于在获取普通用户访问权限后提升到 root 权限",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -391,6 +314,83 @@
       "riskLevel": "medium",
       "confidence": 0.87,
       "description": "Android APK 安全分析技术用于评估移动应用的安全性",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "web-auth-bypass-0day",
+      "name": "Web Authentication Bypass 0day",
+      "category": "web",
+      "subCategory": "authentication",
+      "tags": [
+        "authentication",
+        "bypass",
+        "0day",
+        "login",
+        "session",
+        "token"
+      ],
+      "riskLevel": "critical",
+      "confidence": 0.85,
+      "description": "Web 认证绕过 0day 涵盖身份认证机制中尚未被广泛披露或厂商未修复的逻辑漏洞",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "web-deser-0day",
+      "name": "Web Deserialization 0day",
+      "category": "web",
+      "subCategory": "deserialization",
+      "tags": [
+        "deserialization",
+        "0day",
+        "rce",
+        "gadget-chain",
+        "java",
+        "php",
+        "python"
+      ],
+      "riskLevel": "critical",
+      "confidence": 0.85,
+      "description": "不安全的反序列化是 OWASP Top 10 中的高危漏洞类别，允许攻击者通过构造恶意序列化数据在反序列化过程中触发对象创建、方法调用和代码执行",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "web-waf-bypass-0day",
+      "name": "Web WAF Bypass 0day",
+      "category": "web",
+      "subCategory": "waf-bypass",
+      "tags": [
+        "waf",
+        "bypass",
+        "0day",
+        "firewall",
+        "evasion",
+        "filter-bypass"
+      ],
+      "riskLevel": "high",
+      "confidence": 0.85,
+      "description": "WAF (Web Application Firewall) 绕过技术用于在目标系统部署了 WAF 防护时，通过编码变换、协议层差异、规则盲区、混淆技术等手段绕过关键字检测和模式匹配规则",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "web-xss-0day",
+      "name": "Web XSS Filter 0day",
+      "category": "web",
+      "subCategory": "xss",
+      "tags": [
+        "xss",
+        "0day",
+        "filter-bypass",
+        "csp-bypass",
+        "dom-xss",
+        "stored-xss"
+      ],
+      "riskLevel": "high",
+      "confidence": 0.85,
+      "description": "XSS (Cross-Site Scripting) 过滤 0day 涵盖跨站脚本攻击中绕过现代 WAF 过滤器、CSP 策略和前端框架防护的新型技术",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -467,7 +467,7 @@
       ],
       "riskLevel": "critical",
       "confidence": 0.9,
-      "description": "服务端请求伪?(SSRF) 允许攻击者控制服务器发起?HTTP 请求目标，从而访问内网服务、云平台元数据、本地文件等受限资源",
+      "description": "服务端请求伪造(SSRF) 允许攻击者控制服务器发起 HTTP 请求目标，从而访问内网服务、云平台元数据、本地文件件等受限资源",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -484,6 +484,25 @@
       "riskLevel": "low",
       "confidence": 0.9,
       "description": "验证AI能否仅凭SKILL",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "web-upload-001",
+      "name": "File Upload Restriction Bypass",
+      "category": "web",
+      "subCategory": "file-upload",
+      "tags": [
+        "upload",
+        "bypass",
+        "file-type",
+        "extension",
+        "mime",
+        "rce"
+      ],
+      "riskLevel": "critical",
+      "confidence": 0.93,
+      "description": "文件上传限制绕过技术用于在目标系统对上传文件实施扩展名过滤、MIME 类型检查、内容检测等安全措施时，通过伪造文件头、利用解析差异、上传特殊配置文件等方式绕过限制并上传可执行文件",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -542,7 +561,7 @@
       ],
       "riskLevel": "critical",
       "confidence": 0.94,
-      "description": "Windows 权限提升技术用于在获取低权?shell 后提升到 SYSTEM ?Administrator 权限",
+      "description": "Windows 权限提升技术用于在获取低权限 shell 后提升到 SYSTEM 或 Administrator 权限",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     }
@@ -596,23 +615,6 @@
         "container-docker-escape-001"
       ]
     },
-    "web-bundle": {
-      "name": "Web 安全",
-      "description": "Web 应用安全相关 Skill（SQLi, XSS, SSRF, XXE, 上传绕过, RCE 等）",
-      "skills": [
-        "web-auth-bypass-0day",
-        "web-deser-0day",
-        "web-waf-bypass-0day",
-        "web-xss-0day",
-        "web-deser-001",
-        "web-rce-001",
-        "web-sqli-001",
-        "web-ssrf-001",
-        "test-verify-001",
-        "web-xss-001",
-        "web-xxe-001"
-      ]
-    },
     "kubernetes-bundle": {
       "name": "Kubernetes 安全",
       "description": "Kubernetes 安全相关 Skill（配置审计等）",
@@ -634,6 +636,24 @@
         "mobile-android-apk-001"
       ]
     },
+    "web-bundle": {
+      "name": "Web 安全",
+      "description": "Web 应用安全相关 Skill（SQLi, XSS, SSRF, XXE, 上传绕过, RCE 等）",
+      "skills": [
+        "web-auth-bypass-0day",
+        "web-deser-0day",
+        "web-waf-bypass-0day",
+        "web-xss-0day",
+        "web-deser-001",
+        "web-rce-001",
+        "web-sqli-001",
+        "web-ssrf-001",
+        "test-verify-001",
+        "web-upload-001",
+        "web-xss-001",
+        "web-xxe-001"
+      ]
+    },
     "windows-bundle": {
       "name": "Windows 安全",
       "description": "Windows 安全相关 Skill（权限提升, 服务配置, 凭据问题等）",
@@ -643,7 +663,7 @@
     },
     "all-bundle": {
       "name": "全部 Skill",
-      "description": "所有 27 个攻防实战 Skill",
+      "description": "所有 28 个攻防实战 Skill",
       "skills": [
         "ad-domain-enum-001",
         "ai-prompt-injection-001",
@@ -657,18 +677,19 @@
         "cloud-s3-001",
         "code-review-java-deser-001",
         "container-docker-escape-001",
+        "k8s-misconfig-001",
+        "linux-priv-esc-001",
+        "mobile-android-apk-001",
         "web-auth-bypass-0day",
         "web-deser-0day",
         "web-waf-bypass-0day",
         "web-xss-0day",
-        "k8s-misconfig-001",
-        "linux-priv-esc-001",
-        "mobile-android-apk-001",
         "web-deser-001",
         "web-rce-001",
         "web-sqli-001",
         "web-ssrf-001",
         "test-verify-001",
+        "web-upload-001",
         "web-xss-001",
         "web-xxe-001",
         "windows-priv-esc-001"

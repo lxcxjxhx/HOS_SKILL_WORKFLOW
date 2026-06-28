@@ -17,6 +17,7 @@ export class AgentPool {
 
   /**
    * 创建一个新的 SubAgent 并放入池中（如果未达到上限）
+   * 创建后的 agent 状态为 idle，可通过 getAgent() 获取
    */
   createAgent(name: string, skillId: string): SubAgent {
     if (this.pool.length + this.activeAgents.size >= this.maxPoolSize) {
@@ -45,6 +46,7 @@ export class AgentPool {
 
   /**
    * 释放一个 Agent 回池中以便复用
+   * 会终止当前任务并重置状态为 idle
    */
   releaseAgent(agentId: string): void {
     const agent = this.activeAgents.get(agentId);
@@ -52,7 +54,9 @@ export class AgentPool {
       throw new Error(`Agent ${agentId} not found in active agents`);
     }
 
-    agent.terminate();
+    // 重置状态为 idle 以便复用
+    agent.reset();
+    
     this.activeAgents.delete(agentId);
 
     if (this.pool.length < this.maxPoolSize) {
@@ -79,6 +83,28 @@ export class AgentPool {
    */
   getTotalCount(): number {
     return this.pool.length + this.activeAgents.size;
+  }
+
+  /**
+   * 根据 ID 获取 Agent（不论其在池中还是活跃状态）
+   * 返回 null 如果不存在
+   */
+  getAgentById(agentId: string): SubAgent | null {
+    return this.activeAgents.get(agentId) ?? this.pool.find(a => a.id === agentId) ?? null;
+  }
+
+  /**
+   * 获取 Agent 的当前状态
+   * 返回 'idle' | 'active' | 'unknown'
+   */
+  getAgentState(agentId: string): 'idle' | 'active' | 'unknown' {
+    if (this.activeAgents.has(agentId)) {
+      return 'active';
+    }
+    if (this.pool.some(a => a.id === agentId)) {
+      return 'idle';
+    }
+    return 'unknown';
   }
 
   /**

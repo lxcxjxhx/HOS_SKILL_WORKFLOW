@@ -10,29 +10,29 @@ Android APK 安全分析技术用于评估移动应用的安全性。通过反�
 - 发现可疑应用需要逆向分析
 - API 接口加密需要提取密
 - 应用存在数据泄露风险需要验
-- 需要绕过应用的安全检测机?
+- 需要绕过应用的安全检测机制
 
 ## 操作检查清单
 
 1. 解压 APK 文件分析目录结构
-2. 反编?classes.dex 获取 Java 代码
+2. 反编译 classes.dex 获取 Java 代码
 3. 分析 AndroidManifest.xml 组件配置
 4. 搜索硬编码密钥和敏感信息
 5. 检查网络通信安全
 6. 检查数据存储安全
-7. 使用 Frida 进行动?Hook 测试
-8. 检?Root 检测和模拟器检?
+7. 使用 Frida 进行动态 Hook 测试
+8. 检查 Root 检测和模拟器检测
 
 ## 技术手段
 
-- APK 反编?(jadx, apktool)
+- APK 反编译(jadx, apktool)
 - Smali 代码分析
-- Frida 动?Hook
+- Frida 动态 Hook
 - SSL Pinning Bypass
 - Root Detection Bypass
 - Intent 劫持测试
 - Deep Link 安全测试
-- Native 库分?
+- Native 库分析
 
 ## 症状
 
@@ -45,8 +45,8 @@ Android APK 安全分析技术用于评估移动应用的安全性。通过反�
 ## 根因分析
 
 - 开发者将密钥硬编码在代码或资源文件中
-- 未正确配?AndroidManifest.xml 中的 exported 属
-- 未使?HTTPS 或证书验证不完整
+- 未正确配置 AndroidManifest.xml 中的 exported 属性
+- 未使用 HTTPS 或证书验证不完整
 - 缺少代码混淆或仅使用 ProGuard 基础规则
 - 未对敏感数据进行加密存储
 
@@ -54,7 +54,7 @@ Android APK 安全分析技术用于评估移动应用的安全性。通过反�
 
 ### APK 反编译分
 
-使用 jadx 反编?APK 获取 Java 源码
+使用 jadx 反编译APK 获取 Java 源码
 
 ```
 # 使用 jadx 反编译
@@ -67,7 +67,7 @@ grep -r "API_KEY|secret|password|token" output_dir/
 
 ### Frida SSL Pinning Bypass
 
-使用 Frida 脚本绕过 SSL Pinning 检
+使用 Frida 脚本绕过 SSL Pinning 检测
 
 ```
 # Frida SSL Pinning Bypass 脚本
@@ -97,7 +97,7 @@ Java.perform(function() {
 - 使用代码混淆 (ProGuard/R8) 增加逆向难度
 - 不要在代码中硬编码密
 - 实施 SSL Pinning
-- 正确配置 AndroidManifest.xml ?exported 属
+- 正确配置 AndroidManifest.xml ?exported 属性
 - 使用 Android Keystore 存储敏感数据
 - 实施 Root 和模拟器检
-- 使用 Integrity API 验证应用完整?
+- 使用 Integrity API 验证应用完整性

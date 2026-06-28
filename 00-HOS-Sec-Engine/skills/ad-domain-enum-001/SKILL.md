@@ -1,6 +1,6 @@
 ---
 name: ad-domain-enum-001
-description: "Active Directory 域信息收集是内网渗透的关键阶段 适用于: 成功获取域内主机访问权限后需要收集域信息; 需要绘?AD 域拓扑结构和信任关系; 寻找域管理员和特权账"
+description: "Active Directory 域信息收集是内网渗透的关键阶段 适用于: 成功获取域内主机访问权限后需要收集域信息; 需要绘制 AD 域拓扑结构和信任关系; 寻找域管理员和特权账"
 license: MIT
 metadata:
   author: HOS-Sec-Engine
@@ -23,7 +23,7 @@ Active Directory 域信息收集是内网渗透的关键阶段。通过 LDAP 查
 ### 触发场景
 
 - 成功获取域内主机访问权限后需要收集域信息
-- 需要绘?AD 域拓扑结构和信任关系
+- 需要绘制 AD 域拓扑结构和信任关系
 - 寻找域管理员和特权账
 - 发现域内服务账号和委派配
 - 需要识别域内潜在的攻击路径
@@ -46,9 +46,9 @@ Active Directory 域信息收集是内网渗透的关键阶段。通过 LDAP 查
 
 ## 操作检查清单
 
-1. 获取当前用户域信?(whoami /all)
+1. 获取当前用户域信息(whoami /all)
 2. 定位域控制器 (nltest /dsgetdc)
-3. 枚举域用户和?(net user /domain)
+3. 枚举域用户和组(net user /domain)
 4. 枚举域计算机 (net group "domain computers" /domain)
 5. 查询 SPN (setspn -T domain -Q */*)
 6. 使用 BloodHound 收集器收集数
@@ -64,7 +64,7 @@ Active Directory 域信息收集是内网渗透的关键阶段。通过 LDAP 查
 - SPN 扫描
 - GPO 分析
 - ACL/ACE 权限分析
-- 域信任关系枚?
+- 域信任关系枚举
 
 ## 实战经验
 
@@ -84,7 +84,7 @@ Active Directory 域信息收集是内网渗透的关键阶段。通过 LDAP 查
 
 ### 实战观察
 
-- BloodHound 是最强大?AD 分析工具，可自动识别攻击路径
+- BloodHound 是最强大的 AD 分析工具，可自动识别攻击路径
 - 普通域用户即可获取大量 AD 信息
 - LDAP 查询是最隐蔽的信息收集方
 - Kerberos 预认证请求可用于用户枚举
@@ -94,7 +94,7 @@ Active Directory 域信息收集是内网渗透的关键阶段。通过 LDAP 查
 - 使用 Loud 方式 (?net group) 触发告警
 - 忽略服务账号和委派配
 - 只关注用户而忽略计算机对象
-- 未分?ACL ?ACE 权限
+- 未分析 ACL 和 ACE 权限
 
 ### 补充说明
 
@@ -106,7 +106,7 @@ Active Directory 域信息收集是内网渗透的关键阶段。通过 LDAP 查
 
 ### LDAP 查询域管理员
 
-使用 LDAP 过滤器查?Domain Admins 组成
+使用 LDAP 过滤器查询Domain Admins 组成
 
 ```
 # PowerShell LDAP 查询
@@ -117,12 +117,12 @@ $searcher.FindAll() | ForEach-Object { $_.Properties.name }
 
 ### BloodHound 数据收集
 
-使用 SharpHound 收集器收?AD 数据用于攻击路径分析
+使用 SharpHound 收集器收集AD 数据用于攻击路径分析
 
 ```
 # 使用 SharpHound 收集
 .\SharpHound.exe -c All -d domain.com
-# 或使?PowerShell
+# 或使用 PowerShell
 Import-Module .\SharpHound.ps1
 Invoke-BloodHound -CollectionMethod All -Domain domain.com
 ```
@@ -140,7 +140,7 @@ Invoke-BloodHound -CollectionMethod All -Domain domain.com
 
 - LDAP 查询返回有效结果
 - BloodHound 生成完整的攻击路径图
-- 识别出高价值目标账?
+- 识别出高价值目标账号
 
 ### 误报标志
 
@@ -151,7 +151,7 @@ Invoke-BloodHound -CollectionMethod All -Domain domain.com
 
 ### 推荐做法
 
-- 限制域用?LDAP 查询权限
+- 限制域用户的 LDAP 查询权限
 - 启用 LDAP 签名和通道绑定
 - 部署 AD 审计和监
 - 实施最小权限原

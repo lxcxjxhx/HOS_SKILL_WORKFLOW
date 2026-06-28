@@ -1,38 +1,55 @@
 import { AttackDefenseSkill } from '../types/skill';
-import { SkillResult, ExecuteQuery, EngineConfig } from '../types/result';
+import { SkillResult, ExecuteQuery } from '../types/result';
 import { SkillScorer } from './scorer';
-
-const DEFAULT_CONFIG: Required<EngineConfig> = {
-  strictMode: true,
-  maxResults: 10,
-  minMatchScore: 0.1,
-  customSkillsDir: '',
-  loadPresetSkills: true
-};
 
 /**
  * 多维度 Skill 匹配器
  */
 export class SkillMatcher {
-  private config: Required<EngineConfig>;
+  private maxResults: number;
+  private minMatchScore: number;
+  private filterCache = new Map<string, AttackDefenseSkill[]>();
+  private static readonly MAX_FILTER_CACHE_SIZE = 200;
+  private filterCacheHits = 0;
+  private filterCacheMisses = 0;
+  /** 最大评分 Skill 数量，防止恶意大量 Skill 数据导致性能问题 */
+  private static readonly MAX_SCORE_SKILLS = 500;
 
-  constructor(config: EngineConfig = {}) {
-    this.config = { ...DEFAULT_CONFIG, ...config };
+  constructor(config: { maxResults?: number; minMatchScore?: number } = {}) {
+    this.maxResults = config.maxResults ?? 10;
+    this.minMatchScore = config.minMatchScore ?? 0.1;
   }
 
   /**
    * 执行匹配
    */
   match(query: ExecuteQuery, skills: AttackDefenseSkill[]): SkillResult[] {
-    // 过滤
-    let filteredSkills = this.filterSkills(query, skills);
+    const cacheKey = this.getFilterCacheKey(query);
+    let filteredSkills = this.filterCache.get(cacheKey);
+
+    if (filteredSkills === undefined) {
+      this.filterCacheMisses++;
+      filteredSkills = this.filterSkills(query, skills);
+      this.filterCache.set(cacheKey, filteredSkills);
+
+      // LRU-style eviction
+      if (this.filterCache.size > SkillMatcher.MAX_FILTER_CACHE_SIZE) {
+        const firstKey = this.filterCache.keys().next().value;
+        if (firstKey) {
+          this.filterCache.delete(firstKey);
+        }
+      }
+    } else {
+      this.filterCacheHits++;
+    }
 
     // 计算匹配分数
     const results: SkillResult[] = [];
-
-    for (const skill of filteredSkills) {
+    const limit = Math.min(filteredSkills.length, SkillMatcher.MAX_SCORE_SKILLS);
+    for (let i = 0; i < limit; i++) {
+      const skill = filteredSkills[i];
       const { score, details } = SkillScorer.calculate(query.scenario, skill.trigger);
-      if (score >= this.config.minMatchScore) {
+      if (score >= this.minMatchScore) {
         results.push({
           skill,
           matchScore: score,
@@ -41,17 +58,21 @@ export class SkillMatcher {
       }
     }
 
+    if (filteredSkills.length > SkillMatcher.MAX_SCORE_SKILLS) {
+      console.warn(`[SkillMatcher] 评分 Skill 数量超出上限 (${SkillMatcher.MAX_SCORE_SKILLS})，仅处理前 ${SkillMatcher.MAX_SCORE_SKILLS} 个`);
+    }
+
     // 按分数降序排序
     results.sort((a, b) => {
       if (b.matchScore !== a.matchScore) {
         return b.matchScore - a.matchScore;
       }
       // 分数相同按置信度排序
-      return (b.skill.metadata.confidence || 0) - (a.skill.metadata.confidence || 0);
+      return (b.skill.metadata.confidence ?? 0) - (a.skill.metadata.confidence ?? 0);
     });
 
     // 限制结果数量
-    return results.slice(0, this.config.maxResults);
+    return results.slice(0, this.maxResults);
   }
 
   /**
@@ -79,10 +100,46 @@ export class SkillMatcher {
 
       // 按标签过滤
       if (query.tags && query.tags.length > 0) {
-        if (!skill.metadata.tags || !query.tags.some(tag => skill.metadata.tags?.includes(tag))) return false;
+        if (!skill.metadata.tags || !skill.metadata.tags.some(tag => query.tags!.includes(tag))) return false;
       }
 
       return true;
     });
+  }
+
+  /**
+   * 生成过滤缓存键
+   * 注意: 不包含 scenario 文本，因为过滤仅依赖分类/标签等静态维度，
+   * scenario 文本每次查询不同，若包含会导致缓存命中率极低。
+   * 文本匹配由 SkillScorer 在评分阶段独立处理。
+   */
+  private getFilterCacheKey(query: ExecuteQuery): string {
+    return JSON.stringify({
+      categories: query.categories?.sort(),
+      subCategories: query.subCategories?.sort(),
+      riskLevels: query.riskLevels?.sort(),
+      tags: query.tags?.sort(),
+    });
+  }
+
+  /**
+   * 清除过滤缓存
+   */
+  clearCache(): void {
+    this.filterCache.clear();
+    this.filterCacheHits = 0;
+    this.filterCacheMisses = 0;
+  }
+
+  /**
+   * 获取缓存统计信息
+   */
+  getCacheStats(): { hits: number; misses: number; hitRate: number } {
+    const total = this.filterCacheHits + this.filterCacheMisses;
+    return {
+      hits: this.filterCacheHits,
+      misses: this.filterCacheMisses,
+      hitRate: total === 0 ? 0 : this.filterCacheHits / total,
+    };
   }
 }

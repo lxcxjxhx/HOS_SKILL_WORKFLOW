@@ -1,4 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from 'http';
+import * as crypto from 'crypto';
 import { ServerConfig } from './types';
 
 interface AgentRecord {
@@ -7,12 +8,29 @@ interface AgentRecord {
   results: Array<{ taskId: string; result: unknown }>;
 }
 
-const agentStore: Map<string, AgentRecord> = new Map();
+const MAX_BODY_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_AGENTS = 100;                  // 最大 Agent 注册数量，防止恶意注册耗尽内存
+const MAX_AGENT_TASKS = 50;              // 单个 Agent 最大任务队列长度
+const MAX_AGENT_RESULTS = 100;           // 单个 Agent 最大结果存储数量
+
+class BodySizeError extends Error {
+  constructor() {
+    super('Request body too large');
+    this.name = 'BodySizeError';
+  }
+}
 
 function parseBody(req: IncomingMessage): Promise<Record<string, unknown>> {
   return new Promise((resolve, reject) => {
     let body = '';
+    let size = 0;
     req.on('data', (chunk: Buffer) => {
+      size += chunk.length;
+      if (size > MAX_BODY_SIZE) {
+        reject(new BodySizeError());
+        req.destroy();
+        return;
+      }
       body += chunk.toString();
     });
     req.on('end', () => {
@@ -40,6 +58,7 @@ function extractAgentId(req: IncomingMessage): string | null {
 export class AgentServer {
   private server: http.Server | null = null;
   private config: ServerConfig;
+  private agentStore: Map<string, AgentRecord> = new Map();
 
   constructor(config: ServerConfig) {
     this.config = config;
@@ -69,7 +88,7 @@ export class AgentServer {
   }
 
   getAgents(): ReadonlyMap<string, AgentRecord> {
-    return agentStore;
+    return this.agentStore;
   }
 
   private async handleRequest(req: IncomingMessage, res: ServerResponse): Promise<void> {
@@ -104,15 +123,23 @@ export class AgentServer {
         jsonResponse(res, 404, { error: 'Not found' });
       }
     } catch (error) {
+      if (error instanceof BodySizeError) {
+        jsonResponse(res, 413, { error: error.message });
+        return;
+      }
       const message = error instanceof Error ? error.message : 'Internal error';
       jsonResponse(res, 500, { error: message });
     }
   }
 
   private async handleRegister(req: IncomingMessage, res: ServerResponse): Promise<void> {
+    if (this.agentStore.size >= MAX_AGENTS) {
+      jsonResponse(res, 429, { error: `Maximum agents (${MAX_AGENTS}) reached` });
+      return;
+    }
     const body = await parseBody(req);
     const agentId = crypto.randomUUID();
-    agentStore.set(agentId, {
+    this.agentStore.set(agentId, {
       status: 'idle',
       tasks: [],
       results: [],
@@ -121,9 +148,13 @@ export class AgentServer {
   }
 
   private async handleTask(req: IncomingMessage, res: ServerResponse, agentId: string): Promise<void> {
-    const agent = agentStore.get(agentId);
+    const agent = this.agentStore.get(agentId);
     if (!agent) {
       jsonResponse(res, 404, { error: 'Agent not found' });
+      return;
+    }
+    if (agent.tasks.length >= MAX_AGENT_TASKS) {
+      jsonResponse(res, 429, { error: `Maximum tasks (${MAX_AGENT_TASKS}) reached for agent` });
       return;
     }
 
@@ -136,10 +167,14 @@ export class AgentServer {
   }
 
   private async handleResult(req: IncomingMessage, res: ServerResponse, agentId: string): Promise<void> {
-    const agent = agentStore.get(agentId);
+    const agent = this.agentStore.get(agentId);
     if (!agent) {
       jsonResponse(res, 404, { error: 'Agent not found' });
       return;
+    }
+    if (agent.results.length >= MAX_AGENT_RESULTS) {
+      // 结果已满，移除最旧的结果以腾出空间
+      agent.results.shift();
     }
 
     const body = await parseBody(req);
@@ -151,7 +186,7 @@ export class AgentServer {
   }
 
   private async handleStatus(res: ServerResponse, agentId: string): Promise<void> {
-    const agent = agentStore.get(agentId);
+    const agent = this.agentStore.get(agentId);
     if (!agent) {
       jsonResponse(res, 404, { error: 'Agent not found' });
       return;

@@ -173,7 +173,7 @@ const SKILLS = [
   { id: 'code-review-java-deser-001', category: 'other', desc: 'Java deserialization code review' },
   { id: 'mobile-android-apk-001', category: 'other', desc: 'Android APK reverse engineering' },
   { id: 'ai-prompt-injection-001', category: 'other', desc: 'Prompt injection bypass' },
-  { id: 'hos-sec-master', category: 'master', desc: 'Unified orchestration entry' },
+  { id: 'hos-sec-engine', category: 'master', desc: 'Unified orchestration engine' },
 ];
 
 function parseArgs() {

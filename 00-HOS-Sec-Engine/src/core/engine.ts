@@ -8,13 +8,13 @@ import { SkillLoader } from './loader';
 import { FlowOrchestrator } from './orchestrator';
 import { RuntimeConfig, DEFAULT_RUNTIME_CONFIG } from '../config/types';
 import { ProviderManager } from '../config/provider-manager';
-import { ConfigLoader } from '../config/config-loader';
-import { AgentCoordination, AgentTask, AgentResult } from '../agents/types';
+import { AgentResult } from '../agents/types';
 import { AgentCoordinator } from '../agents/coordinator';
 import { ExecutionContextManager } from '../runtime/execution-context';
 import type { ExecutionContext } from '../runtime/execution-context';
 import { Sandbox } from '../runtime/sandbox';
 import { AgentServer } from '../runtime/server';
+import * as path from 'path';
 
 /**
  * 默认配置
@@ -27,6 +27,12 @@ const DEFAULT_CONFIG: Required<EngineConfig> = {
   loadPresetSkills: true
 };
 
+/** 最大注册 Skill 数量，防止异常数据导致内存耗尽 */
+const MAX_REGISTER_SKILLS = 1000;
+
+/** 最大 playbook 阶段 Skill 关联数量 */
+const MAX_PLAYBOOK_SKILL_LINKS = 500;
+
 /**
  * HOS-Sec-Engine V2 - Skill Engine
  * 攻防专项 Skill 引擎
@@ -34,6 +40,10 @@ const DEFAULT_CONFIG: Required<EngineConfig> = {
 export class HosSecEngine {
   private config: Required<EngineConfig>;
   private skills: Map<string, AttackDefenseSkill>;
+  private cachedSkillsList: AttackDefenseSkill[] | null = null;
+  /** 分类索引: category -> skillId[]，lazy 构建 */
+  private categoryIndex: Map<string, string[]> | null = null;
+  private cachedPlaybookSkills: Map<string, AttackDefenseSkill[]> = new Map();
   private matcher: SkillMatcher;
   private orchestrator: FlowOrchestrator;
   private playbooks: Map<string, Playbook>;
@@ -42,7 +52,6 @@ export class HosSecEngine {
   private runtimeConfig: RuntimeConfig;
   private providerManager: ProviderManager;
   private agentCoordinator: AgentCoordinator;
-  private contextManager: ExecutionContextManager | null = null;
   private agentServer: AgentServer | null;
 
   constructor(config: EngineConfig = {}) {
@@ -75,7 +84,7 @@ export class HosSecEngine {
   private loadPresetSkills(): void {
     try {
       // __dirname = dist/src/core, need to go up to dist/src/skills
-      const skillsDir = require('path').resolve(__dirname, '..', 'skills');
+      const skillsDir = path.resolve(__dirname, '..', 'skills');
       const skills = SkillLoader.loadFromDirectory(skillsDir);
       this.registerSkills(skills);
     } catch (error) {
@@ -93,14 +102,17 @@ export class HosSecEngine {
 
   /**
    * 注册单个 Skill
+   * @param skipValidation 当从 registerSkills 调用时跳过重复验证
    */
-  registerSkill(skill: AttackDefenseSkill): void {
-    const errors = SkillValidator.validate(skill);
-    if (errors.length > 0) {
-      if (this.config.strictMode) {
-        throw new Error(`Skill 验证失败 [${skill.metadata.id}]: ${errors.join(', ')}`);
+  registerSkill(skill: AttackDefenseSkill, skipValidation = false): void {
+    if (!skipValidation) {
+      const errors = SkillValidator.validate(skill);
+      if (errors.length > 0) {
+        if (this.config.strictMode) {
+          throw new Error(`Skill 验证失败 [${skill.metadata.id}]: ${errors.join(', ')}`);
+        }
+        return;
       }
-      return;
     }
 
     if (this.skills.has(skill.metadata.id)) {
@@ -114,13 +126,18 @@ export class HosSecEngine {
     }
 
     this.skills.set(skill.metadata.id, skill);
+    this.invalidateCaches();
   }
 
   /**
    * 批量注册 Skill
    */
   registerSkills(skills: AttackDefenseSkill[]): void {
-    const validationResults = SkillValidator.validateBatch(skills);
+    if (skills.length > MAX_REGISTER_SKILLS) {
+      console.warn(`[HosSecEngine] 注册 Skill 数量超出上限 (${MAX_REGISTER_SKILLS})，仅处理前 ${MAX_REGISTER_SKILLS} 个`);
+    }
+    const limitedSkills = skills.slice(0, MAX_REGISTER_SKILLS);
+    const validationResults = SkillValidator.validateBatch(limitedSkills);
     if (validationResults.size > 0) {
       const errorMessages: string[] = [];
       for (const [id, errors] of validationResults) {
@@ -131,19 +148,29 @@ export class HosSecEngine {
       }
     }
 
-    for (const skill of skills) {
+    for (const skill of limitedSkills) {
       if (validationResults.has(skill.metadata.id)) {
         continue;
       }
-      this.registerSkill(skill);
+      if (this.skills.has(skill.metadata.id)) {
+        if (this.config.strictMode) {
+          throw new Error(`Skill ID 重复: ${skill.metadata.id}`);
+        }
+        continue;
+      }
+      if (skill.enabled === undefined) {
+        skill.enabled = true;
+      }
+      this.skills.set(skill.metadata.id, skill);
     }
+    this.invalidateCaches();
   }
 
   /**
    * 执行查询
    */
   execute(query: ExecuteQuery, format: 'text' | 'json' = 'text'): string {
-    const allSkills = Array.from(this.skills.values());
+    const allSkills = this.getSkillsList();
     const results = this.matcher.match(query, allSkills);
 
     if (format === 'json') {
@@ -156,7 +183,7 @@ export class HosSecEngine {
    * 获取原始匹配结果
    */
   executeRaw(query: ExecuteQuery): SkillResult[] {
-    const allSkills = Array.from(this.skills.values());
+    const allSkills = this.getSkillsList();
     return this.matcher.match(query, allSkills);
   }
 
@@ -164,7 +191,7 @@ export class HosSecEngine {
    * 获取所有已加载的 Skill
    */
   getSkills(): AttackDefenseSkill[] {
-    return Array.from(this.skills.values());
+    return this.getSkillsList();
   }
 
   /**
@@ -188,6 +215,7 @@ export class HosSecEngine {
     const skill = this.skills.get(id);
     if (skill) {
       skill.enabled = true;
+      this.invalidateCaches();
       return true;
     }
     return false;
@@ -197,6 +225,7 @@ export class HosSecEngine {
     const skill = this.skills.get(id);
     if (skill) {
       skill.enabled = false;
+      this.invalidateCaches();
       return true;
     }
     return false;
@@ -206,7 +235,11 @@ export class HosSecEngine {
    * 移除 Skill
    */
   removeSkill(id: string): boolean {
-    return this.skills.delete(id);
+    const deleted = this.skills.delete(id);
+    if (deleted) {
+      this.invalidateCaches();
+    }
+    return deleted;
   }
 
   /**
@@ -214,6 +247,28 @@ export class HosSecEngine {
    */
   clearSkills(): void {
     this.skills.clear();
+    this.invalidateCaches();
+  }
+
+  /**
+   * 统一失效所有缓存（skills list、category index、playbook skills、matcher）
+   * 在 register/remove/clear/enable/disable 后调用
+   */
+  private invalidateCaches(): void {
+    this.cachedSkillsList = null;
+    this.categoryIndex = null;
+    this.cachedPlaybookSkills.clear();
+    this.matcher.clearCache();
+  }
+
+  /**
+   * 获取已加载的 Skill 列表（带缓存）
+   */
+  private getSkillsList(): AttackDefenseSkill[] {
+    if (!this.cachedSkillsList) {
+      this.cachedSkillsList = Array.from(this.skills.values());
+    }
+    return this.cachedSkillsList;
   }
 
   // ==================== 流程编排能力 ====================
@@ -250,16 +305,27 @@ export class HosSecEngine {
    * @returns 关联的 Skill 列表
    */
   getSkillsByPlaybook(playbookId: string): AttackDefenseSkill[] {
+    const cached = this.cachedPlaybookSkills.get(playbookId);
+    if (cached) {
+      return cached;
+    }
+
     const playbook = this.playbooks.get(playbookId);
     if (!playbook) {
       return [];
     }
 
     const skillIds = new Set<string>();
+    let linkCount = 0;
     for (const phase of playbook.phases) {
       for (const skillId of phase.skills) {
+        if (++linkCount > MAX_PLAYBOOK_SKILL_LINKS) {
+          console.warn(`[HosSecEngine] Playbook Skill 关联数量超出上限 (${MAX_PLAYBOOK_SKILL_LINKS})，终止收集`);
+          break;
+        }
         skillIds.add(skillId);
       }
+      if (linkCount > MAX_PLAYBOOK_SKILL_LINKS) break;
     }
 
     const result: AttackDefenseSkill[] = [];
@@ -270,6 +336,7 @@ export class HosSecEngine {
       }
     }
 
+    this.cachedPlaybookSkills.set(playbookId, result);
     return result;
   }
 
@@ -322,7 +389,7 @@ export class HosSecEngine {
   /**
    * 获取 Agent 协调器实例
    */
-  getAgentCoordinator(): AgentCoordination {
+  getAgentCoordinator(): AgentCoordinator {
     return this.agentCoordinator;
   }
 
@@ -424,5 +491,49 @@ export class HosSecEngine {
    */
   createExecutionContext(target: string): ExecutionContext {
     return ExecutionContextManager.create(target, this.runtimeConfig);
+  }
+
+  /**
+   * 获取按分类统计的 Skill 数量（使用索引，O(1)）
+   */
+  getSkillCountByCategory(): Map<string, number> {
+    this.buildCategoryIndex();
+    const counts = new Map<string, number>();
+    for (const [cat, ids] of this.categoryIndex!) {
+      counts.set(cat, ids.length);
+    }
+    return counts;
+  }
+
+  /**
+   * 获取指定分类的 Skill 列表（使用索引，O(1)）
+   */
+  getSkillsByCategory(category: string): AttackDefenseSkill[] {
+    this.buildCategoryIndex();
+    const ids = this.categoryIndex!.get(category);
+    if (!ids) return [];
+    const result: AttackDefenseSkill[] = [];
+    for (const id of ids) {
+      const skill = this.skills.get(id);
+      if (skill) result.push(skill);
+    }
+    return result;
+  }
+
+  /**
+   * Lazy 构建分类索引
+   */
+  private buildCategoryIndex(): void {
+    if (this.categoryIndex) return;
+    this.categoryIndex = new Map();
+    for (const [id, skill] of this.skills) {
+      const cat = skill.metadata.category;
+      let ids = this.categoryIndex.get(cat);
+      if (!ids) {
+        ids = [];
+        this.categoryIndex.set(cat, ids);
+      }
+      ids.push(id);
+    }
   }
 }

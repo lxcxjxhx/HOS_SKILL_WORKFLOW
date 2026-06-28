@@ -12,6 +12,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { allSkills } from '../skills';
 import type { AttackDefenseSkill } from '../types/skill';
+import { CATEGORY_NAMES, CATEGORY_DESCRIPTIONS } from '../config/skill-categories';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -33,11 +34,11 @@ const DIST_OUTPUT_PATH = path.join(PROJECT_ROOT, 'dist', 'skills-index.json');
  */
 function extractDescription(skill: AttackDefenseSkill): string {
   const desc = skill.knowledge.description;
-  const firstSentence = desc.split(/[.。]/)[0].trim();
+  const firstSentence = desc.split(/[.。]/)[0]?.trim();
   if (firstSentence && firstSentence.length <= 200) {
     return firstSentence;
   }
-  return firstSentence.slice(0, 200) + '...';
+  return (firstSentence || '').slice(0, 200) + '...';
 }
 
 /**
@@ -69,48 +70,13 @@ function buildIndex(skills: AttackDefenseSkill[]): any {
     byCategory.get(cat)!.push(skill);
   }
 
-  // Category name mapping for display
-  const categoryNames: Record<string, string> = {
-    web: 'Web 安全',
-    api: 'API 安全',
-    cloud: '云安全',
-    windows: 'Windows 安全',
-    linux: 'Linux 安全',
-    'ai-security': 'AI 安全',
-    ad: '域安全',
-    mobile: '移动安全',
-    container: '容器安全',
-    kubernetes: 'Kubernetes 安全',
-    'code-review': '代码审计',
-    reverse: '逆向工程',
-    'malware-analysis': '恶意代码分析',
-    'threat-hunting': '威胁狩猎',
-    defense: '防御策略',
-  };
-
-  const categoryDescriptions: Record<string, string> = {
-    web: 'Web 应用安全相关 Skill（SQLi, XSS, SSRF, XXE, 上传绕过, RCE 等）',
-    api: 'API 安全相关 Skill（JWT, OAuth, IDOR, Rate Limit 等）',
-    cloud: '云安全相关 Skill（S3/OSS, IAM, 元数据 SSRF 等）',
-    windows: 'Windows 安全相关 Skill（权限提升, 服务配置, 凭据问题等）',
-    linux: 'Linux 安全相关 Skill（Sudo, Capability, Cron, 容器逃逸等）',
-    'ai-security': 'AI 安全相关 Skill（Prompt 注入, 模型绕过等）',
-    ad: 'AD 域渗透相关 Skill（域信息收集, 权限提升等）',
-    mobile: '移动端安全相关 Skill（Android APK 分析等）',
-    container: '容器安全相关 Skill（Docker 逃逸等）',
-    kubernetes: 'Kubernetes 安全相关 Skill（配置审计等）',
-    'code-review': '代码审计相关 Skill（Java/PHP/Python 反序列化等）',
-    reverse: '逆向工程相关 Skill',
-    'malware-analysis': '恶意代码分析相关 Skill',
-    'threat-hunting': '威胁狩猎相关 Skill',
-    defense: '防御策略相关 Skill',
-  };
+  // Category name mapping for display (imported from shared config)
 
   for (const [category, catSkills] of byCategory) {
     const bundleKey = `${category}-bundle`;
     bundles[bundleKey] = {
-      name: categoryNames[category] || category,
-      description: categoryDescriptions[category] || `${category} 相关 Skill`,
+      name: CATEGORY_NAMES[category] || category,
+      description: CATEGORY_DESCRIPTIONS[category] || `${category} 相关 Skill`,
       skills: catSkills.map(s => s.metadata.id),
     };
   }

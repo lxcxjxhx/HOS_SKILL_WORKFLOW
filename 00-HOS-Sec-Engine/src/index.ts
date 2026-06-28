@@ -97,6 +97,20 @@ export {
   codeReviewSkills,
 } from './skills';
 
+// V4 自维护能力导出
+export { SkillLifecycleManager, skillLifecycle } from './core/skill-lifecycle';
+export type { SkillStatus, SkillLifecycleMeta, SkillChangeLog } from './core/skill-lifecycle';
+export { SkillDeriver, skillDeriver } from './core/skill-deriver';
+export type { Finding as DeriverFinding, DerivationCandidate, DerivationResult } from './core/skill-deriver';
+export {
+  CWE_SKILL_MAPPING,
+  getCWEMappingByCategory,
+  getCWEMappingById,
+  generateDefaultDescription,
+  createSkillFromCWEMapping,
+} from './config/skill-categories';
+export type { CWEMappingEntry } from './config/skill-categories';
+
 // 预定义流程导出
 export {
   allPlaybooks,

@@ -1,6 +1,6 @@
 ---
 name: cloud-meta-001
-description: "云平台为运行在其中的虚拟机实例提供了元数据服务（Instance Metadata Service, IMDS），用于获取实例配置、IAM 凭证、用户数据等敏感信息 适用于: 目标应用部署?AWS EC2、GCP Compute Engine、Azure VM 等云实例; 应用存在 SSRF 漏洞（URL 参数控制后端 HTTP 请求目标; 应用在容器环境（Docker、Kubernetes）中运行，可访问容器元数"
+description: "云平台为运行在其中的虚拟机实例提供了元数据服务（Instance Metadata Service, IMDS），用于获取实例配置、IAM 凭证、用户数据等敏感信息 适用于: 目标应用部署在AWS EC2、GCP Compute Engine、Azure VM 等云实例; 应用存在 SSRF 漏洞（URL 参数控制后端 HTTP 请求目标; 应用在容器环境（Docker、Kubernetes）中运行，可访问容器元数"
 license: MIT
 metadata:
   author: HOS-Sec-Engine
@@ -30,7 +30,7 @@ metadata:
 
 ### 触发场景
 
-- 目标应用部署?AWS EC2、GCP Compute Engine、Azure VM 等云实例
+- 目标应用部署在AWS EC2、GCP Compute Engine、Azure VM 等云实例
 - 应用存在 SSRF 漏洞（URL 参数控制后端 HTTP 请求目标
 - 应用在容器环境（Docker、Kubernetes）中运行，可访问容器元数
 - 应用存在 URL 预览、图片代理、Webhook 回调、PDF 生成等功
@@ -77,8 +77,8 @@ metadata:
 - IP 编码绕过?xA9FEA9FE（十六进制）?852039166（十进制）、[0:0:0:0:0:ffff:a9fe:a9fe]（IPv6
 - URL 解析绕过：http://169.254.169.254.nip.io（DNS 解析?169.254.169.254
 - 重定?SSRF：外部服务器 302 ?169.254.169.254 绕过 WAF
-- CRLF 注入：在 URL 中注?
- 添加自定?header（如 IMDSv2 token header
+- CRLF 注入：在 URL 中注入 
+ 添加自定义 header（如 IMDSv2 token header
 - gopher 协议：gopher://169.254.169.254:80/_{PUT_request} 获取 IMDSv2 token
 - SSRF-XXE 组合：通过 XXE 发起请求到元数据端点
 - 容器元数据：ECS 通过 AWS_CONTAINER_CREDENTIALS_RELATIVE_URI 获取端点
@@ -103,39 +103,39 @@ metadata:
 - user-data 脚本中硬编码了敏感信息（密钥、密码、API token
 - 应用使用旧版 SDK 或自定义 HTTP 客户端，不支?IMDSv2
 - 容器编排平台（Kubernetes）中 kubelet API 未启用认
-- 反向代理（如 Nginx）配置不当，?metadata 请求转发到后?
+- 反向代理（如 Nginx）配置不当，将 metadata 请求转发到后端
 
 ### 实战观察
 
-- AWS IMDSv2 ?token 有效期最?6 小时，如?SSRF 在同一会话中可复用 token
-- IMDSv2 hop-limit=1 时，经过代理的请求无法到达元数据服务（TTL ?1 后为 0
-- 但某?SSRF 漏洞（如 SSRF in Java/Python）可以直接控?HTTP header ?TTL
-- GCP 元数据服务器支持递归查询?recursive=true），一次获取所有元数据
-- Azure IMDS 需要设?Metadata: true 请求头，否则返回 404
+- AWS IMDSv2 token 有效期最长 6 小时，如果 SSRF 在同一会话中可复用 token
+- IMDSv2 hop-limit=1 时，经过代理的请求无法到达元数据服务（TTL 减 1 后为 0
+- 但某些 SSRF 漏洞（如 SSRF in Java/Python）可以直接控制 HTTP header 或 TTL
+- GCP 元数据服务器支持递归查询（?recursive=true），一次获取所有元数据
+- Azure IMDS 需要设置 Metadata: true 请求头，否则返回 404
 - ECS 任务角色凭证通过环境变量 AWS_CONTAINER_CREDENTIALS_RELATIVE_URI 获取端点
-- 阿里云元数据端点?100.100.100.200，与 AWS 不同但原理相
-- 腾讯云元数据端点?metadata.tencentyun.com
-- Kubernetes ?service account token 位于 /var/run/secrets/kubernetes.io/serviceaccount/token
-- Docker 守护进程 API?375 端口无认证）可获取容器元数据和环境变?
+- 阿里云元数据端点为 100.100.100.200，与 AWS 不同但原理相同
+- 腾讯云元数据端点为 metadata.tencentyun.com
+- Kubernetes 的 service account token 位于 /var/run/secrets/kubernetes.io/serviceaccount/token
+- Docker 守护进程 API（2375 端口无认证）可获取容器元数据和环境变量
 
 ### 常见错误
 
-- 只测试了 IMDSv1，忽略了 IMDSv2 可能需?token 认证
-- 未测?IP 编码绕过（十六进?0xA9FEA9FE、十进制 2852039166
-- 未检?X-Forwarded-For 是否可以绕过 IMDSv2 的限
-- 忽略?ECS/EKS 等容器环境的特殊元数据端
-- 只关?AWS，未测试 GCP metadata ?Azure IMDS
+- 只测试了 IMDSv1，忽略了 IMDSv2 可能需要 token 认证
+- 未测试 IP 编码绕过（十六进制 0xA9FEA9FE、十进制 2852039166
+- 未检查 X-Forwarded-For 是否可以绕过 IMDSv2 的限制
+- 忽略了 ECS/EKS 等容器环境的特殊元数据端点
+- 只关注 AWS，未测试 GCP metadata 和 Azure IMDS
 - 未利用获取的凭证进一步操作云资源（仅获取凭证即停止）
-- 未检?user-data 中可能包含的敏感信息（初始化脚本中的密码、密钥）
+- 未检查 user-data 中可能包含的敏感信息（初始化脚本中的密码、密钥）
 
 ### 补充说明
 
-- 元数?SSRF 是云渗透中最关键的初始访问点之一，通常可直接获?IAM 凭证
+- 元数据 SSRF 是云渗透中最关键的初始访问点之一，通常可以直接获取 IAM 凭证
 - 获取凭证后应立即使用，因为临时凭证有有效期（通常 1-6 小时
-- IMDSv2 ?token 获取需?PUT 请求，部?SSRF 漏洞只支?GET 请求
-- 如果遇到 IMDSv2 限制，可尝试 SSRF + 重定?+ DNS rebinding 组合绕过
-- 部分 WAF ?169.254.169.254 有硬编码拦截，需?IP 编码绕过
-- 元数据访问本身不违法，但利用获取的凭证操作云资源属于未授权访?
+- IMDSv2 token 获取需要 PUT 请求，部分 SSRF 漏洞只支持 GET 请求
+- 如果遇到 IMDSv2 限制，可尝试 SSRF + 重定向 + DNS rebinding 组合绕过
+- 部分 WAF 对 169.254.169.254 有硬编码拦截，需要 IP 编码绕过
+- 元数据访问本身不违法，但利用获取的凭证操作云资源属于未授权访问
 
 ## 示例
 

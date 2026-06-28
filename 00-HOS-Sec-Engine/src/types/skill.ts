@@ -26,6 +26,8 @@ export interface Metadata {
   author?: string;
   /** 标签 */
   tags: string[];
+  /** 别名（用于重命名迁移兼容），如 ["web-sqli"] */
+  aliases?: string[];
 }
 
 /** Trigger 层 - 多维度触发条件 */

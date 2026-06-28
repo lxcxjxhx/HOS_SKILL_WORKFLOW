@@ -4,8 +4,9 @@ export { AgentServer } from './server';
 export {
   type ExecutionContext,
   type ExecutionLog,
-  type Finding,
   type EvidenceItem,
   type ServerConfig,
-  type SandboxConfig,
 } from './types';
+// Note: SandboxConfig re-exports from ../config/types (the single source of truth)
+export type { SandboxConfig } from '../config/types';
+export type { Finding } from './types';

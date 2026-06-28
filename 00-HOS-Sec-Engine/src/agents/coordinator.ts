@@ -13,6 +13,7 @@ import { SubAgentImpl } from './sub-agent';
 export class AgentCoordinator implements AgentCoordination {
   private agents: Map<string, SubAgent> = new Map();
   private results: Map<string, AgentResult> = new Map();
+  private pendingResolvers = new Map<string, (result: AgentResult) => void>();
   private agentCounter: number = 0;
 
   private createAgentForTask(task: AgentTask): SubAgent {
@@ -26,9 +27,15 @@ export class AgentCoordinator implements AgentCoordination {
     const agent = this.createAgentForTask(task);
     // Start execution asynchronously
     agent.executeTask(task).then((result) => {
-      this.results.set(agent.id, result);
+      const resolver = this.pendingResolvers.get(agent.id);
+      if (resolver) {
+        this.pendingResolvers.delete(agent.id);
+        resolver(result);
+      } else {
+        this.results.set(agent.id, result);
+      }
     }).catch((error) => {
-      this.results.set(agent.id, {
+      const errorResult: AgentResult = {
         taskId: task.id,
         status: 'failed',
         output: '',
@@ -36,7 +43,14 @@ export class AgentCoordinator implements AgentCoordination {
         evidence: [],
         duration: 0,
         error: error.message,
-      });
+      };
+      const resolver = this.pendingResolvers.get(agent.id);
+      if (resolver) {
+        this.pendingResolvers.delete(agent.id);
+        resolver(errorResult);
+      } else {
+        this.results.set(agent.id, errorResult);
+      }
     });
     return agent.id;
   }
@@ -47,14 +61,17 @@ export class AgentCoordinator implements AgentCoordination {
       throw new Error(`Agent ${agentId} not found`);
     }
 
-    // Wait until result is available
-    while (!this.results.has(agentId)) {
-      await new Promise((resolve) => setTimeout(resolve, 50));
+    // If result is already available, return it immediately
+    if (this.results.has(agentId)) {
+      const r = this.results.get(agentId)!;
+      this.results.delete(agentId);
+      return r;
     }
 
-    const result = this.results.get(agentId)!;
-    this.results.delete(agentId);
-    return result;
+    // Otherwise, create a promise and store its resolver for when the result arrives
+    return new Promise<AgentResult>((resolve) => {
+      this.pendingResolvers.set(agentId, resolve);
+    });
   }
 
   async executeParallel(tasks: AgentTask[]): Promise<AgentResult[]> {

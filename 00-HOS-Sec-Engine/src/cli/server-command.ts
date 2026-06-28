@@ -12,7 +12,14 @@ import * as path from 'path';
 async function main() {
   const args = process.argv.slice(2);
   const portArg = args.findIndex(a => a === '--port' || a === '-p');
-  const port = portArg >= 0 ? parseInt(args[portArg + 1], 10) : 3000;
+  let port = 3000;
+  if (portArg >= 0) {
+    port = parseInt(args[portArg + 1], 10);
+    if (isNaN(port) || port < 1 || port > 65535) {
+      console.error(`Error: Invalid port "${args[portArg + 1]}". Must be a number between 1-65535.`);
+      process.exit(1);
+    }
+  }
 
   console.log('HOS-Sec-Engine V4 - Agent Server');
   console.log('================================');

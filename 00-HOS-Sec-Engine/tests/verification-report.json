@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-06-26T05:54:51.807Z",
+  "build": {
+    "passed": true,
+    "details": {
+      "zeroErrors": true,
+      "skillMdGenerated": 30,
+      "playbookMdGenerated": 5,
+      "skillsIndexGenerated": true,
+      "bundledSkillGenerated": true
+    }
+  },
+  "install": {
+    "passed": true,
+    "details": {
+      "installedCount": 30,
+      "output": "] web-xss-0day\n  [OK] web-xxe-001\n  [OK] windows-priv-esc-001\n\nDeployment complete: 30/30 skills deployed to Trae Project Skills\nLocation: C:\\1AAA_PROJECT\\HOS\\HOS-SEC-SKILL\\00-HOS-Sec-Engine\\.trae\\skills\n\nUsage:\n  Claude: Mention skill name in conversation, or ask penetration testing questions\n  Trae:  Mention skill name in conversation, or ask penetration testing questions\n\nExamples:\n  \"Use web-sqli-001 to test SQL injection WAF bypass\"\n  \"Help me test SQL injection, target has WAF protection\"\n"
+    }
+  },
+  "runtime": {
+    "passed": true,
+    "details": "\n========== HOS-Sec-Engine 核心引擎测试 ==========\n\n  ✅ Test 1: Skill 加载: 28 个 Skill 加载成功 (>= 24)\n  ✅ Test 2: SQL注入匹配: web-sqli-001\n  ✅ Test 3: XSS匹配: web-xss-001\n  ✅ Test 4: JWT匹配: api-jwt-001\n  ✅ Test 5: 流程编排: 3 个 Playbook 已加载 (>= 3)\n  ✅ Test 6: 流程执行: web-pentest-full 执行完成, 状态=completed\n  ✅ Test 7: 性能: 100次匹配耗时 26ms (< 1000ms)\n  ✅ Test 8: Skill禁用: web-sqli-001 已禁用\n  ✅ Test 9: Skill重新启用: web-sqli-001 已重新启用\n  ✅ Test 10: 循环保护: MAX_PHASE_ITERATIONS = 200\n  ✅ Test 11: 分类统计: 11 个分类\n  ✅ Test 12: Server: AgentServer 类存在\n  ✅ Test 13: ExecutionContext: 类存在\n\n========== 测试总结 ==========\n  通过: 13\n  失败: 0\n  总计: 13\n  结果: ✅ 全部通过\n\n"
+  },
+  "overall": true
+}

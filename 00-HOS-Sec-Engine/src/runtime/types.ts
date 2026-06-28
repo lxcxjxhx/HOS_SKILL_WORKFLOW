@@ -37,11 +37,6 @@ export interface ServerConfig {
   host?: string;
 }
 
-export interface SandboxConfig {
-  allowedHosts?: string[];
-  networkEnabled?: boolean;
-  fileSystemEnabled?: boolean;
-  maxMemoryMB?: number;
-  maxCpuPercent?: number;
-  timeoutMs?: number;
-}
+// SandboxConfig is defined in ../config/types.ts with semantic types (networkAccess/fileSystemAccess).
+// Re-export for convenience.
+export type { SandboxConfig } from '../config/types';

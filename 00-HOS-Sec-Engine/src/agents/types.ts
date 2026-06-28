@@ -11,6 +11,7 @@ export interface SubAgent {
   executeTask(input: AgentTask): Promise<AgentResult>;
   getStatus(): AgentStatus;
   terminate(): void;
+  reset(): void;
 }
 
 export interface AgentTask {

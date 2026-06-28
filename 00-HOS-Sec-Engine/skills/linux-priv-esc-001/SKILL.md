@@ -1,6 +1,6 @@
 ---
 name: linux-priv-esc-001
-description: "Linux 权限提升技术用于在获取普通用户访问权限后提升?root 适用于: 获取普通用?shell 后需要提升到 root; 发现 sudo 配置不当可执行特权命; 发现 SUID 二进制文件可被滥"
+description: "Linux 权限提升技术用于在获取普通用户访问权限后提升到 root 权限 适用于: 获取普通用户 shell 后需要提升到 root; 发现 sudo 配置不当可执行特权命; 发现 SUID 二进制文件可被滥"
 license: MIT
 metadata:
   author: HOS-Sec-Engine
@@ -18,16 +18,16 @@ metadata:
   confidence: 0.93
 ---
 # Linux Privilege Escalation Techniques
-Linux 权限提升技术用于在获取普通用户访问权限后提升?root。Linux 系统存在多种提权路径：sudo 配置错误、SUID 二进制滥用、危险的 Capability 配置、可?cron 任务、内核漏洞等。提权成功取决于系统配置和用户权限
+Linux 权限提升技术用于在获取普通用户访问权限后提升到 root 权限。Linux 系统存在多种提权路径：sudo 配置错误、SUID 二进制滥用、危险的 Capability 配置、可写cron 任务、内核漏洞等。提权成功取决于系统配置和用户权限
 ## 何时使用
 
 ### 触发场景
 
-- 获取普通用?shell 后需要提升到 root
+- 获取普通用户 shell 后需要提升到 root
 - 发现 sudo 配置不当可执行特权命
 - 发现 SUID 二进制文件可被滥
-- 发现可写?cron 任务或脚
-- 发现危险?Linux Capability 配置
+- 发现可写的 cron 任务或脚
+- 发现危险的 Linux Capability 配置
 
 ### 关键词
 
@@ -48,15 +48,15 @@ Linux 权限提升技术用于在获取普通用户访问权限后提升?root。
 
 ## 操作检查清单
 
-1. 检?sudo 权限 (sudo -l)
-2. 查找 SUID 二进?(find / -perm -4000)
+1. 检查 sudo 权限 (sudo -l)
+2. 查找 SUID 二进制(find / -perm -4000)
 3. 检查用户组 (id)
-4. 检?cron 任务 (crontab -l, ls -la /etc/cron*)
-5. 检?Capability (getcap -r / 2>/dev/null)
-6. 检查可写配置文?(/etc/passwd, /etc/shadow)
+4. 检查 cron 任务 (crontab -l, ls -la /etc/cron*)
+5. 检查 Capability (getcap -r / 2>/dev/null)
+6. 检查可写配置文件(/etc/passwd, /etc/shadow)
 7. 检查环境变
 8. 检查内核版本和可用 exploit
-9. 使用 LinPEAS 自动化枚?
+9. 使用 LinPEAS 自动化枚举
 
 ## 技术手段
 
@@ -75,8 +75,8 @@ Linux 权限提升技术用于在获取普通用户访问权限后提升?root。
 
 - 用户可通过 sudo 执行特定命令
 - 系统存在 SUID root 二进制文
-- 用户具有危险?Linux Capability
-- cron 任务?root 运行但脚本可
+- 用户具有危险的 Linux Capability
+- cron 任务以 root 运行但脚本可
 - 用户属于 docker 或其他特权组
 
 ### 根因分析
@@ -90,40 +90,40 @@ Linux 权限提升技术用于在获取普通用户访问权限后提升?root。
 
 ### 实战观察
 
-- sudo 配置是最常见?Linux 提权路径
-- GTFOBins 提供了大?SUID 利用技
+- sudo 配置是最常见的 Linux 提权路径
+- GTFOBins 提供了大量 SUID 利用技术
 - Docker/LXD 组成员身份等同于 root 访问
 - Capability 滥用是较新但越来越常见的攻击
-- 内核提权漏洞因版本而异且需?PoC 适配
+- 内核提权漏洞因版本而异且需要 PoC 适配
 
 ### 常见错误
 
 - 忽略 sudo -l 的输出分
-- 未检查所?SUID 二进
+- 未检查所有 SUID 二进制文件
 - 忽略 cron 任务的安全
-- 未检查环境变量劫?(PATH, LD_PRELOAD)
+- 未检查环境变量劫持(PATH, LD_PRELOAD)
 - 忽略Capabilities 配置
 
 ### 补充说明
 
 - 提权方法高度依赖系统配置
-- 应使?LinPEAS 等自动化枚举工具
-- 内核提权需要精确匹配内核版?
+- 应使用 LinPEAS 等自动化枚举工具
+- 内核提权需要精确匹配内核版本
 
 ## 示例
 
 ### sudo vim 提权
 
-利用 sudo 允许运行 vim 的特权执?shell
+利用 sudo 允许运行 vim 的特权执行shell
 
 ```
 # sudo 允许运行 vim
 sudo vim -c ':!/bin/sh'
 
-# 或使?python
+# 或使用 python
 sudo python -c 'import os; os.system("/bin/sh")'
 
-# 或使?find
+# 或使用 find
 sudo find /etc/passwd -exec /bin/sh \;
 ```
 
@@ -189,7 +189,7 @@ docker run --rm -it --privileged --pid=host \
 
 - 部署审计日志监控异常提权行为
 - 限制危险二进制的使用
-- 实施最小权限原?
+- 实施最小权限原则
 
 ## 参考链接
 

@@ -1,18 +1,18 @@
 /**
  * HOS-Sec-Engine - SKILL.md Generator
- * 
+ *
  * Converts AttackDefenseSkill objects to agentskills.io standard SKILL.md format.
- * 
+ *
  * Usage:
  *   npx ts-node src/scripts/generate-skills-md.ts
  *   # or after build:
  *   node dist/scripts/generate-skills-md.js
- * 
+ *
  * Output:
- *   dist/skills/{category}/{id}/SKILL.md (nested, for TypeScript Engine)
  *   skills/{id}/SKILL.md (flat, for npx skills CLI installation)
- *   dist/skills/references/REFERENCE.md
  *   skills/references/REFERENCE.md
+ *
+ * Source of Truth: TypeScript skill definitions in src/skills/
  */
 
 import * as fs from 'fs';
@@ -25,12 +25,9 @@ import { allSkills } from '../skills';
 // Constants
 // ---------------------------------------------------------------------------
 
-/** Nested output directory for TypeScript Engine (dist/skills/) */
-const DEFAULT_OUTPUT_DIR = path.resolve(__dirname, '..', '..', '..', 'dist', 'skills');
-
-/** Flat output directory for npx skills CLI (00-HOS-Sec-Engine/skills/) */
-// __dirname = dist/src/scripts/, so go up 3 levels to 00-hos-sec-engine/, then into skills/
-const FLAT_OUTPUT_DIR = path.resolve(__dirname, '..', '..', '..', 'skills');
+/** Output directory for generated SKILL.md files (project root skills/) */
+// __dirname = dist/src/scripts/, so go up 3 levels to project root, then into skills/
+const OUTPUT_DIR = path.resolve(__dirname, '..', '..', '..', 'skills');
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -93,7 +90,7 @@ function generateDescription(skill: AttackDefenseSkill): string {
 
   // What it does - from knowledge description (first sentence or first 200 chars)
   const desc = skill.knowledge.description;
-  const firstSentence = desc.split(/[.。]/)[0].trim();
+  const firstSentence = desc.split(/[.。]/)[0]?.trim();
   if (firstSentence) {
     parts.push(firstSentence);
   }
@@ -479,34 +476,13 @@ function writeOutput(filePath: string, content: string): void {
 }
 
 /**
- * Copy directory recursively (files only, no sub-directory nesting beyond one level).
- */
-function copyDirRecursive(srcDir: string, destDir: string): void {
-  if (!fs.existsSync(srcDir)) return;
-  ensureDir(destDir);
-
-  const entries = fs.readdirSync(srcDir, { withFileTypes: true });
-  for (const entry of entries) {
-    const srcPath = path.join(srcDir, entry.name);
-    const destPath = path.join(destDir, entry.name);
-    if (entry.isDirectory()) {
-      copyDirRecursive(srcPath, destPath);
-    } else {
-      fs.copyFileSync(srcPath, destPath);
-    }
-  }
-}
-
-/**
  * Main generator function.
- * 
+ *
  * @param engine HosSecEngine instance with skills loaded (or undefined to use allSkills directly)
- * @param outputDir Base output directory (defaults to dist/skills)
  * @returns Array of generated file paths
  */
 export function generateSkillsMdFiles(
   engine?: HosSecEngine,
-  outputDir?: string
 ): string[] {
   // If no engine provided, use allSkills directly from the index chain
   // This bypasses SkillLoader and avoids issues with missing skill files
@@ -514,8 +490,7 @@ export function generateSkillsMdFiles(
     ? engine.getSkills().filter(s => s.enabled !== false)
     : allSkills.filter(s => s.enabled !== false);
 
-  const nestedDir = outputDir ?? DEFAULT_OUTPUT_DIR;
-  const flatDir = FLAT_OUTPUT_DIR;
+  const flatDir = OUTPUT_DIR;
 
   if (skills.length === 0) {
     console.warn('No skills loaded. Nothing to generate.');
@@ -529,15 +504,8 @@ export function generateSkillsMdFiles(
   for (const skill of skills) {
     const id = skill.metadata.id;
     const content = generateSkillMd(skill);
-    
-    // 1. Generate nested structure for TypeScript Engine (dist/skills/{category}/{id}/SKILL.md)
-    const nestedDirForSkill = path.join(nestedDir, skill.metadata.category, id);
-    const nestedSkillMdPath = path.join(nestedDirForSkill, 'SKILL.md');
-    writeOutput(nestedSkillMdPath, content);
-    generated.push(nestedSkillMdPath);
-    console.log(`  [NESTED] ${nestedSkillMdPath}`);
-    
-    // 2. Generate flat structure for npx skills CLI (skills/{id}/SKILL.md)
+
+    // Generate flat structure for npx skills CLI (skills/{id}/SKILL.md)
     const flatDirForSkill = path.join(flatDir, id);
     const flatSkillMdPath = path.join(flatDirForSkill, 'SKILL.md');
     writeOutput(flatSkillMdPath, content);
@@ -545,97 +513,15 @@ export function generateSkillsMdFiles(
     console.log(`  [FLAT]   ${flatSkillMdPath}`);
   }
 
-  // Generate consolidated reference for both structures
+  // Generate consolidated reference
   const refContent = generateReferenceMd(skills);
-  
-  // Nested reference
-  const nestedRefDir = path.join(nestedDir, 'references');
-  const nestedRefPath = path.join(nestedRefDir, 'REFERENCE.md');
-  writeOutput(nestedRefPath, refContent);
-  generated.push(nestedRefPath);
-  console.log(`  [NESTED] ${nestedRefPath}`);
-  
-  // Flat reference
   const flatRefDir = path.join(flatDir, 'references');
   const flatRefPath = path.join(flatRefDir, 'REFERENCE.md');
   writeOutput(flatRefPath, refContent);
   generated.push(flatRefPath);
-  console.log(`  [FLAT]   ${flatRefPath}`);
+  console.log(`  [REF]    ${flatRefPath}`);
 
-  // Copy the hos-sec-master skill (unified entry point)
-  // When running from dist/src/scripts/, go up 3 levels to project root, then src/skills/
-  const projectRoot = path.resolve(__dirname, '..', '..', '..');
-  const repoRoot = path.resolve(projectRoot, '..');  // HOS-SEC-SKILL/ (repo root for npx skills add)
-  const masterSkillPath = path.join(projectRoot, 'src', 'skills', 'hos-sec-master', 'SKILL.md');
-  if (fs.existsSync(masterSkillPath)) {
-    const nestedMasterDir = path.join(nestedDir, 'master', 'hos-sec-master');
-    const nestedMasterPath = path.join(nestedMasterDir, 'SKILL.md');
-    writeOutput(nestedMasterPath, fs.readFileSync(masterSkillPath, 'utf-8'));
-    generated.push(nestedMasterPath);
-    console.log(`  [MASTER] ${nestedMasterPath}`);
-
-    const flatMasterDir = path.join(flatDir, 'hos-sec-master');
-    const flatMasterPath = path.join(flatMasterDir, 'SKILL.md');
-    writeOutput(flatMasterPath, fs.readFileSync(masterSkillPath, 'utf-8'));
-    generated.push(flatMasterPath);
-    console.log(`  [MASTER] ${flatMasterPath}`);
-
-    // Sync 0day-skills directory
-    const master0daySrc = path.join(projectRoot, 'src', 'skills', 'hos-sec-master', '0day-skills');
-    if (fs.existsSync(master0daySrc)) {
-      // Copy nested 0day-skills
-      const nested0dayDest = path.join(nestedDir, 'master', 'hos-sec-master', '0day-skills');
-      copyDirRecursive(master0daySrc, nested0dayDest);
-      generated.push(nested0dayDest);
-      console.log(`  [MASTER-0DAY] ${nested0dayDest}`);
-
-      // Copy flat 0day-skills
-      const flat0dayDest = path.join(flatDir, 'hos-sec-master', '0day-skills');
-      copyDirRecursive(master0daySrc, flat0dayDest);
-      generated.push(flat0dayDest);
-      console.log(`  [MASTER-0DAY] ${flat0dayDest}`);
-
-      // Copy to repo root
-      const repo0dayDest = path.join(repoRoot, 'skills', 'hos-sec-master', '0day-skills');
-      copyDirRecursive(master0daySrc, repo0dayDest);
-      generated.push(repo0dayDest);
-      console.log(`  [MASTER-0DAY-ROOT] ${repo0dayDest}`);
-    }
-  } else {
-    console.warn(`  [WARN] Master skill not found at ${masterSkillPath}`);
-  }
-
-  // Sync all flat skills + master to repo root skills/ directory
-  // This is CRITICAL: npx skills add looks for skills/ at the REPO ROOT, not in a subdirectory
-  const repoRootSkillsDir = path.join(repoRoot, 'skills');
-  for (const skill of skills) {
-    const srcFlatPath = path.join(flatDir, skill.metadata.id, 'SKILL.md');
-    if (fs.existsSync(srcFlatPath)) {
-      const destDir = path.join(repoRootSkillsDir, skill.metadata.id);
-      const destPath = path.join(destDir, 'SKILL.md');
-      writeOutput(destPath, fs.readFileSync(srcFlatPath, 'utf-8'));
-      generated.push(destPath);
-    }
-  }
-  // Also sync master skill to repo root
-  if (fs.existsSync(masterSkillPath)) {
-    const repoMasterDir = path.join(repoRootSkillsDir, 'hos-sec-master');
-    const repoMasterPath = path.join(repoMasterDir, 'SKILL.md');
-    writeOutput(repoMasterPath, fs.readFileSync(masterSkillPath, 'utf-8'));
-    generated.push(repoMasterPath);
-    console.log(`  [ROOT]   ${repoMasterPath}`);
-  }
-  // Also sync references to repo root
-  const srcRefPath = path.join(flatDir, 'references', 'REFERENCE.md');
-  if (fs.existsSync(srcRefPath)) {
-    const destRefDir = path.join(repoRootSkillsDir, 'references');
-    const destRefPath = path.join(destRefDir, 'REFERENCE.md');
-    writeOutput(destRefPath, fs.readFileSync(srcRefPath, 'utf-8'));
-    generated.push(destRefPath);
-    console.log(`  [ROOT]   ${destRefPath}`);
-  }
-
-  console.log(`\nDone. Generated ${generated.length} file(s) in ${nestedDir} and ${flatDir}`);
+  console.log(`\nDone. Generated ${generated.length} file(s) in ${flatDir}`);
   return generated;
 }
 

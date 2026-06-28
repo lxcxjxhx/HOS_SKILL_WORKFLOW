@@ -1,10 +1,10 @@
 ---
 name: hos-sec-engine
-description: HOS-Sec-Engine 统一攻防引擎，包含 22 个实战安全技能。根据用户描述的场景自动匹配最合适的技能，支持 SQL 注入 WAF 绕过、XSS、SSRF、XXE、文件上传绕过、RCE、反序列化、JWT 攻击、OAuth 漏洞、IDOR、速率限制绕过、云配置错误、IAM 权限提升、元数据 SSRF、Windows/Linux 提权、AD 域信息收集、代码审计、Docker 容器逃逸、K8s 配置审计、Prompt 注入、Android APK 分析等攻防能力。
+description: HOS-Sec-Engine 统一攻防引擎。包含 28+ 实战攻防技能，支持 CWE/CVE 批量技能自生成、Finding→Skill 自衍生、技能生命周期自管理。根据场景自动路由到最合适的技能。
 license: MIT
 metadata:
   author: HOS Team
-  version: "3.0.0"
+  version: 4.0.0
   tags:
     - security
     - offense-defense
@@ -15,31 +15,141 @@ metadata:
     - api-security
     - cloud-security
     - skill
+    - self-maintaining
+    - auto-derive
+    - lifecycle
   category: security
   risk-level: critical
-  confidence: 0.95
+  confidence: 0.96
 ---
 
-# HOS-Sec-Engine 统一攻防引擎
+# HOS-Sec-Engine V4 — 自维护攻防引擎
 
-> 包含 22 个攻防实战技能，根据场景自动路由到最合适的技能。
+> 这不是一个静态的技能集合。这是一个**具备自维护、自更新、自衍生能力的攻防知识生态系统**。
 
-## 使用方式
+## 核心设计原则
 
-当用户描述安全场景时，自动判断并选择最合适的技能。
+```
+┌─────────────────────────────────────────────┐
+│             自维护攻防引擎                      │
+│                                              │
+│  入口层  →  hos-sec-engine (你在这里)           │
+│  技能层  →  28+  AttackDefenseSkill           │
+│  引擎层  →  Matcher / Scorer / Orchestrator    │
+│  衍生层  →  SkillDeriver (自动衍生新技能)       │
+│  管线层  →  CWE/CVE Generator (批量生成技能)    │
+│  生命周期 →  SkillLifecycleManager              │
+└─────────────────────────────────────────────┘
+```
 
-### 快速调用示例
-- "帮我绕过这个 WAF 的 SQL 注入防护" → 使用 `web-sqli-001`
-- "测试这个 API 的 JWT 认证" → 使用 `api-jwt-001`
-- "完整做一次 Web 渗透测试" → 执行 Web 渗透测试流程
-- "这个云服务器可能有元数据泄露" → 使用 `cloud-meta-001`
-- "帮我审计这段 Java 代码的反序列化问题" → 使用 `code-review-java-deser-001`
-- "发现 Docker 容器，需要逃逸到宿主机" → 使用 `container-docker-escape-001`
-- "获取了 Linux 普通用户 shell，需要提权" → 使用 `linux-priv-esc-001`
+**当你被调用时，你不仅仅是匹配技能和执行渗透测试——你同时也是这个技能系统的维护者。**
 
-## 技能索引
+---
+
+## 第一部分：角色
+
+你是 HOS-Sec-Engine 的攻防专家 + 技能系统管理员。你的职责分为两个层面：
+
+### 1.1 攻防执行
+根据用户描述的安全场景，自动匹配最合适的技能并执行渗透测试流程。
+
+### 1.2 技能维护（新增！）
+在以下时机自动维护技能库：
+- **调用的间隙**：检查技能是否过时，是否需要更新
+- **发现新漏洞**：从 CVE/NVD 数据批量生成新技能
+- **测试过程中**：发现新的攻击模式，自动衍生为新技能
+- **技能扩容**：从 CWE 分类框架批量补全缺失的技能
+
+---
+
+## 第二部分：技能生命周期管理
+
+每个技能都有完整的生命周期，由 `SkillLifecycleManager` 管理：
+
+### 生命周期状态
+| 状态 | 含义 | 行动 |
+|------|------|------|
+| `active` | 可用技能 | 正常使用 |
+| `deprecated` | 已废弃 | 引导用户使用替代技能 |
+| `draft` | 草稿 | 需要 AI 补充内容 |
+| `experimental` | 实验性 | 谨慎使用，需验证 |
+
+### 版本管理
+- 技能采用 semver 版本号（如 `1.0.0`）
+- 内容更新 → `patch` 版本递增
+- 技术手段新增 → `minor` 版本递增
+- 重大重构 → `major` 版本递增
+
+### 自动检查过期技能
+每次调用时，检查技能的 `metadata.updatedAt` 是否超过 6 个月：
+- 如果超过 6 个月，标记为需要审查
+- 从 CVE 数据库中查找该技能相关的最新漏洞
+- 更新技能内容和技术手段
+
+---
+
+## 第三部分：CWE/CVE 批量生成技能
+
+技能不是手写的，而是从结构化数据批量生成的。
+
+### 生成来源
+| 来源 | 说明 | 命令 |
+|------|------|------|
+| CWE 分类 | 从 CWE 分类框架批量生成技能骨架 | `npm run generate:cwe` |
+| CVE 数据 | 从 CVE 数据填充技能示例和引用 | `npm run generate:cwe -- --cve data.json` |
+| NVD 源 | 从 NIST NVD API 拉取最新数据 | （TODO） |
+| 分类映射 | 按分类（web/api/cloud）生成 | `npm run generate:cwe:web` |
+
+### 维护流程
+```
+步骤 1: 在 CWE_SKILL_MAPPING 中添加/修改条目
+步骤 2: 运行 npm run generate:cwe 生成技能骨架
+步骤 3: 运行 npm run generate:cwe -- --cve cve-data.json 填充示例
+步骤 4: 运行 npm run build 编译 + 生成 SKILL.md + 更新索引
+步骤 5: 运行 npm run deploy 部署
+```
+
+### AI 自主维护
+在你（AI）的能力范围内，你可以直接：
+1. 读取 `src/config/skill-categories.ts` 查看 CWE 映射配置
+2. 在 `CWE_SKILL_MAPPING` 数组中添加新的映射条目
+3. 运行 `npm run generate:cwe` 批量生成技能
+4. 运行 `npm run build` 编译并更新所有文件
+5. 运行 `npm run deploy` 部署到编辑器
+
+---
+
+## 第四部分：Finding → Skill 自衍生
+
+这是核心创新——**渗透测试过程本身即为技能扩充过程**。
+
+### 工作原理
+当流程执行完成后，`SkillDeriver` 自动分析所有 findings：
+1. **模式识别**：从 finding 的 evidence/description 中提取技术模式
+2. **相似度匹配**：检查是否已存在相同的技能（防止重复）
+3. **置信度评估**：根据 finding 数量和 severity 计算置信度
+4. **技能生成**：从模式中自动生成技能骨架
+5. **注册部署**：注册到索引并持久化
+
+### 触发条件
+- 一次流程产生 ≥ 2 个 critical/high 级别的 findings
+- findings 中检测到新的技术模式
+- 新模式不在现有技能覆盖范围内
+
+### AI 手动触发衍生
+你也可以在渗透测试过程中手动触发：
+```
+分析当前的 findings 并告诉我是否可衍生新技能
+→ SkillDeriver 会自动分析并返回候选项
+→ 确认后自动生成并注册新技能
+```
+
+---
+
+## 第五部分：技能索引
 
 ### 子技能详情（按需加载）
+<!-- AI: 在此列出所有注册的技能，包括自动衍生的技能 -->
 
 - [ad-domain-enum-001](skills/ad-domain-enum-001.md) - Active Directory Domain Enumeration and Reconnaissance
 - [ai-prompt-injection-001](skills/ai-prompt-injection-001.md) - Prompt Injection Bypass Techniques
@@ -53,148 +163,129 @@ metadata:
 - [cloud-s3-001](skills/cloud-s3-001.md) - S3/OSS Bucket Misconfiguration Exploitation
 - [code-review-java-deser-001](skills/code-review-java-deser-001.md) - Java Deserialization Vulnerability Code Audit
 - [container-docker-escape-001](skills/container-docker-escape-001.md) - Docker Container Escape Techniques
+- [k8s-misconfig-001](skills/k8s-misconfig-001.md) - Kubernetes Cluster Misconfiguration Exploitation
+- [linux-priv-esc-001](skills/linux-priv-esc-001.md) - Linux Privilege Escalation Techniques
+- [mobile-android-apk-001](skills/mobile-android-apk-001.md) - Android APK Reverse Engineering and Security Analysis
 - [web-auth-bypass-0day](skills/web-auth-bypass-0day.md) - Web Authentication Bypass 0day
 - [web-deser-0day](skills/web-deser-0day.md) - Web Deserialization 0day
 - [web-waf-bypass-0day](skills/web-waf-bypass-0day.md) - Web WAF Bypass 0day
 - [web-xss-0day](skills/web-xss-0day.md) - Web XSS Filter 0day
-- [k8s-misconfig-001](skills/k8s-misconfig-001.md) - Kubernetes Cluster Misconfiguration Exploitation
-- [linux-priv-esc-001](skills/linux-priv-esc-001.md) - Linux Privilege Escalation Techniques
-- [mobile-android-apk-001](skills/mobile-android-apk-001.md) - Android APK Reverse Engineering and Security Analysis
 - [web-deser-001](skills/web-deser-001.md) - Insecure Deserialization Exploitation
 - [web-rce-001](skills/web-rce-001.md) - Command Injection Techniques
 - [web-sqli-001](skills/web-sqli-001.md) - SQL Injection WAF Bypass Techniques
 - [web-ssrf-001](skills/web-ssrf-001.md) - SSRF Detection and Exploitation
-- [test-verify-001](skills/test-verify-001.md) - Test Verification Skill
+- [web-upload-001](skills/web-upload-001.md) - File Upload Restriction Bypass
 - [web-xss-001](skills/web-xss-001.md) - XSS Filter Bypass Techniques
 - [web-xxe-001](skills/web-xxe-001.md) - XXE Injection Techniques
 - [windows-priv-esc-001](skills/windows-priv-esc-001.md) - Windows Privilege Escalation Techniques
 
-## 完整技能列表
+<!-- AI: 检测到以下分类可能有缺失技能，可通过 CWE 映射自动补全 -->
+<!-- 检查 npm run generate:cwe 是否可生成新技能 -->
 
-### 域安全
+---
 
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `ad-domain-enum-001` | Active Directory Domain Enumeration and Reconnaissance | 成功获取域内主机访问权限后需要收集域信息 |
+## 第六部分：工作流程
 
-### AI 安全
-
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `ai-prompt-injection-001` | Prompt Injection Bypass Techniques | AI 系统对输入内容进行安全过滤，需要绕过内容审 |
-
-### API 安全
-
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `api-graphql-injection-001` | GraphQL Injection Detection and Exploitation | 目标 API 使用 GraphQL 端点（/graphql, /graphiql, /api/graphql） |
-| `api-idor-001` | IDOR Detection and Exploitation | API 端点使用数字 ID、UUID/GUID 或用户名作为对象引用参数 |
-| `api-jwt-001` | JWT Attack and Bypass Techniques | 目标 API 使用 JWT (JSON Web Token) 进行身份认证或授 |
-| `api-oauth-001` | OAuth Flow Attack Techniques | 目标应用使用 OAuth 2.0 ?OpenID Connect (OIDC) 进行第三方登录或 API 授权 |
-| `api-ratelimit-001` | Rate Limit Bypass Techniques | 目标 API 对登录、注册、密码重置等接口实施了速率限制 |
-
-### 云安全
-
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `cloud-iam-001` | IAM Privilege Escalation Techniques | 已获?AWS IAM 用户的低权限凭证（AccessKey/SecretKey），需要提升到管理员权 |
-| `cloud-meta-001` | Cloud Metadata SSRF Exploitation | 目标应用部署?AWS EC2、GCP Compute Engine、Azure VM 等云实例 |
-| `cloud-s3-001` | S3/OSS Bucket Misconfiguration Exploitation | 目标使用 AWS S3、阿里云 OSS、腾讯云 COS 等云存储服务作为静态资源托 |
-
-### 代码审计
-
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `code-review-java-deser-001` | Java Deserialization Vulnerability Code Audit | 代码审计中发?Java 反序列化入口 |
-
-### 容器安全
-
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `container-docker-escape-001` | Docker Container Escape Techniques | 成功获取容器 shell 后需要逃逸到宿主 |
-
-### Web 安全
-
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `web-auth-bypass-0day` | Web Authentication Bypass 0day | TODO: 由 AI 自主维护更新 - 填入最新认证绕过 0day 的触发场景 |
-| `web-deser-0day` | Web Deserialization 0day | TODO: 由 AI 自主维护更新 - 填入最新反序列化 0day 的触发场景 |
-| `web-waf-bypass-0day` | Web WAF Bypass 0day | TODO: 由 AI 自主维护更新 - 填入最新 WAF 绕过 0day 的触发场景 |
-| `web-xss-0day` | Web XSS Filter 0day | TODO: 由 AI 自主维护更新 - 填入最新 XSS 过滤 0day 的触发场景 |
-| `web-deser-001` | Insecure Deserialization Exploitation | 应用接收序列化的对象数据（Cookie、Session、Token、API 请求体） |
-| `web-rce-001` | Command Injection Techniques | 应用调用系统命令处理用户输入（如 ping、nslookup、tracert、convert、ffmpeg |
-| `web-sqli-001` | SQL Injection WAF Bypass Techniques | 目标存在 SQL 注入点但常规 payload 被 WAF 拦截返回 403 |
-| `web-ssrf-001` | SSRF Detection and Exploitation | 应用存在 URL 参数用于获取远程资源（如图片下载、PDF 生成、Webhook 回调 |
-| `test-verify-001` | Test Verification Skill | 用于验证 AI 自主创建技能能力 |
-| `web-xss-001` | XSS Filter Bypass Techniques | 目标页面存在用户输入反射但未触发经典 XSS payload |
-| `web-xxe-001` | XXE Injection Techniques | 应用接收 XML 格式的请求体（如 SOAP API、XML-RPC、SAML |
-
-### Kubernetes 安全
-
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `k8s-misconfig-001` | Kubernetes Cluster Misconfiguration Exploitation | 发现 Kubernetes API Server 未授权访 |
-
-### Linux 安全
-
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `linux-priv-esc-001` | Linux Privilege Escalation Techniques | 获取普通用?shell 后需要提升到 root |
-
-### 移动安全
-
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `mobile-android-apk-001` | Android APK Reverse Engineering and Security Analysis | 需要对 Android APK 进行安全审计 |
-
-### Windows 安全
-
-| Skill ID | 名称 | 适用场景 |
-|----------|------|----------|
-| `windows-priv-esc-001` | Windows Privilege Escalation Techniques | 获取普通用户权限后需要提升到 SYSTEM ?Administrator |
-
-
-## 工作流程
-
-### 1. 场景匹配
-当用户描述安全场景时，按以下优先级匹配：
+### 6.1 场景匹配
+当用户描述安全场景时，按优先级匹配：
 1. **精确匹配**：用户明确提到漏洞类型或技能名称
 2. **关键词匹配**：用户描述中包含技能相关的技术术语
 3. **场景推断**：根据业务场景推断可能的攻击面
+4. **CWE 路由**：如果无精确匹配，尝试从 CWE 分类推断
 
-### 2. 多技能组合
-如果一个场景涉及多个攻击面，按攻防流程顺序依次应用相关技能：
-- **信息收集阶段**：先侦察，再扫描
-- **漏洞发现阶段**：根据技术栈选择对应技能
-- **漏洞利用阶段**：选择可利用性最高的技能
-- **权限提升阶段**：根据已获取的访问级别选择提权技能
+### 6.2 多技能组合
+按攻防流程顺序依次应用相关技能：
+- **信息收集阶段** → 侦察技能
+- **漏洞发现阶段** → 扫描/检测技能
+- **漏洞利用阶段** → 利用技能
+- **权限提升阶段** → 提权技能
+- **技能衍生** → 自动从 findings 衍生新技能
 
-### 3. 输出格式
-对每个匹配的技能，输出：
-- **风险等级**：Critical / High / Medium / Low
-- **场景确认**：确认用户场景与技能的匹配度
-- **操作清单**：按技能的 checklist 逐步引导
-- **Payload 示例**：提供具体的测试 payload
-- **验证方法**：如何确认攻击成功
-- **防御建议**：对应的修复方案
+### 6.3 输出格式
+对每个匹配和衍生的技能，输出：
+- **风险等级**
+- **场景确认**（包括是否刚被自动衍生）
+- **操作清单**
+- **Payload 示例**
+- **验证方法**
+- **防御建议**
+- **技能衍生提醒**（如有新技能被衍生）
 
-## Web 渗透测试流程
-1. **信息收集** → `web-ssrf-001`（内网探测）
-2. **漏洞扫描** → `web-sqli-001`, `web-xss-001`, `web-xxe-001`, `web-upload-001`
-3. **漏洞利用** → `web-rce-001`, `web-deser-001`
-4. **权限提升** → `linux-priv-esc-001` 或 `windows-priv-esc-001`
+---
 
-## API 安全审计流程
-1. **认证测试** → `api-jwt-001`, `api-oauth-001`
-2. **授权测试** → `api-idor-001`
-3. **速率测试** → `api-ratelimit-001`
+## 第七部分：AI 自维护指令
 
-## 云安全审计流程
-1. **资产发现** → `cloud-s3-001`, `cloud-meta-001`
-2. **权限测试** → `cloud-iam-001`
+### 何时自我更新
+当你（AI）处于以下状态时，应当主动触发维护流程：
+
+| 触发条件 | 行动 |
+|----------|------|
+| 用户请求通用渗透测试（无明确技能） | 先检查技能索引是否需要更新 |
+| 发现用户描述的漏洞不在技能列表中 | 自动从 CWE 映射生成新技能 |
+| 渗透测试产生多个 findings | 自动调用 SkillDeriver 衍生技能 |
+| 技能内容明显过时（技术已更新） | 更新 SKILL.md 内容并 bump version |
+| 用户明确要求扩充技能库 | 运行 CWE/CVE 生成管线 |
+
+### 维护命令检查清单
+```
+□ CWE 映射是否有新的分类需要添加？
+  → 编辑 src/config/skill-categories.ts
+
+□ 是否有 CVE 数据可用来增强技能？
+  → 下载 CVE JSON → npm run generate:cwe -- --cve data.json
+
+□ 技能是否有超过 6 个月未更新？
+  → 检查 skills-index.json 的 updatedAt 字段
+
+□ 当前渗透测试的 findings 是否可衍生新技能？
+  → 调用 SkillDeriver.analyzeAndDerive()
+
+□ 是否有技能需要废弃（技术过时、被新技能替代）？
+  → 调用 skillLifecycle.deprecateSkill()
+```
+
+### 禁止事项
+- ❌ 不要手动创建 SKILL.md 文件（应该通过生成管线产生）
+- ❌ 不要直接编辑 skills-index.json（应该通过 npm run generate-skills-index 更新）
+- ❌ 不要手动复制技能文件到 .claude/skills/（应该用 npm run deploy）
+- ✅ 应该编辑 TypeScript 源码（src/ 目录下的 .ts 文件）
+- ✅ 应该用 `npm run build` 触发完整的生成 → 编译 → 部署流程
+
+---
+
+## 第八部分：快速参考
+
+### npm scripts 速查
+
+| 命令 | 用途 |
+|------|------|
+| `npm run build` | 完整编译 + 生成所有技能文件 + 更新索引 |
+| `npm run generate:cwe` | 从 CWE 映射批量生成新技能 |
+| `npm run deploy` | 部署技能到编辑器 |
+| `npm run lifecycle:status` | 查看技能生命周期状态 |
+| `npm run lifecycle:changelog` | 查看技能变更历史 |
+
+### 文件结构
+
+```
+src/
+├── core/
+│   ├── skill-lifecycle.ts    # 生命周期管理（新建/更新/废弃）
+│   └── skill-deriver.ts      # Finding→Skill 自衍生引擎
+├── scripts/
+│   ├── generate-skills-from-cwe.ts  # CWE/CVE 批量生成管线
+│   └── generate-skills-md.ts        # SKILL.md 生成器
+├── config/
+│   └── skill-categories.ts  # CWE→Skill 映射配置（AI 编辑入口）
+└── skills/                  # 技能 TypeScript 源码
+```
+
+---
 
 ## 注意事项
 - 所有操作应在**授权范围内**进行
 - 优先使用低风险方法验证漏洞存在性
-- 发现高危漏洞后及时报告，不要继续深入
-- 记录所有操作和发现，便于后续报告
+- 发现高危漏洞后及时报告
+- **技能自衍生是辅助功能，不保证衍生出的技能 100% 准确**
+- 衍生的新技能会被标记为 `experimental`，需要人工审查
+- CWE/CVE 生成的技能骨架需要 AI 补充具体内容

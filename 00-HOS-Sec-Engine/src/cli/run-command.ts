@@ -8,7 +8,6 @@
 import { HosSecEngine } from '../core/engine';
 import { ConfigLoader } from '../config/config-loader';
 import * as fs from 'fs';
-import * as path from 'path';
 
 interface RunArgs {
   skill?: string;
@@ -104,7 +103,6 @@ async function main() {
   const engine = new HosSecEngine();
 
   // Load runtime config
-  const configDir = ConfigLoader.getConfigDir();
   const runtimeConfig = ConfigLoader.loadRuntimeConfig(args.config);
   await engine.initializeRuntime(runtimeConfig);
 

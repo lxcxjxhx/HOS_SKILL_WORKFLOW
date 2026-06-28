@@ -101,13 +101,5 @@ export interface SkillRuntime {
   estimatedTokens: number;
 }
 
-/** 默认 Skill 运行时配置 */
-export const DEFAULT_SKILL_RUNTIME: SkillRuntime = {
-  requiresAgent: false,
-  agentCount: 1,
-  parallelizable: true,
-  requiresNetwork: false,
-  requiresSandbox: false,
-  dependencies: [],
-  estimatedTokens: 2000,
-};
+/** 默认 Skill 运行时配置（定义在 types/skill.ts 中） */
+// import { DEFAULT_SKILL_RUNTIME } from '../types/skill';

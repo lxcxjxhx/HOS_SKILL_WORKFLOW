@@ -22,6 +22,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { execSync } from 'child_process';
+import { isSafeToTraverse } from '../utils/fs-safe';
 
 // Set console output encoding for Chinese characters
 if (process.platform === 'win32') {
@@ -52,9 +53,9 @@ interface TargetDir {
 // Constants
 // ---------------------------------------------------------------------------
 
-// Get dist/skills directory
-// After compilation, this file is at dist/src/scripts/, so go up 2 levels to dist/, then into skills/
-const DIST_SKILLS_DIR: string = path.resolve(__dirname, '..', '..', 'skills');
+// Get skills directory (project root)
+// After compilation, this file is at dist/src/scripts/, so go up 3 levels to project root, then into skills/
+const SKILLS_DIR: string = path.resolve(__dirname, '..', '..', '..', 'skills');
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -62,8 +63,13 @@ const DIST_SKILLS_DIR: string = path.resolve(__dirname, '..', '..', 'skills');
 
 /**
  * Recursively find all SKILL.md files in the given directory.
+ * Includes depth limit protection and symlink loop detection.
  */
-function findSkillFiles(dir: string): SkillFile[] {
+function findSkillFiles(dir: string, depth: number = 0, visitedDirs: Set<string> = new Set()): SkillFile[] {
+  if (!isSafeToTraverse(dir, depth, visitedDirs, 'findSkillFiles')) {
+    return [];
+  }
+
   const skills: SkillFile[] = [];
   const items: string[] = fs.readdirSync(dir);
 
@@ -80,7 +86,7 @@ function findSkillFiles(dir: string): SkillFile[] {
           sourceDir: fullPath
         });
       } else {
-        skills.push(...findSkillFiles(fullPath));
+        skills.push(...findSkillFiles(fullPath, depth + 1, visitedDirs));
       }
     }
   }
@@ -89,10 +95,13 @@ function findSkillFiles(dir: string): SkillFile[] {
 }
 
 /**
- * Recursively copy directory.
+ * Recursively copy directory with depth limit protection.
  */
-function copyDirSync(src: string, dest: string): void {
+function copyDirSync(src: string, dest: string, depth: number = 0, visitedDirs: Set<string> = new Set()): void {
   if (!fs.existsSync(src)) return;
+  if (!isSafeToTraverse(src, depth, visitedDirs, 'copyDirSync')) {
+    return;
+  }
 
   fs.mkdirSync(dest, { recursive: true });
 
@@ -103,7 +112,7 @@ function copyDirSync(src: string, dest: string): void {
     const stat: fs.Stats = fs.statSync(srcPath);
 
     if (stat.isDirectory()) {
-      copyDirSync(srcPath, destPath);
+      copyDirSync(srcPath, destPath, depth + 1, visitedDirs);
     } else {
       fs.copyFileSync(srcPath, destPath);
     }
@@ -114,7 +123,7 @@ function copyDirSync(src: string, dest: string): void {
  * Deploy skills to a target directory.
  */
 function deploySkills(targetDir: TargetDir): void {
-  const skills: SkillFile[] = findSkillFiles(DIST_SKILLS_DIR);
+  const skills: SkillFile[] = findSkillFiles(SKILLS_DIR);
 
   console.log(`\nFound ${skills.length} skills. Deploying to ${targetDir.path}...`);
 
@@ -205,9 +214,9 @@ function main(): void {
   console.log('HOS-Sec-Engine Skill Deployer');
   console.log('='.repeat(40));
 
-  // Check if dist/skills exists
-  if (!fs.existsSync(DIST_SKILLS_DIR)) {
-    console.error('Error: dist/skills directory not found. Please run npm run build first.');
+  // Check if skills directory exists
+  if (!fs.existsSync(SKILLS_DIR)) {
+    console.error('Error: skills directory not found. Please run npm run build first.');
     process.exit(1);
   }
 

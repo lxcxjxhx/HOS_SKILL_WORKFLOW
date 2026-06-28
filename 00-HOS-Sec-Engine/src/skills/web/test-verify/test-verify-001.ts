@@ -18,6 +18,7 @@ export const testVerifySkills: AttackDefenseSkill[] = [
       author: 'HOS-Sec-Engine',
       tags: ['test', 'ai-auto-create', 'verification'],
     },
+    enabled: true,
     trigger: {
       scenarios: [
         '用于验证 AI 自主创建技能能力',
@@ -128,6 +129,14 @@ export const testVerifySkills: AttackDefenseSkill[] = [
     },
     playbooks: [],
     phase: 'reconnaissance',
-    enabled: true,
+    runtime: {
+      requiresAgent: false,
+      agentCount: 1,
+      parallelizable: true,
+      requiresNetwork: false,
+      requiresSandbox: false,
+      dependencies: [],
+      estimatedTokens: 1000,
+    },
   },
 ];

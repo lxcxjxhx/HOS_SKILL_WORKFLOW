@@ -37,8 +37,8 @@
 - IP 编码绕过?xA9FEA9FE（十六进制）?852039166（十进制）、[0:0:0:0:0:ffff:a9fe:a9fe]（IPv6
 - URL 解析绕过：http://169.254.169.254.nip.io（DNS 解析?169.254.169.254
 - 重定?SSRF：外部服务器 302 ?169.254.169.254 绕过 WAF
-- CRLF 注入：在 URL 中注?
- 添加自定?header（如 IMDSv2 token header
+- CRLF 注入：在 URL 中注入 
+ 添加自定义 header（如 IMDSv2 token header
 - gopher 协议：gopher://169.254.169.254:80/_{PUT_request} 获取 IMDSv2 token
 - SSRF-XXE 组合：通过 XXE 发起请求到元数据端点
 - 容器元数据：ECS 通过 AWS_CONTAINER_CREDENTIALS_RELATIVE_URI 获取端点
@@ -61,7 +61,7 @@
 - user-data 脚本中硬编码了敏感信息（密钥、密码、API token
 - 应用使用旧版 SDK 或自定义 HTTP 客户端，不支?IMDSv2
 - 容器编排平台（Kubernetes）中 kubelet API 未启用认
-- 反向代理（如 Nginx）配置不当，?metadata 请求转发到后?
+- 反向代理（如 Nginx）配置不当，将 metadata 请求转发到后端
 
 ## 示例
 
