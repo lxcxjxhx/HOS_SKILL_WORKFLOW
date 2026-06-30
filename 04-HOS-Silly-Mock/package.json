@@ -1,0 +1,44 @@
+{
+  "name": "hos-silly-mock",
+  "version": "1.0.0",
+  "description": "HOS-Silly-Mock: Anti-Fake Data & Anti-Regex Reality Enforcement Layer — 阻止 AI 用 MOCK/regex/静态数据伪造系统可运行性",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "bin": {
+    "hos-silly-mock": "dist/src/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --config jest.config.js",
+    "test:manual": "node tests/manual.js",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "code-integrity",
+    "mock-detection",
+    "regex-abuse",
+    "reality-binding",
+    "silent-failure",
+    "ai-code-quality",
+    "enforcement",
+    "code-review",
+    "static-analysis",
+    "quality-gate"
+  ],
+  "author": "HOS-Sec-Engine",
+  "license": "MIT",
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "SKILL.md",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
