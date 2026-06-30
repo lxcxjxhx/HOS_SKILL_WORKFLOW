@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "2.0.0",
+  "name": "Vibe Project Score Engine",
+  "description": "HOS-Vibe-Guard 项目质量评分引擎",
+
+  "dimensions": {
+    "domain_depth": {
+      "label": "🎯 领域深度",
+      "weight": 1.0,
+      "maxScore": 10,
+      "questions": [
+        { "weight": 3, "text": "项目是否包含超越 CRUD 的真实业务逻辑？" },
+        { "weight": 2, "text": "是否有明确的领域模型（Domain Model）而非纯粹的 data schema？" },
+        { "weight": 2, "text": "是否有领域事件或业务规则引擎？" },
+        { "weight": 2, "text": "是否有领域术语的统一语言（Ubiquitous Language）？" },
+        { "weight": 1, "text": "是否使用了 DDD 战术模式（Entity/Value Object/Aggregate）？" }
+      ]
+    },
+    "architecture_complexity": {
+      "label": "🧱 架构复杂度",
+      "weight": 1.0,
+      "maxScore": 10,
+      "questions": [
+        { "weight": 2, "text": "是否有清晰的分层架构（表示层/应用层/领域层/基础设施层）？" },
+        { "weight": 2, "text": "是否使用了设计模式或架构模式？" },
+        { "weight": 2, "text": "是否有抽象层/接口设计（依赖反转）？" },
+        { "weight": 2, "text": "是否有事件驱动/消息机制？" },
+        { "weight": 1, "text": "是否考虑了模块化/微服务拆分？" },
+        { "weight": 1, "text": "是否有中间件/插件机制？" }
+      ]
+    },
+    "scalability": {
+      "label": "🔁 可扩展性",
+      "weight": 1.0,
+      "maxScore": 10,
+      "questions": [
+        { "weight": 3, "text": "添加新功能是否需要大量修改现有代码？" },
+        { "weight": 2, "text": "是否有配置/策略驱动而非硬编码的逻辑？" },
+        { "weight": 2, "text": "是否有清晰的接口/契约设计？" },
+        { "weight": 2, "text": "是否考虑了性能/可伸缩性？" },
+        { "weight": 1, "text": "是否有可选/可插拔的功能模块？" }
+      ]
+    },
+    "security": {
+      "label": "🔐 安全性",
+      "weight": 1.0,
+      "maxScore": 10,
+      "questions": [
+        { "weight": 3, "text": "是否有安全设计考虑（认证/授权/加密）？" },
+        { "weight": 2, "text": "敏感数据是否加密存储？" },
+        { "weight": 2, "text": "是否遵循最小权限原则？" },
+        { "weight": 1, "text": "是否有审计日志？" },
+        { "weight": 1, "text": "是否有输入验证/防注入措施？" },
+        { "weight": 1, "text": "是否有 CSP/HTTPS/HSTS 等安全头？" }
+      ]
+    },
+    "novelty": {
+      "label": "🧠 创新性",
+      "weight": 1.2,
+      "maxScore": 10,
+      "questions": [
+        { "weight": 3, "text": "解决方案是否与已知开源项目有本质不同？" },
+        { "weight": 2, "text": "是否有独特的领域结合或跨领域创新？" },
+        { "weight": 2, "text": "是否解决了未被充分解决的实际问题？" },
+        { "weight": 2, "text": "是否有新颖的技术选型或架构决策？" },
+        { "weight": 1, "text": "是否在某个维度上显著优于现有方案？" }
+      ]
+    },
+    "engineering_completeness": {
+      "label": "📐 工程完整性",
+      "weight": 0.8,
+      "maxScore": 10,
+      "questions": [
+        { "weight": 2, "text": "是否有单元测试/集成测试？" },
+        { "weight": 2, "text": "是否有文档（README/API 文档/架构文档）？" },
+        { "weight": 2, "text": "是否有 CI/CD 配置？" },
+        { "weight": 1, "text": "是否有 lint/prettier/代码规范？" },
+        { "weight": 1, "text": "是否有 Docker/部署配置？" },
+        { "weight": 1, "text": "是否有监控/可观测性？" },
+        { "weight": 1, "text": "是否有 changelog/版本管理？" }
+      ]
+    }
+  },
+
+  "scoringRules": {
+    "calculation": {
+      "baseScore": "SUM(dimension.scores) / SUM(dimension.maxScores * dimension.weight) * 60",
+      "penalties": {
+        "template_match_high": -15,
+        "template_match_medium": -8,
+        "template_match_low": -3,
+        "no_tests": -5,
+        "no_readme": -3,
+        "security_flags_hard": -10,
+        "security_flags_soft": -4
+      },
+      "bonuses": {
+        "positive_indicators_count_3plus": 5,
+        "has_tests_with_coverage": 3,
+        "has_ci_cd": 3,
+        "security_by_design": 5
+      }
+    },
+
+    "thresholds": {
+      "excellent": { "min": 42, "max": 60, "label": "🟢 高价值工程", "action": "silent_or_encourage" },
+      "good": { "min": 28, "max": 41, "label": "🟡 原型项目", "action": "brief_suggestion" },
+      "basic": { "min": 14, "max": 27, "label": "🟠 学习项目", "action": "suggest_upgrade" },
+      "template": { "min": 0, "max": 13, "label": "🔴 模板陷阱", "action": "full_intervention" }
+    }
+  },
+
+  "scoringGuideForAI": "以下是评分执行逻辑，由 AI 推理执行而非代码执行：\n\n评估每个维度的各问题，对每个问题评分 0-2 分（0=否/不符合，1=部分/有但不完善，2=是/完善）。\n每个维度得分 = SUM(question_score * question_weight) / SUM(max_possible * question_weight) * 10\n加权总分 = SUM(dimension_score * dimension_weight)\n最终得分 = MIN(加权总分, 60)\n应用惩罚/奖励后得到最终评分\n根据 thresholds 确定等级和操作",
+  "deprecated": true,
+  "deprecationNote": "评分逻辑已迁移至 scoring/vibe-score.md 作为 AI 可执行的参考标准，此 JSON 仅保留数据结构供外部系统集成。"
+}

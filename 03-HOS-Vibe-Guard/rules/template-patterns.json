@@ -1,0 +1,308 @@
+{
+  "schemaVersion": "2.0.0",
+  "description": "HOS-Vibe-Guard 模板项目检测规则库",
+  "scanScope": ["user_request", "file_list", "dependency_list", "project_structure"],
+
+  "patterns": {
+    "todo_app": {
+      "aliases": ["todo", "待办", "task manager", "任务管理", "task tracker", "todolist"],
+      "level": "HIGH",
+      "detection": {
+        "keywords": ["todo", "task", "待办", "checklist"],
+        "excludeKeywords": ["cognitive", "load", "workflow", "decision", "trace"],
+        "minMatch": 2
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 50000
+    },
+
+    "pomodoro_timer": {
+      "aliases": ["pomodoro", "番茄钟", "番茄工作法", "番茄计时", "focus timer"],
+      "level": "HIGH",
+      "detection": {
+        "keywords": ["pomodoro", "番茄", "timer", "计时"],
+        "excludeKeywords": ["circadian", "cognitive", "state", "behavior"],
+        "minMatch": 2
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 30000
+    },
+
+    "snake_game": {
+      "aliases": ["snake", "贪吃蛇", "snake game"],
+      "level": "HIGH",
+      "detection": {
+        "keywords": ["snake", "贪吃蛇"],
+        "excludeKeywords": ["multi-agent", "competition", "reinforcement", "neural"],
+        "minMatch": 1
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 40000
+    },
+
+    "flappy_bird": {
+      "aliases": ["flappy bird", "flappybird"],
+      "level": "HIGH",
+      "detection": {
+        "keywords": ["flappy"],
+        "minMatch": 1
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 30000
+    },
+
+    "game_2048": {
+      "aliases": ["2048", "2048 game"],
+      "level": "HIGH",
+      "detection": {
+        "keywords": ["2048"],
+        "excludeKeywords": ["search", "AI", "algorithm"],
+        "minMatch": 1
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 20000
+    },
+
+    "tic_tac_toe": {
+      "aliases": ["tic-tac-toe", "tictactoe", "井字棋", "井字游戏"],
+      "level": "HIGH",
+      "detection": {
+        "keywords": ["tic tac toe", "井字"],
+        "excludeKeywords": ["minimax", "adversarial", "MCTS", "RL"],
+        "minMatch": 1
+      },
+      "tags": ["TEMPLATE_TRAP", "LEARNING_OK"],
+      "estimatedCount": 25000
+    },
+
+    "crud_app": {
+      "aliases": ["CRUD", "增删改查", "管理系统", "management system", "dashboard"],
+      "level": "HIGH",
+      "detection": {
+        "keywords": ["CRUD", "增删改查", "管理系统", "dashboard"],
+        "excludeKeywords": ["policy", "RBAC", "event sourcing", "CQRS", "event driven", "workflow engine"],
+        "minMatch": 2
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 100000
+    },
+
+    "blog_cms": {
+      "aliases": ["blog", "CMS", "博客", "内容管理", "content management"],
+      "level": "HIGH",
+      "detection": {
+        "keywords": ["blog", "CMS", "博客"],
+        "excludeKeywords": ["knowledge graph", "evolution", "semantic", "versioning"],
+        "minMatch": 2
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 80000
+    },
+
+    "ecommerce": {
+      "aliases": ["e-commerce", "ecommerce", "商城", "shop", "shopping cart", "购物车"],
+      "level": "MEDIUM",
+      "detection": {
+        "keywords": ["ecommerce", "商城", "shopping cart", "购物车"],
+        "excludeKeywords": ["inventory", "supply chain", "recommendation engine"],
+        "minMatch": 2
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 60000
+    },
+
+    "weather_app": {
+      "aliases": ["weather", "天气", "天气预报", "weather app"],
+      "level": "MEDIUM",
+      "detection": {
+        "keywords": ["weather app", "天气"],
+        "excludeKeywords": ["forecast model", "data pipeline", "visualization"],
+        "minMatch": 1
+      },
+      "tags": ["TEMPLATE_TRAP", "LEARNING_OK"],
+      "estimatedCount": 45000
+    },
+
+    "auth_demo": {
+      "aliases": ["login", "register", "auth", "authentication", "jwt auth", "登录", "注册"],
+      "level": "MEDIUM",
+      "detection": {
+        "keywords": ["login", "register", "auth", "JWT", "登录"],
+        "excludeKeywords": ["OAuth", "SSO", "federated", "zero trust", "policy"],
+        "minMatch": 2
+      },
+      "tags": ["TEMPLATE_TRAP", "LEARNING_OK"],
+      "estimatedCount": 70000
+    },
+
+    "counter_app": {
+      "aliases": ["counter", "计数器", "click counter"],
+      "level": "LOW",
+      "detection": {
+        "keywords": ["counter app", "计数器"],
+        "minMatch": 1
+      },
+      "tags": ["TEMPLATE_TRAP", "LEARNING_OK"],
+      "estimatedCount": 20000
+    },
+
+    "notes_app": {
+      "aliases": ["notes", "备忘录", "note app", "便签"],
+      "level": "MEDIUM",
+      "detection": {
+        "keywords": ["notes app", "note taking", "备忘录"],
+        "excludeKeywords": ["knowledge", "graph", "semantic", "bi-directional"],
+        "minMatch": 1
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 35000
+    },
+
+    "chat_app": {
+      "aliases": ["chat", "聊天", "messenger", "chat app", "即时通讯"],
+      "level": "MEDIUM",
+      "detection": {
+        "keywords": ["chat app", "messenger", "聊天室"],
+        "excludeKeywords": ["WebRTC", "P2P", "mesh", "protocol", "decentralized", "encryption"],
+        "minMatch": 2
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 40000
+    },
+
+    "form_survey": {
+      "aliases": ["form", "survey", "表单", "问卷", "questionnaire"],
+      "level": "LOW",
+      "detection": {
+        "keywords": ["form builder", "survey system", "问卷"],
+        "excludeKeywords": ["dynamic", "conditional", "workflow", "rule engine"],
+        "minMatch": 2
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 15000
+    },
+
+    "url_shortener": {
+      "aliases": ["url shortener", "短链接", "tinyurl"],
+      "level": "MEDIUM",
+      "detection": {
+        "keywords": ["url shortener", "短链接"],
+        "excludeKeywords": ["analytics", "redirect engine", "link health"],
+        "minMatch": 1
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 20000
+    },
+
+    "social_media_demo": {
+      "aliases": ["social media", "社交媒体", "twitter clone", "instagram clone", "社交平台"],
+      "level": "MEDIUM",
+      "detection": {
+        "keywords": ["social media clone", "twitter like", "社交"],
+        "excludeKeywords": ["federated", "activitypub", "protocol", "decentralized"],
+        "minMatch": 2
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 30000
+    },
+
+    "calculator": {
+      "aliases": ["calculator", "计算器", "calc app"],
+      "level": "LOW",
+      "detection": {
+        "keywords": ["calculator app", "计算器"],
+        "excludeKeywords": ["expression parser", "symbolic", "math engine"],
+        "minMatch": 1
+      },
+      "tags": ["TEMPLATE_TRAP", "LEARNING_OK"],
+      "estimatedCount": 15000
+    },
+
+    "expense_tracker": {
+      "aliases": ["expense tracker", "记账", "财务管理", "finance tracker", "personal finance"],
+      "level": "MEDIUM",
+      "detection": {
+        "keywords": ["expense tracker", "记账", "finance"],
+        "excludeKeywords": ["forecasting", "anomaly detection", "ML", "categorization"],
+        "minMatch": 2
+      },
+      "tags": ["TEMPLATE_TRAP"],
+      "estimatedCount": 25000
+    },
+
+    "todo_with_ai": {
+      "aliases": ["AI todo", "智能待办", "smart task"],
+      "level": "MEDIUM",
+      "detection": {
+        "keywords": ["AI", "smart task", "智能"],
+        "parentPattern": "todo_app",
+        "requireParent": true
+      },
+      "tags": ["HOT_TOPIC", "TEMPLATE_TRAP"],
+      "note": "AI + 模板 ≠ 创新，检查 AI 部分是否有真正的智能而非 wrapper"
+    }
+  },
+
+  "compoundDetectors": [
+    {
+      "id": "fullstack_demo_starter",
+      "description": "标准全栈 starter 检测",
+      "indicators": [
+        "同时包含前端+后端+数据库",
+        "使用了 Next.js / Nuxt / Remix 等元框架",
+        "项目结构为 pages+api+components 标准结构",
+        "无特殊领域逻辑"
+      ],
+      "minMatch": 3,
+      "level": "MEDIUM",
+      "tags": ["TEMPLATE_TRAP"]
+    },
+    {
+      "id": "ai_wrapper",
+      "description": "纯 AI API 包装器（无附加值）",
+      "indicators": [
+        "直接调用 OpenAI / Claude API",
+        "无 prompt engineering 层",
+        "无 RAG / fine-tune / 自定义逻辑",
+        "纯 chat UI"
+      ],
+      "minMatch": 3,
+      "level": "MEDIUM",
+      "tags": ["HOT_TOPIC", "TEMPLATE_TRAP"]
+    },
+    {
+      "id": "tutorial_reproduction",
+      "description": "教程级复现项目",
+      "indicators": [
+        "有 TODO.md 跟随教程步骤",
+        "使用特定教程的技术栈（无理由）",
+        "项目结构对应教程章节",
+        "Readme 包含教程来源链接"
+      ],
+      "minMatch": 2,
+      "level": "MEDIUM",
+      "tags": ["LEARNING_OK"]
+    }
+  ],
+
+  "positiveIndicators": {
+    "领域深度": [
+      "domain model", "DDD", "bounded context", "领域事件",
+      "业务规则引擎", "workflow engine", "状态机"
+    ],
+    "架构质量": [
+      "hexagonal", "clean architecture", "onion",
+      "CQRS", "event sourcing", "event-driven",
+      "微服务设计模式", "message broker"
+    ],
+    "工程实践": [
+      "单元测试覆盖率", "契约测试", "集成测试",
+      "CI/CD pipeline", "基础设施即代码",
+      "监控/可观测性", "OpenTelemetry"
+    ],
+    "安全实践": [
+      "OWASP", "zero trust", "secret管理",
+      "加密存储", "审计日志", "RBAC"
+    ]
+  }
+}
