@@ -1,0 +1,65 @@
+# ============================================================================
+# HOS-XRG-Loop++ Goal Tree
+# L0: Intent Layer — 动态目标树
+# ============================================================================
+# 目标树是系统意图层的核心数据结构。
+# 不同于静态 manifest，目标树的 branch weight 会随现实反馈自动调整。
+# ============================================================================
+
+goal_tree:
+  # ── 根目标（不变） ──
+  root: "构建稳定的 GitHub AI 迭代系统"
+
+  # ── 目标分支（权重可变） ──
+  branches:
+    - id: stability
+      goal: "防止 AI 迭代漂移"
+      description: >
+        确保每次迭代都在正确的方向上推进，
+        不偏离项目核心目标。
+      weight: 0.40       # 初始权重（将自动调节）
+      min_weight: 0.15   # 权重下限（防止被完全忽略）
+      max_weight: 0.70   # 权重上限（防止单一目标主导）
+      indicators:
+        - "drift_score < 0.3"
+        - "commit_topic_alignment > 0.7"
+      reality_map:       # 映射到 Reality Score 的维度
+        primary: maintainability
+        secondary: execution
+
+    - id: usefulness
+      goal: "每次 commit 必须带来可验证收益"
+      description: >
+        禁止无价值变更。每个 commit 都必须有
+        明确的、可度量的正向影响。
+      weight: 0.40
+      min_weight: 0.15
+      max_weight: 0.70
+      indicators:
+        - "cvs_score > threshold"
+        - "impact_ratio > 0.5"
+      reality_map:
+        primary: usability
+        secondary: execution
+
+    - id: simplicity
+      goal: "控制系统复杂度增长"
+      description: >
+        防止系统随着迭代自然趋向复杂化。
+        复杂度债务必须保持在可控范围内。
+      weight: 0.20
+      min_weight: 0.10
+      max_weight: 0.50
+      indicators:
+        - "complexity_debt < debt_limit"
+        - "abstraction_delta <= 0"
+      reality_map:
+        primary: maintainability
+        secondary: usability
+
+  # ── 权重调整参数 ──
+  adjustment:
+    method: "exponential_smoothing"  # 指数平滑法
+    alpha: 0.3                       # 平滑系数（0~1，越大对新反馈越敏感）
+    min_delta: 0.02                  # 最小调整幅度（防止噪声抖动）
+    cooldown: 3                      # 调整后冷却迭代次数

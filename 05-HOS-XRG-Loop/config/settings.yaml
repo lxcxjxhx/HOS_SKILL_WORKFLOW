@@ -1,0 +1,72 @@
+# ============================================================================
+# HOS-XRG-Loop++ System Settings
+# 所有可调参数集中管理
+# ============================================================================
+
+# ── CVS 评分参数 ──
+cvs:
+  threshold: 0.50         # CVS 最低门槛（低于此值禁止 commit）
+  factors:
+    impact:
+      weight: 0.35        # Impact 权重
+      max_score: 1.0
+    clarity:
+      weight: 0.25        # Clarity 权重
+      max_score: 1.0
+    reversibility:
+      weight: 0.20        # Reversibility 权重
+      max_score: 1.0
+    complexity:
+      weight: -0.20       # Complexity 惩罚（负权重）
+      max_penalty: -0.5   # 最大复杂度惩罚
+
+# ── Reality Validator 参数 ──
+reality:
+  dimensions:
+    execution:
+      weight: 0.40        # 执行结果权重
+    usability:
+      weight: 0.30        # 使用行为权重
+    maintainability:
+      weight: 0.30        # 可维护性权重
+  thresholds:
+    warning: 0.70         # 低于此值发出警告
+    critical: 0.50        # 低于此值触发审查
+    rollback_sequence: 2  # 连续 N 次下降触发 rollback
+  verification:
+    test_timeout: 60      # 测试超时（秒）
+    build_check: true     # 是否检查构建
+
+# ── Drift Detection 参数 ──
+drift:
+  preemption:
+    enabled: true         # 启用 commit 前漂移预测
+    sensitivity: 0.6      # 敏感度（0~1，越大越容易触发预防）
+  detection:
+    window_size: 5        # 滑动窗口大小（迭代次数）
+    threshold: 0.35       # 漂移判定阈值
+  indicators:
+    - "topic_shift"       # 主题漂移
+    - "complexity_spike"  # 复杂度突增
+    - "unrelated_files"   # 无关文件修改
+    - "goal_mismatch"     # 目标不匹配
+
+# ── Complexity Debt 参数 ──
+complexity_debt:
+  initial_limit: 1.0      # 初始债务上限
+  per_commit_cost:
+    new_file: 0.15        # 新文件成本
+    new_abstraction: 0.25 # 新抽象层成本
+    new_dependency: 0.30  # 新依赖成本
+  clean_mode:
+    debt_threshold: 0.8   # 债务超过上限的 80% 触发警告
+    force_threshold: 1.0  # 债务达到上限强制进入 CLEAN MODE
+    reduction_per_cycle: 0.4  # 每个 CLEAN 周期减少的债务比例
+
+# ── Iteration 参数 ──
+iteration:
+  max_patches_per_cycle: 5     # 每周期最多尝试 patch 次数
+  cvs_reject_cooldown: 2       # CVS 拒绝后的冷却迭代
+  reality_check_interval: 1    # 每次 commit 后都验证
+  auto_rollback: true          # 自动 rollback（设为 false 则仅警告）
+  status_refresh_on_start: true
