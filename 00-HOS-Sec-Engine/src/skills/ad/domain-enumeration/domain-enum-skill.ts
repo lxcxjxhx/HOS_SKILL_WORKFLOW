@@ -12,7 +12,7 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
             category: 'ad',
             subCategory: 'domain-enumeration',
             riskLevel: 'high',
-            confidence: 0.92,
+            confidence: 0.95,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['active-directory', 'domain', 'enumeration', 'reconnaissance', 'ldap', 'kerberos'],
@@ -161,7 +161,7 @@ export const domainEnumSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.92,
+            confidence: 0.95,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

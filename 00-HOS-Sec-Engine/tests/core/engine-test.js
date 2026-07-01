@@ -75,19 +75,12 @@ async function runTests() {
   const elapsed = Date.now() - start;
   assert(elapsed < 1000, `性能: 100次匹配耗时 ${elapsed}ms (< 1000ms)`);
 
-  // Test 7: Cache stats
+  // Test 7: Cache stats (via engine's matcher instance)
   try {
-    const { Scorer } = require(path.join(projectDir, 'dist/src/core/scorer'));
-    if (typeof Scorer.getCacheStats === 'function') {
-      const scorerStats = Scorer.getCacheStats();
-      console.log(`  📊 Scorer 缓存: ${JSON.stringify(scorerStats)}`);
-    }
-  } catch {}
-  try {
-    const { SkillMatcher } = require(path.join(projectDir, 'dist/src/core/matcher'));
-    if (typeof SkillMatcher.getCacheStats === 'function') {
-      const matcherStats = SkillMatcher.getCacheStats();
-      console.log(`  📊 Matcher 缓存: ${JSON.stringify(matcherStats)}`);
+    const matcher = engine['matcher'];
+    if (matcher && typeof matcher.getCacheStats === 'function') {
+      const stats = matcher.getCacheStats();
+      console.log(`  📊 Matcher 缓存: ${JSON.stringify(stats)}`);
     }
   } catch {}
 

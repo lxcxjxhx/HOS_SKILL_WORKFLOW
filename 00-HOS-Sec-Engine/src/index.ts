@@ -122,3 +122,54 @@ export {
   cloudConfigAudit,
   codeReviewJava,
 } from './playbooks';
+
+// V5: SEC-bench Pro 启发的新模块导出
+export { LLMJudge, llmJudge } from './core/judge';
+export type {
+  JudgeVerdict, Verdict, FailureMode, ErrorLevel,
+  ThreeStateEvidence, ExecutionEvidence, JudgeConfig
+} from './core/judge';
+export { EnsembleExecutor } from './agents/ensemble';
+export type {
+  EnsembleResult, EnsembleFinding, EnsembleStrategy,
+  AgentStrategy, EnsembleAgentConfig
+} from './agents/ensemble';
+export { PoCValidator } from './core/poc-validator';
+export type {
+  ValidationResult, ExpectedErrorProfile, OracleLabel,
+  ExecutionRecord, ValidatorConfig
+} from './core/poc-validator';
+export { TokenEfficiencyAnalyzer, tokenAnalyzer } from './utils/token-efficiency';
+export type { TokenRecord, EfficiencyReport, EarlyStopSignal } from './utils/token-efficiency';
+export { FailureModeTracker, failureTracker } from './utils/failure-tracker';
+export type { FailureCategory, FailureSignature, FailureStatsEntry, FailureModeReport } from './utils/failure-tracker';
+
+// V6: MCP 自我管理层导出
+export {
+  // MCP 注册中心
+  MCPRegistry, mcpRegistry,
+  // MCP 自动发现
+  MCPDiscovery, mcpDiscovery,
+  // MCP 工具路由
+  MCPRouter, mcpRouter,
+  // MCP 健康监控
+  MCPHealthMonitor, mcpHealthMonitor,
+} from './mcp';
+
+export type {
+  // MCP 服务器类型
+  MCPServer, MCPServerConfig, MCPServerIdentity,
+  MCPStatus, MCPRuntime,
+  // MCP 工具和能力
+  MCPTool, MCPCapability,
+  // MCP 注册
+  MCPRegistryEvent, MCPEventHandler,
+  // MCP 路由
+  MCPToolCall, MCPToolResult,
+  MCPRouteQuery, MCPRoutingStrategy,
+  SkillMCPMapping,
+  // MCP 健康
+  MCPHealthCheckResult, MCPHealthSummary,
+  // MCP 发现
+  MCPDiscoveryConfig, MCPDiscoveryResult,
+} from './mcp';

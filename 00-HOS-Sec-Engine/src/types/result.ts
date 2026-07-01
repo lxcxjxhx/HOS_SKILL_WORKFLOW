@@ -40,6 +40,8 @@ export interface EngineConfig {
   customSkillsDir?: string;
   /** 是否加载预设 Skill */
   loadPresetSkills?: boolean;
+  /** V6: 是否启用 MCP 自我管理层 */
+  mcpEnabled?: boolean;
 }
 
 /** 引擎执行查询参数 */

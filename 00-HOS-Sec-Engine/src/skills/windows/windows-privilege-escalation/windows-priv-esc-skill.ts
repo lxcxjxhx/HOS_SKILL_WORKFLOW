@@ -12,7 +12,7 @@ export const windowsPrivEscSkills: AttackDefenseSkill[] = [
             category: 'windows',
             subCategory: 'privilege-escalation',
             riskLevel: 'critical',
-            confidence: 0.94,
+            confidence: 0.97,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['windows', 'privilege-escalation', 'priv-esc', 'system', 'administrator', 'uac'],
@@ -176,7 +176,7 @@ export const windowsPrivEscSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.94,
+            confidence: 0.97,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

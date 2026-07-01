@@ -1,0 +1,3461 @@
+SMCP: Secure Model Context Protocol
+XINYI HOU
+∗
+,
+Huazhong University of Science and Technology, China
+SHENAO WANG
+∗
+,
+Huazhong University of Science and Technology, China
+YIFAN ZHANG,
+Huazhong University of Science and Technology, China
+ZILUO XUE,
+Huazhong University of Science and Technology, China
+YANJIE ZHAO,
+Huazhong University of Science and Technology, China
+CAI FU,
+Huazhong University of Science and Technology, China
+HAOYU WANG,
+Huazhong University of Science and Technology, China
+Agentic AI systems built around large language models (LLMs) are moving away from closed, single-model
+frameworks and toward open ecosystems that connect a variety of agents, external tools, and resources. The
+Model Context Protocol (MCP) has emerged as a standard to unify tool access, allowing agents to discover,
+invoke, and coordinate with tools more flexibly. However, as MCP becomes more widely adopted, it also
+brings a new set of security and privacy challenges. These include risks such as unauthorized access, tool
+poisoning, prompt injection, privilege escalation, and supply chain attacks, any of which can impact different
+parts of the protocol workflow. While recent research has examined possible attack surfaces and suggested
+targeted countermeasures, there is still a lack of systematic, protocol-level security improvements for MCP. To
+address this, we introduce the Secure Model Context Protocol (SMCP), which builds on MCP by adding unified
+identity management, robust mutual authentication, ongoing security context propagation, fine-grained policy
+enforcement, and comprehensive audit logging. In this paper, we present the main components of SMCP,
+explain how it helps reduce security risks, and illustrate its application with practical examples. We hope that
+this work will contribute to the development of agentic systems that are not only powerful and adaptable, but
+also secure and dependable.
+1
+Introduction
+In recent years, rapid progress in general AI technologies, particularly advances in Large Language
+Models (LLMs), has shifted agentic systems away from single-model conversation paradigms. In creasingly, these systems are moving toward open ecosystems that connect heterogeneous agents,
+external tools, and diverse resources. LLM-powered autonomous agents now go beyond text gener ation but handle lots of real-world tasks by integrating modules for planning, memory, tool use,
+and action execution. Because of these advances, LLMs are becoming critical entities capable of
+continuous perception, decision-making, and action in complex environments, as demonstrated
+in recent studies [19
+,
+27
+,
+28
+,
+31]. At the same time, protocols designed for tool access and agent
+communication have become increasingly important. Mechanisms such as OpenAI function call ing [14], LangChain tool calling [
+8
+], and the Model Context Protocol (MCP) from Anthropic [11
+]
+provide various ways for agents to interact with a wide range of external resources. Among these
+mechanisms, the most popular and widely adopted is MCP. With this protocol, developers can use
+a consistent method to connect their agents to various data sources, tools, or workflows, helping
+keep the overall design cleaner and more modular. Instead of tying tools directly to a particular
+model, MCP lets various clients and models access the same set of resources. For instance, an agent
+∗Xinyi Hou and Shenao Wang contributed equally to this work.
+Authors
+’ Contact Information: Xinyi Hou, xinyihou@hust.edu.cn, Huazhong University of Science and Technology, Wuhan,
+China; Shenao Wang, shenaowang@hust.edu.cn, Huazhong University of Science and Technology, Wuhan, China; Yifan
+Zhang, zhangyifan95@hust.edu.cn, Huazhong University of Science and Technology, Wuhan, China; Ziluo Xue, xzl@hust.
+edu.cn, Huazhong University of Science and Technology, Wuhan, China; Yanjie Zhao, yanjie_zhao@hust.edu.cn, Huazhong
+University of Science and Technology, Wuhan, China; Cai fu, fucai@hust.edu.cn, Huazhong University of Science and
+Technology, Wuhan, China; Haoyu Wang, haoyuwang@hust.edu.cn, Huazhong University of Science and Technology,
+Wuhan, China.
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP：安全模型上下⽂协议
+XINYI HOU,华中科技⼤学,中国 SHENAO WANG,华中科技⼤学,中国 YIFAN ZHANG,
+华中科技⼤学,中国 ZILUO XUE,华中科技⼤学,中国 YANJIE ZHAO,华中科技⼤学,中
+国 CAI FU,华中科技⼤学,中国 HAOYU WANG,华中科技⼤学,中国
+基于⼤型语⾔模型（LLM）的⾃主 AI 系统正从封闭的单模型框架转向连接各种代理、外部⼯具和资源的开放⽣态系
+统。模型上下⽂协议（MCP）已成为统⼀⼯具访问的标准，允许代理更灵活地发现、调⽤和协调⼯具。然⽽，随着
+MCP 的更⼴泛采⽤，它也带来了⼀套新的安全和隐私挑战。这些⻛险包括未经授权的访问、⼯具中毒、提⽰注⼊、
+权限提升和供应链攻击等，任何⼀种都可能影响协议⼯作流程的不同部分。虽然最近的研究已经检查了可能的攻击
+⾯并提出了有针对性的对策，但对于 MCP 仍然缺乏系统性的、协议级别的安全改进。为此，我们引⼊了安全模型
+上下⽂协议（SMCP），它建⽴在 MCP 之上，通过添加统⼀⾝份管理、强⼤的相互认证、持续的安全上下⽂传播、
+细粒度策略执⾏以及全⾯的审计⽇志。在本⽂中，我们介绍了 SMCP 的主要组件，解释了它如何帮助降低安全⻛
+险，并通过实际案例说明了其应⽤。我们希望这项⼯作能够促进开发出不仅强⼤且适应性强，⽽且安全可靠的智能
+系统。
+1 简介
+近年来，通⽤⼈⼯智能技术的快速发展，特别是⼤型语⾔模型（LLMs）的进步，使⾃主系统逐渐摆脱
+了单⼀模型对话的范式。这些系统越来越多地转向连接异构代理、外部⼯具和多样化资源的开放⽣态
+系统。由 LLM 驱动的⾃主代理现在不仅超越⽂本⽣成，还通过集成规划、记忆、⼯具使⽤和⾏动执⾏
+等模块处理⼤量现实任务。由于这些进步，LLMs 正成为复杂环境中能够持续感知、决策和⾏动的关键
+实体，如近期研究[19, 27, 28, 31]所⽰。与此同时，为⼯具访问和代理通信设计的协议变得越来越重
+要。OpenAI 函数调⽤[14]、LangChain ⼯具调⽤[8]以及 Anthropic 的模型上下⽂协议（MCP）[11]
+等机制提供多种⽅式让代理与各种外部资源交互。在这些机制中，最受欢迎且⼴泛采⽤的是 MCP 协
+议。使⽤此协议，开发者可以采⽤⼀致的⽅法将代理连接到各种数据源、⼯具或⼯作流，有助于保持
+整体设计更清晰和模块化。MCP 不是将⼯具直接绑定到特定模型，⽽是让各种客⼾端和模型访问相同
+的⼀组资源。例如，⼀个代理
+∗ Xinyi Hou 和 Shenao Wang 对这项工作贡献相同。
+作者联系⽅式：侯新怡，xinyihou@hust.edu.cn，华中科技⼤学，武汉，中国；王 Shenao，shenaowang@hust.edu.cn，华中
+科技⼤学，武汉，中国；张 Yifan，zhangyifan95@hust.edu.cn，华中科技⼤学，武汉，中国；薛 Ziluo，xzl@hust. edu.cn，华
+中科技⼤学，武汉，中国；赵 Yanjie，yanjie_zhao@hust.edu.cn，华中科技⼤学，武汉，中国；崔 Fu，fucai@hust.edu.cn，华
+中科技⼤学，武汉，中国；王 Haoyu，haoyuwang@hust.edu.cn，华中科技⼤学，武汉，中国。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+arX
+i
+v:2
+602.011
+2
+9
+v
+1
+[
+c
+s.C
+R
+]
+1
+F
+e
+b
+2
+0
+2
+6
+a
+rX
+i
+v:2
+6
+0
+2.0
+1
+1
+2
+9
+v
+1
+[cs.C
+R
+]
+2
+0
+2
+6
+年
+2
+⽉
+1
+⽇
+2
+X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+can look up, choose, and use external tools simply by following a standard interface, without having
+to worry about the underlying details. Because of these advantages, protocols like MCP are now
+playing a key role in the open and interoperable agent ecosystems.
+However, as MCP and similar open protocols are adopted more widely, new security and privacy
+concerns have emerged [
+6
+]. Attackers have more opportunities to target not just individual models,
+but the entire system, including users and external resources [
+1,
+12]. Some of the risks that have
+come up include unauthorized access, poor session management, manipulation of tool metadata,
+and different types of injection attacks, such as command or prompt injection. These issues can
+show up at any stage of the protocol’
+s operation. For example, attackers might take advantage
+of user input or documents to influence what an agent does, or they could compromise an MCP
+server to run harmful code or gain access to sensitive information [5, 15, 25, 28, 30, 32, 33].
+So far, most research on MCP security has looked at where attacks might happen and what risks
+exist in the broader ecosystem. For example, existing work has examined issues like tool poisoning,
+prompt injection, and privilege escalation across servers. Some researchers have put together attack
+taxonomies and developed detection tools, such as MindGuard [26], MCPLIB [
+4
+], and MCPTox [24].
+On the agent side, the community has tried out different ways to reduce risk at the agent or
+tool level, which include tracking agent behavior (AgentArmor [23]), using contract-based rules
+(AgentSpec [21]), controlling privileges (SAGA [20]), and isolating inputs and outputs (DRIFT [
+9
+]).
+Recent frameworks like A2AS [13] discuss runtime security controls for agentic systems, and the
+latest standard [12] outlines general agent interconnection architectures. However, there is still
+no dedicated protocol-level security enhancement specifically designed for MCP. Most existing
+solutions are either built for individual agents or applications, or they only address specific threats.
+Key challenges such as unified identity management, continuous security context tracking, and
+end-to-end policy enforcement remain largely unaddressed.
+Motivated by these challenges, we introduce the Secure Model Context Protocol (SMCP). SMCP
+is designed as a practical security framework that makes open agent-tool environments more trust worthy, better controlled, and easier to audit from end to end. SMCP builds on the foundation of
+MCP, extending it with a unified digital identity and trust infrastructure, robust mutual authentica tion, continuous security context propagation, fine-grained policy enforcement, and comprehensive
+audit logging. By embedding these features directly into the protocol, SMCP addresses a wide
+range of security risks seen in modern agentic workflows, all while preserving interoperability and
+flexibility for developers. This paper makes several key contributions:
+·We analyze the main security risks in agent ecosystems built around MCP, tracing threats
+throughout the protocol’
+s workflow and probing their underlying causes.
+·We present the detailed architecture of SMCP as a security-enhanced extension to MCP,
+explaining how it brings together identity management, session authentication, security
+context propagation, policy enforcement, and audit logging into a unified protocol layer to
+enable consistent and robust security across agent-tool interactions.
+·We demonstrate the effectiveness of SMCP’
+s built-in mechanisms in mitigating major security
+risks, using practical examples and systematically mapping specific threat types to the
+corresponding SMCP controls and enforcement strategies.
+The remainder of the paper is structured as follows. § 2 reviews the background of LLM-powered
+autonomous agents and the MCP. § 3 systematically analyzes the security risks in MCP workflows.
+§ 4 introduces the design and mechanisms of SMCP. § 5 presents practical use cases and risk
+mitigation mappings. § 6 reviews the work related to MCP security and agentic system protection.
+§ 7 discusses the development roadmap and future directions. Finally, § 8 concludes the paper.
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+2 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+可以通过遵循标准接⼝简单地查找、选择和使⽤外部⼯具，⽽⽆需担⼼底层细节。由于这些优势，像
+MCP 这样的协议现在在开放和互操作的代理⽣态系统中的作⽤⾄关重要。
+然⽽，随着 MCP 和类似的开协议被更⼴泛地采⽤，新的安全和隐私问题已经出现[6]。攻击者有更多
+机会针对不仅是个别模型，⽽且是整个系统，包括⽤⼾和外部资源[1, 12]。出现的⼀些⻛险包括未经
+授权的访问、会话管理不善、⼯具元数据的操纵以及不同类型的注⼊攻击，如命令或提⽰注⼊。这些
+问题可能在协议操作的任何阶段出现。例如，攻击者可能会利⽤⽤⼾输⼊或⽂档来影响代理的⾏为，
+或者他们可能会破坏 MCP 服务器来运⾏有害代码或访问敏感信息[5, 15, 25, 28, 30, 32, 33]。
+到⽬前为⽌，关于 MCP 安全的研究⼤多关注攻击可能发⽣的地⽅以及更⼴泛⽣态系统中的⻛险。例
+如，现有⼯作已经检查了诸如⼯具中毒、提⽰注⼊和服务器权限提升等问题。⼀些研究⼈员已经整理
+了攻击分类法，并开发了检测⼯具，例如 MindGuard [26]、MCPLIB [4] 和 MCPTox [24]。在代理⽅
+⾯，社区已经尝试了不同的⽅法来降低代理或⼯具层⾯的⻛险，包括跟踪代理⾏为（AgentArmor
+[23]）、使⽤基于合同的规则（AgentSpec [21]）、控制权限（SAGA [20]）以及隔离输⼊和输出
+（DRIFT [9]）。像 A2AS [13]这样的最新框架讨论了⽤于代理系统的运⾏时安全控制，⽽最新标准
+[12] 概述了通⽤代理互连架构。然⽽，⽬前还没有专⻔的协议级安全增强措施。为 MCP 设计。⼤多
+数现有解决⽅案要么是为单个代理或应⽤程序构建的，要么只解决特定威胁。统⼀⾝份管理、持续安
+全上下⽂跟踪和端到端策略执⾏等关键挑战在很⼤程度上仍未得到解决。
+受这些挑战的启发，我们介绍了安全模型上下⽂协议（SMCP）。SMCP 被设计为⼀个实⽤的安全框
+架，旨在使开放代理⼯具环境更加可信、易于控制和端到端审计。SMCP 基于 MCP 的基础进⾏扩
+展，增加了统⼀的数字⾝份和信任基础设施、强⼤的相互认证、持续的安全上下⽂传播、细粒度策略
+执⾏以及全⾯的审计⽇志。通过将这些功能直接嵌⼊协议中，SMCP 解决了现代代理⼯作流程中出现
+的⼴泛安全⻛险，同时为开发者保留了互操作性和灵活性。本⽂做出了⼏个关键贡献：
+·我们分析了围绕 MCP 构建的代理⽣态系统中的主要安全⻛险，追踪协议⼯作流程中的威胁，并
+探究其根本原因。
+·我们展⽰了 SMCP 作为 MCP 安全增强扩展的详细架构，解释了它如何将⾝份管理、会话认证、
+安全上下⽂传播、策略执⾏和审计⽇志整合到⼀个统⼀的协议层中，以实现代理⼯具交互之间的
+⼀致性和强⼤的安全性。
+·我们通过实际案例展⽰了 SMCP 内置机制在缓解主要安全⻛险⽅⾯的有效性，并系统地将特定
+威胁类型映射到相应的 SMCP 控制和执⾏策略。
+本⽂的其余部分结构如下。§ 2 回顾了由 LLM 驱动的⾃主代理和 MCP 的背景。§ 3 系统地分析了
+MCP ⼯作流程中的安全⻛险。§ 4 介绍了 SMCP 的设计和机制。§ 5 展⽰了实际⽤例和⻛险缓解映
+射。§ 6 回顾了与 MCP 安全和代理系统保护相关的⼯作。
+§ 7 讨论了发展路线图和未来⽅向。最后，§ 8 总结了本⽂。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+SMCP: Secure Model Context Protocol
+3
+2
+Background
+2.1 LLM Powered Autonomous Agents
+Autonomous agents powered by LLMs are an emerging direction in intelligent systems. Instead of
+relying solely on single-turn conversations, these agents place LLMs at the center and combine
+them with modules for planning, memory, and tool use (see Figure 1) [
+3,
+10]. This allows agents to
+understand their surroundings, make decisions, and take actions in more complex situations [28].
+As a result, LLMs can now take on long-term tasks and interact with their environment in a more
+active way. Specifically, the planning module breaks down user goals into specific steps, often using
+strategies such as chain-of-thought reasoning or self-reflection. The memory module keeps track
+of both recent context and longer-term knowledge, helping the agent plan ahead and learn from
+experience. The tools module lets the agent reach out to external resources for tasks like searching
+for information, running calculations, or executing code, which greatly extends what the LLM can
+do. Finally, the execution module decides when to use these tools or take other actions based on
+the plan, and it sends any new results back to memory so the agent can keep improving over time.
+Agent Tools Planning
+Action
+Memory
+Short-term memory Long-term memory
+Reflection
+Chain-of-Thoughts
+Tree-of-Thoughts
+WebBrowser( )
+FileManager( )
+DatabaseQuery( )
+EmailSender( )
+…mor
+e
+…mor
+e
+Context Retrieval
+Experience Access
+Tool Results
+Fig. 1. Overview of a Typical LLM-based Autonomous Agent Architecture.
+2.2 Model Context Model (MCP)
+Before the emergence of the MCP protocol, LLM agents primarily relied on a variety of non unified approaches when interacting with external tools, as shown in Table 1. While these methods
+were typically sufficient for small-scale, single-task scenarios, they faced significant scalability
+bottlenecks when required to simultaneously access a large number of heterogeneous data sources
+and tools or to share capabilities across multiple models and applications.
+As LLM agents have grown more complex and the number of available tools has increased, it has
+become much harder to describe, manage, and connect these resources in a way that is both scalable
+and independent of any single implementation. To address these issues, Anthropic introduced the
+Model Context Protocol (MCP) at the end of 2024 [11]. Drawing inspiration from general-purpose
+protocols like the Language Server Protocol (LSP), MCP is designed as a single, flexible interface
+for accessing external tools and shared context.
+As shown in Figure 2, the architecture of MCP consists of three core components: the MCP host,
+MCP client, and MCP server [
+6
+]. The MCP host is the environment where LLMs are deployed and
+where the task context is kept. For example, this could be a desktop assistant or an intelligent
+development environment. The MCP client operates within the host and serves as a bridge between
+the LLMs and external resources. It is responsible for starting requests, understanding user intent,
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 3
+2 背景
+2.1 基于 LLM 的⾃主代理
+由 LLM 驱动的⾃主代理是智能系统中的⼀个新兴⽅向。这些代理不再仅仅依赖于单轮对话，⽽是将
+LLM 置于中⼼，并将其与规划、记忆和⼯具使⽤模块相结合（⻅图 1）[3, 10]。这使得代理能够理解其
+周围环境，在更复杂的情况下做出决策并采取⾏动[28]。因此，LLM 现在可以承担⻓期任务，并以更
+积极的⽅式与环境互动。具体来说，规划模块将⽤⼾⽬标分解为具体步骤，通常使⽤思维链推理或⾃
+我反思等策略。记忆模块跟踪最近的上下⽂和⻓期知识，帮助代理提前规划并从经验中学习。⼯具模
+块允许代理连接外部资源，⽤于搜索信息、运⾏计算或执⾏代码等任务。这极⼤地扩展了 LLM 能做的
+事情。最后，执⾏模块根据计划决定何时使⽤这些⼯具或采取其他⾏动，并将任何新结果发送回内
+存，以便代理可以随着时间的推移不断改进。
+代理 ⼯具 计划
+⾏动
+内存
+短期记忆 ⻓期记忆
+反思
+思维链
+思维树
+WebBrowser()
+FileManager()
+数据库查询( )
+EmailSender()
+…更多
+…更多
+上下⽂检索
+体验访问
+⼯具结果
+图 1. 典型的基于 LLM 的⾃主代理架构概述。
+2.2 模型上下⽂模型（MCP）
+在 MCP 协议出现之前，LLM 代理在与外部⼯具交互时主要依赖于各种⾮统⼀的⽅法，如表 1 所⽰。虽
+然这些⽅法通常⾜以满⾜⼩规模、单任务场景的需求，但在需要同时访问⼤量异构数据源和⼯具，或
+是在多个模型和应⽤之间共享功能时，它们⾯临着显著的扩展性瓶颈。
+随着⼤型语⾔模型代理变得越来越复杂，可⽤⼯具的数量也在增加，描述、管理和连接这些资源的⽅
+式变得越来越困难，既需要可扩展性，也需要独⽴于任何单个实现。为了解决这些问题，Anthropic
+于 2024 年底推出了模型上下⽂协议（MCP）[11]。受通⽤协议（如语⾔服务器协议 LSP）的启发，
+MCP 被设计为⼀个单⼀的、灵活的接⼝，⽤于访问外部⼯具和共享上下⽂。
+如图 2 所⽰，MCP 的架构由三个核⼼组件组成：MCP 主机、MCP 客⼾端和 MCP 服务器[6]。MCP 主
+机是部署 LLM 并保存任务上下⽂的环境。例如，这可以是⼀个桌⾯助⼿或⼀个智能开发环境。MCP 客
+⼾端在主机内运⾏，并作为 LLM 和外部资源之间的桥梁。它负责启动请求、理解⽤⼾意图，
+第 1 卷第 1 期⽂章。出版⽇期：2026 年 2 ⽉。
+4
+X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+Table 1. Comparison of LLM Tool Integration Paradigms.
+Paradigm Main Features Limitations
+Manual API Integration m
+De
+a
+v
+x
+e
+im
+lo
+u
+p
+m
+ers
+fle
+d
+x
+ir
+ib
+e
+i
+c
+li
+t
+t
+l
+y
+y
+f
+c
+o
+o
+r
+n
+c
+n
+u
+e
+s
+c
+to
+t
+m
+ex
+i
+t
+z
+e
+e
+r
+d
+n
+s
+a
+c
+l
+e
+A
+n
+P
+a
+I
+r
+s
+i
+,
+o
+o
+s.
+ffering I
+c
+m
+os
+p
+t
+l
+s
+e
+a
+m
+re
+en
+h
+t
+i
+a
+g
+t
+h
+io
+, a
+n
+n
+i
+d
+s c
+s
+o
+c
+m
+ala
+p
+b
+le
+il
+x
+i
+,
+ty
+m
+is
+ai
+l
+n
+im
+te
+i
+n
+te
+a
+d
+n
+.
+ce
+Standard Plugin
+Plugins are discovered and invoked through standard ized interfaces such as OpenAPI, simplifying integra tion within one platform.
+The approach is typically stateless, re stricted to a single platform, and difficult
+to reuse across different environments.
+Agent Framework
+Tools are abstracted and orchestrated within an agent
+framework (e.g., LangChain), supporting dynamic se lection and workflow management by the LLM.
+Integration is highly dependent on specific
+frameworks, resulting in weak interoper ability and limited extensibility.
+RAG + Vector DB
+Retrieval-augmented generation enables LLMs to in corporate external knowledge via vector search, en hancing context understanding.
+This method is limited to information re trieval and does not support action execu tion or data modification.
+Protocol-based (MCP) A unified and extensible protocol enables decoupled,
+dynamic discovery and invocation of tools and re sources across applications and models.
+The protocol ecosystem is still evolving,
+and consistency and security best practices
+are not yet fully established.
+managing responses, and coordinating the process of using external tools. The MCP server, which
+is on the service side, offers three types of capabilities for LLMs: tools, resources, and prompts.
+The tools module wraps external APIs or operational logic, so the client can call these tools and
+receive results. The resources module manages various data sources, such as databases, files, or
+cloud storage. The prompts module provides reusable workflow templates that help make tool use
+more efficient and keep interactions consistent.
+MCP Clients
+Prompt:
+“Can you please
+fetch the latest
+stock price of
+AAPL and notify
+me via email?”
+MCP Servers
+Capabilities
+Tools Resources Prompts
+② I
+nitial Response
+③
+Notification
+① I
+nitial Request
+Transfer Layer
+Data
+Source
+Web Services
+Database
+Local Files
+Tool Selection API Invocation
+Intent
+Analysis
+Notification Sampling
+Orchestration
+User
+MCP Workflow
+(Chat Apps, IDEs,
+···
+, AI Agents)
+MCP Hosts
+1:1
+Fig. 2. The Workflow of MCP (Reproduced from Our Previous Work [6]).
+The complete MCP workflow is as follows: when a user sends a request, the MCP host interprets
+what kind of action is required and then the MCP clientcontacts the MCP server through a standard
+communication layer. The server replies with a list of available tools and capabilities that fit the
+current context. The host picks the right tool, makes the necessary API call, and, once the task is
+finished, returns the results to the user. This process, while ensuring generality, also retains the
+ability for dynamic configuration, bidirectional interaction, and multi-task scheduling, providing
+fundamental protocol support for building more flexible, secure, and scalable agent systems.
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+4 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+表 1. LLM ⼯具集成范式⽐较。
+范式 主要特性 局限性
+⼿动 API 集成
+开
+性
+发
+。
+者直接连接外部 API，为定制化场景提供最⼤灵活 实现复杂，维护成本⾼，可扩展性有限。
+标准插件
+插件通过标准接⼝（如 OpenAPI）进⾏发现和调⽤，简化
+了平台内的集成。
+该⽅法通常是状态 less 的，仅限于单个平台，
+并且难以在不同的环境中重⽤。
+代理框架
+⼯具在代理框架（例如 LangChain）中抽象化和编排，⽀
+持 LLM 进⾏动态选择和⼯作流管理。
+集成⾼度依赖于特定框架，导致互操作性弱和
+可扩展性有限。
+RAG + 向量数据库
+检索增强⽣成使 LLMs 能够通过向量搜索整合外部知识，
+增强上下⽂理解。
+此⽅法仅限于信息检索，不⽀持执⾏操作或修
+改数据。
+基于协议（MCP）
+统⼀的可扩展协议⽀持跨应⽤和模型解耦、动态发现和调
+⽤⼯具和资源。
+协议⽣态系统仍在发展中，⼀致性和安全最佳
+实践尚未完全建⽴。
+管理响应，并协调使⽤外部⼯具的过程。MCP 服务器位于服务端，为 LLM 提供三种类型的能⼒：⼯
+具、资源和提⽰。⼯具模块封装外部 API 或操作逻辑，以便客⼾端可以调⽤这些⼯具并接收结果。资
+源模块管理各种数据源，例如数据库、⽂件或云存储。提⽰模块提供可重⽤的⼯作流模板，帮助提⾼
+⼯具使⽤的效率，并保持交互的⼀致性。
+MCP 客⼾端
+提示：
+“你能请
+获取最新
+AAPL 的
+股票价格并通知
+我通过电子邮件联系你吗？”
+MCP 服务器
+功能
+⼯具 资源 提⽰
+② 初始响应
+③ 通知
+① 初始请求
+传输层
+数据
+源
+Web 服务
+数据库
+本地⽂件
+⼯具选择 API 调⽤
+意图
+分析
+通知 采样
+编排
+⽤⼾
+MCP ⼯作流
+(聊天应⽤、集成开发环境，
+···
+，⼈⼯智能代理)
+MCP 主机
+1:1
+图 2. MCP ⼯作流程（改编⾃我们之前的⼯作[6]）
+完整的 MCP ⼯作流程如下：当⽤⼾发送请求时，MCP 主机解释需要执⾏哪种操作，然后 MCP 客⼾端
+通过标准通信层联系 MCP 服务器。服务器回复⼀份符合当前上下⽂的可⽤⼯具和能⼒列表。主机选择
+合适的⼯具，进⾏必要的 API 调⽤，任务完成后将结果返回给⽤⼾。这个过程在确保通⽤性的同时，
+也保留了动态配置、双向交互和多任务调度的能⼒，为构建更灵活、安全和可扩展的代理系统提供基
+础协议⽀持。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+Client
+Server
+客
+⼾
+端
+服
+务
+器
+SMCP: Secure Model Context Protocol
+5
+3
+Security Risks of MCP
+The openness and flexibility that MCP offers for integrating AI agents and external tools also
+introduce a wide range of security and privacy risks. As illustrated in Figure 3, threats may appear
+throughout the entire MCP workflow, and each stage can present its own set of vulnerabilities
+that attackers might exploit [
+1, 5,
+30
+,
+32]. These risks may come from various sources, including
+outside attackers, malicious or compromised developers, supply chain participants, or insiders
+with elevated access [
+6
+]. Attackers are usually interested in gaining unauthorized access, stealing
+data, influencing agent behavior, or compromising the protocol’
+s integrity. Each part of the MCP
+ecosystem, such as the host, client, server, and connected tools, may become a target for attacks.
+LLM/Agent (MCP Host)
+LLM/Agent (MCP Host)
+MCP Client
+MCP Client
+MCP Server
+MCP Server
+Tool Service/Resource
+Tool Service/Resource
+1. Establish connection Unauthenticated Access
+Session Management Flaws
+2. Request tool list
+3. Sync tool list
+Namespace Typosquatting
+Tool Name Conflict
+Tool Poisoning
+Command Injection
+Rug Pulls
+Cross-Server Shadowing
+4. Provide tool list info
+5. Analyze task and tool requirements Prompt Injection
+Indirect Prompt Injection
+6. Select tool & send task info Installer Spoofing
+Preference Manipulation
+7. Forward tool invocation with task info Remote Code Execution
+SQL Injection
+8. Invoke tool
+Credential Theft
+Sandbox Escape
+Tool Chaining Abuse
+Unauthorized Access
+Privilege Abuse
+9. Return tool execution result Path Traversal
+Resource Content Poisoning
+10. Return tool invocation result Token Passthrough
+Cross-Tenant Data Exposure
+11. Return tool invocation result
+Vulnerable Versions
+Privilege Persistence
+Configuration Drift
+Fig. 3. Security Threats and Attack Surfaces in MCP Workflow.
+In our analysis, we examine the end-to-end workflow and consider possible risks at each stage.
+Early steps in the process may be affected by weak authentication or poor session management,
+while later phases may be exposed to tool poisoning, prompt injection, fake installers, or remote
+code execution. Other threats, such as stolen credentials, privilege escalation, leaked tokens, and
+misconfigurations, can also occur as the workflow progresses. In many cases, attackers may combine
+several risks to increase the overall impact. Table 2 summarizes the main types of risk and how
+they can appear in different stages of the workflow. Since our work is not focused on providing
+an exhaustive list of all possible threats, we do not discuss each type in detail. Instead, our main
+concern is the protocol’
+s design and the enforcement mechanisms that can help reduce these risks.
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 5
+3 MCP 安全⻛险
+MCP 为集成 AI 代理和外部⼯具所提供的开放性和灵活性，也引⼊了⼴泛的安全和隐私⻛险。如图 3
+所⽰，威胁可能在整个 MCP ⼯作流程中出现，并且每个阶段都可能存在攻击者可能利⽤的⾃⾝漏洞[
+1 , 5, 30 , 32]。这些⻛险可能来⾃各种来源，包括外部攻击者、恶意或受损的开发者、供应链参与者或
+具有提升访问权限的内部⼈员[ 6 ]。攻击者通常感兴趣的是获得未经授权的访问权限、窃取数据、影
+响代理⾏为或破坏协议的完整性。MCP ⽣态系统的每个部分，如主机、客⼾端、服务器和连接的⼯
+具，都可能成为攻击的⽬标。
+LLM/智能体（MCP 主机）
+LLM/智能体（MCP 主机）
+MCP 客⼾端
+MCP 客⼾端
+MCP 服务器
+MCP 服务器
+⼯具服务/资源
+⼯具服务/资源
+1. 建⽴连接 未通过⾝份验证 访问 会话管理 缺陷
+2. 请求 ⼯具列表 3. 同步 ⼯具列表
+命名空间 拼写错误 ⼯具名称 冲突 ⼯具
+中毒 命令注⼊ 地板拉⾛ 跨服务器 影⼦
+4. 提供 ⼯具列表 信息
+5. 分析任务和⼯具需求 提⽰注⼊ 间接提⽰注⼊
+6. 选择⼯具并发送任务信息 安装器欺骗 偏好操控
+7. 带有任务信息转发⼯具调⽤ 远程代码执⾏ SQL 注⼊
+8. 调⽤⼯具
+凭证盗窃
+沙盒逃逸
+⼯具链滥⽤
+⾮法访问
+权限滥⽤
+9. 返回⼯具执⾏结果
+路径遍历 资源内容中毒
+10. 返回⼯具调⽤结果
+跨租⼾数据泄露 - 令牌透传
+11. 返回⼯具调⽤结果
+漏洞版本权限持久化配置漂移
+图 3. MCP ⼯作流程中的安全威胁和攻击⾯。
+在我们的分析中，我们考察了端到端的⼯作流程，并考虑了每个阶段可能存在的⻛险。流程的早期步
+骤可能受到弱认证或会话管理不良的影响，⽽后期阶段则可能⾯临⼯具中毒、提⽰注⼊、虚假安装程
+序或远程代码执⾏的⻛险。随着⼯作流程的推进，其他威胁，如被盗凭证、权限提升、泄露的令牌和
+配置错误，也可能发⽣。在许多情况下，攻击者可能会结合多种⻛险来增加整体影响。表 2 总结了主
+要的⻛险类型以及它们在不同⼯作流程阶段可能出现的⽅式。由于我们的⼯作不是专注于提供所有可
+能威胁的详尽列表，因此我们不详细讨论每种类型。相反，我们的主要关注点是协议的设计以及能够
+帮助降低这些⻛险的执⾏机制。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+6
+X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+Table 2. Summary of Security Risks Across MCP Workflow Steps (Refined from our previous work [6]).
+Step Risk Name Risk Source Risk Description
+1
+Unauthenticated Access Protocol/Design Flaw Lack of robust authentication allows attackers to impersonate
+clients or servers, leading to unauthorized access and potential
+data leakage.
+Session Management Flaws Protocol/Design Flaw Weak session handling enables hijacking, replay attacks, or
+persistent unauthorized access by failing to securely generate,
+expire, or revoke sessions.
+3
+Namespace Typosquatting Malicious Developer Attackers register servers with deceptively similar names to
+legitimate ones, tricking users or agents and facilitating supply
+chain compromise.
+Tool Name Conflict Malicious Developer Ambiguous or conflicting tool names enable attackers to sub stitute malicious tools for legitimate ones during selection.
+Tool Poisoning Malicious Developer Malicious logic or hidden instructions are embedded in tool
+metadata, causing agents to execute unintended or harmful operations.
+Command Injection External Attacker Insecure parameter handling allows attackers to inject system
+commands, leading to arbitrary code execution on the server.
+Rug Pulls Malicious Developer Initially benign servers or tools are later updated to include
+malicious payloads, betraying established trust.
+Cross-Server Shadowing Malicious Developer Attackers exploit overlapping tool definitions to cause agents
+to invoke attacker-controlled tools instead of trusted ones.
+5
+Prompt Injection User/Context Injection Malicious user prompts manipulate the model’
+s reasoning, trig gering unintended actions or privilege escalation.
+Indirect Prompt Injection External Attacker Adversarial instructions are embedded in external data sources,
+covertly influencing model behavior or leaking data.
+6
+Installer Spoofing External Attacker Attackers distribute tampered installer packages or auto installers, introducing malware or backdoors during tool setup.
+Preference Manipulation Malicious Developer Persuasive or deceptive tool descriptions bias agent or model
+selection, steering preference toward attacker-controlled tools.
+7
+Remote Code Execution External Attacker Insufficient input validation allows attacker-supplied data to
+trigger arbitrary code execution on the server.
+SQL Injection External Attacker Unsanitized parameters are passed into database queries, en abling manipulation or exfiltration of backend data.
+8
+Credential Theft Insider/Privilege Abuse Attackers extract API keys, tokens, or credentials from the execution environment for long-term unauthorized access.
+Sandbox Escape User/Context Injection Malicious tools escape isolation, gaining access to host system
+resources or enabling lateral movement.
+Tool Chaining Abuse User/Context Injection Multiple low-risk tools are chained to perform unintended
+high-impact operations, evading policy checks.
+Unauthorized Access Insider/Privilege Abuse Insufficient access control allows invocation of tools or re sources beyond intended permissions.
+Privilege Abuse Insider/Privilege Abuse Over-permissioned tools or misconfigured policies enable per sistent unauthorized operations or escalation.
+9
+Path Traversal External Attacker Improper path handling allows attackers to access or overwrite
+arbitrary files via crafted return data.
+Resource Content Poisoning External Attacker Manipulated output data injects malicious content, misleading
+downstream agents or corrupting workflows.
+10
+Token Passthrough Protocol/Design Flaw Sensitive tokens or credentials are inadvertently forwarded
+along the workflow, exposing them to unauthorized parties.
+Cross-Tenant Data Exposure Insider/Privilege Abuse In multi-tenant environments, improper segregation leads to
+leakage of data between tenants or sessions.
+11
+Vulnerable Versions Version/Config Management Outdated or unpatched tool/server versions remain in use, ex posing the system to known exploits.
+Privilege Persistence Version/Config Management Revoked or outdated credentials are not invalidated after up dates, allowing retention of unauthorized access.
+Configuration Drift Version/Config Management Manual or uncoordinated configuration changes accumulate,
+causing deviation from the intended security baseline.
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+6 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+表 2. MCP ⼯作流步骤中的安全⻛险总结（源⾃我们之前的⼯作 [6]）。
+步骤 ⻛险名称 ⻛险来源 ⻛险描述
+1
+未⾝份验证访问协议/设计缺陷 缺乏强⼤的⾝份验证允许攻击者冒充客⼾端或服务器，导致未经授
+权的访问和潜在的数据泄露。
+会话管理缺陷协议/设计缺陷 薄弱的会话处理通过未能安全地⽣成、过期或撤销会话，使攻击者
+能够进⾏会话劫持、重放攻击或持续的未经授权访问。
+3
+命名空间错位攻击 恶意开发者 攻击者使⽤与合法服务器名称相似但具有欺骗性的名称注册服务
+器，欺骗⽤⼾或代理并促进供应链妥协。
+⼯具名称冲突 恶意开发者 模糊或冲突的⼯具名称使攻击者在选择时能够将恶意⼯具替换为合法⼯具。⼯具中毒 恶意开发者 恶意逻辑
+或隐藏指令被嵌⼊到⼯具中
+元数据，导致代理执⾏未预期的或有害的操作。
+命令注⼊ 外部攻击者 不安全的参数处理允许攻击者注⼊系统命令，导致服务器上任意代
+码执⾏。
+拉⾼出货 恶意开发者 最初⽆害的服务器或⼯具后来被更新以包含恶意负载，违背了既定
+的信任。
+跨服务器影⼦恶意开发者 攻击者利⽤重叠的⼯具定义来使代理调⽤攻击者控制的⼯具，⽽不
+是可信的⼯具。
+5
+提⽰注⼊ ⽤⼾/上下⽂注⼊ 恶意⽤⼾提⽰操纵模型的推理，触发未预期的操作或权限提升。间接提⽰注⼊ 外部攻击者 敌对指令嵌⼊在
+外部数据源中，秘密地影响模型⾏为或泄露数据。
+6
+安装程序欺骗 外部攻击者 攻击者分发被篡改的安装程序包或⾃动安装程序，在⼯具设置期间引⼊恶意软件或后⻔。偏好操控 恶意开
+发者 说服性或欺骗性的⼯具描述偏置代理或模型选择，将偏好引向攻击者控制的⼯具。
+7
+远程代码执⾏ 外部攻击者 输⼊验证不⾜允许攻击者提供的数据在服务器上触发任意代码执
+⾏。
+SQL 注⼊ 外部攻击者 未清理的参数被传递到数据库查询中，从⽽能够操纵或窃取后端数据。
+8
+凭证盗窃 内部⼈员/权限滥⽤ 攻击者从执⾏环境中提取 API 密钥、令牌或凭证，以实现⻓期未经
+授权的访问。
+沙箱逃逸 ⽤⼾/上下⽂注⼊恶意⼯具逃逸隔离，获取对主机系统资源的访问权限或启⽤横向移动。
+⼯具链滥⽤ ⽤⼾/上下⽂注⼊ 多个低⻛险⼯具被串联起来执⾏⾮预期的重⼤操作，绕过了策略检
+查。
+未授权访问 内部⼈员/权限滥⽤ 不⾜的访问控制允许调⽤超出预期权限的⼯具或资源。权限滥⽤ 内部⼈员/权限滥⽤ 过度授权的⼯具
+或配置错误的策略导致持续的⾮授权操作或权限提升。
+9
+路径遍历 外部攻击者 不恰当的路径处理允许攻击者通过定制的返回数据访问或覆盖任意
+⽂件。
+资源内容中毒 外部攻击者 被操纵的输出数据注⼊恶意内容，误导下游代理或破坏⼯作流程。
+10
+令牌透传 协议/设计缺陷 敏感令牌或凭证意外地沿⼯作流程转发，使其暴露给未授权的各
+⽅。
+跨租⼾数据泄露 内部⼈员/权限滥⽤ 在多租⼾环境中，隔离不当导致租⼾之间或会话之间的数据泄漏。
+11
+易受攻击版本 版本/配置管理 使⽤过时或未修补的⼯具/服务器版本，使系统⾯临已知漏洞的攻击。权限持久化 版本/配置管理 撤销或
+过时的凭证在更新后未被失效，允许保留未经授权的访问。配置漂移 版本/配置管理 ⼿动或未协调的配置更改累积，导致偏离预期的
+安全基线。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+SMCP: Secure Model Context Protocol
+7
+4
+Secure Model Context Protocol (SMCP)
+As stated before, the security threats in open agent-tool ecosystems are deeply rooted in the lack
+of unified trust, fragmented authentication, and limited auditability throughout the workflow.
+Addressing such systemic challenges requires a holistic, protocol-level solution that can guarantee
+the authenticity of all participants, enforce strong mutual authentication, maintain a con tinuous security context across all operations, and ensure comprehensive accountability.
+SMCP is designed to meet these needs. It serves as a unified security framework that combines
+identity management, session authentication, security context tracking, policy enforcement, and
+audit logging. At the core of this approach, the Trusted Component Registry makes sure that only
+verified and traceable participants are allowed in agent-tool interactions. Each connection is created
+using mutual authentication, and every operation is linked to a security context that contains
+details about identity, delegation, and risk. The system enforces detailed access policies to support
+minimal privilege and flexible protection. Complete audit logs are kept so that all important actions
+can be followed from start to finish. As shown in Figure 4, SMCP brings these key elements together
+to provide strong access control, protection during operation, and clear accountability. This allows
+multiple agents to work together securely and reliably, while still keeping the system compatible
+and flexible.
+MCP Clients
+Prompt:
+“Can you please
+fetch the latest
+stock price of
+AAPL and notify
+me via email?”
+MCP Servers
+② I
+nitial Response
+③
+Notification
+① I
+nitial Request
+Transfer Layer
+Data
+Source
+Web Services
+Database
+Local Files
+(Chat Apps, IDEs,
+···
+, AI Agents)
+MCP Hosts
+Trusted Component
+Registry
+User-Registry Host-Registry
+S
+C
+e
+o
+c
+n
+u
+t
+r
+e
+i
+x
+ty
+t
+Identity Code Delegation Chain Risk Level Policy
+Policy
+Audit Log
+Authentication
+Call Chain
+agentId, taskId, sessionId
+authnAssertionId, toolId,
+delegatorChain,
+riskLevel,
+…
+actionCode, result,
+t
+imestamp, signature,
+auditRef, …
+User
+• Unified identity allocation
+• Credential management
+• Policy issuance and audit
+Server-Registry Resource-Registry
+§
+4.1
+§
+4.2
+§
+4.4
+§
+4.3
+§
+4.5
+Fig. 4. SMCP: Secure Model Context Protocol.
+4.1 Trusted Component Registry
+4.1.1 Unified Digital Identity and Trust Infrastructure. SMCP is built on a unified digital identity
+and trust infrastructure that spans multiple systems and trust domains, which forms the foundation
+for protocol operation. Unlike solutions that only address a single type of entity, such as agents,
+SMCP brings together all key participants in the ecosystem. This includes not only human users
+and organizational accounts, but also different types of agents, tools, and external resource services
+such as MCP servers, model services, and dataset services. It also covers governance components
+like identity and policy services, bringing them all under a common identity and trust framework.
+This design covers not only the structured encoding and account management of all entity types,
+but also a comprehensive Trusted Component Registry and standardized assertion mechanisms: only
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 7
+4 安全模型上下⽂协议 (SMCP)
+如前所述，开放代理⼯具⽣态系统中的安全威胁深深植根于缺乏统⼀信任、认证碎⽚化以及整个⼯作
+流程中有限的可审计性。解决此类系统性挑战需要⼀个全⾯的、协议级别的解决⽅案，该⽅案能够保
+证
+所有参与者的真实性，强制执⾏严格的相互认证，保持所有操作中的持续安全上下⽂，并确保全⾯的
+责任制。
+SMCP 旨在满⾜这些需求。它作为⼀个统⼀的安全框架，结合了⾝份管理、会话认证、安全上下⽂跟
+踪、策略执⾏和审计⽇志记录。在这种⽅法的核⼼，受信任组件注册表确保只有经过验证和可追溯的
+参与者才被允许在代理⼯具交互中。每个连接都使⽤相互认证创建，并且每个操作都与包含⾝份、授
+权和⻛险详情的安全上下⽂相关联。系统执⾏详细的访问策略以⽀持最⼩权限和灵活的保护。保留完
+整的审计⽇志，以便所有重要操作可以从开始到结束都被跟踪。如图 4 所⽰，SMCP 将这些关键元素
+结合在⼀起，提供强⼤的访问控制、操作期间的保护和明确的责任制。这使得多个代理能够安全可靠
+地协同⼯作，同时仍然保持系统的兼容性和灵活性。
+MCP 客⼾端
+提示：
+“你能请
+获取最新
+AAPL 的
+股票价格并通知
+我通过电子邮件联系你吗？”
+MCP 服务器
+② 初始响应
+③ 通知
+① 初始请求
+传输层
+数据
+源
+Web 服务
+数据库
+本地⽂件
+(聊天应⽤、集成开发环境，
+···
+，⼈⼯智能代理)
+MCP 主机
+受信任组件
+注册表
+⽤⼾注册表 主机注册表
+安
+上
+全
+下⽂
+⾝份代码 委托链 ⻛险等级 策略
+策略
+审计⽇志
+⾝份验证
+呼叫链
+agentId、taskId、
+sessionId、
+a
+d
+u
+e
+t
+le
+h
+g
+n
+a
+A
+t
+s
+o
+s
+r
+e
+C
+r
+h
+ti
+a
+o
+in
+n
+、
+Id、toolId、
+riskLevel、……
+actionCode、result、
+timestamp、
+signature、
+auditRef、……
+⽤⼾
+• 统⼀⾝份分配
+• 凭证管理
+• 策略发布与审计
+服务器注册表 资源注册表
+§ 4.1
+§ 4.2
+§ 4.4
+§ 4.3 § 4.5
+图 4. SMCP：安全模型上下⽂协议。
+4.1 可信组件注册表
+4.1.1 统⼀数字⾝份和信任基础设施。SMCP 建⽴在跨越多个系统和信任域的统⼀数字⾝份和信任基础
+设施之上，这构成了协议运⾏的基础。与仅解决单⼀类型实体的解决⽅案不同，例如代理，SMCP 将
+⽣态系统中的所有关键参与者汇集在⼀起。这包括不仅⼈类⽤⼾和组织账⼾，还包括不同类型的代
+理、⼯具和外部资源服务，如 MCP 服务器、模型服务和数据集服务。它还涵盖了治理组件，如⾝份和
+政策服务，将它们全部置于⼀个共同的数字⾝份和信任框架之下。这种设计不仅涵盖了所有实体类型
+的结构化编码和账⼾管理，还包括⼀个全⾯的受信任组件注册表和标准化的断⾔机制：仅
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+Client
+Server
+客
+⼾
+端
+服
+务
+器
+8
+X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+those components registered and bound to the unified identity namespace via digital credentials
+are recognized as trusted components eligible to participate in the SMCP invocation plane.
+4.1.2 Scope and Key Elements. The trust infrastructure of SMCP comprises three interrelated parts:
+·Structured identity codes for all principal types;
+·Identity accounts and digital credential managed by the Trusted Component Registry
+;
+·Standardized authentication assertions and pre-access verification processes.
+These components provide a consistent trust anchor throughout the operation of SMCP, supporting
+session establishment, capability access, and call-chain auditing. Table 3 summarizes the major
+entity types and key attributes managed within this infrastructure.
+Table 3. Entity Types and Key Attributes in the SMCP Trusted Component Registry
+Registry Type Example Identity and Account Credential and Trust Info
+User Human user, org ac count
+Account mapped to a unique 32-character
+identity code; stores basic profile, organiza tional relationships, and assigned roles in
+the registry
+Login secret, certificate, or verifi able credential; encodes user affili ation, role, authorization baseline,
+and compliance attributes
+Agent (MCP host) General/vertical
+agent, orchestrator
+Each MCP Host assigned a 32-character iden tity code; registry records code or model
+hash, deployment environment, functional
+scope, and operational boundaries
+Host digital credential with public
+key, declared capabilities, permis sion baseline, and optionally dele gation or controller information
+MCP Server Tool services, integra tion endpoint
+Each server endpoint or instance issued
+a unique identity code; registry maintains
+provider/operator, exposed capability de scription, and service sensitivity level
+Service certificate or verifiable cre dential; includes service identity,
+supported authentication, compli ance and data handling policy, and
+operational trust attributes
+Resource Model API, dataset,
+external service
+Each resource assigned a unique modelId,
+datasetId
+, etc.; registry stores owner, ver sion, provenance, and sensitivity labels
+Resource-level credential or asser tion issued by trust anchor; spec ifies compliance, permitted usage
+scope, risk classification, and sup ports auditability
+4.1.3 Structured Identity Code for All Entities. At the identification layer, SMCP defines unified
+encoding rules and type fields for different entity categories.An example as shown in Figure 5. Every
+discoverable, callable, or delegable entity is assigned a fixed-length, 32-character identity code
+using the character set [0-9A-Z]. This applies to users, agents, tool services, models, and resource
+endpoints. The code reserves type fields for distinguishing users (human or organizational), agents
+(general or domain-specific), tools and resources (MCP servers, APIs, model/data services), and
+governance/audit components (identity services, policy points, log aggregators, etc). Other fields
+encode version, authority, registrant, registration year, package/account serial, instance serial, and
+a checksum. This cross-type, parseable encoding enables global uniqueness, rapid validation (e.g.,
+MOD 97-10 checksum), and binding of all protocol interactions to a stable identity namespace
+without exposing internal implementation details.
+4.1.4 Identity Lifecycle and Credential Management. SMCP defines a unified identity lifecycle
+management framework atop the Trusted Component Registry, including registration, verifica tion, archival, credential issuance, and activation for each entity type. For agents, the sponsor or
+developer submits a registration request with functional descriptions, system composition and
+environment digests (e.g., code/model hashes, dependency fingerprints), behavioral boundaries,
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+8 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+那些通过数字凭证注册并绑定到统⼀⾝份命名空间的组件被视为可信组件，有资格参与 SMCP 调⽤平
+⾯。
+4.1.2 范围和关键要素。SMCP 的信任基础设施由三个相互关联的部分组成：
+·所有主体类型的结构化⾝份代码；
+·由可信组件注册机构管理的⾝份账⼾和数字凭证；
+·标准化的⾝份认证断⾔和预访问验证流程。
+这些组件在整个 SMCP 运⾏过程中提供⼀致的信任锚点，⽀持会话建⽴、能⼒访问和调⽤链审计。表
+3 总结了在此基础设施中管理的的主要实体类型和关键属性。
+表 3. SMCP 可信组件注册表中的实体类型和关键属性
+注册类型⽰例 ⾝份和账⼾ 凭证和信任信息
+⽤⼾ ⼈类⽤⼾，组织 ac-
+计数
+账⼾映射到⼀个唯⼀的 32 字符⾝份代码；在注
+册表中存储基本资料、组织关系和分配的⻆⾊
+登录密钥、证书或可验证凭证；编码
+⽤⼾⾪属关系、⻆⾊、授权基线和合
+规属性
+代理（MCP 主机）通⽤/垂直
+代理，协调器
+每个 MCP 主机分配⼀个 32 字符的⾝份代码；注
+册表记录代码或模型哈希、部署环境、功能范围
+以及操作边界主机数字凭证包含公
+钥、声明能⼒、权限基线，以及可选
+的委派或控制器信息
+MCP 服务器⼯具服务，集成
+端点/连接点
+每个服务器端点或实例分配⼀个唯⼀⾝份代码；
+注册表维护提供者/操作者、暴露能⼒描述
+服务敏感性级别服务证书或可验证凭
+证；包括服务⾝份、⽀持的认证⽅
+式、合规性和数据处理政策，以及运
+营信任属性
+资源 模型 API，数据集
+外部服务
+每个资源分配⼀个唯⼀的 modelId、datasetId
+等；注册表存储所有者、版本、来源和敏感性标
+签
+由信任锚点发布的资源级凭证或断
+⾔；指定合规性、允许的使⽤范围、
+⻛险分类，并⽀持可审计性
+4.1.3 所有实体的结构化⾝份代码。在识别层，SMCP 定义了不同实体类别统⼀的编码规则和类型字
+段。如图 5 所⽰，每个可发现、可调⽤或可委派的实体都使⽤ [0-9A-Z] 字符集分配⼀个固定⻓度、32
+个字符的⾝份代码。这适⽤于⽤⼾、代理、⼯具服务、模型和资源端点。该代码保留类型字段以区分
+⽤⼾（⼈类或组织）、代理（通⽤或特定领域）、⼯具和资源（MCP 服务器、API、模型/数据服务）以
+及治理/审计组件（⾝份服务、策略点、⽇志聚合器等）。其他字段编码版本、权限、注册者、注册年
+份、包/账⼾序列、实例序列和校验和。这种跨类型、可解析的编码实现了全局唯⼀性、快速验证（例
+如, MOD 97-10 校验和), 以及将所有协议交互绑定到⼀个稳定的⾝份命名空间，⽽不会暴露内部实现细
+节。
+4.1.4 ⾝份⽣命周期和凭证管理。SMCP 定义了⼀个统⼀的⾝份⽣命周期
+在可信组件注册表之上的管理框架，包括注册、验证、存档、凭证签发以及对每种实体类型的激活。
+对于代理，赞助商或开发者提交包含功能描述、系统组成和环境摘要（例如，代码/模型哈希值、依赖
+指纹）、⾏为边界等的注册请求。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+SMCP: Secure Model Context Protocol
+9
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+{
+" identityCode": "AG01AC01COMP2500012345005678X7A3",
+" type
+": "AG", // AG=Agent, US=User, TL=Tool, MD=Model, IN=Infrastructure
+" version
+": "01", // Identity code version
+" authority
+": "AC01", // Identity authority code
+" registrant": "COMP", // Registrant/organization code
+" year
+": "25", // Registration year (2025)
+" packageSerial": "00012345", // Package/account serial number
+" instanceSerial": "005678", // Instance serial number
+" checksum
+": "X7A3" // Checksum (MOD 97- 10)
+}
+Fig. 5. Example of SMCP Structured Identity Code.
+and supporting documentation. The registration service evaluates risk and required evidence based
+on task sensitivity and deployment context, verifies all proofs, then creates a registry entry, assigns
+the identity code, and snapshots verified information as the baseline.
+Likewise, users and organizations must complete registration and verification (potentially lever aging existing IAM/IDaaS infrastructure), incorporating account attributes, organizational relation ships, and baseline authorization into the unified identity domain. Tool and resource services must
+register before being added to the capability directory or invoked by SMCP, disclosing provider/op erator, capability sensitivity, and compliance boundaries. Models and datasets must declare training
+data sources, usage restrictions, and sensitivity tags. This creates a unified graph of users, agents,
+tools, models, data, and organizations, enabling delegation chains, access control, and audit trails.
+Once registered, independent credential issuance services generate digital credentials for each
+entity in the form of public key certificates or verifiable credentials containing the identity code, type,
+provider/delegator information, capability scope, privilege level, security/compliance attributes,
+and public key reference. After issuance, the identity code and credential are returned for secure
+storage and use. Only after this process is an entity
+’
+s digital identity considered active and eligible
+for trusted participation in SMCP operations. To prevent “
+register-once, never-update
+”
+risks, SMCP
+supports unified update, lock, and revocation mechanisms. When an agent’
+s implementation,
+capability, or environment changes significantly, an identity update process is triggered (identity
+code remains, registry/account info is updated, credentials may be rotated). Tool/resource services
+follow similar flows for capability/sensitivity/operator changes. For misbehavior, credential leaks,
+or delegator revocation, identity accounts may be locked or deactivated, with full audit trails
+preserved for compliance and forensic review.
+4.2 Session Establishment and Mutual Authentication
+A secure session in SMCP is established through a process of mutual authentication between
+entities, based on the unified digital identity and credential infrastructure provided by the Trusted
+Component Registry. This approach ensures that both parties in a session can reliably verify each
+other
+’
+s identities. Each session is then linked to a verifiable security context, which serves as the
+basis for all secure interactions and the transfer of context information throughout the protocol.
+4.2.1 Authentication and Mutual Verification. During cross-entity interactions, trust is established
+not by request payloads alone, but via standardized authentication and assertion flows:
+·When a subject initiates a request, the relying party evaluates its access control policy
+to determine the required authentication strength (e.g., agent identity only, or additional
+tool/model trust attributes).
+·Upon challenge, the requester assembles an appropriate credential bundle, signs dynamic
+challenges, and presents them (e.g., via mutual TLS or application-level assertions).
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 9
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+{ "identityCode
+"
+:
+"AG01AC01COMP2500012345005678X7A3"
+,
+"type
+"
+:
+"AG"
+, // AG=代理, US=用户, TL=工具, MD=模型, IN=
+基
+组
+础
+织
+设
+代
+施
+码
+"
+"
+v
+y
+e
+e
+r
+a
+s
+r
+i
+"
+o
+:
+n
+"
+"
+:
+25
+"
+"
+01"
+, // 身份代码版本 "
+authority
+"
+:
+"AC01"
+, // 身份权威代码 "
+registrant"
+:
+"COMP"
+, // 注册者/
+, // 注册年份（2025 年） "
+packageSerial"
+:
+"00012345"
+, // 包/账户序列号 "instanceSerial"
+:
+"005678"
+, // 实例序列号 "
+checksum
+"
+:
+"X7A3" // 校验和（模 97-10） }
+图 5. SMCP 结构化⾝份代码⽰例。
+以及⽀持性⽂档。注册服务根据任务敏感性和部署环境评估⻛险和所需证据，验证所有证明，然后创
+建注册条⽬，分配⾝份代码，并将验证信息快照作为基线。
+同样地，⽤⼾和组织必须完成注册和验证（可能利⽤现有的 IAM/IDaaS 基础设施），将账⼾属性、组
+织关系和基本授权纳⼊统⼀⾝份域。⼯具和资源服务在被添加到能⼒⽬录或由 SMCP 调⽤前必须注
+册，并披露提供者/操作者、能⼒敏感性和合规边界。模型和数据集必须声明训练数据来源、使⽤限
+制和敏感标签。这创建了⼀个包含⽤⼾、代理、⼯具、模型、数据和组织的统⼀图谱，⽀持授权链、
+访问控制和审计追踪。
+⼀旦注册，独⽴凭证发⾏服务会为每个实体⽣成数字凭证，形式为公钥证书或可验证凭证，包含⾝份
+代码、类型、提供者/授权者信息、能⼒范围、权限级别、安全/合规属性和公钥引⽤。发⾏后，⾝份
+代码和凭证会返回⽤于安全存储和使⽤。只有经过此过程，实体的数字⾝份才被视为激活并有权参与
+SMCP 操作。为防⽌“注册⼀次，永不更新”的⻛险，SMCP ⽀持统⼀的更新、锁定和撤销机制。当
+代理的实现、能⼒或环境发⽣显著变化时，会触发⾝份更新过程（⾝份代码保持不变，注册/账⼾信
+息更新，凭证可能被轮换）。⼯具/资源服务在能⼒/敏感性/操作员变更⽅⾯遵循相似的流程。对于不
+当⾏为、凭证泄露或委托⼈撤销，⾝份账⼾可能会被锁定或停⽤，同时保留完整的审计跟踪以符合合
+规性和法医审查。
+4.2 会话建⽴和相互认证
+在 SMCP 中，安全会话通过实体之间的相互认证过程建⽴，该过程基于可信组件注册表中提供的统
+⼀数字⾝份和凭证基础设施。这种⽅法确保了会话中的双⽅能够可靠地验证彼此的⾝份。然后，每个
+会话都与⼀个可验证的安全上下⽂相关联，该上下⽂作为所有安全交互和整个协议中上下⽂信息传输
+的基础。
+4.2.1 ⾝份验证和相互验证。在跨实体交互过程中，信任的建⽴不仅仅依赖于请求负载，⽽是通过标
+准化的⾝份验证和断⾔流程：
+·当主体发起请求时，依赖⽅评估其访问控制策略以确定所需的⾝份验证强度（例如，仅代理⾝
+份，或额外的⼯具/模型信任属性）。
+·在提出挑战时，请求⽅组装适当的凭证包，对动态挑战进⾏签名，并呈现它们（例如，通过相
+互 TLS 或应⽤级断⾔）。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+10 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+·The verifier (identity service or relying party) checks credential signatures, trust chains,
+validity, revocation, and ensures scope matches the request. For delegation, registry records
+are used to validate the full authorization chain from delegator to current actor.
+·After verification, an authentication assertion is generated, including result, assurance level,
+subject identity, delegator summary, unique ID, and timestamp. The relying party uses this
+assertion and local policy to decide on access, privileges, further checks, or session setup.
+With unified digital identity, a Trusted Component Registry, and trust infrastructure across all
+entity types, SMCP ensures that all protocol-level identifiers (agentId
+,
+toolServiceId
+,
+modelId
+,
+datasetId
+, etc.) can be traced to a registered, auditable trusted component. This provides a consis tent, measurable trust layer for all cross-boundary interactions.
+4.2.2 Session Initialization and Security Context Binding. After mutual authentication is success fully completed, a dedicated session is established between the interacting entities. At this stage,
+SMCP generates a session-specific security context that aggregates essential security semantics,
+including the identities of both parties, the verified delegation chain, risk level, session identifiers,
+and relevant metadata. This security context receives a unique identifier, such as sessionId or
+callChainId
+, and is cryptographically bound to the session using the secure key material ne gotiated during authentication. The security context is explicitly associated with all subsequent
+messages, task requests, and tool invocations within the session. This association ensures that
+every operation can be traced back to the original authentication event and that context integrity is
+maintained throughout the invocation chain. If the session is interrupted, expires, or is terminated,
+the associated security context is invalidated to prevent unauthorized reuse. Through this mecha nism, all downstream operations inherit a consistent and auditable security baseline, supporting
+end-to-end access control, policy enforcement, and auditability across the entire SMCP workflow.
+4.3 Security Context
+4.3.1 Definition and Design Principles. Building on digital identity and trust infrastructure, SMCP
+defines a unified security context structure at the protocol abstraction layer and requires that this
+context be explicitly carried by or be traceable from core interaction elements such as sessions,
+tasks, messages, and tool invocations. The unified security context consolidates security semantics
+that are scattered across different components and boundaries into a set of common fields, thus
+providing a shared language at the protocol level for end-to-end authentication, authorization
+control, and audit tracing. Table 4 presents the main fields of this security context.
+This unified security context is not intended to replace the field definitions in existing standards.
+Instead, it integrates with current structures in two ways. First, for existing session, task, and
+message structures such as sessionId
+,
+taskId
+, and id in agent interaction standards, SMCP
+attaches references or digests of the security context by extending metadata or security extension
+fields. Second, for tool capability invocations and responses, SMCP separates the security context
+into invocation metadata, which is transmitted together with the tool invocation payload. Through
+this mechanism, whether for model-oriented context construction, resource-oriented capability
+access, or long-chain invocations involving multiple components, all events can be represented as
+occurring under a unified security context and endorsed by the Trusted Component Registry. This
+approach provides a consistent security semantic foundation for subsequent access control, risk
+management, and audit tracing.
+4.3.2 Roles and Objects in SMCP. The runtime environment of SMCP involves four core roles:
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+10 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+·验证器（⾝份服务或受信任⽅）检查凭证签名、信任链、有效性、吊销情况，并确保范围与请
+求匹配。对于授权委托，使⽤注册表记录来验证从委托⼈到当前⾏为者的完整授权链。
+·验证后，会⽣成⼀个⾝份验证断⾔，包括结果、保证级别、主体⾝份、委托⼈摘要、唯⼀ ID 和
+时间戳。受信任⽅使⽤此断⾔和本地策略来决定访问权限、权限、进⼀步检查或会话设置。
+通过统⼀的数字⾝份、可信组件注册表以及跨所有实体类型的信任基础设施，SMCP 确保所有协议级
+标识符（agentId、toolServiceId、modelId、datasetId 等）都可以追溯到已注册、可审计的可信组
+件。这为所有跨边界交互提供了⼀个⼀致、可衡量的信任层。
+4.2.2 会话初始化和安全上下⽂绑定。在相互认证成功后
+完全完成，在交互实体之间建⽴专⽤会话。在此阶段，SMCP ⽣成⼀个会话特定的安全上下⽂，该上
+下⽂聚合了必要的安全语义，包括双⽅的⾝份、验证的委托链、⻛险级别、会话标识符和相关元数
+据。此安全上下⽂接收⼀个唯⼀标识符，例如 sessionId 或 callChainId，并使⽤在认证过程中协商的
+安全密钥材料对其进⾏加密绑定。安全上下⽂明确关联到会话中所有后续消息、任务请求和⼯具调
+⽤。这种关联确保每个操作都可以追溯到原始的认证事件，并且在调⽤链中始终保持上下⽂完整性。
+如果会话中断、过期或终⽌，关联的安全上下⽂被使⽆效，以防⽌未经授权的重复使⽤。通过这种机
+制，所有下游操作继承⼀致且可审计的安全基线，⽀持端到端访问控制、策略执⾏和整个 SMCP ⼯作
+流程的可审计性。
+4.3 安全上下⽂
+4.3.1 定义和设计原则。基于数字⾝份和信任基础设施，SMCP 在协议抽象层定义了⼀个统⼀的安全
+上下⽂结构，并要求该上下⽂被显式携带或可从会话、任务、消息和⼯具调⽤等核⼼交互元素中追
+踪。统⼀的安全上下⽂将分散在不同组件和边界上的安全语义整合为⼀组通⽤字段，从⽽在协议级别
+为端到端认证、授权控制和审计追踪提供了⼀种共享语⾔。表 4 展⽰了该安全上下⽂的主要字段。
+此统⼀安全上下⽂并⾮旨在取代现有标准中的字段定义。相反，它通过两种⽅式与当前结构集成。⾸
+先，对于现有会话、任务和消息结构（如 sessionId、taskId 和 agent 交互标准中的 id），SMCP 通
+过扩展元数据或安全扩展字段附加安全上下⽂的引⽤或摘要。其次，对于⼯具能⼒调⽤和响应，
+SMCP 将安全上下⽂分离为调⽤元数据，该元数据与⼯具调⽤有效负载⼀起传输。通过这种机制，⽆
+论是⾯向模型的上下⽂构建、⾯向资源的 capability 访问，还是涉及多个组件的链式调⽤，所有事件
+都可以表⽰为在统⼀安全上下⽂下发⽣，并由可信组件注册表背书。这种⽅法为后续的访问控制、⻛
+险管理和审计追踪提供了统⼀的安全语义基础。
+4.3.2 SMCP 中的⻆⾊和对象。SMCP 的运⾏环境涉及四个核⼼⻆⾊：
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+SMCP: Secure Model Context Protocol 11
+Table 4. Unified Security Context Fields in SMCP.
+Field Example Name Description
+Session Identifier sessionId
+A session ID shared across messages, tasks, and invocations, cor responding to the session concept in agent interaction standards.
+Call Chain Identifier callChainId
+A globally unique ID for a user task, used for end-to-end au ditability across agents and tools.
+Delegation Chain delegatorChain
+A summary of the authorization chain from user or organiza tion through the entry agent to the current actor, supporting
+accountability and policy enforcement.
+Caller Identity callerAgentId
+The identity code of the agent initiating the current request,
+bound to the identity management domain and trusted compo nent registry.
+Peer Identity peerId
+The identity of the interaction peer (tool service, model, or data
+service), used for mutual authentication and access control.
+Authentication Assertion authnAssertionId
+Reference to the most recent authentication assertion, used to
+prove the current session or channel’
+s assurance level.
+Risk Level riskLevel
+The risk classification for the current task or invocation (e.g.,
+low, medium, high, critical), driving adaptive authentication and
+authorization strategies.
+Policy Reference policyRef
+A pointer to the applicable set of access control and compliance
+policies, used for decision explanation and auditing.
+Data Sensitivity dataSensitivity
+The sensitivity level of data involved in this interaction, con straining access to the minimum necessary.
+Timestamp Protection timestamp, nonce Used with underlying TLS or message signatures to resist replay
+and ordering attacks.
+·Invoking Agent: This includes both entry-point agents and downstream business agents.
+These agents initiate capability invocations via the tool access component, with their identities
+mapped to corresponding agentId and trust metadata within the SMCP identity system.
+·Tool Service: This component connects to the tool catalog and runtime environment, is
+responsible for receiving invocation requests, orchestrating specific tool instances, and
+aggregating results. It is typically identified externally by a toolServiceId.
+·Tool Instance: These are the operational units that perform actual actions within the resource
+access domain, such as database queries, API calls, or local script executions.
+·Policy Engine: This component works in conjunction with identity and authorization
+services. It makes decisions on authorization, downgrade, or denial based on the security
+context, tool security properties, and relevant component metadata.
+Building on these roles, the protocol revolves around three main types of objects: Tool Capa bility Description
+,
+Tool Invocation Request, and Tool Execution Response, as illustrated
+in Table 5. SMCP requires explicit embedding of security context fields (such as callChainId
+,
+delegatorChain
+,
+riskLevel
+, etc.) within these objects, and associates them with the identity and
+capability metadata of each component. This ensures that the complete invocation chain, from user
+to agent to tool, maintains a consistent security semantic throughout.
+Through these objects, SMCP brings the high-level security semantics down to the tool layer, so
+that each invocation can be verified and audited in terms of who authorized it, the associated risk
+level, and what capability and underlying components have been accessed.
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 11
+表 4. SMCP 中的统⼀安全上下⽂字段。
+字段 ⽰例名称描述
+会话标识符 sessionId ⼀个在消息、任务和调⽤中共享的会话 ID，对应于代理交互标准中
+的会话概念。
+调⽤链标识符 callChainId ⼀个⽤于⽤⼾任务的全球唯⼀ ID，⽤于跨代理和⼯具的端到端可审
+计性。
+委托链 delegatorChain
+⽤⼾或组织通过⼊⼝代理到当前⾏为者的授权链摘要，⽀持责任追
+究和政策执⾏。
+调⽤者⾝份 callerAgentId
+发起当前请求的代理的⾝份代码，绑定到⾝份管理域和可信组件注
+册表。
+对等⾝份 peerId 交互对等的⾝份（⼯具服务、模型或数据服务），⽤于相互认证和访
+问控制。
+认证断言 authnAssertionId 对最近⼀次认证断⾔的引⽤，⽤于证明当前会话或通道的保证级
+别。
+⻛险等级 风险等级
+当前任务或调⽤的⻛险分类（例如：低、中、⾼、关键），驱动⾃适
+应认证和授权策略。
+策略引⽤ policyRef 指向适⽤的访问控制和合规策略集的指针，⽤于决策解释和审计。
+数据敏感性 dataSensitivity
+涉及此交互的数据的敏感程度，限制访问⾄最低必要程度。
+时间戳保护 时间戳，随机数
+与底层 TLS 或消息签名⼀起使⽤，以抵抗重放和顺序攻击。
+·调⽤代理：这包括⼊⼝点代理和下游业务代理。这些代理通过⼯具访问组件发起能⼒调⽤，其⾝
+份映射到 SMCP ⾝份系统中的相应 agentId 和信任元数据。
+·⼯具服务：该组件连接到⼯具⽬录和运⾏时环境，负责接收调⽤请求、协调特定⼯具实例以及
+聚合结果。它通常通过 toolServiceId 在外部进⾏标识。
+·⼯具实例：这些是执⾏资源访问域中实际操作的单元，例如数据库查询、API 调⽤或本地脚本执
+⾏。
+·策略引擎：该组件与⾝份和授权服务协同⼯作。它根据安全上下⽂、⼯具安全属性和相关组件
+元数据，对授权、降级或拒绝做出决策。
+基于这些⻆⾊，协议围绕三种主要类型的对象：⼯具能⼒描述、⼯具调⽤请求和⼯具执⾏响应，如表
+5 所⽰。SMCP 要求在这些对象中明确嵌⼊安全上下⽂字段（如 callChainId、delegatorChain、
+riskLevel 等），并将它们与每个组件的⾝份和能⼒元数据相关联。这确保了从⽤⼾到代理再到⼯具的
+完整调⽤链在整个过程中保持⼀致的安全语义。
+通过这些对象，SMCP 将⾼级别的安全语义下放到⼯具层，以便每次调⽤都可以根据授权者、相关⻛
+险级别以及访问了哪些能⼒和底层组件来进⾏验证和审计。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+12 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+Table 5. Core Objects and Their Roles in SMCP.
+Object Example Identifiers Description
+Tool Capability Description toolId, sensitivityLevel
+f
+U
+o
+n
+r
+i
+a
+q
+c
+u
+c
+e
+e
+l
+s
+y
+s
+id
+co
+e
+n
+n
+t
+t
+r
+ifi
+o
+e
+l a
+s
+n
+th
+d
+e
+ri
+t
+s
+o
+k
+o
+a
+l
+s
+a
+s
+n
+e
+d
+ss
+it
+m
+s
+e
+s
+n
+ec
+t
+u
+b
+r
+e
+it
+fo
+y
+r
+a
+e
+tt
+in
+ri
+v
+b
+o
+u
+c
+t
+a
+e
+t
+s
+i
+,
+o
+u
+n
+s
+.
+ed
+Tool Invocation Request toolCallId, callChainId
+Binds a unified security context and component identity
+references, enabling each invocation to be traced back to
+upstream sessions, tasks, and underlying components.
+Tool Execution Response actionCode, auditRef
+Returns the execution status and result summary, and pro vides audit record references for the resource access domain
+and related components.
+4.3.3 Security Extensions for Tool Capabilities. Building upon existing tool capability descriptions
+(such as name, input/output patterns, invocation quotas, etc.), SMCP introduces a set of security
+attributes for each tool to drive authorization decisions and invocation downgrade strategies. Table 6
+presents an illustrative set of such fields. Figure 6 is an example of a tool capability description
+with the security extension fields included alongside the standard capability metadata:
+Table 6. Security Extension Fields for Tool Capabilities (Illustrative).
+Field Example Name Description
+Sensitivity Level sensitivityLevel
+Categorizes tools into public, internal, sensitive, or highly
+sensitive levels, each corresponding to different invocation
+constraints.
+Minimum Identity Assurance minIdentityAssurance
+Requires the invoker to have at least a certain authentica tion strength (can be mapped to LoA or custom levels in
+this framework).
+Allowed Delegators allowedDelegators
+Specifies which subject types or tenants may access the
+tool via agent delegation (e.g., only users from the same
+organization are allowed).
+Data Policy dataPolicy
+Indicates whether results may be stored long-term, included
+in agent long-term memory, used for model retraining, or
+require redaction; can be linked to compliance labels of
+underlying resources.
+Audit Requirement auditRequirement
+Specifies the minimum granularity for invocation chain
+records (e.g., whether to record parameter summaries, result
+summaries, and caller context).
+Tool services can fetch and cache such security capability descriptions when loading tool catalogs.
+Subsequently, each time an SMCP tool invocation request is received, the tool service matches the
+security context in the invocation message with these fields, thereby achieving access control and
+risk evaluation in a unified semantic framework.
+4.3.4 Security Semantics of SMCP Invocation and Response. SMCP treats a tool invocation as a
+controlled capability access request, issued by an agent on behalf of an upstream subject, within
+a specific delegation chain and risk configuration. Table 7 summarizes the key security fields in
+SMCP invocation and response messages.
+During the invocation phase, the agent constructs an SMCP tool invocation request based on
+the security context formed in the current session, binding task semantics with tool capabilities,
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+12 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+表 5. SMCP 中的核⼼对象及其作⽤。
+对象 ⽰例标识符 描述
+工具能力描述 toolId, sensitivityLevel 唯
+估
+⼀
+。
+标识⼯具及其安全属性，⽤于调⽤前的访问控制和⻛险评
+工具调用请求 toolCallId, callChainId
+绑定统⼀的安全上下⽂和组件⾝份引⽤，使每次调⽤都能追溯到
+上游会话、任务和底层组件。
+工具执行响应 actionCode, auditRef
+返回执⾏状态和结果摘要，并为资源访问域和相关组件提供审计
+记录参考。
+4.3.3 ⼯具功能的扩展。基于现有的⼯具功能描述（如名称、输⼊/输出模式、调⽤配额等），SMCP 为
+每个⼯具引⼊了⼀套安全属性，⽤于驱动授权决策和调⽤降级策略。表 6 展⽰了⼀组此类字段。图 6
+是⼀个包含安全扩展字段的⼯具功能描述⽰例，以及标准功能元数据：
+表 6. ⼯具功能的扩展字段（⽰例）。
+字段 ⽰例名称 描述
+敏感级别 敏感度级别
+将⼯具分为公共、内部、敏感或⾼度敏感级别，每个级别对应
+不同的调⽤约束。
+最小身份保证 minIdentityAssurance
+要求调⽤者⾄少具有⼀定的认证强度（可以映射到此框架中的
+LoA 或⾃定义级别）。
+允许的委托者 允许的委托者/被授权的代理人
+指定哪些主题类型或租⼾可以通过代理委托访问该⼯具（例
+如，仅允许来⾃同⼀组织的⽤⼾）。
+数据策略 数据政策
+指⽰结果是否可能⻓期存储、包含在代理⻓期记忆中、⽤于模
+型再训练或需要编辑；可以链接到底层资源的合规标签。
+审计要求 审计要求
+指定调⽤链记录的最⼩粒度（例如，是否记录参数摘要、结果
+摘要和调⽤者上下⽂）。
+⼯具服务在加载⼯具⽬录时可以获取并缓存此类安全能⼒描述。随后，每当收到⼀个 SMCP ⼯具调⽤
+请求时，⼯具服务会将调⽤消息中的安全上下⽂与这些字段进⾏匹配，从⽽在⼀个统⼀的语义框架内
+实现访问控制和⻛险评估。
+4.3.4 SMCP 调⽤和响应的安全语义。SMCP 将⼯具调⽤视为⼀个受控能⼒访问请求，由代理代表上游
+主体在特定的委派链和⻛险配置下发出。表 7 总结了 SMCP 调⽤和响应消息中的关键安全字段。
+在调⽤阶段，代理基于当前会话中形成的 безопасности контекст构建⼀个 SMCP ⼯具调⽤请
+求，将任务语义与⼯具能⼒绑定，
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+SMCP: Secure Model Context Protocol 13
+1
+2
+3
+4
+5
+6
+7
+8
+9
+1011
+1213141516171819
+{
+"type": " SMCP.ToolCapability",
+"toolId": "TOOL-SALES-QUERY-001",
+"version": "2025.3",
+"displayName": "Sales Aggregated Metrics Query",
+"description": "Query aggregated sales metrics for a given time range and region.",
+"io": {
+" inputSchemaRef": "schema://tools/sales query/input-v1",
+" outputSchemaRef": "schema://tools/sales query/output- v1" },
+"security": {
+" sensitivityLevel": "internal",
+" minIdentityAssurance": "aal2",
+" allowedDelegators": [
+{
+"subjectType": "user",
+"allowedOrgIds": [
+"ORG- ACME" ],
+" allowedRoles": [" data_analyst", "sales_analyst"]
+},
+{
+"subjectType": "agent",
+"allowedAgentIds": [
+"AGENT- REPORT-ENTRY-
+0001"
+]
+}
+],
+"dataPolicy": {
+" allowLongTermStorage": true,
+" allowIntoAgentLongTermMemory": false,
+" allowForModelTraining": false,
+" requiresRedaction": false },
+"auditRequirement": {
+" recordParamsSummary": true,
+" recordResultSummary": true,
+" recordCallerContext": true,
+" minRetentionDays": 365
+}
+}
+}
+2021
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+Fig. 6. SMCP Tool Capability.
+Table 7. Key Security Fields in SMCP Invocation and Response.
+Direction Field Description
+Invocation Request
+agentId,
+authnAssertionId
+Specifies the invoking agent’
+s identity and the current identity assurance
+status, which can be jointly verified with the tool’
+s minIdentityAssurance
+requirement.
+delegatorChain,
+riskLevel
+dataSensit
+,
+ivity
+Propagates the delegation chain and risk semantics from upstream sessions
+to the tool layer, serving as the basis for authorization and downgrade
+decisions.
+callChainId,
+sessionId, taskId,
+toolCallId
+Binds the current tool invocation to the global invocation chain, session, and
+specific task, forming a traceable invocation segment that can be correlated
+with tool-side audit records.
+toolId, toolVersion,
+toolInput
+Describes the capability and parameters compatible with existing tool
+interfaces to drive the actual execution.
+Tool Response
+actionCode, result Indicates the execution status and result data (or summary), compatible
+with existing invocation patterns.
+timestamp,
+signature
+Timestamp and integrity protection information signed by the tool service
+or security gateway, ensuring result non-repudiation.
+auditRef Reference to the tool-side local audit record, which can be associated with
+callChainId and related component identifiers for end-to-end traceability.
+security constraints, and component identities. Upon completing the execution of a specific tool
+instance, the tool service returns the result and relevant security metadata to the invoking agent
+through an SMCP tool execution response message.
+4.4 Policy Enforcement and Least-Privilege Control
+SMCP leverages the unified security context and capability model to support fine-grained policy
+enforcement and the principle of least privilege throughout the tool invocation lifecycle. Every
+invocation request is evaluated by the policy engine, which makes decisions based on attributes
+such as agent identity, delegator chain, risk level, data sensitivity, and permitted operations.
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 13
+1
+2
+3
+4
+5
+6
+7
+8
+9
+1011
+12
+13
+141516
+171819 { "type": "SMCP.ToolCapability", "toolId": "TOOL-SALES-QUERY-001",
+"version": "2025.3", "displayName": "销售汇总指标查询", "description": "查
+询指定时间范围和区域的汇总销售指标。",
+"io": { "inputSchemaRef": "schema://tools/salesquery/input-v1", "outputSchemaRef": "schema://tools/salesquery/output-v1" }, "security": { "sensitivityLevel": "内部",
+"minIdentityAssurance": "aal2",
+"allowedDelegators": [
+{ "subjectType": "用户", "allowedOrgIds": ["ORG ACME"],
+"allowedRoles": ["数据分析师", "销售分析师"] }, { "subjectType": "代理", "allowedAgentIds": ["AGENT-REPORT ENTRY0001"]}
+}
+],“dataPolicy”: { “allowLongTermStorage”: true,
+“allowIntoAgentLongTermMemory”: false,
+“allowForModelTraining”: false, “requiresRedaction”: false
+}, “auditRequirement”: { “recordParamsSummary”: true,
+“recordResultSummary”: true, “recordCallerContext”: true,
+“minRetentionDays”: 365 } }
+2021
+22
+23242526
+27
+2829
+3031323334
+353637
+383940
+图 6. SMCP ⼯具功能。
+表 7. SMCP 调⽤和响应中的关键安全字段。
+⽅向 字段 描述
+调⽤请求
+agentId，
+authnAssertionId
+指定调⽤代理的⾝份以及当前⾝份保证状态，可与⼯具的
+minIdentityAssurance 要求共同验证。
+delegatorChain，
+⻛险等级,
+数据敏感性
+将上游会话中的委托链和⻛险语义传递到⼯具层，作为授权和降级决策的基
+础。
+callChainId，
+sessionId、taskId、
+toolCallId
+将当前⼯具调⽤与全局调⽤链、会话和特定任务绑定，形成⼀个可追溯的调⽤
+段，可与⼯具端的审计记录相关联。
+toolId、toolVersion、
+toolInput
+描述与现有⼯具接⼝兼容的功能和参数，以驱动实际执⾏。
+⼯具响应
+actionCode, result 指⽰执⾏状态和结果数据（或摘要），与现有调⽤模式兼容。
+时间戳，
+签名/署名
+由⼯具服务或安全⽹关签署的时间戳和完整性保护信息，确保结果不可否认。
+auditRef ⼯具端本地审计记录的引⽤，可以与调⽤链 ID 和相关组件标识符相关联，以实
+现端到端的可追溯性。
+安全约束和组件标识符。在完成特定⼯具实例的执⾏后，⼯具服务通过 SMCP ⼯具执⾏响应消息将结
+果和相关安全元数据返回给调⽤代理。
+4.4 策略执⾏和最⼩权限控制
+SMCP 利⽤统⼀的上下⽂和权限模型来⽀持在整个⼯具调⽤⽣命周期中实施细粒度策略和最⼩权限原
+则。每个调⽤请求都会由策略引擎进⾏评估，该引擎根据代理⾝份、委托链、⻛险级别、数据敏感性
+和允许的操作等属性来做出决策。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+14 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+4.4.1 End-to-End Policy Enforcement Workflow. As shown in Figure 7, SMCP policy enforcement
+is tightly integrated into the end-to-end tool invocation workflow:
+Caller Agent
+Caller Agent
+Tool Service
+Tool Service
+Policy Engine
+Policy Engine
+Sensitive Resource
+Sensitive Resource
+getToolCapabilities(toolId)
+ToolCapabilities(toolId, sensitivityLevel,
+minIdentityAssurance, allowedDelegators, ...)
+SACP.ToolCallRequest(toolCallId, agentId, toolId,
+securityContext, toolInput)
+EvaluatePolicy(requestContext,
+securityContext, toolCapability)
+Decision
+(PERMIT / DENY /
+PERMIT WITH OBLIGATIONS)
+a l t = = D E N Y
+SACP.ToolCallResponse(actionCode=
+"DENY"
+,
+reason, auditRef)
+== PERMIT or PERMIT_WITH_OBLIGATIONS
+ResourceRequest(toolId, toolInput,
+securityLabels)
+ResourceResponse(rawResult)
+applyObligations
+(masking/aggregation/limits)
+createAuditRecord(auditRef, callChainId)
+SACP.ToolCallResponse(actionCode=
+"SUCCESS"/"DOWNGRADED"
+,
+resultSummary, appliedSecurity, auditRef, signature)
+Fig. 7. Sequence Diagram of Secure Agent
+↔
+Tool Interoperability in SMCP.
+(1) Capability Discovery: The caller agent initiates by retrieving tool capability descriptions,
+which include both functional and security-relevant metadata (such as sensitivity level,
+allowed delegators, and identity assurance thresholds).
+(2) Invocation Request Construction: The agent constructs a tool invocation request, embed ding the comprehensive security context (e.g.,
+callChainId
+,
+delegatorChain
+,
+riskLevel
+,
+dataSensitivity, and identity fields).
+(3) Policy Evaluation: Upon receiving the request, the tool service forwards the relevant
+security context and tool capability information to the policy engine.
+(4) Decision Making: The policy engine evaluates the request against configured authorization
+policies, considering both the runtime security context and the static properties of the tool.
+It returns a decision of PERMIT
+,
+DENY
+, or PERMIT WITH OBLIGATIONS (such as masking,
+aggregation, or rate limits).
+(5) Enforcement and Obligation Application: If permitted, the tool service executes the
+tool call, applying any obligations imposed by the policy engine. If denied, a detailed denial
+response is returned, including an audit reference.
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+14 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+4.4.1 端到端策略执⾏⼯作流。如图 7 所⽰，SMCP 策略执⾏紧密集成到端到端⼯具调⽤⼯作流中：
+调⽤代理
+调⽤代理
+⼯具服务
+⼯具服务
+策略引擎
+策略引擎
+敏感资源
+敏感资源
+getToolCapabilities(toolId)
+ToolCapabilities(toolId, sensitivityLevel,
+minIdentityAssurance, allowedDelegators, ...)
+SACP.ToolCallRequest(toolCallId, agentId, toolId,
+securityContext, toolInput)
+EvaluatePolicy(requestContext,
+securityContext, toolCapability)
+决策
+(允许 / 拒绝 / 允许带有义务)
+alt = Denny
+SACP.ToolCallResponse(actionCode=
+"DENY"
+, reason,
+auditRef)
+== 许可证或附有义务的许可证
+ResourceRequest(toolId, toolInput,
+securityLabels)
+ResourceResponse(rawResult)
+applyObligations (掩码/聚合/限制)
+createAuditRecord(auditRef, callChainId)
+SACP.ToolCallResponse(actionCode=
+"SUCCESS"/"降级"
+,
+resultSummary, appliedSecurity, auditRef, signature)
+图 7. SMCP 中安全代理 ↔ ⼯具互操作的时序图
+(1) 能⼒发现：调⽤⽅代理通过检索⼯具能⼒描述来启动，这些描述包括功能和安全相关的元数据
+（例如敏感度级别、允许的委托者以及⾝份保证阈值）。
+(2) 调⽤请求构建：代理构建⼀个⼯具调⽤请求，嵌⼊全⾯的安全上下⽂（例如，callChainId、
+delegatorChain、⻛险级别、数据敏感性和⾝份字段）。
+(3) 策略评估：在收到请求后，⼯具服务将相关的安全上下⽂和⼯具能⼒信息转发给策略引擎。
+(4) 决策制定：策略引擎根据配置的授权策略评估请求，同时考虑运⾏时安全上下⽂和⼯具的静态属
+性。它返回 PERMIT、DENY 或 PERMIT WITH OBLIGATIONS（例如掩码、聚合或速率限制）的
+决策。
+(5) 执⾏和义务应⽤：如果允许，⼯具服务将执⾏⼯具调⽤，并应⽤策略引擎强加的任何义务。如
+果拒绝，将返回⼀个详细的拒绝响应，包括审计参考。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+SMCP: Secure Model Context Protocol 15
+(6) Audit and Response: All actions, including policy decisions and applied obligations, are
+logged with references to the security context for subsequent auditing. The agent receives
+the response, which includes both result data and the relevant security and audit metadata.
+This sequence ensures that every tool invocation is subject to dynamic, context-aware policy
+evaluation, and that the minimum required permissions are strictly enforced at each step. The
+explicit embedding of audit references and security outcomes in the response messages further
+supports traceability and compliance.
+4.4.2 Policy Evaluation Mechanisms and Enforcement Architecture. The policy enforcement archi tecture of SMCP is fundamentally anchored in the propagation of an explicit, structured security
+context with every invocation across the protocol chain. Within this framework, the policy en gine acts as the Policy Decision Point (PDP), while agents and tool services function as Policy
+Enforcement Points (PEPs). This separation of roles enables a modular and auditable security model,
+ensuring that policy enforcement remains consistent and traceable across diverse deployment
+environments. Unlike traditional static access control, SMCP evaluates each tool invocation dy namically based on the complete security context. This context includes the full delegation chain,
+risk level, data sensitivity, and the identity and trust level of every participant in the call chain.
+The policy language enables fine-grained constraints on any of these attributes; for instance, a
+policy can permit access to a sensitive function only if the risk level is below
+“
+medium
+”
+and the
+delegation chain contains a verified human. Beyond simple allow or deny outcomes, policies may
+impose obligations such as result masking, rate limiting, or requiring additional verification steps,
+all tightly bound to context attributes. Every decision and enforcement action is linked to unique
+identifiers in the context, supporting end-to-end traceability and compliance.
+" policyRef": "POLICY- ORG-ACME-REPORTING- USER" },
+"tool": {
+"toolId": "TOOL- SALES- QUERY- 001",
+"toolVersion": "2025.3",
+"capabilityRef":
+" capability:sales_aggregated_metrics",
+"requestedSensitivityLevel": "internal",
+"requestedScopes": ["sales_reporting"],
+"minIdentityAssurance": "aal2" },
+"toolInput": {
+"timeRange": "2025- Q3",
+"region": [
+"NA"],
+"metrics": [
+"revenue", "orders", " churn_rate" ],
+"groupBy": [
+"month"],
+"filters": {
+" excludeTestAccounts": true
+}
+},”constraints": {
+"maxExecutionTimeMs": 5000,
+"maxRows": 5000,
+"allowPartialResult": true
+}
+}
+1
+2
+3
+4
+5
+6
+7
+8
+9
+1011121314151617181920212223242526272829
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+404142434445464748495051525354555657
+{
+" type": "SMCP.ToolCallRequest",
+" toolCallId": "TC- 2025- 12- 19- 000123",
+" timestamp": "2025-12-19T10:17:05Z",
+" caller": {
+"agentId": "AGENT-REPORT- ENTRY-0001",
+"agentType": "entry_agent"
+},
+" securityContext": {
+"sessionId": "S-
+7F3K9L2M8Q1Z4X6C0D5B8N2R4T6Y8W1",
+"taskId": "T- 2025-12- 19- 000089",
+"callChainId": "CC- 2025- 12- 19- 00004567",
+"authnAssertionId": "AA- 9Z2X7C4V1B6N3M8Q5",
+"delegatorChain": [
+{
+" subjectId": "U-ORG- ACME-00123",
+" subjectType": "user",
+" role": " data_analyst"
+},
+{
+" subjectId": "AGENT- REPORT-ENTRY-0001",
+" subjectType": "agent",
+" role": " entry_agent"
+}
+],
+"riskLevel": "medium",
+"dataSensitivity": "internal",
+Fig. 8. Example of SMCP Tool Invocation Request. This includes delegation chain, risk level, data sensitivity,
+and capability constraints, which are evaluated by the policy engine to determine access and obligations.
+Figure 8 illustrates a typical SMCP tool invocation request. Key fields such as delegatorChain
+,
+riskLevel
+, and dataSensitivity provide the basis for policy decisions by the engine, which
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 15
+(6) 审计与响应：所有操作，包括策略决策和应⽤的义务，都会记录并参考安全上下⽂以供后续审
+计。代理接收响应，其中包含结果数据以及相关的安全和审计元数据。
+该序列确保每次⼯具调⽤都受到动态的、上下⽂感知的策略评估，并且在每⼀步都严格执⾏最低所需
+权限。在响应消息中明确嵌⼊审计参考和安全结果进⼀步⽀持可追溯性和合规性。
+4.4.2 策略评估机制和执⾏架构。
+SMCP 的架构从根本上锚定在协议链中的每次调⽤中传播明确的、结构化的安全上下⽂。在此框架
+内，策略引擎充当策略决策点（PDP），⽽代理和⼯具服务充当策略执⾏点（PEP）。这种⻆⾊的分离
+实现了⼀个模块化和可审计的安全模型，确保策略执⾏在不同部署环境中保持⼀致和可追溯。与传统
+的静态访问控制不同，SMCP 根据完整的安全上下⽂动态评估每个⼯具调⽤。此上下⽂包括完整的授
+权链、⻛险级别、数据敏感性以及调⽤链中每个参与者的⾝份和信任级别。策略语⾔允许对任何这些
+属性进⾏细粒度约束；例如，策略可以仅当⻛险级别低于敏感功能时才允许访问。w “中等”级别，
+并且委托链中包含经过验证的⼈类。除了简单的允许或拒绝结果外，策略还可能施加义务，例如结果
+遮罩、速率限制或要求额外的验证步骤，所有这些都紧密绑定到上下⽂属性。每个决策和执⾏操作都
+与上下⽂中的唯⼀标识符相关联，⽀持端到端的可追溯性和合规性。
+"
+policyRef"
+:
+"POLICY-ORG-ACME-REPORTING-USER" },
+“工具”
+：{ “工具 ID”
+：
+“TOOL-SALES-QUERY-001”
+，
+“工具版本”
+：
+“2025.3” }
+"
+capabilityRef"
+:
+"
+capability:sales aggregated metrics
+"
+"请求的敏感级别"
+:
+"内部"
+,
+"请求的范围"
+: ["销售报告"],
+"最小身
+份保证"
+:
+"
+aal2" },
+"工具输入"
+: { "时间范围"
+:
+"2025-Q3"
+,
+"区域"
+: ["北美"],
+"指标"
+: ["收入"
+,
+"订单"
+,
+"流失率"],
+"分组依据"
+: ["月"],
+"过滤器"
+: {
+"排除测试账户"
+: true } },
+”约束”: { “最大执行时间毫秒”: 5000,
+“最
+大行数”: 5000,
+“允许部分结果”: true } }
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+{ "类型"
+:
+"SMCP.ToolCallRequest"
+,
+"toolCallId"
+:
+"TC-2025-
+12-19-000123"
+,
+"timestamp
+"
+:
+"2025-12-19T10:17:05Z"
+,
+"调用者"
+: { "
+agentId"
+:
+"AGENT-REPORT-ENTRY-0001"
+,
+"
+agentType
+"
+:
+"
+entry_agent" },
+"
+securityContext"
+: { "
+sessionId"
+:
+"S7F3K9L2M8Q1Z4X6C0D5B8N2R4T6Y8W1"
+,
+“taskId”: “T-2025-12-19-000089”
+，
+“callChainId”: “CC-2025-
+12-19-00004567”
+，
+“authnAssertionId”: “
+9Z2X7C4V1B6N3M8Q5”
+AA- ，
+“delegatorChain”: [ {
+"
+subjectId"
+:
+"U-ORG-ACME-00123"
+,
+"
+subjectType
+"
+:
+"用户"
+,
+"
+role
+"
+:
+"数据分析师"
+},
+{ "
+subjectId"
+:
+"AGENT-REPORT-ENTRY-0001"
+,
+"
+subjectType
+"
+:
+"代理"
+,
+"
+role
+"
+:
+"录入代理" } ],
+"
+riskLevel"
+:
+"中等"
+,
+"dataSensitivity
+"
+:
+"内部"
+,
+图 8. SMCP ⼯具调⽤请求⽰例。这包括授权链、⻛险等级、数据敏感性和能⼒约束，这些由策略引擎评估以确定访
+问权限和义务。
+图 8 展⽰了⼀个典型的 SMCP ⼯具调⽤请求。delegatorChain、riskLevel 和数据 Sensitivity 等关
+键字段为引擎的决策提供了基础，
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+16 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+determines whether the action is permitted, downgraded, or denied. The agentId and toolId
+fields associate the invocation with specific agent and tool entities, supporting both access control
+and audit requirements. In this example, the policy engine can enforce that only requests with an
+appropriate risk level and an allowed delegation chain are processed, and may require masking or
+other obligations if the data sensitivity demands it.
+Once the policy engine reaches a decision, the tool service must enforce the result, including
+any specified obligations. As shown in Figure 9, the tool execution response records the applied
+security policy, data handling status, and audit information. The appliedSecurity field specifies
+the sensitivity level and data policy that were enforced, while auditRef and signature ensure
+the result’
+s authenticity and end-to-end traceability. This structured response allows downstream
+systems and auditors to verify compliance with organizational and regulatory policies.
+1
+2
+3
+4
+5
+6
+7
+8
+9
+1011121314
+15161718192021222324
+25
+26272829
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+4041424344
+4546474849
+{
+" type": " SMCP.ToolCallResponse",
+" toolCallId": "TC- 2025- 12- 19- 000123",
+" timestamp": "2025-12-19T10:17:06Z",
+" status": {
+"actionCode": "SUCCESS",
+"errorCode": null,
+"errorMessage": null,
+"partial": false },
+" result": {
+"summary": "North America sales in 2025-Q3 increased by 12.4% QoQ.",
+"detailsRef": "blob://results/sales report/2025- Q3/NA/summary-v1",
+"metrics": [
+{
+" month": "2025- 07",
+" revenue": 1250000,
+" orders": 18450 },
+{
+" month": "2025- 08",
+" revenue": 1325000,
+" orders": 19120 },
+{
+" month": "2025- 09",
+" revenue": 1398000,
+" orders": 19980
+}
+]
+},
+"appliedSecurity": {
+"appliedSensitivityLevel": "internal",
+"appliedDataPolicy": "DATA-POLICY- ACME- AGG ONLY",
+"redactedFields": [],
+"requiresStepUpForNext": false },"audit": {
+"auditRef": "AUDIT- TOOL-SALES-2025-12-19-10- 17-
+06-0001",
+"signature": "sig-base64- ...",
+"signedBy": "TOOL-SALES-SERVICE",
+"signedAt": "2025-12-19T10:17:06Z",
+"hashAlgo": "SHA- 256"
+}
+}
+Fig. 9. Example of SMCP Tool Execution Response. The response details the applied security policy, actual data handling, and provides audit and signature fields to enable end-to-end traceability and compliance.
+Through this context-driven, fine-grained policy evaluation, SMCP enforces the principle of least
+privilege: at every invocation, only the minimal necessary permissions and capabilities are granted,
+and these are dynamically adjusted as context changes, ensuring robust and adaptive security.
+4.5 Audit Logging and Traceability
+Comprehensive audit logging is a cornerstone of SMCP’
+s security and compliance framework. Every
+critical protocol operation, including agent authentication, capability negotiation, policy evaluation,
+tool invocation, and response delivery, is systematically captured in the audit log with structured
+and high-fidelity metadata. Rather than serving as a passive record, the audit log is designed to
+actively support retrospective security analysis, such as detecting misconfigurations or abuse, as
+well as demonstrating compliance with regulatory or organizational policies. A distinctive feature of
+SMCP audit logging is its close integration with the security context that is propagated throughout
+each protocol interaction. Each log entry is bound to unique identifiers such as callChainId
+and auditRef
+, precise timestamps, digital signatures, and a complete contextual snapshot of the
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+16 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+确定操作是否允许、降级或拒绝。agentId 和 toolId 字段将调用与特定的代理和工具实体相关
+联，支持访问控制和审计要求。在此示例中，策略引擎可以强制执行仅处理具有适当风险级别和允
+许的委托链的请求，并且如果数据敏感性要求，可能需要掩码或其他义务。
+⼀旦策略引擎做出决策，⼯具服务必须执⾏结果，包括任何指定的义务。如图 9 所⽰，⼯具执⾏响应
+记录了应⽤的安防策略、数据处理状态和审计信息。appliedSecurity 字段指定了被强制的敏感级别
+和数据策略，⽽ auditRef 和 signature 确保了结果的完整性和端到端可追溯性。这种结构化响应允
+许下游系统和审计员验证符合组织和监管政策。
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+{ “type”: “SMCP.ToolCallResponse”
+,
+“toolCallId”:
+“TC-2025-12-19-000123”
+,
+“timestamp”: “2025-12-
+19T10:17:06Z” }
+“状态”
+：{ “操作代码”
+：
+“成功”
+，
+“错
+误代码”
+：null，
+“错误消息”
+：null，
+“是
+否为部分成功”
+：false }
+"
+result"
+: { "
+summary
+"
+:
+"2025 年第三季度北美销售额环比增长了 12.4%"
+,
+"detailsRef"
+:
+"blob://results/salesreport/2025-
+Q3/NA/summary-v1" }
+“指标”
+：[
+{
+“月份”
+：
+“2025-07”
+，
+“收入”
+：1250000，
+“订单数量”
+：18450
+},
+{
+“月份”
+：
+“2025-08”
+，
+“收入”
+：1325000，
+“订单数量”
+：19120
+},
+{
+"
+month"
+:
+"2025-09"
+“收入”
+：1398000，
+“订单数量”
+：19980
+}
+]
+},
+"
+appliedSecurity
+"
+: { "
+appliedSensitivityLevel"
+:
+"内部"
+,
+"
+appliedDataPolicy
+"
+:
+"DATA-POLICY-ACME-AGGONLY"
+,
+“redactedFields”: [],
+“requiresStepUpForNext”: false }
+"审计"
+: { "
+auditRef"
+:
+"AUDIT-TOOL-SALES-2025-12-19-10-1706-0001" }
+"签名"
+:
+"
+sig-base64-..."
+,
+"签名者"
+:
+"TOOL-SALES SERVICE"
+,
+"签名时间"
+:
+"2025-12-19T10:17:06Z"
+,
+"哈希算
+法"
+:
+"SHA-256" } }
+图 9. SMCP ⼯具执⾏响应⽰例。响应详细说明了应⽤的安全策略、实际数据处理，并提供审计和签名字段以实现
+端到端可追溯性和合规性。
+在这种基于上下⽂的细粒度策略评估中，SMCP 强制执⾏最⼩权限原则：在每次调⽤中，仅授予最必
+要的权限和能⼒，并且随着上下⽂的变化动态调整这些权限和能⼒，确保健壮和⾃适应的安全。
+4.5 审计⽇志记录和可追溯性
+全⾯的审计⽇志是 SMCP 安全与合规框架的基⽯。每个关键协议操作，包括代理认证、能⼒协商、策
+略评估、⼯具调⽤和响应交付，都会系统地被捕获到审计⽇志中，并带有结构化和⾼保真度的元数
+据。审计⽇志不仅仅作为被动记录，它被设计为主动⽀持回顾性安全分析，例如检测配置错误或滥
+⽤，以及展⽰符合监管或组织政策。SMCP 审计⽇志的⼀个显著特征是与贯穿每个协议交互过程中的
+安全上下⽂的紧密集成。每个⽇志条⽬都与唯⼀的标识符（如 callChainId 和 auditRef）、精确的时间
+戳、数字签名以及完整的上下⽂快照相关联。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+SMCP: Secure Model Context Protocol 17
+operation. This approach ensures comprehensive, end-to-end traceability and guarantees non repudiation for every action within the system.
+As summarized in Table 8, the audit log captures a broad range of key attributes, including the
+identities of all actors and subjects, detailed operation metadata, policy decisions and obligations,
+sensitivity and risk levels, result summaries, and cryptographic proofs of integrity. This compre hensive coverage enables the audit log to support real-time monitoring, automated risk detection,
+and post-incident forensic analysis, forming the foundation for both proactive and retrospective
+security controls.
+Table 8. Key Attributes Captured in SMCP Audit Log Entries.
+Attribute Category Example Fields Description Timestamps
+timestamp, signedAt Records the time of invocation, response, and log entry signing,
+supporting chronological reconstruction and non-repudiation.
+Actor and Subject Identities
+agentId, userId,
+delegatorChain, subjectId,
+subjectType, role
+Identifies the primary invoker, end user, and any delegation chain;
+distinguishes between user and agent roles for accountability and
+compliance tracking.
+Operation Details
+toolId, capabilityRef,
+actionCode, taskId, sessionId,
+callChainId, auditRef
+Describes the invoked tool, requested capability, action performed,
+and unique identifiers for the session, task, and audit chain, enabling
+granular traceability and correlation.
+Policy Decisions and Obligations
+policyRef, policyDecision,
+obligations, constraints
+Captures the applicable policy references, decisions (e.g., permit
+with obligations), imposed constraints, and obligations such as data
+masking or aggregation.
+Sensitivity and Risk Level
+requestedSensitivityLevel,
+appliedSensitivityLevel
+Indicates the sensitivity and risk classification requested and actually
+applied to the data, supporting risk-aware auditing and compliance.
+Result Metadata
+resultSummary, metrics,
+resultDetailsRef
+Summarizes the outcome of the operation, including key perfor mance indicators and references to detailed result data.
+Signatures and Integrity
+signature, hashAlg, signedBy Provides cryptographic signatures, hash algorithms, and signer iden tity to ensure log integrity and enable tamper evidence.
+An example of a structured audit log entry is shown in Figure 10, which demonstrates how these
+attributes are organized in practice. Each entry can be cross-referenced with both the originating
+request and the resulting response, ensuring a complete and verifiable chain of custody for sensitive
+operations. By mandating explicit, structured, and tamper-evident audit records for all security relevant events, SMCP provides trustworthy and contextually justified decision-making in both
+automated and human-in-the-loop agentic workflows.
+5
+SMCP Use Cases
+To illustrate the practical application and security features of the SMCP, we present a representative
+use case that demonstrates its complete workflow. This example describes how the main mechanisms
+of SMCP, including secure authentication, policy enforcement, capability-based access control, and
+audit logging, cooperate to address security challenges in a modular software system.
+As outlined in Table 9, the process begins with the user and tools performing mutual authentica tion through the SMCP authentication module. This initial verification ensures that only trusted
+participants are allowed to proceed. Following authentication, the user searches for available
+tools by querying the centralized registry. The registry applies strict naming policies and verifies
+metadata, which helps to prevent issues such as typosquatting and the registration of unauthorized
+or potentially malicious tools. Once a suitable tool is identified, the user submits a request to
+invoke the tool. Before the request is processed, the SMCP policy engine evaluates it according
+to predefined security and capability policies. This step ensures that unauthorized or unsafe op erations are blocked before execution. During invocation, each tool operates within a restricted
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 17
+操作。这种⽅法确保了全⾯、端到端的可追溯性，并保证了系统内每个操作的⾮否认性。
+如表 8 所⽰，审计⽇志捕获了⼴泛的关键属性，包括所有参与者和主体的⾝份、详细的操作元数据、
+策略决策和责任、敏感性和⻛险级别、结果摘要以及完整性加密证明。这种全⾯的覆盖范围使审计⽇
+志能够⽀持实时监控、⾃动⻛险检测和事后取证分析，为主动和回顾性安全控制奠定了基础。
+表 8. SMCP 审计⽇志条⽬中捕获的关键属性。
+属性类别 ⽰例字段 描述
+时间戳
+时间戳、签名时间 记录调⽤、响应和⽇志条⽬签名的时间，⽀持时间顺序重建和不可否认
+性。
+演员和主题⾝份
+agentId、userId、
+delegatorChain、subjectId、
+subjectType、role
+识别主要调⽤者、最终⽤⼾和任何委托链；区分⽤⼾和代理⻆⾊，⽤于责
+任和合规跟踪。
+操作详情
+toolId、capabilityRef、
+actionCode、taskId、sessionId、
+callChainId、auditRef
+描述了被调⽤的⼯具、请求的功能、执⾏的操作，以及会话、任务和审计
+链的唯⼀标识符，从⽽实现细粒度的可追溯性和关联性。
+策略决策和义务
+policyRef、policyDecision、义
+务、约束条件
+捕获适⽤的政策参考、决定（例如，带有义务的许可证）、强加的约束以
+及义务，如数据掩码或聚合。
+敏感性和⻛险级别
+requestedSensitivityLevel，
+appliedSensitivityLevel
+表⽰对数据所请求和实际应⽤的敏感性和⻛险分类，⽀持⻛险感知审计和
+合规。
+结果元数据
+resultSummary、metrics、
+resultDetailsRef
+总结操作结果，包括关键性能指标和详细结果数据的引⽤。
+签名和完整性
+签名，hashAlg，signedBy 提供加密签名、哈希算法和签名者⾝份，以确保⽇志完整性和实现篡改证据。
+⼀个结构化的审计⽇志条⽬的⽰例显⽰在图 10 中，它展⽰了这些属性在实际中的组织⽅式。每个条⽬
+都可以与原始请求和结果响应进⾏交叉引⽤，确保敏感操作的完整且可验证的所有权链。通过强制要
+求所有与安全相关的事件都使⽤明确、结构化且防篡改的审计记录，SMCP 在⾃动化和⼈类参与的⼯
+作流程中提供了值得信赖且具有上下⽂依据的决策。
+5 SMCP 使⽤案例
+为了说明 SMCP 的实际应⽤和安全特性，我们展⽰了⼀个代表性⽤例，该⽤例展⽰了其完整的⼯作流
+程。此⽰例描述了 SMCP 的主要机制，包括安全认证、策略执⾏、基于能⼒的访问控制和审计⽇志，
+如何协同⼯作以解决模块化软件系统中的安全挑战。
+如表 9 所述，该过程始于⽤⼾和⼯具通过 SMCP 认证模块进⾏相互认证。此初始验证确保只有受信任
+的参与者才被允许继续。认证后，⽤⼾通过查询中央注册表来搜索可⽤⼯具。注册表应⽤严格的命名
+策略并验证元数据，这有助于防⽌诸如拼写欺骗和未经授权或潜在恶意⼯具的注册等问题。⼀旦确定
+了合适的⼯具，⽤⼾提交请求以调⽤该⼯具。在处理请求之前，SMCP 策略引擎根据预定义的安全和
+能⼒策略对其进⾏评估。此步骤确保在执⾏前阻⽌未经授权或不安全的操作。在调⽤期间，每个⼯具
+都在受限
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+18 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+1
+2
+3
+4
+5
+6
+7
+8
+9
+1011121314151617
+18
+19
+2021
+222324
+25
+2627
+2829
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+4041424344454647
+48
+49
+50
+"riskLevel": "medium",
+"dataSensitivity": "internal",
+"policyDecision": {
+"effect": "PERMIT_WITH_OBLIGATIONS",
+"obligations": [
+"aggregation", "redactPII" ],
+"constraints": {
+" maxExecutionTimeMs": 5000,
+" maxRows": 5000,
+" allowPartialResult": true
+}
+},
+"resultSummary": "North America sales in 2025- Q3 increased by 12.4% QoQ.",
+"resultDetailsRef": " bbi://results/sales report/2025- Q3/NA/summary- v1",
+"metrics": [
+{"month": "2025- 07", "revenue": 1250000,
+"orders": 18450},
+{"month": "2025- 08", "revenue": 1325000,
+"orders": 19120},
+{"month": "2025- 09", "revenue": 1398000,
+"orders": 19980
+}
+],
+"signedAt": "2025- 12- 19T10:17:06Z",
+"signedBy": "TOOL- SALES- SERVICE",
+"signature": "sig- base64- encoded- example",
+"hashAlgo": "SHA-256"
+}
+{
+" type": "SMCP.AuditLogEntry",
+" auditRef": "AUDIT-TOOL- SALES- 2025- 12- 19T10-17-
+06- 0001",
+" timestamp": "2025-12-19T10:17:06Z",
+" callChainId": "CC-2025- 12- 19- 0004567",
+" sessionId": "7F3K9LM2B0I4ZXG6B0SD8BN2R4T6Y8W1",
+" taskId": "T- 2025- 12- 19- 000089",
+" agentId": "AGENT- REPORT-ENTRY-0001",
+" userId": "U- ORG-ACME-00123",
+" delegatorChain": [
+{
+"subjectId": "U-ORG- ACME- 00123",
+"subjectType": "user",
+"role": " data_analyst"
+},
+{
+"subjectId": "AGENT- REPORT-ENTRY-0001",
+"subjectType": "agent",
+"role": " entry_agent"
+}
+],
+" toolId": "TOOL-SALES-QUERY-001",
+" capabilityRef": " sales_aggregated_metrics",
+" actionCode": "SUCCESS",
+" policyRef": "POLICY- ORG-ACME- REPORTING- USER",
+" requestedSensitivityLevel": "internal",
+" appliedSensitivityLevel": "internal",
+Fig. 10. Example of a Structured Audit Log Entry in SMCP.
+security context determined by SMCP, thereby minimizing privilege exposure and limiting access
+to sensitive resources.
+Table 9. Mapping of Security Risks to SMCP Mitigation Steps.
+Risk Type SMCP Mitigation Details
+Unauthenticated Access § 4.2 Enforces strong mutual authentication and secure exchange of credentials
+to prevent unauthorized entities from accessing any part of the system.
+Session Management Flaws § 4.2 Secures session initiation, renewal, and termination to prevent session hi jacking and unauthorized reuse. Ensures active session validation through out the workflow.
+Namespace Typosquatting § 4.1 Trusted registry enforces strict naming policies and validation, blocking
+deceptively named or malicious components from being registered or dis covered.
+Tool Name Conflict § 4.1 Registry ensures tool identifier uniqueness with conflict checks and pre vents ambiguity or accidental invocation of the wrong tool.
+Tool Poisoning § 4.1, § 4.4 Only verified tools are registered; policy engine validates tool metadata
+and enforces behavior checks before invocation, reducing risk of malicious
+tool insertion.
+Command Injection § 4.4 Policy rules and input validation filter unsafe payloads, preventing mali cious command execution in tool calls or actions.
+(Continued)
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+18 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+“riskLevel”
+：
+“medium”
+，
+“dataSensitivity”
+：
+“internal”
+，
+“policyDecision”
+：{ “effect”
+：
+“PERMIT_WITH_OBLIGATIONS”
+“obligations”
+：[“aggregation”
+，
+,
+“redactPII”]，
+“constraints”
+：{
+"
+maxExecutionTimeMs
+"
+: 5000,
+"
+maxRows
+"
+: 5000,
+"
+allowPartialResult"
+: true }
+},
+"
+re
+"
+s
+r
+u
+e
+l
+s
+t
+u
+D
+l
+e
+t
+t
+S
+a
+u
+i
+m
+l
+m
+s
+a
+R
+r
+e
+y
+f
+"
+"
+:
+:
+"
+"
+2
+b
+0
+b
+2
+i
+5 年第三季度北美洲销售额环比增长 12.4%。
+"
+,
+://results/salesreport/2025-Q3/NA/summary-v1"
+,
+"
+metrics
+"
+: [
+{"month": "2025-07", "revenue": 1250000, "orders": 18450},
+{"month": "2025-08", "revenue": 1325000, "orders": 19120},
+{"month": "2025-09", "revenue": 1398000, "orders": 19980},
+"signedAt": "2025-12-19T10:17:06Z", "signedBy": "TOOL-SALES SERVICE", "signature": "sig-base64-encoded-example", "hashAlgo":
+"SHA-256"}
+{ "type
+"
+:
+"SMCP.AuditLogEntry
+"
+,
+"
+auditRef"
+:
+"AUDIT-TOOL-SALES-2025-12-19T10-
+1706-0001"
+,
+"timestamp
+"
+:
+"2025-12-19T10:17:06Z"
+,
+"
+callChainId"
+:
+"CC-2025-12-
+19-0004567"
+,
+"
+sessionId"
+:
+"7F3K9LM2B0I4ZXG6B0SD8BN2R4T6Y8W1"
+,
+"taskId"
+:
+"T-
+2025-12-19-000089"
+,
+"
+agentId"
+:
+"AGENT-REPORT-ENTRY-0001"
+,
+"
+userId"
+:
+"U-ORG ACME-00123"
+,
+"delegatorChain
+"
+: [] }
+{ "
+subjectId"
+:
+"U-ORG-ACME-00123"
+,
+"
+subjectType
+"
+:
+"用户"
+,
+"
+role
+"
+:
+"数
+据分析师" }, { "
+subjectId"
+:
+"AGENT-REPORT-ENTRY-0001"
+,
+"
+subjectType
+"
+:
+"代理"
+,
+"
+role
+"
+:
+"录入代理" } ],
+"toolId"
+:
+"TOOL-SALES-QUERY-001"
+"
+capabilityRef"
+:
+"销售汇总指标"
+,
+"
+actionCode
+"
+:
+"成功"
+,
+"
+policyRe
+,
+f"
+:
+"POLICY-ORG-ACME-REPORTING-USER"
+,
+"
+requestedSensitivityLevel"
+:
+"内部"
+,
+"
+appliedSensitivityLevel"
+:
+"内部"
+图 10. SMCP 中的结构化审计⽇志条⽬⽰例。
+由 SMCP 确定的安全上下⽂，从⽽最⼤限度地减少权限暴露并限制对敏感资源的访问。
+表 9. 安全⻛险到 SMCP 缓解步骤的映射。
+⻛险类型 SMCP 缓解详情
+未⾝份验证访问 § 4.2 强制执⾏强相互认证和凭证的安全交换，以防⽌未经授权的实体访问系统的任
+何部分。
+会话管理缺陷 § 4.2 保护会话初始化、续期和终⽌，以防⽌会话 hi
+⾮法接⼊和未经授权的重复使⽤。确保在整个⼯作流程中验证活动会话。
+命名空间错位 § 4.1 可信注册中⼼执⾏严格的命名策略和验证，阻⽌欺骗性命名或恶意组件被注册
+或发现。
+⼯具名称冲突 § 4.1 注册中⼼通过冲突检查确保⼯具标识符的唯⼀性，防⽌歧义或错误调⽤⼯具。
+⼯具中毒 § 4.1, § 4.4 仅注册经过验证的⼯具；策略引擎验证⼯具元数据
+并强制在调⽤前进⾏⾏为检查，降低恶意⼯具插⼊的⻛险。
+命令注⼊ § 4.4 政策规则和输⼊验证过滤不安全载荷，防⽌在⼯具调⽤或操作中执⾏恶意命令。
+(续)
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+SMCP: Secure Model Context Protocol 19
+Table 9. Continued.
+Risk Type SMCP Mitigation Details
+Rug Pulls § 4.1 Registry maintains version history and provenance for all tool entries,
+preventing undetected malicious updates or sudden removals.
+Cross-Server Shadowing § 4.1 Centralized registry ensures authoritative mapping and prevents registra tion of duplicate or shadow tool endpoints.
+Prompt Injection § 4.3, § 4.4 Security context constrains available agent actions and policy checks ensure
+prompt contents cannot escalate privileges or induce undesired behaviors.
+Indirect Prompt Injection § 4.3, § 4.4 Policy checks and secure context propagation restrict the impact of adver sarial manipulation in indirect or multi-stage prompts.
+Installer Spoofing § 4.1 Authenticated, integrity-checked distribution of installers and updates
+blocks use of tampered or fake installation sources.
+Preference Manipulation § 4.1 Registry verifies tool descriptions and metadata are signed and authentic,
+protecting against attacker-influenced preference modifications.
+Remote Code Execution § 4.4 All inputs are validated and policy controls restrict code execution scope,
+minimizing the risk from untrusted or injected code.
+SQL Injection § 4.4 Policy engine includes input validation for data operations, effectively
+blocking injection attacks in tool or server interactions.
+Credential Theft § 4.3, § 4.4 Security context traces credential use; least-privilege access design and
+scoping minimize possible credential exposure or misuse.
+Sandbox Escape § 4.4 Policy and runtime isolation controls restrict the execution environment
+of tools, limiting their ability to break out of sandboxes.
+Tool Chaining Abuse § 4.4 Capability models and policy logic limit tool chaining depth and validate
+all chained calls to prevent escalation or abuse.
+Unauthorized Access § 4.4 Fine-grained policy and capability enforcement ensure no component re ceives excess permissions, reducing attack surface.
+Privilege Abuse § 4.4, § 4.5 Policy restricts privilege escalation; audit logs provide full traceability and
+enable detection of abnormal privilege use.
+Path Traversal § 4.4 Policy checks enforce strict path validation for all resource accesses, block ing unauthorized or dangerous file operations.
+Resource Content Poisoning § 4.4, § 4.5 Policy validation and comprehensive audit logging enable early detection
+of manipulated or malicious resource results.
+Token Passthrough § 4.3, § 4.5 Scoped context design restricts token propagation; audit logs detect and
+alert on any inadvertent credential forwarding. Cross-Tenant Data Exposure § 4.3, § 4.5 Security context enforces strict tenant isolation; audit logs track and sup port investigation of any data leakage events.
+Vulnerable Versions § 4.1, § 4.5 Registry enforces component version control; audit logs help identify out dated or unpatched components for timely updates.
+Privilege Persistence § 4.5 Audit trail tracks every privilege modification, supporting detection and
+remediation of improper retention or persistence of access.
+Configuration Drift § 4.1, § 4.5 Registry maintains a reference configuration baseline; auditing reveals
+unauthorized or accidental configuration changes.
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 19
+表 9. 续表。
+⻛险类型 SMCP 缓解详情
+拉⾼出货 § 4.1 注册表维护所有⼯具条⽬的版本历史和来源，防⽌未检测到的恶意更新或突然
+删除。
+跨服务器影⼦ § 4.1 中央化注册表确保权威映射，并防⽌注册重复或影⼦⼯具端点。
+提⽰注⼊ § 4.3, § 4.4 安全上下⽂限制可⽤代理操作，策略检查确保即时内容不能提升权限或诱导不
+期望的⾏为。
+间接提⽰注⼊ § 4.3, § 4.4 政策检查和安全上下⽂传播限制了对抗性操纵对间接或多阶段提⽰的影响。
+安装程序欺骗 § 4.1 经过⾝份验证、完整性检查的安装程序和更新分发阻⽌使⽤篡改或伪造的安装
+来源。
+偏好操纵 § 4.1 注册表验证⼯具描述和元数据是否已签名且真实，防⽌攻击者影响偏好修改。
+远程代码执⾏ § 4.4 所有输⼊都经过验证，策略控制限制了代码执⾏范围，最⼤限度地降低了来⾃
+不受信任或注⼊代码的⻛险。
+SQL 注⼊ § 4.4 策略引擎包含数据操作输⼊验证，有效阻⽌⼯具或服务器交互中的注⼊攻击。
+凭证盗窃 § 4.3, § 4.4 安全上下⽂跟踪凭证使⽤；最⼩权限访问设计和作⽤域最⼩化可能的凭证暴露
+或滥⽤。
+沙箱逃逸 § 4.4 策略和运⾏时隔离控制限制⼯具的执⾏环境，限制其跳出沙箱的能⼒。
+⼯具链滥⽤ § 4.4 能⼒模型和政策逻辑限制⼯具链深度，并验证所有链式调⽤，以防⽌升级或滥
+⽤。
+未授权访问 § 4.4 细粒度策略和能⼒执⾏确保没有组件获得过多权限，减少攻击⾯。
+特权滥⽤ § 4.4, § 4.5 政策限制权限提升；审计⽇志提供完整可追溯性，并能够检测异常权限使⽤。
+路径遍历 § 4.4 政策检查强制对所有资源访问进⾏严格的路径验证，阻⽌未经授权或危险的⽂件操作。
+资源内容中毒 § 4.4, § 4.5 政策验证和全⾯的审计⽇志能够早期检测被篡改或恶意的资源结果。
+令牌透传 § 4.3, § 4.5 范围化上下⽂设计限制令牌传播；审计⽇志检测并警报任何意外的凭证转发。
+租⼾间数据泄露 § 4.3, § 4.5 安全上下⽂强制执⾏严格的租⼾隔离；审计⽇志跟踪并⽀持对任何数据泄露事件进⾏调查。
+易受攻击版本 § 4.1, § 4.5 注册表强制执⾏组件版本控制；审计⽇志有助于识别过时或未修补的组件以便及时更新。
+权限持久化 § 4.5 审计轨迹跟踪每个权限修改，⽀持检测和修复不当保留或持久化访问。
+配置漂移 § 4.1, § 4.5 注册表维护⼀个参考配置基线；审计显⽰未经授权或意外的配置更改。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+20 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+6
+Related Work
+6.1 MCP Security
+Since the release of the MCP, the security community has rapidly moved to identify potential
+vulnerabilities inherent in its open and modular design. Early efforts have focused on cataloging
+risks and establishing benchmarks for attack surfaces.
+Adversa.ai released a comprehensive
+list of the top 25 MCP vulnerabilities, highlighting issues ranging from unauthorized access to
+supply chain risks [
+1
+]. Meanwhile, academic researchers have sought to formalize these risks
+within the protocol’
+s architecture. Hou et al. provided a comprehensive landscape analysis of MCP,
+detailing security threats and future research directions [
+6
+]. In parallel, Guo et al. conducted a
+systematic analysis of MCP security, introducing MCPLib to categorize threats across the client host-server interaction model [
+4
+]. Building on these foundational taxonomies, recent work has
+exposed specific attack vectors arising from the trust agents place in external servers. Zhao et al.
+treated servers as active threat actors, identifying twelve distinct attack categories where malicious
+implementations can exploit host-LLM interactions [34]. Specific vulnerabilities in the registration
+phase were highlighted by Wang et al. via MCPTox, which demonstrated how tool poisoning can
+embed malicious instructions in metadata to manipulate agent behavior [24]. Beyond direct attacks,
+the complexity of toolchains introduces indirect risks; Zhao et al. revealed parasitic toolchain
+attacks, where passive data sources inject prompts to hijack execution flows without direct user
+interaction [32]. Furthermore, Wang et al. uncovered economic threats through MPMA, showing
+how servers can manipulate descriptions to bias LLM selection for financial gain [25]. In response to
+these threats, the community has moved towards empirical assessment and defensive frameworks.
+Hasan et al. conducted a large-scale empirical study of open-source MCP servers, finding that despite
+high community engagement, many servers suffer from maintainability issues and vulnerabilities
+like credential exposure [
+5
+]. To enable proactive security, Radosevich and Halloran developed
+McpSafetyScanner, an agentic tool for auditing servers against exploits such as remote access
+control before deployment [16]. On the benchmarking front, Yang et al. introduced MCPSecBench
+to systematically evaluate 17 attack types across the protocol’
+s layers, exposing weaknesses in
+current host defenses [30]. Finally, Shi et al. proposed SecMCP, a defense mechanism that leverages
+latent polytope analysis to detect conversation drift, effectively identifying adversarial deviations
+in agent trajectories [17].
+6.2 Agentic AI System Security
+Parallel to protocol-specific research, the broader field of agentic AI security has developed various
+defense mechanisms focusing on the agent’
+s runtime environment and decision-making processes.
+Comprehensive surveys by Gan et al. [
+2
+] and Li et al. [10] have categorized threats facing LLM based agents, emphasizing the need for robust defenses against prompt injection and unsafe action
+execution. To mitigate these risks, researchers have moved beyond static rules towards dynamic
+runtime protection. AgentArmor utilizes program analysis to trace agent behavior [23], while
+AgentSpec enforces formal contracts to prevent deviations [21]. Advancing this dynamic capability,
+Xiang et al. proposed GuardAgent, which employs a dedicated agent to interpret safety requests
+and generate executable guardrail code via knowledge-enabled reasoning, ensuring compliance
+without altering the target agent’
+s core logic [29]. Shifting from reactive to proactive defense,
+Wang et al. introduced PRO
+2
+GUARD, a framework that leverages discrete-time Markov chains to
+probabilistically predict unsafe agent trajectories, enabling interventions before violations actually
+occur [22]. In the domain of interaction integrity and access control, recent works have focused on
+granular policy enforcement. Jing et al. developed the Model Contextual Integrity Protocol (MCIP),
+which integrates a guardian model and tracking tools to enforce information flow integrity based on
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+20 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+6 相关⼯作
+6.1 MCP 安全性
+⾃ MCP 发布以来，安全社区迅速着⼿识别其开放和模块化设计中固有的潜在漏洞。早期⼯作集中于列
+出⻛险并建⽴攻击⾯的基准。Adversa.ai 发布了⼀份包含前 25 个 MCP 漏洞的综合性列表，突出了从
+未经授权的访问到供应链⻛险等⼀系列问题[1]。与此同时，学术研究⼈员试图在协议的架构内正式化
+这些⻛险。Hou 等⼈对 MCP 进⾏了全⾯的景观分析，详细阐述了安全威胁和未来的研究⽅向[6]。与
+此同时，Guo 等⼈对 MCP 安全进⾏了系统性分析，引⼊了 MCPLib 来对跨客⼾端-主机-服务器交互模
+型中的威胁进⾏分类[4]。在这些基础分类学的基础上，近期⼯作揭⽰了源于信任代理对外部服务器信
+任的具体攻击向量。赵等将服务器视为主动威胁⾏为者，识别了⼗⼆种不同的攻击类别，其中恶意实
+现可以利⽤主机-LLM 交互进⾏攻击[34]。王等通过 MCPTox 突出了注册阶段的具体漏洞，展⽰了⼯具
+中毒如何将恶意指令嵌⼊元数据以操纵代理⾏为[24]。除了直接攻击，⼯具链的复杂性引⼊了间接⻛
+险；赵等揭⽰了寄⽣⼯具链攻击，其中被动数据源注⼊提⽰以劫持执⾏流程，⽽⽆需直接⽤⼾交互
+[32]。此外，王等通过 MPMA 发现了经济威胁，展⽰了服务器如何操纵描述以偏袒 LLM 选择以获取经
+济利益[25]。 针对这些威胁，社区已转向实证评估和防御框架。Hasan 等⼈对开源 MCP 服务器进⾏了
+⼤规模实证研究，发现尽管社区参与度⾼，但许多服务器存在可维护性问题以及凭证暴露等漏洞[5]。
+为实现主动安全，Radosevich 和 Halloran 开发了 McpSafetyScanner，这是⼀种代理⼯具，⽤于在
+部署前审计服务器以防范远程访问控制等漏洞[16]。在基准测试⽅⾯，Yang 等⼈引⼊了
+MCPSecBench，以系统地评估协议各层中的 17 种攻击类型，揭⽰了当前主机防御的弱点[30]。最
+后，Shi 等⼈提出了 SecMCP，这是⼀种利⽤潜在多⾯体分析来检测对话漂移的防御机制，有效识别代
+理轨迹中的对抗性偏差[17]。
+6.2 代理式 AI 系统安全
+与协议特定研究并⾏，⾃主 AI 安全领域已发展出多种防御机制，这些机制专注于代理的运⾏时环境和
+决策过程。Gan 等⼈[2]和 Li 等⼈[10]的综合性调查将⾯临 LLM 代理的威胁进⾏了分类，强调了针对提
+⽰注⼊和 unsafe ⾏动执⾏进⾏强健防御的必要性。为了缓解这些⻛险，研究⼈员已从静态规则转向动
+态运⾏时保护。AgentArmor 利⽤程序分析来追踪代理⾏为[23]，⽽ AgentSpec 通过强制正式合同来
+防⽌偏离[21]。在推进这种动态能⼒⽅⾯，Xiang 等⼈提出了 GuardAgent，该系统采⽤专⽤代理来解
+释安全请求，并通过知识赋能的推理⽣成可执⾏的护栏代码，确保合规性⽽不改变⽬标代理的核⼼逻
+辑[29]。从被动转向主动主动防御，王等⼈介绍了 PROGUARD，这是⼀个利⽤离散时间⻢尔可夫链来
+概率预测不安全智能体轨迹的框架，能够在违规实际发⽣之前进⾏⼲预[22]。在交互完整性和访问控制
+领域，最近的研究⼯作集中在粒度策略执⾏上。景等⼈开发了模型上下⽂完整性协议（MCIP），该协
+议集成了监护模型和跟踪⼯具，基于信息流完整性进⾏执⾏。
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+SMCP: Secure Model Context Protocol 21
+a fine-grained risk taxonomy [
+7
+]. Complementing this, Shi et al. presented Progent, a programmable
+privilege control framework that enforces the principle of least privilege by intercepting tool calls
+with deterministic security policies, effectively reducing the attack surface for coding and web
+agents [18]. These approaches sit alongside architectures like SAGA [20] and isolation techniques
+such as DRIFT [9] and A2AS [13], creating a multi-layered defense landscape.
+7
+SMCP Roadmap
+The SMCP is being developed as an open and extensible security foundation, providing unified
+digital identity, contextual access control, and end-to-end auditability for agent-tool interactions.
+NEAR TERM, the goal is to integrate SMCP’
+s core security mechanisms, such as trusted compo nent registries, structured digital identity codes, and unified security context propagation, into
+existing MCP implementations and widely-used agent frameworks. This stage will focus on devel oping reference implementations, facilitating compatibility with current agent architectures, and
+demonstrating feasibility in real-world engineering deployments. Additional research will target
+best practices for entity registration workflows, authentication procedures, and security context
+message formats.
+MID TERM, the focus will shift to expanding SMCP’
+s policy enforcement and runtime auditing
+capabilities. Key directions include developing fine-grained risk-adaptive access control engines,
+scalable audit logging infrastructure, and advanced delegation and revocation management. Industry
+feedback and empirical studies will inform improvements in policy expressiveness, compliance
+automation, and operational efficiency. This phase will also explore interoperability with other
+agent security standards and protocols.
+LONG TERM, the roadmap envisions SMCP as a foundational layer for secure, interoperable agent
+ecosystems across diverse domains and trust boundaries. Future work will include supporting
+multi-domain federation, automated trust negotiation, and integration with evolving AI-native
+protocols and governance frameworks. Ultimately, the goal is to establish SMCP as a reference
+standard for secure agent interconnection and collaborative AI governance, enabling scalable,
+accountable, and trustworthy agentic AI on a global scale.
+8
+Conclusion
+This paper presented the SMCP, a comprehensive security framework designed to address the
+unique challenges of open, MCP-based agent ecosystems. We systematically analyzed the security
+risks inherent in the MCP workflow, which arise from the protocol’
+s open and composable archi tecture. While existing research has made significant progress in attack analysis and agent-level
+defenses, there remains a critical gap in protocol-native, end-to-end security enhancements for
+MCP systems. SMCP fills this gap by introducing unified digital identity and trust infrastructure,
+mutual authentication, continuous security context propagation, fine-grained policy enforcement,
+and structured audit logging directly at the protocol layer. Through these mechanisms, SMCP de livers robust access control, adaptive runtime protection, and comprehensive accountability across
+agent-tool interactions. Our analysis and use cases demonstrate that SMCP can effectively mitigate
+the most pressing security threats in modern agentic workflows while maintaining flexibility and
+interoperability. Looking ahead, the SMCP roadmap envisions its integration into mainstream
+agent architectures and standardization as a foundational layer for secure, scalable, and trustworthy
+agentic AI ecosystems.
+References
+[1] Adversa.ai. 2025. MCP Security Top 25 Vulnerabilities. https://adversa.ai/mcp-security-top-25-mcp-vulnerabilities/.
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 21
+⼀种细粒度的⻛险分类法[7]。此外，Shi 等⼈提出了 Progent，⼀个可编程的权限控制框架，通过拦
+截具有确定性安全策略的⼯具调⽤，强制执⾏最⼩权限原则，有效减少了编码和 Web 代理的攻击⾯
+[18]。这些⽅法与 SAGA[20]等架构以及 DRIFT[9]和 A2AS[13]等隔离技术并存，形成了⼀个多层次的
+防御格局。
+7 SMCP 路线图
+SMCP 正在开发为⼀个开放且可扩展的安全基础架构，为代理⼯具交互提供统⼀的数字⾝份、上下⽂
+访问控制和端到端可审计性。近期⽬标是将 SMCP 的核⼼安全机制，如可信组件注册表、结构化数字
+⾝份代码和统⼀安全上下⽂传播，集成到现有的 MCP 实现和⼴泛使⽤的代理框架中。此阶段将专注
+于开发参考实现，促进与当前代理架构的兼容性，并在实际⼯程部署中展⽰可⾏性。额外的研究将针
+对实体注册⼯作流、认证程序和安全上下⽂消息格式的最佳实践。
+中期，重点将转向扩展 SMCP 的政策执⾏和运⾏时审计能⼒。主要⽅向包括开发细粒度⻛险⾃适应访
+问控制引擎、可扩展的审计⽇志基础设施以及⾼级委托和撤销管理。⾏业反馈和实证研究将指导政策
+表达性、合规⾃动化和运营效率的改进。本阶段还将探索与其他代理安全标准和协议的互操作性。
+⻓期来看，路线图设想 SMCP 作为⼀个基础层，⽤于构建跨不同领域和信任边界的、安全的、可互操
+作的代理⽣态系统。未来的⼯作将包括⽀持多领域联盟、⾃动信任协商，以及与不断发展的 AI 原⽣
+协议和治理框架的集成。最终⽬标是将 SMCP 建⽴为安全代理互连和协同 AI 治理的参考标准，以在
+全球范围内实现可扩展、有责任感和值得信赖的代理式 AI。
+8 结论
+本⽂介绍了 SMCP，这是⼀个旨在应对开放、基于 MCP 的代理⽣态系统独特挑战的全⾯安全框架。我
+们对 MCP ⼯作流中固有的安全⻛险进⾏了系统分析，这些⻛险源于协议的开放和可组合架构。尽管现
+有研究在攻击分析和代理级防御⽅⾯取得了显著进展，但 MCP 系统在协议原⽣、端到端安全增强⽅⾯
+仍存在关键差距。SMCP 通过引⼊统⼀的数字⾝份和信任基础设施、相互认证、持续安全上下⽂传
+播、细粒度策略执⾏以及结构化的审计⽇志直接在协议层，填补了这⼀差距。通过这些机制，SMCP
+提供了强⼤的访问控制、⾃适应运⾏时保护和全⾯的代理⼯具交互问责制。我们的分析和⽤例表明，
+SMCP 可以有效地缓解现代智能代理⼯作流程中最紧迫的安全威胁，同时保持灵活性和互操作性。展
+望未来，SMCP 路线图设想将其集成到主流智能代理架构中，并作为安全、可扩展和值得信赖的智能
+代理 AI ⽣态系统的基础层进⾏标准化。
+参考⽂献
+[1] Adversa.ai. 2025. MCP 安全前 25 个漏洞。https://adversa.ai/mcp-security-top-25-mcp-vulnerabilities/.
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+22 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, and H Wang
+[2] Wensheng Gan, Shicheng Wan, and Philip S. Yu. 2023. Model-as-a-Service (MaaS): A Survey. In IEEE International
+Conference on Big Data, BigData 2023, Sorrento, Italy, December 15-18, 2023, Jingrui He, Themis Palpanas, Xiaohua
+Hu, Alfredo Cuzzocrea, Dejing Dou, Dominik Slezak, Wei Wang, Aleksandra Gruca, Jerry Chun-Wei Lin, and Rakesh
+Agrawal (Eds.). IEEE, 4636‒4645. doi:10.1109/BIGDATA59044.2023.10386351
+[3] Yuyou Gan, Yong Yang, Zhe Ma, Ping He, Rui Zeng, Yiming Wang, Qingming Li, Chunyi Zhou, Songze Li, Ting Wang,
+Yunjun Gao, Yingcai Wu, and Shouling Ji. 2024. Navigating the Risks: A Survey of Security, Privacy, and Ethics Threats
+in LLM-Based Agents. CoRR abs/2411.09523 (2024). arXiv:2411.09523 doi:10.48550/ARXIV.2411.09523
+[4] Yongjian Guo, Puzhuo Liu, Wanlun Ma, Zehang Deng, Xiaogang Zhu, Peng Di, Xi Xiao, and Sheng Wen. 2025.
+Systematic Analysis of MCP Security. arXiv:2508.12538 [cs.CR] https://arxiv.org/abs/2508.12538
+[5] Mohammed Mehedi Hasan, Hao Li, Emad Fallahzadeh, Gopi Krishnan Rajbahadur, Bram Adams, and Ahmed E. Hassan.
+2025. Model Context Protocol (MCP) at First Glance: Studying the Security and Maintainability of MCP Servers. CoRR
+abs/2506.13538 (2025). arXiv:2506.13538 doi:10.48550/ARXIV.2506.13538
+[6] Xinyi Hou, Yanjie Zhao, Shenao Wang, and Haoyu Wang. 2025. Model Context Protocol (MCP): Landscape, Security
+Threats, and Future Research Directions. arXiv:2503.23278 [cs.CR] https://arxiv.org/abs/2503.23278
+[7] Huihao Jing, Haoran Li, Wenbin Hu, Qi Hu, Xu Heli, Tianshu Chu, Peizhao Hu, and Yangqiu Song. 2025. MCIP:
+Protecting MCP Safety via Model Contextual Integrity Protocol. In Proceedings of the 2025 Conference on Empirical
+Methods in Natural Language Processing, Christos Christodoulopoulos, Tanmoy Chakraborty, Carolyn Rose, and Violet
+Peng (Eds.). Association for Computational Linguistics, Suzhou, China, 1177‒1194. doi:10.18653/v1/2025.emnlp-main.62
+[8] LangChain. 2022. LangChain: Framework for developing applications powered by language models. https://github.
+com/langchain-ai/langchain.
+[9] Hao Li, Xiaogeng Liu, Hung-Chun Chiu, Dianqi Li, Ning Zhang, and Chaowei Xiao. 2025. DRIFT: Dynamic Rule-Based
+Defense with Injection Isolation for Securing LLM Agents. arXiv:2506.12104 [cs.CR] https://arxiv.org/abs/2506.12104
+[10] Yuanchun Li, Hao Wen, Weijun Wang, Xiangyu Li, Yizhen Yuan, Guohong Liu, Jiacheng Liu, Wenxing Xu, Xiang
+Wang, Yi Sun, Rui Kong, Yile Wang, Hanfei Geng, Jian Luan, Xuefeng Jin, Zilong Ye, Guanjing Xiong, Fan Zhang,
+Xiang Li, Mengwei Xu, Zhijun Li, Peng Li, Yang Liu, Ya-Qin Zhang, and Yunxin Liu. 2024. Personal LLM Agents:
+Insights and Survey about the Capability, Efficiency and Security. CoRR abs/2401.05459 (2024). arXiv:2401.05459
+doi:10.48550/ARXIV.2401.05459
+[11] Model Context Protocol. 2024. What is the Model Context Protocol (MCP)? https://modelcontextprotocol.io/docs/
+getting-started/intro. Accessed: 2025-12-16.
+[12] National Technical Committee for Information Technology Standardization and Artificial Intelligence Subcom mittee, National Technical Committee for Information Technology Standardization. 2025. Artificial Intelli gence ― Agent Interconnection ― Part 1: General Architecture. https://std.samr.gov.cn/gb/search/gbDetailed?id=
+3BAB0AA8A7FC31E3E06397BE0A0AA43F.
+[13] Eugene Neelou, Ivan Novikov, Max Moroz, Om Narayan, Tiffany Saade, Mika Ayenson, Ilya Kabanov, Jen Ozmen,
+Edward Lee, Vineeth Sai Narajala, Emmanuel Guilherme Junior, Ken Huang, Huseyin Gulsin, Jason Ross, Marat
+Vyshegorodtsev, Adelin Travers, Idan Habler, and Rahul Jadav. 2025. A2AS: Agentic AI Runtime Security and Self Defense. arXiv:2510.13825 [cs.CR] https://arxiv.org/abs/2510.13825
+[14] OpenAI. 2023. Function calling. https://platform.openai.com/docs/guides/function-calling.
+[15] Brandon Radosevich and John Halloran. 2025. MCP Safety Audit: LLMs with the Model Context Protocol Allow Major
+Security Exploits. CoRR abs/2504.03767 (2025). arXiv:2504.03767 doi:10.48550/ARXIV.2504.03767
+[16] Brandon Radosevich and John Halloran. 2025. MCP Safety Audit: LLMs with the Model Context Protocol Allow Major
+Security Exploits. arXiv:2504.03767 [cs.CR] https://arxiv.org/abs/2504.03767
+[17] Haoran Shi, Hongwei Yao, Shuo Shao, Shaopeng Jiao, Ziqi Peng, Zhan Qin, and Cong Wang. 2025. Quantifying
+Conversation Drift in MCP via Latent Polytope. arXiv:2508.06418 [cs.CL] https://arxiv.org/abs/2508.06418
+[18] Tianneng Shi, Jingxuan He, Zhun Wang, Hongwei Li, Linyu Wu, Wenbo Guo, and Dawn Song. 2025. Progent:
+Programmable Privilege Control for LLM Agents. arXiv:2504.11703 [cs.CR] https://arxiv.org/abs/2504.11703
+[19] Noah Shinn, Shunyu Labash, et al. 2023. Reflexion: an Autonomous Agent with Dynamic Memory and Self-Reflection.
+arXiv preprint arXiv:2303.11366 (2023). https://arxiv.org/abs/2303.11366
+[20] Georgios Syros, Anshuman Suri, Jacob Ginesin, Cristina Nita-Rotaru, and Alina Oprea. 2025. SAGA: A Security
+Architecture for Governing AI Agentic Systems. arXiv:2504.21034 [cs.CR] https://arxiv.org/abs/2504.21034
+[21] Haoyu Wang, Christopher M. Poskitt, and Jun Sun. 2025. AgentSpec: Customizable Runtime Enforcement for Safe and
+Reliable LLM Agents. arXiv:2503.18666 [cs.AI] https://arxiv.org/abs/2503.18666
+[22] Haoyu Wang, Christopher M. Poskitt, Jun Sun, and Jiali Wei. 2026. Pro2Guard: Proactive Runtime Enforcement of
+LLM Agent Safety via Probabilistic Model Checking. arXiv:2508.00500 [cs.AI] https://arxiv.org/abs/2508.00500
+[23] Peiran Wang, Yang Liu, Yunfei Lu, Yifeng Cai, Hongbo Chen, Qingyou Yang, Jie Zhang, Jue Hong, and Ye Wu.
+2025. AgentArmor: Enforcing Program Analysis on Agent Runtime Trace to Defend Against Prompt Injection.
+arXiv:2508.01249 [cs.CR] https://arxiv.org/abs/2508.01249
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+22 X Hou, S Wang, Y Zhang, Z Xue, Y Zhao, C Fu, 和 H Wang
+[2] ⽂胜⼲，万世成，和菲利普·S·余。2023 年。《服务化模型（MaaS）：⼀项调查》。在 IEEE 国际
+⼤数据会议，BigData 2023，意⼤利索伦托，2023 年 12 ⽉ 15-18 ⽇， Jingrui He，Themis Palpanas，Xiaohua Hu，
+Alfredo Cuzzocrea，Dejing Dou，Dominik Slezak，Wei Wang，Aleksandra Gruca，Jerry Chun-Wei Lin，以及 Rakesh
+Agrawal（主编）。IEEE，4636‒4645。doi:10.1109/BIGDATA59044.2023.10386351
+[3] 余勇, 杨勇, ⻢哲, 何平, 曾瑞, 王⼀鸣, 李庆明, 周春毅, 李松泽, 王婷, ⾼云军, 吴英才, 及季寿玲. 2024. 导航⻛险：基于 LLM 代理
+的安全、隐私和伦理威胁调查. CoRR abs/2411.09523 (2024). arXiv:2411.09523 doi:10.48550/ARXIV.2411.09523 [4] 郭永健, 刘
+朴卓, ⻢万伦, 邓泽航, 朱晓刚, 董鹏, 肖曦, ⽂胜. 2025.
+MCP 安全系统的系统分析。arXiv:2508.12538 [cs.CR] https://arxiv.org/abs/2508.12538 [5] Mohammed Mehedi Hasan, Hao
+Li, Emad Fallahzadeh, Gopi Krishnan Rajbahadur, Bram Adams, 和 Ahmed E. Hassan.
+2025. 初探模型上下⽂协议（MCP）：研究 MCP 服务器的安全性和可维护性。CoRR abs/2506.13538 (2025)。arXiv:2506.13538
+doi:10.48550/ARXIV.2506.13538 [6] 侯新怡，赵岩杰，王深奥，王浩宇。2025. 模型上下⽂协议（MCP）：现状、安全威胁和未
+来研究⽅向。arXiv:2503.23278 [cs.CR] https://arxiv.org/abs/2503.23278 [7] 景会豪，李浩然，胡⽂斌，胡琪，赫利旭，褚天
+舒，胡佩昭，宋阳秋。2025. MCIP：通过模型上下⽂完整性协议保护 MCP 安全。在 2025 年⾃然语⾔处理经验⽅法会议论⽂集
+中，Christos Christodoulopoulos，Tanmoy Chakraborty，Carolyn Rose，Violet Peng（编）。计算语⾔学协会，苏州，中
+国，1177‒1194。doi:10.18653/v1/2025.emnlp-main.62 [8] LangChain。2022。LangChain：⽤于开发由语⾔模型提供⽀持的
+应框架。https://github.
+com/langchain-ai/langchain.
+[9] Hao Li, Xiaogeng Liu, Hung-Chun Chiu, Dianqi Li, Ning Zhang, 和 Chaowei Xiao. 2025. DRIFT: 基于动态规则的注⼊隔离防
+御⽅法，⽤于保障⼤语⾔模型代理安全. arXiv:2506.12104 [cs.CR] https://arxiv.org/abs/2506.12104 [10] Yuanchun Li, Hao
+Wen, Weijun Wang, Xiangyu Li, Yizhen Yuan, Guohong Liu, Jiacheng Liu, Wenxing Xu, Xiang
+王毅，刘瑞孔，王逸，耿汉⻜，阮健，⾦学峰，叶⼦⻰，熊冠景，张帆，李翔，徐梦薇，李志军，李鹏，刘洋，张亚琴，刘云欣。
+2024。个⼈ LLM 代理：关于能⼒、效率和安全的洞察与调查。CoRR abs/2401.05459 (2024)。arXiv:2401.05459
+doi:10.48550/ARXIV.2401.05459 [11] 模型上下⽂协议。2024。什么是模型上下⽂协议（MCP）？
+https://modelcontextprotocol.io/docs/ getting-started/intro。访问时间：2025-12-16。[12] 国家信息技术标准化委员会和⼈⼯
+智能分委员会。
+委员会，国家信息技术标准化技术委员会。2025 年。⼈⼯智能——智能体互连——第 1 部分：通⽤架构。
+https://std.samr.gov.cn/gb/search/gbDetailed?id=3BAB0AA8A7FC31E3E06397BE0A0AA43F。
+[13] 尤⾦·涅洛夫，伊万·诺维科夫，⻢克斯·莫罗兹，奥姆·纳拉扬，蒂芙尼·萨德，⽶卡·阿耶森，伊利亚·卡巴诺夫，詹
+·奥兹⻔，
+爱德华·李，维尼 eth·萨伊·纳拉贾拉，埃⻢纽埃尔·吉勒梅·朱尼尔，⻩肯，胡塞因·古尔⾟，杰森·罗斯，⻢拉特·维亚谢
+⼽罗德采夫，阿德林·特拉维斯，伊丹·哈伯勒，和拉胡尔·贾达尔。2025 年。《A2AS：具有⾃主 AI 的运⾏时安全和⾃卫》。
+arXiv:2510.13825 [cs.CR] https://arxiv.org/abs/2510.13825 [14] OpenAI。2023 年。《函数调⽤》。
+https://platform.openai.com/docs/guides/function-calling。 [15] 布兰登·拉多塞维奇和约翰·霍尔兰。2025 年。《MCP 安全
+审计：具有模型上下⽂协议的 LLM 允许重⼤ 安全漏洞。CoRR abs/2504.03767 (2025)。arXiv:2504.03767 doi:10.48550/ARXIV.2504.03767 [16] Brandon Radosevich
+和 John Halloran。2025 年。MCP 安全审计：具有模型上下⽂协议的 LLM 允许重⼤
+安全漏洞。arXiv:2504.03767 [cs.CR] https://arxiv.org/abs/2504.03767 [17] Haoran Shi, Hongwei Yao, Shuo Shao,
+Shaopeng Jiao, Ziqi Peng, Zhan Qin, and Cong Wang. 2025. 定量
+MCP 中的潜在多⾯体对话偏移。arXiv:2508.06418 [cs.CL] https://arxiv.org/abs/2508.06418 [18] ⽯天能，何景轩，王准，
+李宏伟，吴林宇，郭⽂博，以及宋 Dawn。2025 年。Progent:
+LLM 代理的可编程权限控制。arXiv:2504.11703 [cs.CR] https://arxiv.org/abs/2504.11703 [19] Noah Shinn, Shunyu
+Labash 等⼈，2023。Reflexion：⼀个具有动态内存和⾃我反思的⾃主代理。
+arXiv 预印本 arXiv:2303.11366 (2023)。https://arxiv.org/abs/2303.11366 [20] Georgios Syros, Anshuman Suri, Jacob
+Ginesin, Cristina Nita-Rotaru, 和 Alina Oprea。2025 年。SAGA：⼀种安全
+治理 AI ⾃主系统的架构。arXiv:2504.21034 [cs.CR] https://arxiv.org/abs/2504.21034 [21] 王浩宇，Christopher M.
+Poskitt，和孙俊。2025 年。AgentSpec：⽤于安全运⾏的定制化运⾏时强制执⾏。
+可靠的 LLM 代理。arXiv:2503.18666 [cs.AI] https://arxiv.org/abs/2503.18666 [22] 王浩宇，Christopher M. Poskitt，孙俊，和魏
+佳莉。2026 年。Pro2Guard：通过概率模型检查主动运⾏时执⾏ LLM 代理安全。arXiv:2508.00500 [cs.AI]
+https://arxiv.org/abs/2508.00500 [23] 王培然，刘杨，陆云⻜，蔡⼀峰，陈洪波，杨庆友，张杰，洪决，和吴叶。
+2025. AgentArmor：在代理运⾏时跟踪中执⾏程序分析以防御提⽰注⼊。arXiv:2508.01249 [cs.CR]
+https://arxiv.org/abs/2508.01249
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。
+SMCP: Secure Model Context Protocol 23
+[24] Zhiqiang Wang, Yichao Gao, Yanting Wang, Suyuan Liu, Haifeng Sun, Haoran Cheng, Guanquan Shi, Haohua
+Du, and Xiangyang Li. 2025. MCPTox: A Benchmark for Tool Poisoning Attack on Real-World MCP Servers.
+arXiv:2508.14925 [cs.CR] https://arxiv.org/abs/2508.14925
+[25] Zihan Wang, Hongwei Li, Rui Zhang, Yu Liu, Wenbo Jiang, Wenshu Fan, Qingchuan Zhao, and Guowen Xu. 2025.
+MPMA: Preference Manipulation Attack Against Model Context Protocol. CoRR abs/2505.11154 (2025). arXiv:2505.11154
+doi:10.48550/ARXIV.2505.11154
+[26] Zhiqiang Wang, Junyang Zhang, Guanquan Shi, HaoRan Cheng, Yunhao Yao, Kaiwen Guo, Haohua Du, and Xiang-Yang
+Li. 2025. MindGuard: Tracking, Detecting, and Attributing MCP Tool Poisoning Attack via Decision Dependence
+Graph. arXiv:2508.20412 [cs.CR] https://arxiv.org/abs/2508.20412
+[27] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia, Ed H. Chi, Quoc V. Le, and Denny
+Zhou. 2022. Chain-of-Thought Prompting Elicits Reasoning in Large Language Models. Advances in Neural Information
+Processing Systems 35 (2022), 24824‒24837. arXiv:2201.11903 https://arxiv.org/abs/2201.11903
+[28] Lilian Weng. 2023. LLM-powered Autonomous Agents. lilianweng.github.io (June 2023). https://lilianweng.github.io/
+posts/2023-06-23-agent/
+[29] Zhen Xiang, Linzhi Zheng, Yanjie Li, Junyuan Hong, Qinbin Li, Han Xie, Jiawei Zhang, Zidi Xiong, Chulin Xie, Carl
+Yang, Dawn Song, and Bo Li. 2025. GuardAgent: Safeguard LLM Agents by a Guard Agent via Knowledge-Enabled
+Reasoning. arXiv:2406.09187 [cs.LG] https://arxiv.org/abs/2406.09187
+[30] Yixuan Yang, Daoyuan Wu, and Yufan Chen. 2025. MCPSecBench: A Systematic Security Benchmark and Playground
+for Testing Model Context Protocols. CoRR abs/2508.13220 (2025). arXiv:2508.13220 doi:10.48550/ARXIV.2508.13220
+[31] Shunyu Yao, Dian Yu, Jeffrey Zhao, Izhak Shafran, Tom Griffiths, Graham Neubig, and Yuan Cao. 2023. Tree of
+Thoughts: Deliberate Problem Solving with Large Language Models. arXiv preprint arXiv:2305.10601 (2023). https:
+//arxiv.org/abs/2305.10601
+[32] Shuli Zhao, Qinsheng Hou, Zihan Zhan, Yanhao Wang, Yuchong Xie, Yu Guo, Libo Chen, Shenghong Li, and Zhi
+Xue. 2025. Mind Your Server: A Systematic Study of Parasitic Toolchain Attacks on the MCP Ecosystem. CoRR
+abs/2509.06572 (2025). arXiv:2509.06572 doi:10.48550/ARXIV.2509.06572
+[33] Weibo Zhao, Jiahao Liu, Bonan Ruan, Shaofei Li, and Zhenkai Liang. 2025. When MCP Servers Attack: Taxonomy,
+Feasibility, and Mitigation. CoRR abs/2509.24272 (2025). arXiv:2509.24272 doi:10.48550/ARXIV.2509.24272
+[34] Weibo Zhao, Jiahao Liu, Bonan Ruan, Shaofei Li, and Zhenkai Liang. 2025. When MCP Servers Attack: Taxonomy,
+Feasibility, and Mitigation. arXiv:2509.24272 [cs.CR] https://arxiv.org/abs/2509.24272
+, Vol. 1, No. 1, Article . Publication date: February 2026.
+SMCP: 安全模型上下⽂协议 23
+[24] 王志强，⾼⼀超，王艳婷，刘素园，孙海峰，程浩然，⽯冠权，⾼浩
+Du, 李祥. 2025. MCPTox: ⼀个针对真实世界 MCP 服务器的⼯具中毒攻击基准. arXiv:2508.14925 [cs.CR]
+https://arxiv.org/abs/2508.14925 [25] 王志涵, 李宏伟, 张瑞, 刘宇, 姜⽂波, 范⽂舒, 赵清川, 和徐国⽂. 2025.
+MPMA：针对模型上下⽂协议的偏好操纵攻击。CoRR abs/2505.11154 (2025)。arXiv:2505.11154
+doi:10.48550/ARXIV.2505.11154
+[26] 王志强，张俊阳，⽯冠权，程浩然，姚云浩，郭凯⽂，杜浩华，和向阳
+李. 2025. MindGuard: 通过决策依赖图追踪、检测和归因 MCP ⼯具中毒攻击. arXiv:2508.20412 [cs.CR]
+https://arxiv.org/abs/2508.20412
+[27] 杰森·魏、王学智、戴尔·舒尔曼斯、⻢滕·博斯⻢、布赖恩·伊赫特、夏⻜、艾德·H·池、勒国维、丹尼
+Zhou. 2022. 思维链提⽰在⼤语⾔模型中激发推理. 神经信息处理系统进展 35 (2022), 24824‒24837. arXiv:2201.11903
+https://arxiv.org/abs/2201.11903 [28] Lilian Weng. 2023. LLM 驱动的⾃主代理. lilianweng.github.io (2023 年 6 ⽉).
+https://lilianweng.github.io/
+posts/2023-06-23-agent/ [29] 沈⾹，郑林芝，李延杰，洪军元，李秦斌，谢寒，张继伟，熊紫迪，谢春林，卡尔
+杨阳，宋晨，和李波。2025。GuardAgent：通过知识赋能的推理，由⼀个 Guard Agent 保护 LLM Agent。arXiv:2406.09187
+[cs.LG] https://arxiv.org/abs/2406.09187 [30] 杨⼀轩，吴道远，和陈宇帆。2025。MCPSecBench：⼀个系统的安全基准和游
+乐场
+⽤于测试模型上下⽂协议。CoRR abs/2508.13220 (2025)。arXiv:2508.13220 doi:10.48550/ARXIV.2508.13220 [31] Shunyu
+Yao, Dian Yu, Jeffrey Zhao, Izhak Shafran, Tom Griffiths, Graham Neubig, 和 Yuan Cao。2023 年。树
+想法：使⽤⼤型语⾔模型的刻意问题解决。arXiv 预印本 arXiv:2305.10601 (2023)。https: //arxiv.org/abs/2305.10601 [32]
+Shuli Zhao, Qinsheng Hou, Zihan Zhan, Yanhao Wang, Yuchong Xie, Yu Guo, Libo Chen, Shenghong Li, 和 Zhi
+Xue. 2025. 注意你的服务器：对 MCP ⽣态系统中寄⽣⼯具链攻击的系统研究. CoRR abs/2509.06572 (2025).
+arXiv:2509.06572 doi:10.48550/ARXIV.2509.06572 [33] 微博 赵伟, 刘嘉豪, 阮博安, 李少⻜, 和 梁振凯. 2025. 当 MCP 服务器
+攻击时：分类法,
+可⾏性、缓解措施。CoRR abs/2509.24272 (2025)。arXiv:2509.24272 doi:10.48550/ARXIV.2509.24272 [34] 微博赵嘉豪、
+阮博⻜、李少⻜、梁振凯。2025 年。当 MCP 服务器攻击时：分类法，
+可⾏性、缓解措施。arXiv:2509.24272 [cs.CR] https://arxiv.org/abs/2509.24272
+, 第 1 卷, 第 1 期, ⽂章 . 出版⽇期: 2026 年 2 ⽉。

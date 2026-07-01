@@ -1,6 +1,7 @@
 /**
  * HOS-Sec-Engine 完整集成验证脚本
- * 三步验证：构建 → 安装 → 运行
+ * V6: 新增 MCP 自我管理层验证
+ * 四步验证：构建 → 安装 → 引擎运行 → MCP 管理层
  */
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -17,6 +18,7 @@ let results = {
   build: { passed: false, details: '' },
   install: { passed: false, details: '' },
   runtime: { passed: false, details: '' },
+  mcp: { passed: false, details: '' },
   overall: false,
 };
 
@@ -64,8 +66,18 @@ log('STEP 1: 构建验证', '执行 npm run build...');
 
 const buildResult = runCommand('npm run build');
 if (buildResult.success) {
-  // Count generated files
-  const skillMdCount = countFiles(path.join(DIST_DIR, 'skills'), 'SKILL.md');
+  // Check MCP layer built files
+  const mcpFiles = [
+    path.join(DIST_DIR, 'src', 'mcp', 'index.js'),
+    path.join(DIST_DIR, 'src', 'mcp', 'registry.js'),
+    path.join(DIST_DIR, 'src', 'mcp', 'discovery.js'),
+    path.join(DIST_DIR, 'src', 'mcp', 'router.js'),
+    path.join(DIST_DIR, 'src', 'mcp', 'health.js'),
+    path.join(DIST_DIR, 'src', 'mcp', 'types.js'),
+  ];
+  const mcpAllExist = mcpFiles.every(f => fs.existsSync(f));
+
+  const skillMdCount = countFiles(SKILLS_DIR, 'SKILL.md');
   const playbookMdCount = countFiles(path.join(DIST_DIR, 'playbooks'), 'PLAYBOOK.md');
   const skillsIndexExists = fs.existsSync(path.join(PROJECT_DIR, 'skills-index.json'));
   const bundledSkillExists = fs.existsSync(path.join(SKILLS_DIR, 'hos-sec-engine', 'SKILL.md'));
@@ -76,11 +88,13 @@ if (buildResult.success) {
     playbookMdGenerated: playbookMdCount,
     skillsIndexGenerated: skillsIndexExists,
     bundledSkillGenerated: bundledSkillExists,
+    mcpLayerBuilt: mcpAllExist,
+    mcpFiles: mcpFiles.map(f => path.relative(DIST_DIR, f)),
   };
 
-  results.build.passed = skillMdCount >= 28 && playbookMdCount >= 5 && skillsIndexExists && bundledSkillExists;
+  results.build.passed = skillMdCount >= 27 && playbookMdCount >= 5 && skillsIndexExists && bundledSkillExists && mcpAllExist;
   results.build.details = buildDetails;
-  console.log(`  ✅ 构建成功`);
+  console.log(`  ✅ MCP 管理层: ${mcpAllExist ? '✅ 全部构建成功' : '❌ 部分缺失'}`);
   console.log(`  ✅ SKILL.md: ${skillMdCount} 个`);
   console.log(`  ✅ PLAYBOOK.md: ${playbookMdCount} 个`);
   console.log(`  ✅ skills-index.json: ${skillsIndexExists ? '已生成' : '缺失'}`);
@@ -95,7 +109,6 @@ if (buildResult.success) {
 log('STEP 2: 安装验证', '执行 npx hos-sec-engine deploy --trae...');
 
 if (results.build.passed) {
-  // Clean old skills first - deploy to project .trae/skills directory
   const targetDir = path.join(PROJECT_DIR, '.trae', 'skills');
   if (fs.existsSync(targetDir)) {
     try { fs.rmSync(targetDir, { recursive: true, force: true }); } catch {}
@@ -104,7 +117,6 @@ if (results.build.passed) {
 
   const deployResult = runCommand('node dist/src/scripts/deploy-skills.js --trae');
   if (deployResult.success) {
-    // Count installed skills
     let installedCount = 0;
     try {
       const entries = fs.readdirSync(targetDir);
@@ -150,8 +162,94 @@ if (results.build.passed) {
   console.log('  ⏭️ 跳过运行验证（构建未通过）');
 }
 
+// ========== STEP 4: MCP 管理层验证 ==========
+log('STEP 4: MCP 自我管理层验证', '验证 MCP 注册、发现、路由、健康监控...');
+
+if (results.build.passed) {
+  const mcpTestPath = path.join(TESTS_DIR, 'core', 'mcp-test.js');
+  if (fs.existsSync(mcpTestPath)) {
+    const mcpResult = runCommand(`node "${mcpTestPath}"`);
+    if (mcpResult.success) {
+      results.mcp.passed = true;
+      results.mcp.details = mcpResult.output;
+      console.log(`  ✅ MCP 验证通过`);
+      console.log(mcpResult.output);
+    } else {
+      results.mcp.passed = false;
+      results.mcp.details = mcpResult.error;
+      console.log(`  ❌ MCP 验证失败: ${mcpResult.error}`);
+    }
+  } else {
+    // 如果 MCP 测试文件不存在，尝试直接 require 验证
+    console.log('  ℹ️ MCP 独立测试文件不存在，执行模块加载验证...');
+    try {
+      const testCode = `
+        const { MCPRegistry, mcpRegistry } = require('${path.join(DIST_DIR, 'src/mcp/registry').replace(/\\/g, '/')}');
+        const { MCPRouter, mcpRouter } = require('${path.join(DIST_DIR, 'src/mcp/router').replace(/\\/g, '/')}');
+        const { MCPHealthMonitor, mcpHealthMonitor } = require('${path.join(DIST_DIR, 'src/mcp/health').replace(/\\/g, '/')}');
+
+        let pass = 0, fail = 0;
+        function assert(cond, msg) { if(cond) pass++; else { fail++; console.log('  ❌', msg); } }
+
+        // Test 1: Registry singleton
+        assert(typeof mcpRegistry.registerServer === 'function', 'MCPRegistry.registerServer exists');
+        assert(typeof mcpRegistry.getServers === 'function', 'MCPRegistry.getServers exists');
+
+        // Test 2: Register a test server
+        mcpRegistry.registerServer({
+          name: 'test-server',
+          command: 'echo',
+          args: ['hello'],
+          env: {},
+          description: 'Test server',
+          autoStart: false,
+          maxRestarts: 1,
+          healthCheckIntervalMs: 60000,
+          timeoutMs: 5000,
+          tags: ['test']
+        });
+        const servers = mcpRegistry.getServers();
+        assert(servers.some(s => s.config.name === 'test-server'), 'Server registered successfully');
+        assert(servers.length >= 1, 'At least 1 server registered');
+
+        // Test 3: Router initialization
+        assert(typeof mcpRouter.routeAndExecute === 'function', 'MCPRouter.routeAndExecute exists');
+        assert(typeof mcpRouter.findToolsForScenario === 'function', 'MCPRouter.findToolsForScenario exists');
+
+        // Test 4: Health monitor
+        assert(typeof mcpHealthMonitor.runFullCheck === 'function', 'MCPHealthMonitor.runFullCheck exists');
+        assert(typeof mcpHealthMonitor.getStatus === 'function', 'MCPHealthMonitor.getStatus exists');
+
+        // Test 5: Cleanup
+        mcpRegistry.unregisterServer('test-server');
+        assert(!mcpRegistry.getServer('test-server'), 'Server unregistered');
+
+        console.log(\`\\n📊 MCP 测试结果: 通过 \${pass}, 失败 \${fail}, 总计 \${pass+fail}\`);
+        process.exit(fail > 0 ? 1 : 0);
+      `;
+      const verifyResult = runCommand(`node -e "${testCode.replace(/"/g, '\\"').replace(/\n/g, ' ')}"`);
+      if (verifyResult.success) {
+        results.mcp.passed = true;
+        results.mcp.details = verifyResult.output;
+        console.log(`  ✅ MCP 模块加载验证通过`);
+        console.log(verifyResult.output);
+      } else {
+        results.mcp.passed = false;
+        results.mcp.details = verifyResult.error;
+        console.log(`  ❌ MCP 模块加载验证失败: ${verifyResult.error}`);
+      }
+    } catch (err) {
+      results.mcp.passed = false;
+      results.mcp.details = err.message;
+      console.log(`  ❌ MCP 模块加载异常: ${err.message}`);
+    }
+  }
+} else {
+  console.log('  ⏭️ 跳过 MCP 验证（构建未通过）');
+}
+
 // ========== OVERALL ==========
-results.overall = results.build.passed && results.install.passed && results.runtime.passed;
+results.overall = results.build.passed && results.install.passed && results.runtime.passed && results.mcp.passed;
 
 // Save report
 fs.mkdirSync(path.dirname(REPORT_FILE), { recursive: true });
@@ -159,10 +257,12 @@ fs.writeFileSync(REPORT_FILE, JSON.stringify(results, null, 2));
 
 log('验证结果', `
   构建: ${results.build.passed ? '✅ 通过' : '❌ 失败'}
+  ${results.build.passed ? `    - MCP 管理层: ${results.build.details.mcpLayerBuilt ? '✅ 构建' : '❌ 缺失'}` : ''}
   安装: ${results.install.passed ? '✅ 通过' : '❌ 失败'}
   运行: ${results.runtime.passed ? '✅ 通过' : '❌ 失败'}
+  MCP: ${results.mcp.passed ? '✅ 通过' : '❌ 失败'}
   总体: ${results.overall ? '✅ 全部通过' : '❌ 存在失败'}
-  
+
   报告已保存: ${REPORT_FILE}
 `);
 

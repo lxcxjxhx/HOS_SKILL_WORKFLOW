@@ -12,7 +12,7 @@ export const k8sMisconfigSkills: AttackDefenseSkill[] = [
             category: 'kubernetes',
             subCategory: 'k8s-misconfig',
             riskLevel: 'critical',
-            confidence: 0.91,
+            confidence: 0.94,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['kubernetes', 'k8s', 'misconfiguration', 'rbac', 'pod-escape', 'cluster-admin'],
@@ -177,7 +177,7 @@ export const k8sMisconfigSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.91,
+            confidence: 0.94,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

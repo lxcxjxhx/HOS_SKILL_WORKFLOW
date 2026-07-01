@@ -13,7 +13,7 @@ export const uploadBypassSkills: AttackDefenseSkill[] = [
       category: 'web',
       subCategory: 'file-upload',
       riskLevel: 'critical',
-      confidence: 0.93,
+      confidence: 0.96,
       updatedAt: '2026-06',
       author: 'HOS-Sec-Engine',
       tags: ['upload', 'bypass', 'file-type', 'extension', 'mime', 'rce'],
@@ -253,7 +253,7 @@ export const uploadBypassSkills: AttackDefenseSkill[] = [
       ],
     },
     quality: {
-      confidence: 0.93,
+      confidence: 0.96,
       reviewed: true,
       tested: true,
       lastVerified: '2026-06',

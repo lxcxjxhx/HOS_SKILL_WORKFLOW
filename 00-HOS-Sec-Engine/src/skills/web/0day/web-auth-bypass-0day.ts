@@ -13,7 +13,7 @@ export const authBypass0daySkills: AttackDefenseSkill[] = [
       category: 'web',
       subCategory: 'authentication',
       riskLevel: 'critical',
-      confidence: 0.85,
+      confidence: 0.89,
       updatedAt: '2026-06',
       author: 'HOS-Sec-Engine',
       tags: ['authentication', 'bypass', '0day', 'login', 'session', 'token'],
@@ -205,7 +205,7 @@ export const authBypass0daySkills: AttackDefenseSkill[] = [
       ],
     },
     quality: {
-      confidence: 0.85,
+      confidence: 0.89,
       reviewed: false,
       tested: false,
       lastVerified: '2026-06',

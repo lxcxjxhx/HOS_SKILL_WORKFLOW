@@ -2,37 +2,40 @@ import { Trigger } from '../types/skill';
 import { MatchDetail } from '../types/result';
 
 /**
- * 多维度评分计算
+ * 多维度评分计算（实例化版本）
  * 基于 Trigger 层的四个维度综合计算匹配分数
+ *
+ * 每个实例拥有独立的缓存，避免全局状态共享和竞态问题。
+ * 可安全用于多引擎实例或多租户场景。
  */
 export class SkillScorer {
   /** 场景描述权重 */
-  private static readonly SCENARIO_WEIGHT = 0.4;
+  private readonly SCENARIO_WEIGHT = 0.4;
   /** 关键词权重 */
-  private static readonly KEYWORD_WEIGHT = 0.3;
+  private readonly KEYWORD_WEIGHT = 0.3;
   /** 别名权重 */
-  private static readonly ALIAS_WEIGHT = 0.15;
+  private readonly ALIAS_WEIGHT = 0.15;
   /** 指标权重 */
-  private static readonly INDICATOR_WEIGHT = 0.15;
+  private readonly INDICATOR_WEIGHT = 0.15;
   /** 相似度计算缓存最大条目数 */
-  private static readonly MAX_SIMILARITY_CACHE_SIZE = 500;
+  private readonly MAX_SIMILARITY_CACHE_SIZE = 500;
   /** 缓存: "sortedQueryTokens|scenario" -> 相似度结果 */
-  private static similarityCache = new Map<string, number>();
+  private similarityCache = new Map<string, number>();
   /** 预分词 Scenario 缓存: scenario文本 -> 分词后的 Set，避免反复 split */
-  private static scenarioTokenCache = new Map<string, Set<string>>();
+  private scenarioTokenCache = new Map<string, Set<string>>();
   /** 最大 Scenario Token 缓存数 */
-  private static readonly MAX_SCENARIO_TOKEN_CACHE = 200;
+  private readonly MAX_SCENARIO_TOKEN_CACHE = 200;
   /** 缓存命中计数器 */
-  private static cacheHits = 0;
+  private cacheHits = 0;
   /** 缓存未命中计数器 */
-  private static cacheMisses = 0;
+  private cacheMisses = 0;
   /** 最大 scenarios 遍历数量，防止恶意 trigger 数据导致性能问题 */
-  private static readonly MAX_SCENARIOS = 100;
+  private readonly MAX_SCENARIOS = 100;
 
   /**
    * 计算综合匹配分数
    */
-  static calculate(query: string, trigger: Trigger): { score: number; details: MatchDetail } {
+  calculate(query: string, trigger: Trigger): { score: number; details: MatchDetail } {
     if (!query?.trim() || !trigger) {
       return { score: 0, details: this.createEmptyDetails() };
     }
@@ -70,7 +73,7 @@ export class SkillScorer {
    * 计算场景描述匹配分数
    * 使用 Jaccard 相似度计算输入与每个场景描述的匹配度，取最高值
    */
-  private static calculateScenarioScore(queryTokens: Set<string>, scenarios: string[]): number {
+  calculateScenarioScore(queryTokens: Set<string>, scenarios: string[]): number {
     if (!scenarios || scenarios.length === 0) return 0;
 
     let maxSimilarity = 0;
@@ -94,7 +97,7 @@ export class SkillScorer {
   /**
    * 计算匹配分数并返回匹配项（单次遍历）
    */
-  private static calculateKeywordScoreWithItems(queryLower: string, items: string[]): { score: number; matched: string[] } {
+  calculateKeywordScoreWithItems(queryLower: string, items: string[]): { score: number; matched: string[] } {
     if (!items || items.length === 0) return { score: 0, matched: [] };
 
     const matched: string[] = [];
@@ -113,7 +116,7 @@ export class SkillScorer {
   /**
    * 计算缓存键：将 Set 排序后与 scenario 拼接
    */
-  private static getSimilarityCacheKey(queryTokens: Set<string>, scenario: string): string {
+  private getSimilarityCacheKey(queryTokens: Set<string>, scenario: string): string {
     const sorted = [...queryTokens].sort().join(',');
     return `${sorted}|${scenario}`;
   }
@@ -121,7 +124,7 @@ export class SkillScorer {
   /**
    * 计算字符串相似度 (Jaccard 相似度)
    */
-  private static calculateStringSimilarity(queryTokens: Set<string>, scenario: string): number {
+  private calculateStringSimilarity(queryTokens: Set<string>, scenario: string): number {
     const key = this.getSimilarityCacheKey(queryTokens, scenario);
 
     const cached = this.similarityCache.get(key);
@@ -132,23 +135,25 @@ export class SkillScorer {
 
     this.cacheMisses++;
     const result = this.computeStringSimilarity(queryTokens, scenario);
-    this.similarityCache.set(key, result);
 
-    // LRU-style eviction: remove the oldest entry when cache exceeds limit
-    if (this.similarityCache.size > this.MAX_SIMILARITY_CACHE_SIZE) {
-      const firstKey = this.similarityCache.keys().next().value;
-      if (firstKey) {
-        this.similarityCache.delete(firstKey);
+    // 批量淘汰：当缓存超过上限时，一次性淘汰 20% 最旧条目
+    // 比逐条淘汰减少高频淘汰操作的 Map 遍历开销
+    if (this.similarityCache.size >= this.MAX_SIMILARITY_CACHE_SIZE) {
+      const evictCount = Math.ceil(this.MAX_SIMILARITY_CACHE_SIZE * 0.2);
+      for (let i = 0; i < evictCount; i++) {
+        const firstKey = this.similarityCache.keys().next().value;
+        if (firstKey) this.similarityCache.delete(firstKey);
       }
     }
 
+    this.similarityCache.set(key, result);
     return result;
   }
 
   /**
    * 获取缓存统计信息
    */
-  static getCacheStats(): { hits: number; misses: number; hitRate: number } {
+  getCacheStats(): { hits: number; misses: number; hitRate: number } {
     const total = this.cacheHits + this.cacheMisses;
     return {
       hits: this.cacheHits,
@@ -158,9 +163,11 @@ export class SkillScorer {
   }
 
   /**
-   * 重置缓存统计
+   * 重置缓存和统计
    */
-  static resetCacheStats(): void {
+  clearCache(): void {
+    this.similarityCache.clear();
+    this.scenarioTokenCache.clear();
     this.cacheHits = 0;
     this.cacheMisses = 0;
   }
@@ -168,7 +175,7 @@ export class SkillScorer {
   /**
    * 获取或预计算 scenario 的分词结果（缓存避免重复 split）
    */
-  private static getScenarioTokens(scenario: string): Set<string> {
+  private getScenarioTokens(scenario: string): Set<string> {
     const cached = this.scenarioTokenCache.get(scenario);
     if (cached) return cached;
 
@@ -184,7 +191,7 @@ export class SkillScorer {
   /**
    * 实际计算 Jaccard 相似度 (无缓存)
    */
-  private static computeStringSimilarity(queryTokens: Set<string>, scenario: string): number {
+  private computeStringSimilarity(queryTokens: Set<string>, scenario: string): number {
     const set2 = this.getScenarioTokens(scenario);
 
     // 预分配大小优化：选择较小的 Set 作为迭代基准
@@ -203,7 +210,7 @@ export class SkillScorer {
   /**
    * 创建空的匹配详情
    */
-  private static createEmptyDetails(): MatchDetail {
+  private createEmptyDetails(): MatchDetail {
     return {
       scenarioScore: 0,
       keywordScore: 0,

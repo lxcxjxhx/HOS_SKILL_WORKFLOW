@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from 'async_hooks';
 import * as crypto from 'crypto';
-import { ExecutionContext, ExecutionLog, Finding, EvidenceItem } from './types';
+import { ExecutionContext, ExecutionLog, Finding, EvidenceItem, TokenUsage } from './types';
 
 const MAX_FINDINGS = 1000;
 const MAX_EVIDENCE = 500;
@@ -61,6 +61,39 @@ export class ExecutionContextManager {
 
   get(): ExecutionContext {
     return this.context;
+  }
+
+  /**
+   * V5: 记录 Token 使用量
+   */
+  recordTokenUsage(input: number, output: number, cached: number = 0, phase?: string): void {
+    const usage = this.context.tokenUsage ?? { input: 0, output: 0, cached: 0, total: 0 };
+    usage.input += input;
+    usage.output += output;
+    usage.cached += cached;
+    usage.total += input + output;
+    if (phase) {
+      usage.byPhase = usage.byPhase || {};
+      const existing = usage.byPhase[phase] ?? { input: 0, output: 0 };
+      existing.input += input;
+      existing.output += output;
+      usage.byPhase[phase] = existing;
+    }
+    this.context.tokenUsage = usage;
+  }
+
+  /**
+   * V5: 获取 Token 统计
+   */
+  getTokenUsage(): TokenUsage | undefined {
+    return this.context.tokenUsage;
+  }
+
+  /**
+   * V5: 记录失败模式
+   */
+  recordFailureMode(mode: string): void {
+    this.context.failureMode = mode;
   }
 }
 

@@ -1,0 +1,10806 @@
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security
+Vulnerability Xianzhen Luo
+1 * Jingyuan Zhang
+2 * Shiqi Zhou
+1 * Jinyang Huang
+3 * Chuan Xiao
+1
+Qingfu Zhu
+1 †
+Zhiyuan Ma
+4
+Xing Yue
+2
+Yang Yue
+2 †
+Wencong Zeng
+2
+Wanxiang Che
+1 †
+Abstract
+Evaluating and improving the security capabil ities of code agents requires high-quality, exe cutable vulnerability tasks. However, existing
+works rely on costly, unscalable manual repro duction and suffer from outdated data distribu tions. To address these, we present CVE-Factory,
+the first multi-agent framework to achieve expert level quality in automatically transforming sparse
+CVE metadata into fully executable agentic tasks.
+Cross-validation against human expert reproduc tions shows that CVE-Factory achieves 95% solu tion correctness and 96% environment fidelity,
+confirming its expert-level quality. It is also
+evaluated on the latest realistic vulnerabilities
+and achieves a 66.2% verified success. This au tomation enables two downstream contributions.
+First, we construct LiveCVEBench, a continu ously updated benchmark of 190 tasks spanning
+14 languages and 153 repositories that captures
+emerging threats including AI-tooling vulnera bilities. Second, we synthesize over 1,000 exe cutable training environments, the first large-scale
+scaling of agentic tasks in code security. Fine tuned Qwen3-32B improves from 5.3% to 35.8%
+on LiveCVEBench, surpassing Claude 4.5 Son net, with gains generalizing to Terminal Bench
+(12.5% to 31.3%). We open-source all code,
+data, and models at https://github.com/
+livecvebench/CVE-Factory.
+*Equal contribution
+1
+Harbin Institute of Technology
+(HIT)
+2
+Kuaishou Technology
+3
+Central South University (CSU)
+4
+University of Science and Technology of China (UTSC).
+Correspondence to: Qingfu Zhu
+<
+qfzhu@ir.hit.edu.cn
+> ,
+Yang Yue
+<
+yueyang07@kuaishou.com
+> , Wanxiang Che
+<
+car@ir.hit.edu.cn
+> .
+Proceedings of the 43
+rd
+International Conference on Machine
+Learning, Seoul, South Korea. PMLR 306, 2026. Copyright 2026
+by the author(s).
+Container : wordpress
+CVE-2025-10686.json
+"datePublished "
+:
+"2025-11-14T06:00:09.051Z"
+,
+"cve_descriptions
+"
+:
+"The WordPress is vulnerable to Local File Inclusion…
+"
+,
+"
+cwe_description
+"
+:
+"CWE-22 Improper Limitation of a Pathname to …
+"
+"references
+"
+:
+"https://wpscan.com/...
+"
+,
+"
+cvssV3_1"
+:{"
+scope
+"
+:
+"UNCHANGED"
+,
+"baseScore": 7.2,
+…},
+"affected_versions
+"
+: {"
+versionType
+"
+:
+"
+semver
+"
+,
+"
+version
+"
+:
+"0"
+,
+"lessThan
+"
+:
+"1.2.4"}
+run-tests.sh
+When I use browser
+dev tools…the
+plugin try loading
+files from outside…
+done
+Container : db
+read
+docker-compose.yaml
+Code Agent
+Terminal
+agent@admin:
+~$ cat
+class-meta-shortcode.php
+...
+if (!defined(‘ABSPATH’))
+exit;
+...
+agent@admin:
+~$ vim
+class-metashortcode.php
+think
+write
+view code
+web search
+task.yaml
+CVE-Factory
+Figure 1. Comparison between raw CVE metadata and a com prehensive agentic task. (Top) Sparse CVE metadata consisting
+of vulnerability descriptions, classifications, and reference URLs.
+(Bottom) An agentic task including natural-language instructions,
+an interactive environment, and verification tests.
+1. Introduction
+AI-driven software development has enabled code agents
+to handle high-privilege tasks such as managing complex
+environments, executing scripts, and performing production level deployments (Yang et al., 2025d). As these agents be come widespread, the volume of AI-generated code grows
+explosively while human oversight diminishes proportion ally, making security a critical requirement alongside func tional correctness (Chen et al., 2025). Agents lacking suffi cient security reasoning pose massive systemic risks: high
+autonomy combined with large-scale code output can propa gate vulnerabilities at unprecedented speed (Su et al., 2025).
+Therefore, evaluating and enhancing the security proficiency
+of code agents has become an urgent challenge.
+1
+CVE-Factory：为代码安全扩展专家级代理任务
+漏洞
+罗先振 张景园 周世奇 ⻩锦阳 ⻩川 肖庆福 朱志远
+⻢志远 杨兴 薛阳 薛⽂聪 曾万祥 ⻋万⾥
+摘要
+评估和改进代码代理的安全能⼒需要⾼质量的、可
+执⾏的漏洞任务。然⽽，现有⼯作依赖于昂贵且不
+可扩展的⼿动复现，并受到过时数据分布的影响。
+为了解决这些问题，我们提出了 CVE-Factory，这
+是第⼀个多代理框架，能够将稀疏的 CVE 元数据⾃
+动转换为完全可执⾏的代理任务，并达到专家级质
+量。与⼈类专家复现的交叉验证表明，CVE-Factory
+实现了 95%的解决⽅案正确性和 96%的环境保真
+度，证实了其专家级质量。它还在最新的真实漏洞
+上进⾏了评估，实现了 66.2%的验证成功率。这种
+⾃动化带来了两个下游贡献。⾸先，我们构建了
+LiveCVEBench，这是⼀个包含 190 个任务的持续
+更新基准，涵盖 14 种语⾔和 153 个仓库，捕捉了
+包括 AI ⼯具漏洞在内的新兴威胁。其次，我们综合
+了超过 1,000 个可执⾏训练环境，这是代码安全领
+域中代理任务⾸次实现⼤规模扩展。微调后的
+Qwen3-32B 在 LiveCVEBench 上的表现从 5.3%提
+升⾄ 35.8%，超越了 Claude 4.5 Sonnet，且提升
+效果泛化到 Terminal Bench（从 12.5%提升⾄
+31.3%）。我们在
+https://github.com/livecvebench/CVE-Factory 上
+开源了所有代码、数据和模型。
+*
+平等的贡献 哈尔滨⼯业⼤学（HIT） 快⼿科技 中南⼤学（CSU）
+4 中国科学技术⼤学（UTSC）。通讯地址：朱庆福 , 杨越 , ⻋万祥 .
+第 43 届国际机器学习⼤会论⽂集，韩国⾸尔。PMLR 306, 2026。版
+权所有 2026 年由作者拥有。
+容器：wordpress
+CVE-2025-10686.json
+"发布⽇期 ":"2025-11-14T06:00:09.051Z", "cve 描述":"WordPress 存在本地⽂件
+包含漏洞…", "cwe 描述":"CWE-22 路径名限制不当…" "参考链
+接":"https://wpscan.com/... ", "cvssV3_1":{"范围": "UNCHANGED", "基础分数":
+7.2,…}, "受影响版本": {"版本类型": "semver", "版本": "0", "⼩于": "1.2.4"}
+run-tests.sh
+当我在浏览器中使⽤
+开发者⼯具…
+插件尝试加载
+从外部加载⽂件…
+完成
+容器：db
+读取
+docker-compose.yaml
+代码代理
+终端
+agent@admin:
+~$ cat class-meta shortcode.php ... if
+(!defined('ABSPATH')) exit; ...
+agent@admin:
+~$ vim class metashortcode.php
+思考/考虑
+写⼊
+查看代码
+⽹络搜索
+task.yaml
+CVE-Factory
+图 1. 原始 CVE 元数据与全⾯智能任务之间的⽐较。(顶部) 由漏洞描
+述、分类和参考 URL 组成的稀疏 CVE 元数据。(底部) 包括⾃然语⾔
+指令、交互环境和验证测试的智能任务。
+1. 引⾔
+AI 驱动的软件开发使代码代理能够处理⾼权限任务，例如管
+理复杂环境、执⾏脚本和执⾏⽣产级部署（Yang 等⼈，
+2025d）。随着这些代理的普及，AI ⽣成的代码量呈爆炸性增
+⻓，⽽⼈⼯监督则相应减少，使得安全性成为功能正确性同等
+重要的关键要求（Chen 等⼈，2025）。缺乏⾜够安全推理的
+代理会带来巨⼤的系统性⻛险：⾼⾃主性与⼤规模代码输出相
+结合，可能导致漏洞以前所未有的速度传播（Su 等⼈，
+2025）。因此，评估和提升代码代理的安全能⼒已成为⼀项紧
+迫的挑战。
+1
+arX
+i
+v:2
+602.03012v3 [
+c
+s.C
+R
+]
+2
+9
+M
+ay
+2
+0
+2
+6
+a
+rX
+i
+v:2
+6
+0
+2.0
+3
+0
+1
+2
+v
+3
+[
+c
+s.C
+R
+]
+2
+0
+2
+6
+年
+5
+⽉
+2
+9
+⽇
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+A promising approach is to train and evaluate agents on real istic vulnerability repair tasks. Beyond static code snippets,
+such tasks require executable environments which agents
+can navigate codebases, execute commands, and iteratively
+refine solutions based on feedback. A complete task pack age must therefore provide a task description, an environ ment that faithfully reproduces vulnerabilities, and a suite
+of verification tests and solutions. However, existing task
+generation efforts fall short. While the community main tains CVELists
+1
+, which document extensive collections
+of Common Vulnerabilities and Exposures (CVE), these
+sources provide only sparse descriptions and references, as
+shown in Figure 1. Prior works (Wei et al., 2025; Zhu et al.,
+2025; Wang et al., 2025) manually reproduce CVE meta data into tasks but this human-intensive approach fails to
+scale. CVEs involve heterogeneous programming languages
+and complex, unconfigured systems, costs experts on av erage 10+ hours per CVE (Mu et al., 2018). For instance,
+the WordPress setup in Figure 1 requires installing specific
+packages in a Dockerfile and configuring a backend MySQL
+database. Automated task generation frameworks from soft ware engineering offer partial solutions but remain limited
+to Python or depend on well-configured repositories (Pan
+et al., 2024; Zhang et al., 2025b; Zeng et al., 2025; Yang
+et al., 2025c). The prior attempt at multi-agent CVE re production, CVE-Genie (Ullah et al., 2025), produces task
+formats incompatible with agent training.
+To address these limitations, we present CVE-Factory, a
+multi-agent framework that automatically transforms CVE
+metadata into fully executable agentic tasks. A single agent
+is often intractable because CVE reproduction is an ex ceptionally long-horizon mission often exceeding 200k to kens (Zhang et al., 2025a).. We resolve this by decoupling
+it into three independent generation stages and three pro gressive verification stages, each handled by a specialized
+agent with focused context. Crucially, this isolation is bal anced by a feedback mechanism that intelligently routes
+problems back to the responsible agent. Rather than con straining agents to fixed workflows, we grant them full
+autonomy within safety boundaries, allowing creative explo ration while ensuring rigor through objective script-based
+verification. A central Orchestrator governs this entire life cycle, managing agent activation, results validation, and
+the feedback loop. To enhance realism, task descriptions
+are formulated as user reports rather than technical CVE de scriptions and require holistic validation of the entire system
+rather than isolated submodules.
+We first evaluate the reproduction quality of CVE-Factory by
+reconstructing 215 expert-built tasks from PatchEval (Wei
+et al., 2025) using identical initial metadata. In cross execution experiments, CVE-Factory solutions achieve a
+1
+https://github.com/CVEProject/cvelistV5
+95% pass rate on expert environments, while 96% expert
+solutions match ours. Furthermore, 74% of our tests are
+evaluated as equivalent or superior to expert versions. These
+results demonstrate that CVE-Factory achieves expert-level
+reproduction capability. We then evaluate real-world appli cability by reproducing 454 recent CVEs (May‒December
+2025), with 66.2% passing rigorous manual validation. This
+process reveals an increasing proportion of vulnerabili ties in AI-tools such as PyTorch. This insight motivates
+LiveCVEBench, a continuously updated benchmark of 190
+tasks spanning 14 languages and 153 repositories that tracks
+the evolving threat landscape. With quality validated, we
+attempt the first large-scale synthesis of code security tasks,
+producing over 1,000 executable training tasks. Fine-tuning
+Qwen3-32B on distilled trajectories yields a 6.8× improve ment on LiveCVEBench and 4.2× on PatchEval. Improve ments also generalize to Terminal Bench (2.3×) (Team,
+2025), confirming utility beyond security tasks.
+Our contributions are summarized below:
+·CVE-Factory: A multi-agent framework that au tonomously transforms sparse CVE metadata into fully
+executable agentic tasks with expert-level quality.
+·LiveCVEBench: A continuously updated benchmark
+of 190 tasks spanning 14 languages and 153 reposito ries tracking real-world distribution shifts.
+·Scaling and Training: The first large-scale synthe sis of code security tasks, producing over 1,000 ex ecutable environments. Fine-tuning Qwen3-32B yields
+6.8×, 4.2×, and 2.3× improvements on LiveCVEBench,
+PatchEval, and Terminal-Bench.
+2. Related Work Code Security The primary task in code security is to
+locate and fix vulnerabilities while preserving functional ity (Sanvito et al., 2025). The field has evolved through
+three stages. Early static approaches constructed
+⟨
+vulnerable
+code, fixed code
+⟩
+pairs from CVE commits for training (Fan
+et al., 2020; Fu et al., 2022; Ding et al., 2025; Steenhoek
+et al., 2025; Yang et al., 2025b; Simoni et al., 2025; Gao
+et al., 2024). Evaluation relied on static matching or man ual review (Bhandari et al., 2021; Wang et al., 2021; So
+& Oh, 2023; Mou et al., 2025; Liu et al., 2025). As code
+interpreters became widely adopted, evaluation shifted to
+dynamic test execution (Gao et al., 2021; Bui et al., 2022;
+Wu et al., 2023; Hu et al., 2025). The rise of Code Agents
+has since transformed the paradigm toward autonomous
+exploration and repair within complete environments (Zhu
+et al., 2025; Yu et al., 2025; Wei et al., 2025; Mei et al.,
+2024; Lee et al., 2025; Zhang et al., b;a). However, these
+tasks still require manual construction (Zhu et al., 2025; Mu
+2
+CVE-Factory：为代码安全漏洞扩展专家级代理任务
+⼀种有前景的⽅法是在现实的漏洞修复任务上训练和评估代
+理。除了静态代码⽚段之外，这类任务还需要可执⾏的运⾏
+环境，代理可以在其中导航代码库、执⾏命令，并根据反馈
+迭代地改进解决⽅案。因此，⼀个完整的任务包必须提供任
+务描述、⼀个能够忠实复现漏洞的环境，以及⼀套验证测试
+和解决⽅案。然⽽，现有的任务⽣成⼯作远远不够。虽然社
+区维护着 CVELists，它记录了⼤量的通⽤漏洞和暴露
+（CVE）集合，但这些来源只提供了稀疏的描述和参考，如
+图 1 所⽰。先前的⼯作（Wei 等⼈，2025 年；Zhu 等⼈，
+2025 年；Wang 等⼈，2025 年）⼿动将 CVE 元数据转换为
+任务，但这种⼈⼯密集型⽅法⽆法扩展。CVE 涉及异构编程
+语⾔和复杂、未配置的系统。解决每个漏洞所需要的⼈⼒成
+本，平均来说为 10 多个⼩时/个漏洞（Mu 等⼈，2018
+年）。例如，图 1 中所展⽰的 WordPress 系统需要先在
+Dockerfile 中安装相应的软件包，同时还要配置后端的
+MySQL 数据库。虽然软件⼯程领域的⾃动化任务⽣成框架
+可以提供部分解决⽅案，但这些框架要么仅适⽤于 Python
+语⾔，要么依赖于配置良好的代码库才能正常使⽤（Pan 等
+⼈，2024 年；Zhang 等⼈，2025b 年；Zeng 等⼈，2025
+年；Yang 等⼈，2025c 年）。此前尝试利⽤多智能体来处理
+漏洞问题的⽅案——CVE-Genie（Ullah 等⼈，2025 年） ——所⽣成的任务格式并不适合智能体的训练需求。
+为解决这些限制，我们提出了 CVE-Factory，这是⼀个多智
+能体框架，能够⾃动将 CVE 元数据转换为完全可执⾏的智能
+体任务。由于 CVE 复现是⼀项通常超过 200k 个 token 的⻓
+期任务，单个智能体往往难以处理（Zhang 等⼈，
+2025a）。我们通过将其解耦为三个独⽴的⽣成阶段和三个渐
+进式验证阶段来解决这⼀问题，每个阶段由⼀个具有专注上
+下⽂的专⽤智能体处理。关键在于，这种隔离通过⼀个智能
+地将问题路由回负责智能体的反馈机制得到了平衡。我们不
+仅没有将智能体限制在固定的⼯作流程中，⽽是赋予它们在
+安全边界内的完全⾃主权，允许创造性探索，同时通过基于
+客观数据脚本的验证确保严谨性。⼀个中央的 Orchestrator
+管理整个⽣命周期，负责智能体激活、结果验证和反馈循
+环。为了增强真实性，任务描述被制定为⽤⼾报告，⽽不是
+技术 CVE 描述，并且需要对整个系统进⾏整体验证，⽽不是
+隔离的⼦模块。
+我们⾸先通过使⽤相同的初始元数据重建 PatchEval（Wei
+等⼈，2025 年）中的 215 个专家构建的任务来评估 CVE Factory 的复现质量。在交叉执⾏实验中，CVE-Factory 解
+决⽅案实现了
+1
+https://github.com/CVEProject/cvelistV5
+专家环境下通过率为 95%，⽽ 96%的专家解决⽅案与我们的
+匹配。此外，我们 74%的测试被评估为与专家版本相当或更
+优。这些结果证明 CVE-Factory 达到了专家级的复现能⼒。
+我们随后通过复现 454 个近期 CVE（2025 年 5 ⽉⾄ 12 ⽉）
+来评估现实世界的适⽤性，其中 66.2%通过了严格的 manual
+validation。这⼀过程揭⽰ AI ⼯具（如 PyTorch）中的漏洞⽐
+例正在增加。这⼀洞察促成了 LiveCVEBench 的推出，这是
+⼀个包含 190 项任务、跨越 14 种语⾔和 153 个仓库的持续更
+新基准，⽤于追踪不断变化的威胁格局。在质量得到验证后，
+我们尝试了⾸次⼤规模的代码安全任务综合，⽣成了超过
+1,000 个可执⾏的训练任务。在蒸馏轨迹上微调 Qwen3-
+32B，在 LiveCVEBench 上提升了 6.8 倍，在 PatchEval 上提
+升了 4.2 倍。改进也适⽤于终端基准（2.3 倍）（团队，2025
+年），证实了其在安全任务之外的实⽤性。
+我们的贡献总结如下：
+·CVE-Factory：⼀个多智能体框架，能够⾃主地将稀疏的
+CVE 元数据转换为具有专家级质量的完全可执⾏的智能
+体任务。
+·LiveCVEBench：⼀个持续更新的基准，包含 190 个任
+务，涵盖 14 种语⾔和 153 个仓库，跟踪现实世界的分布
+变化。
+·缩放与训练：⾸次⼤规模合成代码安全任务，⽣成超过
+1,000 个可执⾏环境。微调 Qwen3-32B 在
+LiveCVEBench、PatchEval 和 Terminal-Bench 上分别
+提升了 6.8 倍、4.2 倍和 2.3 倍。
+2. 相关⼯作
+代码安全 代码安全的主要任务是在保持功能的同时定位和修
+复漏洞（Sanvito 等⼈，2025 年）。该领域经历了三个阶段。
+早期的静态⽅法从 CVE 提交中构建 ⟨易受攻击的代码，修复的
+代码⟩ 对进⾏训练（Fan 等⼈，2020 年；Fu 等⼈，2022 年；
+Ding 等⼈，2025 年；Steenhoek 等⼈，2025 年；Yang 等
+⼈，2025b 年；Simoni 等⼈，2025 年；Gao 等⼈，2024
+年）。评估依赖于静态匹配或⼈⼯审查（Bhandari 等⼈，
+2021 年；Wang 等⼈，2021 年；So & Oh，2023 年；Mou
+等⼈，2025 年；Liu 等⼈，2025 年）。随着代码解释器的⼴
+泛采⽤，评估转向动态测试执⾏（Gao 等⼈，2021 年；Bui
+等⼈，2022 年；Wu 等⼈，2023 年；Hu 等⼈，2025 年）。
+⾃代码代理兴起以来，范式已转变为在完整环境中进⾏⾃主探
+索和修复（Zhu 等⼈）。, 2025; 余等, 2025; 魏等, 2025; 梅等,
+2024; 李等, 2025; 张等, b;a). 然⽽, 这些任务仍然需要⼿动构
+建 (朱等, 2025; 沐
+2
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Stage 2 File Generation
+Generator
+Information Collection
+Environment Construction
+Holistic Validation Stage 5 Solution Verification
+Stage 1
+Analyzer
+Stage 3
+web search
+webpage & repository
+Analysis report For Generator: Simulate administrator login process
+For Builder: Initialize the WordPress environment
+For Validator: Create file with LFI_SUCCESS string
+For Solver: Implement whitelist validation rule
+Analyze browsing
+Stage 6
+Checker
+continue
+Builder
+error
+pause pause
+checker@ubuntu:~$ vi task.yaml
+solution.sh
+task-deps
+tests
+docker-reqs.md
+task.yaml
+CVE-2025-10686
+vuln test
+func test
+Expected outcome
+Check env ready
+Stage 4 Vulnerability Verification
+pause
+Validator
+continue
+fail
+error
+vuln test
+func test
+Expected outcome
+Check fix ready
+3 times
+3 times
+fail
+continue
+success/fail
+All file ready
+Docker ready
+Expected outcome
+Check CVE ready Solver
+Test ready
+Solution ready
+test_vuln.py
+test_func.py
+run_test.sh
+<file>
+<name>Dockerfile</name>
+<reason>Base image is
+wrong.</reason>
+</file>
+builder@ubuntu:~$ docker run -it wordpress /bin/bash
+builder@wordpress:~$ apt-get install default-mysql-client
+Get:1 libconfig [45.9 kB]
+Get:2 mysql-common [6636B]
+builder@wordpress:~$ curl ‒O https://...Wpwp-cli.phar
+% Total % Received
+100 6975k 40 1235k
+Terminal
+solver@ubuntu:~$ vi solution.sh
+- VULN_FILE=
+"/var/includes/class
+-meta-shortcode.php
+"
++ VULN_FILE=
+"/var/admin/class-me
+ta-shortcode.php
+”
+solver@ubuntu:~$ bash solution.sh
+Fix completed. The path traversal
+vulnerability has been patched.
+Terminal
+checker@ubuntu:~$ ls -la task-deps/
+creta-showcase.1.2.2.zip,
+creta-showcase.1.2.3.zip,...
+checker@ubuntu:~$ rm task-deps/
+creta-showcase.1.2.3.
+checker@ubuntu:~$ vi task.yaml
+- Identify and fix the path handling
+vulnerability (CVE-2025-10686).
++ Could you please fix this...
+Terminal
+CVE-2025-10686.md
+error
+https://wpscan.com/vulnerability/27d58c
+5a-ab87-41aa-a806-53fa96d4351c/
+A path traversal vulnerability in the Creta
+Testimonial Showcase WordPress plugin.
+error
+Figure 2. Overview of CVE-Factory. CVE Metadata are processed through six stages: three decoupling stages (Stages 1‒3) generate
+task components independently, and three coupling stages (Stages 4‒6) progressively verify and align them. A central Orchestrator
+manages the workflow, activating specialized agents and executing verification scripts per stage. Agents communicate with Orchestrator
+via continue, error
+, or pause signals, where pause triggers the feedback mechanism to route revisions to original file creators.
+et al., 2018). This scarcity severely constrains agent-based
+evaluation and training at scale for code security.
+Agentic Task Construction Automatically constructing
+executable tasks from static information is an active research
+area. SWE-smith and R2E-Gym (Yang et al., 2025c; Jain
+et al., 2025) use agents to explore environments but still
+require manual Dockerfile finalization. SWE-bench-Live
+and SWA (Zhang et al., 2025b; Vergopoulos et al., 2025)
+achieve full automation but only for Python repositories with
+standard metadata like requirements.txt. Multi-language
+frameworks such as SWE-Factory (Guo et al., 2025) re main limited in scale, covering only a dozen repositories.
+These methods are insufficient for CVEs, which involve
+diverse languages, complex service architectures, and in complete environmental information. CVE-Genie (Ullah
+et al., 2025) made initial attempts at multi-agent CVE repro duction, demonstrating feasibility but without generating
+complete task packages including Dockerfiles, test scripts,
+and task descriptions. CVE-Factory addresses these gaps by
+automating CVE transformation at scale.
+3. CVE-Factory
+CVE-Factory is a multi-agent framework that transforms
+raw CVE metadata into verified, executable task packages.
+As illustrated in Figure 2, package follow the Terminal
+Bench (Team, 2025) and includes: task.yaml for instruc tions; Dockerfile and docker-compose.yaml for
+environment setup; solution.sh as the reference fix;
+and run-tests.sh to execute evaluation. For security
+tasks, testing is split into test func.py (functional sta bility) and test vuln.py (vulnerability presence before
+fixing and resolution afterward).
+3.1. Architecture Design
+Task Decouple & Couple Directly employing existing
+code agent frameworks like Claude Code to reproduce a
+CVE often fails. This mission requires transforming sparse
+descriptions into a complete environment, test suite, and
+solution. The high volume of required files and the long
+verification cycles typically overwhelm the agents. We ad dress this by splitting the process into six stages: three
+decoupling stages (Information Collection, File Generation,
+and Environment Construction) that break the mission into
+independent tasks, and three coupling stages that progres sively align these components to restore the original holistic
+task. Stage 4 aligns the environment with the tests to verify
+the vulnerability trigger, while Stage 5 aligns the solution
+with the verified environment to fix the vulnerability. By
+the time Stage 6 performs the final end-to-end verification,
+the task difficulty is significantly reduced because the core
+components are already synchronized. With this sequence
+of isolated generation and incremental alignment, our de sign ensures that the cognitive burden remains low while
+successfully restoring the full-scale task.
+3
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+阶段 2 ⽂件⽣成
+⽣成器
+信息收集
+环境构建
+整体验证阶段 5 解决⽅案验证
+阶段 1
+分析器
+阶段 3
+⽹络搜索
+⽹⻚ & 仓库
+分析报告
+对于⽣成器：模拟管理员登录过程 对于构建器：初始化
+W
+⽂
+o
+件
+rd
+对
+Pr
+于
+es
+解
+s 环
+决
+境
+器
+对于验证器：创建包含 LFI_SUCCESS 字符串的
+：实现⽩名单验证规则
+分析 浏览
+阶段 6
+检查器
+继续
+构建者
+错误
+暂停 暂停
+checker@ubuntu:~$ vi task.yaml
+solution.sh
+任务依赖关系
+测试
+docker-reqs.md
+task.yaml
+CVE-2025-10686
+漏洞测试
+func test
+预期结果
+检查环境就绪
+阶段 4 漏洞验证
+暂停
+验证器
+继续
+失败
+错误
+漏洞测试
+测试函数
+预期结果
+检查修复是否准备就绪
+3 次
+3 次
+失败
+继续
+成功/失败
+所有⽂件已准备就绪
+Docker 已准备就绪
+预期结果
+CVE 检查准备就绪 Solver
+测试就绪
+解决⽅案就绪
+test_vuln.py
+test_func.py
+run_test.sh
+Dockerfile 基础镜像不正确。
+builder@ubuntu:~$ docker run -it wordpress /bin/bash
+builder@wordpress:~$ apt-get install default-mysql-client
+获取：1 libconfig [45.9 kB]
+获取：2 mysql-common [6636B]
+b
+%
+u
+总
+ild
+计
+er@
+%
+w
+已
+o
+接
+rd
+收
+pr
+：
+es
+100 
+s:~$ 
+6975k
+curl ‒O
+40 
+h
+1235k
+ttps://...Wpwp-cli.phar
+终端
+solver@ubuntu:~$ vi solution.sh -
+VULN_FILE="/var/includes/class-meta shortcode.php" + VULN_FILE="/var/admin/class- meta-shortcode.php”
+solver@ubuntu:~$ bash solution.sh 修复完成。路径遍历
+漏洞已修复。
+终端
+checker@ubuntu:~$ ls -la task-deps/ creta showcase.1.2.2.zip, creta-showcase.1.2.3.zip,...
+checker@ubuntu:~$ rm task-deps/ creta-showcase.1.2.3.
+checker@ubuntu:~$ vi task.yaml - 识别并修复路径处理漏洞
+(CVE-2025-10686).
++ 您能否修复这个问题...
+终端
+CVE-2025-10686.md
+错误
+https://wpscan.com/vulnerability/27d58c5a ab87-41aa-a806-53fa96d4351c/
+Creta Testimonial Showcase WordPress 插件中
+的路径遍历漏洞。
+错误
+图 2. CVE-Factory 的概述。CVE 元数据通过六个阶段进⾏处理：三个解耦阶段（阶段 1-3）独⽴⽣成任务组件，三个耦合阶段（阶段 4-6）逐
+步验证和校准它们。⼀个中央协调器管理⼯作流，根据每个阶段激活专业代理并执⾏验证脚本。代理通过继续、错误或暂停信号与协调器通
+信，其中暂停会触发反馈机制将修订路由到原始⽂件创建者。
+et al., 2018）。这种稀缺性严重限制了在代码安全⽅⾯对基于
+代理的评估和⼤规模训练。
+从静态信息⾃动构建可执⾏任务是⼀个活跃的研究领域。
+SWE-smith 和 R2E-Gym（Yang 等⼈，2025c；Jain 等⼈，
+2025）使⽤代理来探索环境，但仍然需要⼿动完成
+Dockerfile。SWE-bench-Live 和 SWA（Zhang 等⼈，
+2025b；Vergopoulos 等⼈，2025）实现了完全⾃动化，但
+仅适⽤于具有标准元数据（如 requirements.txt）的 Python
+仓库。像 SWE-Factory（Guo 等⼈，2025）这样的多语⾔框
+架在规模上仍然有限，仅涵盖⼗⼏个仓库。这些⽅法对于 CVE
+来说是不够的，CVE 涉及多种语⾔、复杂的服务架构和不完整
+的环境信息。CVE-Genie（Ullah 等⼈，2025）在多代理 CVE
+再现⽅⾯做出了初步尝试，展⽰了可⾏性，但没有⽣成包括
+Dockerfile、测试脚本和任务描述的完整任务包。CVE Factory 通过⾃动化⼤规模的 CVE 转换来解决这些差距。
+3. CVE-Factory
+CVE-Factory 是⼀个多代理框架，将原始 CVE 元数据转换为经
+过验证的可执⾏任务包。如图 2 所⽰，包遵循终端基准（团
+队，2025 年），包括：task.yaml ⽤于指令
+配置；Dockerfile 和 docker-compose.yaml ⽤于
+环境配置；以 solution.sh 作为参考修复；并使⽤ run tests.sh 执⾏评估。对于安全任务，测试分为 test func.py
+（功能稳定性）和 test vuln.py（修复前存在漏洞，修复后解
+决）。
+3.1. 架构设计
+任务解耦与耦合直接采⽤现有的代码代理框架如 Claude
+Code 来复现 CVE 往往失败。这项任务需要将稀疏描述转化为
+完整的环境、测试套件和解决⽅案。所需⽂件的⾼容量和漫⻓
+的验证周期通常使代理不堪重负。我们通过将过程分为六个阶
+段来解决这⼀问题：三个解耦阶段（信息收集、⽂件⽣成和环
+境构建）将任务分解为独⽴任务，以及三个耦合阶段逐步对⻬
+这些组件以恢复原始的整体任务。阶段 4 将环境与测试对⻬以
+验证漏洞触发，阶段 5 将解决⽅案与验证后的环境对⻬以修复
+漏洞。当阶段 6 执⾏最终端到端验证时，任务难度显著降低，
+因为核⼼组件已经同步。通过这种隔离⽣成和增量对⻬的序
+列，我们的设计确保认知负担保持低，同时成功恢复全⾯任
+务。
+3
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Context Isolation & Reuse Each stage is assigned a spe cialized agent with an independent context. Agents do not
+share dialogue histories. Instead, essential knowledge is
+transferred via distilled Markdown files. This isolation pre vents irrelevant information from consuming limited context
+windows. For instance, extensive Docker logs are largely
+irrelevant to subsequent verification. However, we also im plement a feedback mechanism for scenarios where reusing
+previous information improves efficiency. When an agent
+identifies a fundamental flaw requiring file reconstruction,
+the system routes the failure back to the original creator.
+This allows the original agent to leverage exploration his tory for efficient repair rather than restarting from scratch.
+Agent Autonomy & Control Our agents are not restricted
+to predefined workflows or tools. Instead, each agent
+is a Claude Code session with the liberty to explore the
+workspace, execute commands, and adapt to feedback au tonomously. However, such high autonomy requires con straints to prevent agents from being misled by prior infor mation, executing unsafe operations, or making subjective
+judgments. First, we maintain information asymmetry by
+blinding Builder to pre-generated tests or solutions. This
+prevents agents from mocking the expected results and stops
+error propagation. Second, agents are prohibited from read ing or writing files outside the designated working directory
+and cannot execute dangerous system commands. Finally,
+task completion is determined by objective static scripts
+rather than an agent’
+s self-assessment.
+Orchestrator A central Orchestrator manages the entire
+reproduction process. It controls CVE state flow, executes
+verification scripts, and activating agents. Agents interact
+with it through a structured agent-res.xml
+, which has
+three signals.
+continue indicates that the agent considers
+its task complete. Orchestrator then performs static script
+validation, like ensuring required files are generated. If this
+validation fails, the error detail is sent back to the agent for
+further refinement.
+Error means that the CVE is deter mined as irreproducible by agent, prompting the Orchestra tor to terminate the process. Finally, pause triggers the
+feedback mechanism. In this case, the agent identifies the
+problematic file and the reason for the revision. Orchestrator
+maintains a file ownership map to route revision requests
+to original creators. Once the creator resolves the issue and
+returns its own continue signal, Orchestrator notifies the
+paused agent to resume. This design allows agents to focus
+purely on the output files without tracking file provenance.
+Orchestrator handles all the background work .
+3.2. Multi-Agent Reproduction
+The reproduction pipeline consists of six stages coordinated
+by a central Orchestrator (Figure 2). Raw CVE JSON en tries are first converted to Markdown, filtering extraneous
+metadata such as timestamps and organizational tags. This
+Markdown format serves as the unified knowledge transfer
+medium between specialized agents across stages.
+Information Collection The Analyzer agent is directly
+triggered to process the initial CVE metadata. Using web
+search and fetch tools, it gathers technical details from ex ternal links and distills them into a shared public.md and
+four role-specific documents to provide tailored context for
+subsequent agents. If Analyzer determines the information
+is insufficient for a faithful reproduction, such as proprietary
+software or missing source repositories, it issues an error
+signal and Orchestrator will terminate the process.
+File Generation Generator synthesizes the task’
+s logi cal components from extracted documents. It produces
+task.yaml modeling authentic user reports, dynamic
+and holistic test func.py and test vuln.py. These
+scripts are designed for executable validation of the en tire system behavior rather than static pattern matching
+within submodules. Furthermore, it produces the reference
+solution.sh
+, the execution script run-tests.sh
+,
+and a docker-reqs.md file. The latter provides essen tial technical guidance, such as file placement and service
+configurations, for the subsequent stage.
+Environment Construction Builder explores and ex ecutes various Docker commands to produce a valid
+Dockerfile and docker-compose.yaml. To en sure rigorous reproduction, it operates under a
+“blind build ing
+”
+constraint without access to the tests or the solution.
+Vulnerability Verification Orchestrator first executes
+check env ready, which requires test vuln.py to
+fail (vulnerability present) and test func.py to pass
+(environment stable). If verification fails, Validator is ac tivated to diagnose and rectify the environment, utilizing
+check env ready as a self-check tool. After Valida tor issues a continue signal, Orchestrator re-executes
+check env ready. If it still fails, the failure details are
+fed back to Validator for further refinement, with a max imum of three retry attempts. If this limit is exceeded,
+Orchestrator judges the reproduction as a failure and ter minates the process to minimize resource waste. Further more, if Validator identifies a structural flaw requiring a
+file rewrite (e.g.,
+Dockerfile), it issues a pause signal,
+triggering the feedback mechanism to route revisions to
+Builder. Following the Builder
+’
+s revision and continue
+signal, Orchestrator resumes the Validator
+’
+s session.
+Solution Verification Orchestrator first executes
+check fix ready by applying the solution.sh
+and rerun the run-tests.sh. Success requires both
+4
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+上下⽂隔离与重⽤每个阶段都分配⼀个专⻔的代理，并拥有
+独⽴的上下⽂。代理之间不共享对话历史。相反，通过蒸馏
+的 Markdown ⽂件传输关键知识。这种隔离防⽌了不相关信
+息占⽤有限的上下⽂窗⼝。例如，⼤量的 Docker ⽇志与后
+续验证关系不⼤。然⽽，我们也为那些重⽤先前信息能提⾼
+效率的场景实现了反馈机制。当代理识别出需要⽂件重建的
+基本错误时，系统会将错误路由回原始创建者。这使得原始
+代理能够利⽤探索历史进⾏⾼效修复，⽽不是从头开始重
+启。
+代理⾃主性与控制我们的代理不受预定义⼯作流程或⼯具的
+限制。相反，每个代理是⼀个 Claude Code 会话，可以⾃由
+探索⼯作空间、执⾏命令并⾃主适应反馈。然⽽，这种⾼⾃
+主性需要约束，以防⽌代理被先验信息误导、执⾏不安全操
+作或做出主观判断。⾸先，我们通过向 Builder 隐藏预⽣成
+的测试或解决⽅案来维持信息不对称。这防⽌了代理模拟预
+期结果并阻⽌错误传播。其次，代理被禁⽌读取或写⼊指定
+⼯作⽬录外的⽂件，并且不能执⾏危险的系统命令。最后，
+任务完成是由客观的静态脚本决定，⽽不是代理的⾃我评
+估。
+Orchestrator A 的中央 Orchestrator 管理整个复制过程。它
+控制 CVE 状态流，执⾏验证脚本并激活代理。代理通过⼀个
+具有三个信号的结构化 agent-res.xml 与其交互。continue
+表⽰代理认为其任务已完成。Orchestrator 然后执⾏静态脚
+本验证，例如确保⽣成了所需的⽂件。如果此验证失败，错
+误详细信息将发送回代理以进⾏进⼀步改进。Error 表⽰代
+理确定 CVE ⽆法复制，提⽰ Orchestrator 终⽌进程。最
+后，pause 触发反馈机制。在这种情况下，代理识别出有问
+题的⽂件和修订原因。Orchestrator 维护⼀个⽂件所有权映
+射，以将修订请求路由到原始创建者。⼀旦创建者解决了问
+题并返回⾃⼰的继续信号，Orchestrator 会通知暂停的代理
+恢复。这种设计允许代理专注于输出⽂件，⽽⽆需跟踪⽂件
+来源。
+Orchestrator 处理所有后台⼯作。
+3.2. 多代理复现
+复现流程由⼀个中央 Orchestrator 协调的六个阶段组成（图
+2）。原始 CVE JSON
+尝试⾸先转换为 Markdown，过滤掉如时间戳和组织标签等
+⽆关元数据。这种 Markdown 格式作为不同阶段之间专业代
+理之间统⼀的知识传递媒介。
+信息收集 分析器代理直接被触发来处理初始的 CVE 元数
+据。利⽤⽹络搜索和获取⼯具，它从外部链接收集技术细
+节，并将它们提炼成⼀个共享的 public.md ⽂件和四个⻆⾊
+特定的⽂件，为后续的代理提供定制化的上下⽂。如果分析
+器确定信息不⾜以忠实复现，例如专有软件或缺失的源代码
+仓库，它会发出错误信号，并且 Orchestrator 将终⽌进程。
+⽂件⽣成器从提取的⽂档中合成任务的逻辑组件。它⽣成
+task.yaml 模型真实⽤⼾报告，动态和全⾯的 test func.py
+和 test vuln.py。这些脚本设计⽤于可执⾏验证整个系统⾏
+为，⽽不是在⼦模块中静态模式匹配。此外，它还⽣成参考
+解决⽅案.sh、执⾏脚本 run-tests.sh 和 docker-reqs.md ⽂
+件。后者为后续阶段提供关键技术指导，如⽂件放置和服务
+配置。
+环境构建构建器探索和
+执⾏各种 Docker 命令以⽣成有效的
+Dockerfile 和 docker-compose.yaml。为确保严格的可复
+现性，它在⼀个“盲构建”约束下运⾏，⽆法访问测试或解
+决⽅案。
+漏洞验证协调器⾸先执⾏检查环境就绪，这需要测试
+vuln.py 失败（存在漏洞）并且测试 func.py 通过（环境稳
+定）。如果验证失败，验证器被激活以诊断和修正环境，利
+⽤检查环境就绪作为⾃检⼯具。在验证器发出继续信号后，
+协调器重新执⾏检查环境就绪。如果它仍然失败，失败详情
+被反馈给验证器以进⾏进⼀步优化，最多三次重试尝试。如
+果超过此限制，协调器将复现判断为失败并终⽌进程以最⼩
+化资源浪费。此外，如果验证器识别出需要⽂件重写（例如
+Dockerfile）的结构性缺陷，它发出暂停信号，触发反馈机
+制将修订路由到构建器。在构建器的修订和继续信号后，协
+调器恢复验证器的会话。
+解决⽅案验证协调器⾸先执⾏ check fix ready，通过应⽤
+solution.sh 并重新运⾏ run-tests.sh。成功需要两者都满
+⾜。
+4
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Table 1. Cross-validation results between CVE-Factory and
+PatchEval. Solution correctness and environment fidelity are mea- sured by pass rate; test quality reports the percentage of CVE Factory tests rated equal or better than expert tests.
+Metric Configuration Pass Rate(%)
+Solution Correctness
+Pe + Pt + Cs
+95.35
+Environment Fidelity
+Ce + Ct + Ps
+96.13
+Test Quality
+Ct > = Pt
+73.91
+test vuln.py and test func.py to pass. If verifica tion fails, Solver is triggered to adjust the fix or the tests.
+Retry and feedback logic follows Stage 4.
+Holistic Validation check cve ready is executed and
+Checker is activated regardless of outcome. On failure,
+Checker fixes identified errors. On success, it performs
+quality assurance to remove mock code, static test suites, or
+data leakage. After Checker completes its task, Orchestrator
+performs a final check cve ready. If successful, the
+CVE is officially marked as reproduced.
+Through this six-stage pipeline, CVE-Factory transforms
+CVE metadata into complete, verified task packages con taining environments, test suites, and solutions. The decou pled architecture enables parallel processing of hundreds of
+CVEs while maintaining reproduction quality.
+4. Experiment
+4.1. Expert-Level Quality Validation
+To evaluate whether CVE-Factory can match expert-level
+quality, we conduct cross-validation against PatchEval (Wei
+et al., 2025). It has 230 CVEs manually reproduced by se curity experts spanning the 65 most prevalent CWE types
+across Python, JavaScript, and Go. We exclude 15 CVEs
+incompatible with our hardware, yielding 215 valid samples.
+Given identical initial information, CVE-Factory indepen dently reproduces each CVE. We use Claude 4.5 Sonnet
+for the analyzer and Opus for other agents. We denote
+PatchEval and CVE-Factory as
+P
+and
+C
+respectively, with
+each reproduction comprising three components
+(
+e, t, s
+):
+environment, test suite, and solution.
+Solution Validation. We validate solution correctness by
+replacing
+Ps
+with
+Cs
+in the PatchEval setting. Results
+show
+Cs
+achieves a 95.35% pass rate (Table 1), demon strating strong alignment with expert judgment. The few
+failures stem from a stylistic difference: CVE-Factory fa vors targeted line-level edits using sed
+, whereas experts
+typically apply git apply patches that replace entire
+blocks. What’
+s more, manual inspection of passing cases
+reveals that
+Cs
+sometimes addresses edge cases overlooked
+by experts. For instance, in CVE-2023-33967, the expert
+patch addresses only MySQL injection, while
+Cs
+addition ally guards against PostgreSQL-specific syntax variants.
+Test Validation. We next evaluate whether
+Ct
+correctly
+detects vulnerabilities. Running
+Ct
+on unpatched expert en vironments
+Pe
+yields a 54.88% pass rate, substantially lower
+than expected. However, failure analysis reveals that most
+failures reflect stricter standards rather than deficiencies.
+Specifically, 16.03% of failures occur because
+Ct
+enforces
+stricter security criteria than
+Pt
+. In CVE-2021-21384,
+Ps
+patches only the Unix path traversal, while
+Ct
+additionally
+tests Windows-style path formats(Appendix F). Another
+29.09% fail because
+Ct
+requires end-to-end system valida tionexercising complete service stacks rather than isolated
+submodules. This reflects our deliberate design: prioritizing
+realistic scenarios over isolated unit testing.
+Environment Validation. Given the tight coupling be tween
+Ct
+and
+Ce
+, we validate environment by testing
+whether expert solutions
+Ps
+work within CVE-Factory
+’
+s
+reproduction. We apply
+Ps
+to
+Ce
+and execute
+Ct. Af ter excluding cases where
+Ct
+is demonstrably stricter, the
+pass rate reaches 96.13%. This confirms that
+Ce
+faithfully
+reconstructs the CVE. The remaining failures arise from
+solution-test coupling: when multiple valid fix strategies
+exist, CVE-Factory may choose a different approach than
+experts, causing
+Ct
+to expect different post-patch behavior.
+This coupling also exists in PatchEval, where some
+Pt
+are
+tailored to specific
+Ps
+implementations.
+Test Quality Comparison. Pass rates establish correct ness but not comprehensiveness. A test may be correct
+yet superficial. To assess quality, we compare
+Ct
+against
+Pt
+using a dedicated comparison agent, categorizing each
+pair into three levels: Equal (same coverage), Better (
+Ct
+covers all of
+Pt
+plus additional scenarios), and Worse (other wise). Static pattern-matching tests are directly categorized
+as Worse. Results show 73.91% of CVE-Factory
+’
+s tests
+rated Equal or Better. Notably, Better cases exhibit sub stantially broader coverage: rather than validating a single
+attack path,
+Ct
+systematically probes multiple entry points,
+diverse injection syntaxes, bypass techniques, and varia tions in payload size and depth. This comprehensive testing
+reflects CVE-Factory
+’
+s ability to reason holistically about
+vulnerabilities rather than replicating documented exploits.
+Across all three dimensions CVE-Factory matches or ex ceeds expert-level reproductions. Crucially, this quality
+comes with dramatically improved efficiency. Experts re port spending 5‒24 hours per CVE (Zhu et al., 2025); CVE Factory averages 48 minutes per reproduction, yielding a
+6‒30
+×
+speedup. More importantly, CVE-Factory supports
+massive parallelization: with 20 concurrent workers, we
+5
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+表 1. CVE-Factory 和 PatchEval 之间的交叉验证结果。解决⽅案正确
+性和环境保真度通过通过率来衡量；测试质量报告了 CVEFactory 测
+试中被评为等于或优于专家测试的百分⽐。
+指标 配置通过率(%)
+解决⽅案正确性 P+ P+ C 95.35 环境保真度 C+ C+ P
+96.13 测试质量 C>= P 73.91
+测试 vuln.py 和 func.py 以通过。如果 verifica-
+如果调整失败，Solver 将被触发以调整修复或测试。
+重试和反馈逻辑遵循第 4 阶段。
+整体验证检查 CVE 准备已执⾏并
+Checker 会根据结果是否成功⽽激活。在失败的情况下，
+Checker 会修复已识别的错误。在成功的情况下，它会执⾏
+质量保证，以移除模拟代码、静态测试套件或数据泄漏。
+Checker 完成任务后，Orchestrator 会进⾏最终的 cve
+ready 检查。如果成功，CVE 将被正式标记为可复现。
+通过这个六阶段管道，CVE-Factory 将 CVE 元数据转换为包
+含环境、测试套件和解决⽅案的完整、经过验证的任务包。
+解耦架构能够并⾏处理数百个 CVE，同时保持可复现性。
+4. 实验
+4.1. 专家级质量验证
+为了评估 CVE-Factory 是否能达到专家级质量，我们将其与
+PatchEval (Wei 等⼈, 2025) 进⾏交叉验证。PatchEval 包含
+230 个由安全专家⼿动复制的 CVE，这些 CVE 涵盖了
+Python、JavaScript 和 Go 中的 65 种最常⻅的 CWE 类型。
+我们排除了 15 个与我们的硬件不兼容的 CVE，从⽽得到
+215 个有效样本。在初始信息相同的情况下，CVE-Factory
+独⽴地复制每个 CVE。我们使⽤ Claude 4.5 Sonnet 作为分
+析器，并使⽤ Opus 作为其他代理。我们将 PatchEval 和
+CVE-Factory 分别表⽰为 P 和 C，每个复制过程包含三个组
+件 (e, t, s)：环境、测试套件和解决⽅案。
+解决⽅案验证。我们通过在 PatchEval 设置中⽤ C 替换 P 来
+验证解决⽅案的正确性。结果显⽰ C 达到了 95.35%的通过
+率（表 1），这表明其与专家判断⾼度⼀致。少数失败案例源
+于⻛格差异：CVE-Factory 倾向于使⽤ sed 进⾏有针对性的
+⾏级编辑，⽽专家通常应⽤替换整个块的 git apply 补丁。
+更重要的是
+⼈⼯检查通过案例发现，C 有时能处理专家遗漏的边缘情
+况。例如，在 CVE-2023-33967 中，专家补丁仅处理
+MySQL 注⼊，⽽ C 额外防范了 PostgreSQL 特定的语法变
+体。
+测试验证。我们接下来评估 C 是否正确检测漏洞。在未打补
+丁的专家环境中运⾏ Con，得到 54.88%的通过率，远低于
+预期。然⽽，失败分析表明，⼤多数失败反映的是更严格的
+标准，⽽不是缺陷。具体来说，16.03%的失败是因为 C 执
+⾏⽐ P 更严格的安全标准。在 CVE-2021-21384 中，P 仅修
+复了 Unix 路径遍历，⽽ C 额外测试了 Windows ⻛格的路径
+格式（附录 F）。另外 29.09%的失败是因为 C 需要端到端系
+统验证，执⾏完整的服务堆栈，⽽不是隔离的⼦模块。这反
+映了我们的有意设计：优先考虑实际场景，⽽不是隔离的单
+元测试。
+环境验证。鉴于 C 和 C 之间的紧密耦合，我们通过测试专家
+解决⽅案 P 是否在 CVE-Factory 的复现环境中有效来验证环
+境。我们将 P 应⽤于 C 并执⾏ C。在排除 C 明显更严格的情
+况后，通过率达到 96.13%。这证实了 C 忠实地重建了
+CVE。剩余的失败源于解决⽅案-测试耦合：当存在多个有效
+的修复策略时，CVE-Factory 可能会选择与专家不同的⽅
+法，导致 C 期望不同的补丁后⾏为。这种耦合也存在于
+PatchEval 中，其中⼀些 P 针对特定的 P 实现进⾏了定制。
+测试质量对⽐。通过率可以确⽴正确性但⽆法确保全⾯性。
+⼀个测试可能正确但流于表⾯。为了评估质量，我们使⽤专
+⻔的对⽐代理将 C 与 P 进⾏⽐较，将每⼀对分类为三个等
+级：相同（覆盖范围相同）、更好（C 覆盖了 P 的所有场景
+并包含额外场景）、更差（其他情况）。静态模式匹配测试直
+接归类为更差。结果显⽰ CVE-Factory 的 73.91%的测试被
+评为相同或更好。值得注意的是，更好案例表现出显著更⼴
+泛的覆盖范围：C 系统性地探测多个⼊⼝点、多样的注⼊语
+法、绕过技术以及有效载荷⼤⼩和深度的变化，⽽不仅仅是
+验证单个攻击路径。这种全⾯的测试反映了 CVE-Factory 能
+够整体性地推理漏洞，⽽不是复制已记录的利⽤。
+在所有三个维度上，CVE-Factory 匹配或
+能够达到专家级的复制品。关键在于这种质量
+带来了效率的显著提升。专家报告称每个 CVE（Zhu 等⼈，
+2025 年）需要花费 5-24 ⼩时；CVEFactory 每个复现平均只
+需 48 分钟，速度提升 6-30 倍。更重要的是，CVE-Factory ⽀
+持⼤规模并⾏化：使⽤ 20 个并发⼯作线程时，我们
+5
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+reproduce all 215 CVEs in under 5 hours, which is a
+workload that would require weeks of expert effort.
+4.2. Validation on Real-World Distribution
+While the results on PatchEval are promising, its CVEs are
+limited to three languages, focused on 65 CWE types, and
+restricted to GitHub repositories. To validate CVE-Factory
+’
+s
+effectiveness on real-world vulnerabilities distribution, we
+choose to reproduce CVEs directly from CVElistV5.
+4.2.1. SETUP
+We target CVEs published between May and December
+2025. CVElistV5 grows rapidly, with 7,152 new entries in
+December 2025 alone. However, many CVEs are inherently
+irreproducible: some require proprietary software or spe cific hardware (e.g., IoT firmware, Windows-only APIs),
+while others lack sufficient technical detail for faithful re production. To identify high-quality candidates from this
+volume, we design a three-stage filtering pipeline. First,
+a Reproduce Score quantifies reproducibility potential via
+metadata analysis: CVEs with public PoCs, exploit URLs,
+or patches receive higher scores, while those specific hard ware or proprietary environments are penalized. Second,
+Monthly Sampling ensures diversity by prioritizing MITRE
+Top 25 dangerous CWEs but enforcing caps per reposi tory and CWE type to maintain long-tail coverage. Third,
+an LLM-as-Judge performs semantic filtering to eliminate
+CVEs incompatible with Linux containers and removes re dundant entries exhibiting identical attack patterns. This
+pipeline yields 554 CVEs spanning 15 programming lan guages (46.9% involving multiple languages), 345 distinct
+repositories plus 52 from non-GitHub platforms (e.g., Word Press plugins), and 123 CWE types.
+CVE-Factory attempts reproduction on all 554 candidates.
+For CVEs that CVE-Factory reports as successful, we con duct rigorous manual verification against three criteria: (1)
+source code authenticity: the vulnerable version must be ob tained from official sources, not mock implementations; (2)
+dynamic test execution: the PoC must trigger the vulnerabil ity through actual execution, not static pattern matching; and
+(3) solution validity: the fix must patch the vulnerable code,
+not upgrade to a safe version or bypass the functionality.
+4.2.2. RESULTS
+CVE-Factory reports 499 successes and 55 failures of 554
+CVEs. The failures arise from three causes: 35 from limita tions in our pytest parsing scripts, 14 from agents exhausting
+the three-retry limit, and 6 from external factors during exe c
+su
+u
+c
+ti
+c
+o
+e
+n
+ss
+s
+e
+u
+s
+c
+,
+h
+1
+a
+8
+s
+7
+n
+fa
+e
+i
+t
+l
+w
+m
+o
+a
+rk
+nu
+ti
+a
+m
+l
+e
+ve
+o
+r
+u
+i
+t
+fi
+s
+c
+.
+a
+A
+t
+m
+io
+o
+n
+n
+.
+g
+Th
+th
+e
+e
+d
+4
+o
+9
+m
+9
+i
+r
+n
+e
+a
+p
+n
+o
+t
+r
+f
+t
+a
+e
+i
+d
+l-
+ure mode is mock implementations (94 cases). However,
+42 of these stem from genuinely inaccessible sources like
+PHP Shell JavaScript Python C/C++ TypeScript Go
+(a) By Programming Language
+0
+50
+100
+150
+200
+250
+Success
+False Positive
+Failure
+(b) By CWE Category
+0
+20
+40
+60
+80
+Figure 3. Distribution of CVE reproduction outcomes by program ming language (top) and CWE type (bottom). Colors indicate veri-
+fied success (green), false positives (orange), and failures (gray). deleted repositories or paywalled software beyond any auto mated system
+’
+s reach. Other failures include static tests that
+grep source code rather than executing attacks, fix leakage
+in environment, and solution or PoC defects. Table 7 shows
+the distribution. Excluding objectively irreproducible cases,
+CVE-Factory achieves a 66.2% verified success rate. With out any expert curation, CVE-Factory successfully trans forms two-thirds of real-world CVEs into fully verified,
+executable security tasks, each with authentic environments,
+dynamic tests, and valid patches.
+Figure 3 breaks down results by programming language
+and CWE type. PHP dominates the samples, reflecting the
+prevalence of WordPress plugin vulnerabilities in real-world
+distributions. JavaScript achieves the highest success rate
+(65.3%) due to npm
+’
+s mature ecosystem, while Shell scripts
+exhibit the lowest success rate (46.1%) due to complex
+system-level interactions difficult to containerize. Across
+vulnerability types, XSS (CWE-79) achieves a 69.5% suc cess rate since validation requires only HTTP response in spection, while SQL injection (CWE-89) shows higher false
+positive rates (37.9%). This stems from our requirement
+for holistic validation from frontend to database, but agents
+often fall back to directly invoking backend functions af ter repeated failures. Access control flaws (CWE-284) and
+memory safety issues (CWE-119) achieve strong success
+rates exceeding 75%, demonstrating CVE-Factory
+’
+s capa bility across diverse vulnerability classes.
+4.2.3. LIVECVEBENCH
+Benchmark During reproduction, we observe significant
+distribution shift in real-world vulnerabilities. Emerging cat-
+6
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+在 5 ⼩时内重现所有 215 个 CVE，这是⼀项需要数周专家⼯
+作的任务。
+4.2. 真实世界分布的验证
+虽然 PatchEval 上的结果很有希望，但其 CVE 仅限于三种语
+⾔，专注于 65 种 CWE 类型，并且仅限于 GitHub 存储库。为
+了验证 CVE-Factory 在真实世界漏洞分布上的有效性，我们
+选择直接从 CVElistV5 中重现 CVE。
+4.2.1. S
+我们关注 2025 年 5 ⽉⾄ 12 ⽉间发布的 CVE。CVElistV5 增
+⻓迅速，仅 2025 年 12 ⽉就新增了 7,152 条条⽬。然⽽，许
+多 CVE 本质上不可复现：⼀些需要专有软件或特定硬件（例
+如物联⽹固件、仅限 Windows 的 API），⽽另⼀些则缺乏⾜
+够的技术细节以忠实复现。为了从这些条⽬中识别⾼质量候
+选，我们设计了⼀个三阶段过滤管道。⾸先，通过元数据分
+析量化可复现性潜⼒的复现分数：具有公开的 PoC、利⽤
+URL 或补丁的 CVE 会获得更⾼的分数，⽽特定硬件或专有
+环境则会受到惩罚。其次，⽉度采样通过优先考虑 MITRE
+Top 25 危险的 CWE 来确保多样性，但强制实施每个存储库
+和 CWE 类型的上限以保持⻓尾覆盖。第三，以 LLM 作为法
+官执⾏语义过滤，以消除与 Linux 容器不兼容的 CVE。移除
+显⽰相同攻击模式的冗余条⽬。该管道产⽣了涉及 15 种编
+程语⾔（46.9%涉及多种语⾔）的 554 个 CVE，345 个独特
+仓库以及来⾃⾮ GitHub 平台（例如 WordPress 插件）的
+52 个，以及 123 种 CWE 类型。
+CVE-Factory 尝试在所有 554 个候选项⽬上进⾏复现。对于
+CVE-Factory 报告为成功的 CVE，我们根据三个标准进⾏严
+格的 manual verification：（1）源代码真实性：易受攻击的
+版本必须从官⽅来源获取，⽽不是模拟实现；（2）动态测试
+执⾏：PoC 必须通过实际执⾏触发漏洞，⽽不是静态模式匹
+配；（3）解决⽅案有效性：修复必须修复易受攻击的代码，
+⽽不是升级到安全版本或绕过功能。
+4.2.2. R
+CVE-Factory 报告了 554 个 CVE 中的 499 个成功和 55 个失
+败。失败原因有三个⽅⾯：35 个是由于我们的 pytest 解析脚
+本存在限制，14 个是由于代理达到三次重试限制，6 个是由
+于执⾏期间的外部因素，如⽹络超时。在 499 个报告的成功
+案
+现
+例
+（
+中
+94
+，
+个
+1
+案
+87
+例
+个
+）。
+未
+然
+能
+⽽
+通
+，
+过
+其
+⼈
+中
+⼯验
+42
+证
+个
+。
+是
+主
+由
+要
+于
+的
+真
+失
+正
+败
+⽆
+模
+法
+式
+访
+是
+问
+模
+的
+拟
+来
+实
+源，例如
+PHP Shell JavaScript Python C/C++ TypeScript Go
+(a) 按编程语⾔
+0
+50
+100
+150
+200
+250
+Success
+False Positive
+Failure
+(b) 按 CWE 类别
+0
+20
+40
+60
+80
+图 3. 按编程语⾔（上）和 CWE 类型（下）的 CVE 复现结果分布。颜
+⾊表⽰验证成功（绿⾊）、误报（橙⾊）和失败（灰⾊）。
+删除超出任何⾃动化系统范围的仓库或付费软件。其他失败
+包括静态测试（⽽⾮执⾏攻击）的源代码 grep、环境泄漏的
+修复、解决⽅案或 PoC 缺陷。表 7 显⽰了分布情况。排除客
+观上⽆法复现的案例，CVE-Factory 实现了 66.2%的验证成
+功率。在没有专家审核的情况下，CVE-Factory 成功将三分
+之⼆的现实 CVE 转化为完全验证、可执⾏的 security 任
+务，每个任务都包含真实环境、动态测试和有效补丁。
+图 3 按编程语⾔和 CWE 类型分解结果。PHP 占据了样本的
+主导地位，反映了 WordPress 插件漏洞在现实世界分发中
+的普遍性。JavaScript 达到了最⾼的成功率（65.3%），这
+得益于 npm 成熟的⽣态系统，⽽ Shell 脚本则表现出最低
+的成功率（46.1%），因为复杂的系统级交互难以容器化。
+在漏洞类型⽅⾯，XSS（CWE-79）达到了 69.5%的成功
+率，因为验证只需要检查 HTTP 响应，⽽ SQL 注⼊（CWE-
+89）则显⽰出更⾼的假阳性率（37.9%）。这源于我们从前
+端到数据库需要全⾯验证的要求，但代理在重复失败后通常
+会回退到直接调⽤后端函数。访问控制缺陷（CWE-284）和
+内存安全问题（CWE-119）的成功率超过 75%，达到了很
+⾼的成功率，这展⽰了 CVE-Factory 在不同漏洞类别上的能
+⼒。
+4.2.3. LCVEB
+基准测试在复现过程中，我们观察到真实世界漏洞存在显著的
+分布偏移。新兴的 cat-
+6
+CWE-74
+CWE-434
+CWE-89
+CWE-79
+CWE-94
+CWE-22
+CWE-284
+CWE-119
+CWE-400
+CWE-89
+CWE-79
+CWE-74
+CWE-94
+CWE-22 CWE-434 CWE-284 CWE-119 CWE-400
+Count Count
+数
+量
+数
+量
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Claude-4-
+Sonnet
+Qwen3
+-Coder
+DeepSeek-V3.1
+-Terminus
+Claude-4.5
+-Sonnet
+GLM-4.6 MiniMax-M2 Claude-4.5
+-Opus
+Gemini-3
+-Pro
+GPT-5.1
+-Codex
+DeepSeek-V3.2
+0
+25
+50
+75
+100
+125
+150
+175
+200
+25
+67
+109
+115
+118
+145
+149
+159 159 170
+164
+122
+80
+74 71
+44 40
+30 30
+19
+CVE Count (Before Release)
+CVE Count (After Release)
+0
+10
+20
+30
+40
+50
+36.0
+21.3 24.0
+19.5
+28.4
+13.9
+22.4
+18.0
+25.7
+20.0
+27.5
+20.0
+37.4
+39.2
+35.7
+32.4 28.8
+19.7
+21.2
+18.3
+31.7
+25.0 27.6
+15.9
+45.6
+30.0
+43.0
+35.0
+30.8
+23.3
+27.7
+26.7
+21.4
+20.0 22.0
+10.0
+24.1
+10.5
+22.4
+10.5
+Terminus-2
+Mini-SWE-Agent
+Figure 4. Model performance on CVEs before versus after each model’
+s release date.
+Table 2. Comparison of task count, language diversity, and envi ronment complexity. Terminal Bench is 1.0 version.
+Benchmark #Tasks #Lang
+# Containers
+1 2 ≥3
+Terminal-Bench 80
+8
+77
+1 2
+PatchEval 230
+3
+230
+0 0
+LiveCVEBench 190 14 137 46
+7
+egories, AI tool exploits (e.g., LangChain) appear frequently
+in CVElistV5 but remain absent from existing benchmarks.
+This temporal drift renders static benchmarks increasingly
+misaligned with vulnerabilities that agents encounter in prac tice. The automated pipeline of CVE-Factory enables us to
+address this gap. We organize our verified reproductions
+into LiveCVEBench, a benchmark that we continuously up date as new CVEs emerge. The current release comprises
+190 tasks spanning 14 programming languages, 74 CWE
+types, and 153 repositories, with 10% AI-related tasks.
+Compared to existing benchmarks, LiveCVEBench presents
+substantially greater complexity in Table 2. 27.75% of
+our tasks require multi-container orchestration (e.g., sepa rate frontend, backend, and database services). This multi service architecture reflects real-world deployment patterns
+and demands that agents reason about cross-component in teractions rather than isolated codebases. LiveCVEBench
+further enhances realism through two design principles.
+First, task descriptions adopt a first-person bug report for mat rather than technical CVE advisories, requiring agents
+to diagnose from ambiguous symptoms. Second, evalua tion demands holistic system validation rather than isolated
+submodule fixes, mirroring authentic usage scenarios.
+Evaluation We evaluate 10 LLMs across four agent
+frameworks on LiveCVEBench. LLMs span open-source
+GLM-4.6, MiniMax M2, Qwen3-Coder-480B, DeepSeek
+V3.1/V3.2, and closed-source Claude Opus 4.5, Claude
+Sonnet 4.5/4, GPT-5.1-Codex, Gemini 3 Pro. Agent frame works include open-source Terminus-2, OpenHands, and
+Mini-SWE-Agent, and closed-source Claude Code.
+Full results with efficiency metrics are in Appendix B.1.
+Claude Opus 4.5 on Terminus-2 achieves the highest pass
+rate at 42.33%, followed by Claude Sonnet 4.5 at 38.10%.
+Surprisingly, they drop to 27.78% and 24.34% respectively
+on Claude Code. This gap traces to the difference in system
+prompts. Mini-SWE-Agent explicitly requires executing
+tests to verify fixes, whereas Claude Code lacks this re quirement. Without this guidance, LLMs overestimate fix
+correctness and terminate prematurely. Figure 4 reveals a
+concerning pattern. We partition LiveCVEBench by each
+model’
+s release date and compare pre-release versus post release performance. Nearly all models degrade on post release CVEs, with Claude Sonnet 4.5 on Terminus-2 being
+the sole exception. This performance gap carries two impli cations: it suggests potential data contamination in existing
+benchmarks, and confirms that vulnerability distributions
+are indeed shifting over time. LiveCVEBench’
+s continuous
+updates address both risks.
+4.3. Scaling Agentic Tasks
+The strong results from preceding experiments motivate
+scaling up tasks. With CVE-Factory enabling this for the
+first time, we investigate the resulting training outcomes.
+Setup We construct a large-scale training corpus by re producing over 1,000 CVEs. PatchEval’
+s training set pro vides 770 CVEs in Python, JavaScript, and Go with meta data but no executable environments; CVE-Factory creates
+these for the first time. We additionally sample 300 CVEs
+from CVElistV5 with no overlap with any test set to extend
+coverage. For trajectory collection, we deploy Mini-SWE-
+7
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+克劳德-4-
+⼗四⾏诗
+Qwen3
+-程序员
+DeepSeek-V3.1
+-终点站
+克劳德-4.5
+-⼗四⾏诗
+GLM-4.6 MiniMax-M2 Claude-4.5
+-作品/创作
+双⼦座 3 号
+-中⽂
+GPT-5.1
+-法典/准则
+DeepSeek-V3.2
+0
+25
+50
+75
+100
+125
+150
+175
+200
+25
+67
+109
+115 118
+145
+149
+159 159 170
+164
+122
+80
+74 71
+44
+40
+30 30
+19
+发布前 CVE 数量 发布后 CVE 数
+量
+0
+10
+20
+30
+40
+50
+36.0
+21.3 24.0
+19.5
+28.4
+13.9
+22.4
+18.0
+25.7
+20.0
+27.5
+20.0
+37.4
+39.2
+35.7
+32.4 28.8
+19.7
+21.2
+18.3
+31.7
+25.0 27.6
+15.9
+45.6
+30.0
+43.0
+35.0 30.8
+23.3
+27.7
+26.7
+21.4
+20.0 22.0
+10.0
+24.1
+10.5
+22.4
+10.5
+终点站-2
+Mini-SWE-Agent
+图 4. 模型在 CVE 上的性能在每次模型发布⽇期前后的对⽐。
+表 2. 任务数量、语⾔多样性和环境复杂性的⽐较。Terminal Bench
+是 1.0 版本。
+基准 #任务 #语⾔
+# 容器
+1 2 ≥ 3
+Terminal-Bench 80 8 77 1 2 PatchEval 230 3 230 0 0
+LiveCVEBench 190 14 137 46 7
+类别、AI ⼯具利⽤（例如 LangChain）在 CVElistV5 中频繁
+出现，但现有基准测试中却缺失。这种时间上的偏差导致静
+态基准测试与代理在实际中遇到的漏洞越来越不匹配。CVE Factory 的⾃动化流程使我们能够弥补这⼀差距。我们将验
+证过的复现案例组织成 LiveCVEBench，这是⼀个我们随着
+新 CVE 出现⽽持续更新的基准测试。当前版本包含 190 个任
+务，涵盖 14 种编程语⾔、74 种 CWE 类型和 153 个仓库，
+其中 10%与 AI 相关。
+与现有基准相⽐，LiveCVEBench 在表 2 中展现出显著更⾼
+的复杂性。27.75% 的任务需要多容器编排（例如，分离的
+前端、后端和数据库服务）。这种多服务架构反映了现实世
+界的部署模式，并要求代理推理跨组件交互⽽不是隔离的代
+码库。LiveCVEBench 通过两个设计原则进⼀步增强真实
+性。⾸先，任务描述采⽤第⼀⼈称的 bug 报告格式，⽽不是
+技术 CVE 公告，要求代理从模糊的症状中诊断问题。其次，
+评估要求整体系统验证⽽不是隔离的⼦模块修复，模拟了真
+实的⽤例场景。
+评估我们在 LiveCVEBench 上对四个智能体框架上的 10 个
+LLM 进⾏评估
+LLM 包括开源的 GLM-4.6、MiniMax M2、Qwen3-Coder-
+480B、DeepSeek V3.1/V3.2，以及闭源的 Claude Opus
+4.5、Claude Sonnet 4.5/4、GPT-5.1-Codex、Gemini 3
+Pro。智能体框架包括开源的 Terminus-2、OpenHands 和
+Mini-SWE-Agent，以及闭源的 Claude Code。
+完整结果和效率指标在附录 B.1 中。Claude Opus 4.5 在
+Terminus-2 上实现了最⾼的通过率，为 42.33%，其次是
+Claude Sonnet 4.5，为 38.10%。令⼈惊讶的是，它们在
+Claude Code 上的通过率分别降⾄ 27.78%和 24.34%。这
+种差距可追溯到系统提⽰的差异。Mini-SWE-Agent 明确要
+求执⾏测试来验证修复，⽽ Claude Code 没有这个要求。
+没有这种指导，LLMs 会⾼估修复的正确性并过早终⽌。图
+4 揭⽰了⼀个令⼈担忧的模式。我们将 LiveCVEBench 按每
+个模型的发布⽇期进⾏分区，并⽐较发布前与发布后的性
+能。⼏乎所有模型在发布后的 CVE 上都表现下降，Claude
+Sonnet 4.5 在 Terminus-2 上是唯⼀例外。这种性能差距有
+两个含义：它表明现有基准中可能存在潜在的数据污染，并
+证实漏洞分布确实随着时间的推移⽽变化。LiveCVEBench
+的持续更新解决了双重⻛险。
+4.3. 扩展代理任务
+先前实验的强劲结果激励我们扩展任务规模。借助 CVE Factory ⾸次实现这⼀⽬标，我们研究了由此产⽣的训练结
+果。
+我们通过复现超过 1,000 个 CVE 来构建⼤规模的训练语料
+库。PatchEval 的训练集提供了 770 个 Python、JavaScript
+和 Go 语⾔的 CVE，包含元数据但没有可执⾏环境；CVE Factory ⾸次创建了这些环境。我们额外从 CVElistV5 中采样
+300 个 CVE，确保与任何测试集不重叠，以扩展覆盖范围。对
+于轨迹收集，我们部署了 Mini-SWE-
+7
+Numb
+er of CV
+E Tasks
+P
+ass Rate (%)
+C
+V
+E
+任
+务
+数
+量
+通
+过
+率 (%)
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Table 3. Performance comparison on LiveCVEBench (LCB),
+PatchEval (PE) and Terminal-Bench (TB). Upper: baseline mod els. Lower: Qwen3-32B fine-tuned on tasks from SETA and
+CVE-Factory.
+Model LCB PE TB Avg
+Qwen3-Coder-30B 10.58 9.91 13.75 11.41
+Qwen3-Coder-480B 19.58 19.34 36.25 25.06
+MiniMax-M2 24.87 19.34 37.50 27.24
+Claude Sonnet 4 20.11 22.64 33.75 25.50
+Claude Sonnet 4.5 34.39 28.77 45.00 36.05
+Claude Opus 4.5 41.27 32.08 48.75 40.70
+Qwen3-32B 5.29 5.66 12.50 7.82
++ SETA (4k) 21.69 14.62 27.50 21.27
++ CVE (3k) 31.05 19.81 31.25 27.37
++ CVE (4k) 35.79 23.58 28.75 29.37
+Agent with Claude Opus 4.5 on each reproduced task and
+record the full interaction traces. We fine-tune Qwen3-
+32B (Yang et al., 2025a) on two data scales: 3k trajectories
+from PatchEval reproductions, and 4k trajectories including
+the additional CVEs. As a baseline, we also train on 4k
+trajectories distilled from SETA (Shen et al., 2026) which
+provides 400 terminal tasks. All models are trained for
+5 epochs (Appendix D). We evaluate on LiveCVEBench,
+PatchEval, and Terminal Bench using Mini-SWE-Agent.
+Results Table 3 presents the results. Trajectories from
+CVE-Factory tasks transform Qwen3-32B from the weakest
+baseline to a competitive model, improving LiveCVEBench
+from 5.29% to 35.79% and approaching Claude Sonnet 4.5.
+With equal data volume, CVE-Factory substantially outper forms SETA across all benchmarks. Trajectory analysis
+reveals behavioral changes. Qwen3-32B averages 15.88
+steps and submits fixes without verification. Trained models
+extend to 57.54 steps with active exploration and test-based
+validation. Injection vulnerabilities such as CWE-78 and
+CWE-94 gain +350%, benefiting from learned cross-file
+code tracing capabilities. The improvements generalize
+across languages. CVE-Factory (3k) contains only Python,
+JavaScript, and Go, yet PHP improves by 866.7% and C
+achieves a breakthrough from 0 to 6 solves. Scaling to 4k
+trajectories, PHP and Ruby further improve by 17.2% and
+100% while other languages maintain gains. Training also
+transfers beyond security tasks. On Terminal Bench, harder
+tasks see larger gains: Simple +2, Medium +5, Hard +6,
+demonstrating our high data quality. Cross-category transfer
+is equally strong: beyond the expected 4 additional Security
+solves, Debugging gains 3 and Model-training gains 2, con-
+firming broad generalization beyond the training domain.
+Analyzer Generator Builder Validator Solver Checker
+0
+5
+10
+15
+20
+25
+30
+13.0
+5.9
+12.0
+15.0
+12.2
+11.6
+Figure 5. Execution time distribution per agent across 2,000 CVE
+reproductions. Table 4. Performance comparison against baselines and ablation
+study evaluating the necessity of the decouple-couple architecture.
+Method / Configuration Success Rate (%)
+Baselines
+Claude Code (Single-agent) 0.0
+CVE-Genie (Multi-agent) 48.4
+Our Framework
+CVE-Factory (Ours) 90.3
+Ablation Studies
+Merge Stage 1‒3 (Generation) 71.0
+Merge Stage 4‒6 (Verification) 58.1
+5. Discussion
+Can a simpler agent workflow replace CVE-Factory?
+We first examine whether CVE reproduction can be solved
+by a single powerful agent or a more constrained multi-agent
+workflow. Table 4 reports results on a random sample of 31
+CVEs in 2025 from CVE-Genie (Ullah et al., 2025). Claude
+Code, as a state-of-the-art single-agent baseline, fails to com plete any task, highlighting the long-horizon nature of CVE
+reproduction. CVE-Genie is a strong prior multi-agent sys tem and shows the value of decomposing CVE reproduction,
+but its agents relies on a relatively fixed pipeline with prede-
+fined tool interfaces. In contrast, CVE-Factory instantiates
+each stage as a full Claude Agent SDK session, allowing
+agents to search, execute commands, inspect repositories,
+edit files, and adapt strategies under Orchestrator-enforced
+verification. This flexible yet controlled design achieves
+90.3%, substantially outperforming CVE-Genie at 48.4%.
+These results show that CVE-Factory improves over prior
+workflows by combining multi-agent decomposition with
+flexible agent autonomy.
+8
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+表 3. 在 LiveCVEBench (LCB), PatchEval (PE) 和 Terminal-Bench
+(TB) 上的性能⽐较。上：基线模型。下：在 SETA 和 CVE-Factory 任
+务上微调的 Qwen3-32B。
+模型 LCB PE TB 平均值
+Qwen3-Coder-30B：10.58、9.91、13.75、11.41
+Qwen3-Coder-480B：19.58、19.34、36.25、25.06
+MiniMax-M2：24.87、19.34、37.50、27.24
+Claude Sonnet 4：20.11、22.64、33.75、25.50
+Claude Sonnet 4.5：34.39、28.77、45.00、36.05
+Claude Opus 4.5：41.27、32.08、48.75、40.70
+Qwen3-32B：5.29、5.66、12.50、7.82；加上 SETA
+（4k）后为：21.69、14.62、27.50、21.27；加上 CVE
+（3k）后为：31.05、19.81、31.25、27.37；再加上
+CVE（4k）后为：35.79、23.58、28.75、29.37
+在每个复现任务上使⽤带有 Claude Opus 4.5 的代理，并记录
+完整的交互轨迹。我们在两个数据规模上微调 Qwen332B
+（Yang 等⼈，2025a）：来⾃ PatchEval 复现的 3k 轨迹，以
+及包含额外 CVEs 的 4k 轨迹。作为基线，我们还使⽤从 SETA
+（Shen 等⼈，2026）中提炼的 4k 轨迹进⾏训练，SETA 提供
+400 个终端任务。所有模型都训练了 5 个 epoch（附录 D）。
+我们使⽤ Mini-SWE-Agent 在 LiveCVEBench、PatchEval 和
+Terminal Bench 上进⾏评估。
+结果表 3 展⽰了结果。CVE-Factory 任务的轨迹将 Qwen3-
+32B 从最弱的基线转变为⼀个有竞争⼒的模型，将
+LiveCVEBench 从 5.29%提升到 35.79%，并接近 Claude
+Sonnet 4.5。在相等的数据量下，CVE-Factory 在所有基准测
+试中都显著优于 SETA。轨迹分析揭⽰了⾏为变化。Qwen3-
+32B 平均需要 15.88 步，并在⽆需验证的情况下提交修复。训
+练模型通过主动探索和基于测试的验证扩展到 57.54 步。注⼊
+漏洞如 CWE-78 和 CWE-94 提升了 350%，得益于学习到的跨
+⽂件代码跟踪能⼒。这些改进泛化到多种语⾔。CVE-Factory
+（3k）只包含 Python、JavaScript 和 Go，但 PHP 提升了
+866.7%，C 实现了从 0 到 6 个解题的突破。扩展到 4k 轨迹
+后，PHP 和 Ruby 分别进⼀步提升了 17.2%和 100%，⽽其他
+语⾔维持了收益。训练也超越了安全任务。在终端基准测试
+中，更困难的任务能看到更⼤的收益：简单+2，中等+5，困
+难+6，这证明了我们的⾼质量数据。跨类别迁移同样强⼤：除
+了预期的 4 个额外安全解决之外，调试获得 3 个，模型训练获
+得 2 个，这证实了在训练领域之外的⼴泛泛化能⼒。
+分析器⽣成器构建器验证器解决器检查器
+0
+5
+10
+15
+20
+25
+30
+13.0
+5.9
+12.0
+15.0
+12.2
+11.6
+图 5. 在 2,000 个 CVE 重现中，每个代理的执⾏时间分布。
+表 4. 与基线性能对⽐及消融研究，评估解耦-耦合架构的必要性。
+⽅法/配置 成功率 (%)
+基线
+Claude Code（单代理） 0.0 CVE-Genie（多代
+理） 48.4
+我们的框架
+CVE-⼯⼚（我们的） 90.3
+消融研究
+合并阶段 1‒3（⽣成）71.0 合并阶段 4‒6（验
+证）58.1
+5. 讨论
+⼀个更简单的代理⼯作流能否替代 CVE-Factory？我们⾸先考
+察 CVE 复现是否可以通过⼀个强⼤的单⼀代理或⼀个更受约
+束的多代理⼯作流来解决。表 4 报告了 CVE-Genie（Ullah 等
+⼈，2025 年）中 2025 年 31 个 CVE 随机样本的结果。作为最
+先进的单⼀代理基线，Claude Code 未能完成任何任务，突
+显了 CVE 复现的⻓期性。CVE-Genie 是⼀个强⼤的先验多代
+理系统，展⽰了分解 CVE 复现的价值，但其代理依赖于⼀个
+相对固定的管道和预定义的⼯具接⼝。相⽐之下，CVE Factory 将每个阶段实例化为⼀个完整的 Claude 代理 SDK 会
+话，允许代理在 Orchestrator 强制验证下搜索、执⾏命令、
+检查仓库、编辑⽂件和调整策略。这种灵活但受控的设计实现
+了 90.3%，显著优于 CVE-Genie 的 48.4%。
+这些结果表明，CVE-Factory 通过结合多代理分解和灵活的代
+理⾃主性，改进了先前的流程。
+8
+持
+续
+时
+间（分
+钟） D
+uratio
+n (min)
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Why is the decouple-couple structure necessary? Be yond agent autonomy, we further validate whether the
+decouple-couple structure is necessary. As shown in Ta ble 4, merging Stages 1‒3 drops success to 71.0%. This
+generation-side merge forces one agent to keep the task
+intent, exploitability criteria, reference fix, and runnable
+packaging consistent while producing all artifacts, increas ing cross-file interference and leading to ignored format
+constraints or incomplete outputs. Merging Stages 4‒6
+drops success further to 58.1%. Without progressive checks,
+failures from environment setup, tests, and fixes are exposed
+only in the final end-to-end run, forcing the agent to localize
+all causes at once and often exhausting even a 3
+×
+timeout
+budget. These two ablations reveal complementary bottle necks: generation fails when too many artifacts must be
+co-designed at once, while verification fails when too many
+failure sources must be diagnosed jointly. We therefore
+examine whether our staged design distributes complex ity across stages without creating a dominant bottleneck.
+Figure 5 shows execution time distributions across 2,000
+reproductions. Generator completes fastest at 5.9 minutes
+since it only synthesizes files without environment interac tion. The remaining five agents cluster within a narrow 11
+to 15 minute range. Notably, Checker performs end-to-end
+verification, yet averages only 11.6 minutes, comparable
+to Builder at 12.0 minutes. This indicates that the preced ing stages have effectively synchronized all components,
+substantially reducing the complexity Checker must handle.
+Full time and cost distributions are in Appendix E. Thus,
+decoupled generation and progressive coupling reduce
+unresolved complexity instead of shifting it to one stage.
+Why do agents fall back to mock and static tests despite
+explicit constraints? All agents are prompted to avoid
+mocks and static tests, with Checker specifically tasked to
+identify and fix them. Yet 52 mock and 51 static-test failures
+persist. Analysis traces most cases to early-stage decisions.
+In CVE-2025-5895, Analyzer records:
+‘due to repository
+complexity, only one file is selected.
+” In CVE-2025-53003,
+Analyzer decides to mock because
+‘
+source program too com plex.
+” Downstream agents inherit these decisions, and even
+Checker sometimes rationalizes rather than rejects them,
+arguing that “building the full Janssen project would be
+very complex.
+” This reveals a fundamental tension: agents
+prioritize task completion over constraints when faith ful reproduction becomes difficult. Our follow-up Judger
+study further supports this diagnosis. A V1 judging prompt
+still made 16 false positives among 70 cases, mainly be cause it was persuaded by upstream rationalizations. After
+adding a 10-category auditing schema, few-shot examples,
+and strict anchoring instructions to ignore upstream defenses
+and extract only the core issue, the V2 Judger achieved full
+agreement with human review on 500 CVEs. This suggests
+that future versions should make Stage 6 more adversarial:
+Checker should audit artifacts independently rather than
+inherit agents
+’ justifications.
+Does multi-container complexity inevitably impair re production performance? We observe a non-linear re lationship between architectural complexity and environ ment reproduction success. Surprisingly, the success rate
+on 2-container tasks is 6% higher than on 1-container tasks.
+This stems from environmental standardization: 83% of
+2-container tasks feature standard “App + Database
+”
+web
+architectures, whereas 1-container tasks often involve highly
+diverse, hard-to-synthesize low-level vulnerabilities (e.g.,
+C/C++ memory corruption). However, this reproduction
+capability predictably declines as container count scales fur ther. For 3 or 4 containers, the success rate falls 10% below
+the 1-container baseline. These tasks introduce complex,
+multi-tiered architectures (e.g., Spring Boot + Elasticsearch
++ Kibana, or Laravel + Nginx + MySQL + Redis) with de manding inter-container networking and synchronization re quirements. While agents comfortably handle standard con tainer setups, complex container orchestration remains a
+critical bottleneck for environment synthesis.
+Why does the performance of LLMs drop on post-release
+CVEs? Trajectory analysis reveals that this drop is primar ily driven by the varying levels of familiarity with the target
+repositories. While LLMs might not directly memorize
+exact CVE patches, their high familiarity with pre-release
+codebases accelerates vulnerability localization. Conse quently, the first successful edit is noticeably delayed in
+post-release settings: increasing from 6.4 to 10.3 for Qwen3-
+Coder. For instance, on the pre-release CVE-2025-10824,
+GPT-5.1-Codex quickly located the issue and initiated edits
+by step 6. Conversely, on the post-release CVE-2025-68129,
+it spent 34 steps purely exploring and hit the timeout limit
+while struggling to configure validation tools. An LLM’
+s fa miliarity with the repository and the strength of its SWE
+capabilities, such as repository exploration, directly im pact its code security performance.
+6. Conclusion
+We present CVE-Factory, a multi-agent framework that au tomatically transforms CVE descriptions into verified, exe cutable tasks. It achieves expert-level quality with 6‒30
+×
+speedup. Validated on real-world distributions with 66.2%
+success rate. We also provide LiveCVEBench, a continu ously updated benchmark tracking evolving vulnerability
+landscapes, and a training corpus that transforms Qwen3-
+32B into a competitive model with gains transferring beyond
+security tasks. Ultimately, CVE-Factory serves as a scalable,
+high-fidelity foundation that bridges the gap between raw
+vulnerability data and the rigorous evaluation and training
+required for next-generation secure code agents.
+9
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+为什么解耦-耦合结构是必要的？
+超越代理⾃主性，我们进⼀步验证解耦-耦合结构是否必要。
+如表 4 所⽰，合并阶段 1-3 使成功率降⾄ 71.0%。这种⽣成
+端的合并迫使⼀个代理在⽣成所有⼯件时保持任务意图、可
+利⽤性标准、引⽤修复和可运⾏打包的⼀致性，增加了跨⽂
+件⼲扰，导致忽略格式约束或输出不完整。合并阶段 4-6 使
+成功率进⼀步降⾄ 58.1%。如果没有渐进式检查，来⾃环境
+设置、测试和修复的失败仅在最终端到端运⾏中暴露，迫使
+代理⼀次性定位所有原因，甚⾄常常耗尽 3 倍的超时预算。
+这两个消融实验揭⽰了互补的瓶颈：⽣成端失败是因为⼀次
+必须共同设计太多⼯件，⽽验证端失败是因为⼀次必须共同
+诊断太多故障源。因此，我们考察我们的分阶段⽅法是否签
+名将复杂性分布在各个阶段，⽽不会创建⼀个主导瓶颈。图
+5 显⽰了在 2,000 次再现中的执⾏时间分布。⽣成器在 5.9
+分钟内完成最快，因为它只合成⽂件⽽不与环境交互。其余
+五个代理聚集在⼀个狭窄的 11 到 15 分钟范围内。值得注意
+的是，检查器执⾏端到端验证，但平均时间仅为 11.6 分钟，
+与构建器 12.0 分钟相当。这表明前序阶段已经有效地同步了
+所有组件，⼤⼤减少了检查器必须处理的复杂性。完整的时
+间和成本分布在附录 E 中。因此，解耦⽣成和渐进式耦合减
+少了未解决的复杂性，⽽不是将其转移到某个阶段。
+为什么代理会退回到模拟和静态测试，尽管有明确的限制？
+所有代理都被提⽰避免模拟和静态测试，Checker 特别被指
+定来识别和修复它们。然⽽仍有 52 个模拟和 51 个静态测试
+失败。分析将⼤多数情况追溯到早期决策。在 CVE-2025-
+5895 中，Analyzer 记录：“由于仓库复杂性，只选择了⼀个
+⽂件。”在 CVE-2025-53003 中，Analyzer 决定模拟，因为
+“源程序太复杂。”下游代理继承了这些决策，甚⾄
+Checker 有时会合理化⽽不是拒绝它们，认为“构建完整的
+Janssen 项⽬会⾮常复杂。”这揭⽰了⼀个根本性的张⼒：
+代理
+在忠实再现变得困难时，优先考虑任务完成⽽⾮约束。我们
+的后续 Judger 研究进⼀步⽀持这⼀诊断。在 70 个案例中，
+V1 判断提⽰仍有 16 个假阳性，主要是因为它被上游的合理
+化说服了。在添加了 10 类审计模式、少量⽰例和严格的基
+础指令以忽略上游防御并仅提取核⼼问题后，V2 Judger 在
+500 个 CVE 上与⼈⼯审查完全⼀致
+这表明未来的版本应该使阶段 6 更具对抗性：Checker 应该
+独⽴审计⼯件，⽽不是继承代理的辩护。
+多容器复杂性是否必然损害复现性能？我们观察到架构复杂度
+与环境复现成功率之间存在⾮线性关系。令⼈惊讶的是，2 容
+器任务的成功率⽐ 1 容器任务⾼ 6%。这源于环境标准化：
+83%的 2 容器任务采⽤标准的“App + Database”⽹络架
+构，⽽ 1 容器任务通常涉及⾼度多样化、难以合成的低级漏洞
+（例如 C/C++内存损坏）。然⽽，这种复现能⼒随着容器数量
+的增加⽽可预测地下降。对于 3 或 4 容器，成功率⽐ 1 容器基
+线低 10%。这些任务引⼊了复杂的多层架构（例如 Spring
+Boot + Elasticsearch + Kibana，或 Laravel + Nginx + MySQL
++ Redis），并提出了苛刻的跨容器⽹络和同步要求。代理可以
+轻松处理标准的容器设置，
+但复杂的容器编排仍然是环境合成的⼀个关键瓶颈。
+为什么 LLMs 在发布后性能会下降
+CVEs？轨迹分析表明，这次下降主要是由对⽬标存储库的熟
+悉程度不同所驱动的。虽然⼤型语⾔模型可能不会直接记住确
+切的 CVE 补丁，但它们对预发布代码库的⾼熟悉度加速了漏
+洞定位。因此，在发布后环境中，⾸次成功的编辑明显延迟：
+对于 Qwen3Coder，从 6.4 增加到 10.3。例如，在预发布的
+CVE-2025-10824 中，GPT-5.1-Codex 快速定位了问题，并在
+第 6 步开始编辑。相反，在发布后的 CVE-2025-68129 中，它
+花了 34 步纯粹地探索，并在配置验证⼯具时超时。⼤型语⾔
+模型对存储库的熟悉程度及其 SWE 能⼒（如存储库探索）的
+强度，直接影响其代码安全性能。
+6. 结论
+我们提出了 CVE-Factory，⼀个多智能体框架，能够⾃动将
+CVE 描述转换为经过验证的可执⾏任务。它以 6-30 倍的加速
+实现了专家级质量。在真实世界分布上的验证显⽰其成功率为
+66.2%。我们还提供了 LiveCVEBench，这是⼀个持续更新的
+基准，跟踪不断变化的漏洞图景，以及⼀个训练语料库，将
+Qwen332B 转化为⼀个具有跨安全任务的收益的竞争性模
+型。最终，CVE-Factory 作为⼀个可扩展、⾼保真度的基础，
+弥合了原始漏洞数据与下⼀代安全代码代理所需的严格评估和
+训练之间的差距。
+9
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Impact Statement
+This paper presents work whose goal is to advance the field
+w
+p
+of
+o
+e
+M
+t
+f
+e
+e
+a
+n
+e
+c
+t
+l
+i
+h
+m
+a
+i
+l
+n
+u
+s
+e
+s
+o
+t
+L
+c
+b
+e
+ie
+e
+a
+t
+r
+a
+s
+n
+p
+l
+i
+c
+e
+n
+o
+c
+g
+n
+ifi
+a
+s
+c
+n
+e
+a
+q
+d
+ll
+u
+y
+C
+e
+o
+h
+n
+d
+i
+c
+g
+e
+e
+h
+s
+S
+li
+o
+g
+e
+h
+f
+c
+o
+u
+te
+u
+r
+d
+i
+r
+ty
+h
+w
+.
+e
+o
+T
+r
+r
+e
+h
+k
+.
+e
+,
+A
+r
+n
+l
+e
+l
+o
+o
+a
+n
+u
+r
+e
+e
+r
+w
+m
+ev
+h
+a
+a
+ic
+n
+lu
+h
+y
+-
+ated CVEs are sourced from the public CVElistV5 database,
+and we strictly select only vulnerabilities that already have
+official patches. We did not discover or disclose any new
+vulnerabilities. For our open-source release, we enforce
+three safeguards: (1) explicitly excluding any CVEs that re main unpatched; (2) applying desensitization techniques to
+high-risk PoCs to prevent weaponization; and (3) releasing
+the data under a research-only license to strictly limit the
+scope of usage.
+Acknowledge
+We gratefully acknowledge the support of the National Natu ral Science Foundation of China (NSFC) via grant 62236004
+and 62476073.
+References
+Bhandari, G., Naseer, A., and Moonen, L. Cvefixes: auto mated collection of vulnerabilities and their fixes from
+open-source software. In Proceedings of the 17th Inter national Conference on Predictive Models and Data Ana lytics in Software Engineering, PROMISE ’21, pp. 30‒39.
+ACM, August 2021. doi: 10.1145/3475960.3475985.
+URL http://dx.doi.org/10.1145/3475960.
+3475985.
+Bui, Q.-C., Scandariato, R., and Ferreyra, N. E. D. Vul4j:
+a dataset of reproducible java vulnerabilities geared
+towards the study of program repair techniques. In
+Proceedings of the 19th International Conference on
+Mining Software Repositories, MSR ’22, pp. 464‒468,
+New York, NY, USA, 2022. Association for Comput ing Machinery. ISBN 9781450393034. doi: 10.1145/
+3524842.3528482. URL https://doi.org/10.
+1145/3524842.3528482.
+Chen, J., Huang, H., Lyu, Y., An, J., Shi, J., Yang, C.,
+Zhang, T., Tian, H., Li, Y., Li, Z., Zhou, X., Hu, X., and
+Lo, D. SecureAgentBench: Benchmarking Secure Code
+Generation under Realistic Vulnerability Scenarios, 2025.
+URL http://arxiv.org/abs/2509.22097.
+Ding, Y., Fu, Y., Ibrahim, O., Sitawarin, C., Chen, X., Alo mair, B., Wagner, D., Ray, B., and Chen, Y. Vulner ability detection with code language models: How far
+are we? In Proceedings of the IEEE/ACM 47th Interna tional Conference on Software Engineering, ICSE ’25, pp.
+1729‒1741. IEEE Press, 2025. ISBN 9798331505691.
+doi: 10.1109/ICSE55347.2025.00038. URL https://
+doi.org/10.1109/ICSE55347.2025.00038.
+Fa
+c
+n
+o
+,
+d
+J
+e
+.,
+v
+L
+u
+i
+l
+,
+n
+Y
+e
+.
+r
+,
+a
+W
+bi
+a
+li
+n
+ty
+g
+d
+,
+a
+S
+t
+.
+a
+,
+s
+a
+e
+n
+t
+d
+wi
+N
+th
+g
+c
+u
+o
+y
+d
+e
+e
+n
+c
+,
+h
+T
+a
+.
+n
+N.
+ges
+A
+an
+c
+d
+/c
+c
++
+ve
++
+summaries. In Proceedings of the 17th International
+Conference on Mining Software Repositories, MSR ’20,
+pp. 508‒512, New York, NY, USA, 2020. Associa tion for Computing Machinery. ISBN 9781450375177.
+doi: 10.1145/3379597.3387501. URL https://doi.
+org/10.1145/3379597.3387501.
+Fu, M., Tantithamthavorn, C., Le, T., Nguyen, V., and
+Phung, D. Vulrepair: a t5-based automated soft ware vulnerability repair. In Proceedings of the 30th
+ACM Joint European Software Engineering Conference
+and Symposium on the Foundations of Software En gineering, ESEC/FSE 2022, pp. 935‒947, New York,
+NY, USA, 2022. Association for Computing Machin ery. ISBN 9781450394130. doi: 10.1145/3540250.
+3549098. URL https://doi.org/10.1145/
+3540250.3549098.
+Gao, X., Wang, B., Duck, G. J., Ji, R., Xiong, Y., and
+Roychoudhury, A. Beyond tests: Program vulnerability
+repair via crash constraint extraction. ACM Trans. Softw.
+Eng. Methodol., 30(2), February 2021. ISSN 1049-331X.
+doi: 10.1145/3418461. URL https://doi.org/10.
+1145/3418461.
+Gao, Z., Wang, H., Zhou, Y., Zhu, W., and Zhang, C. How
+far have we gone in vulnerability detection using large
+language model, 2024. URL https://openreview.
+net/forum?id=Q3GVrWRKuB.
+Guo, L., Wang, Y., Li, C., Yang, P., Chen, J., Tao, W., Zou,
+Y., Tang, D., and Zheng, Z. SWE-Factory: Your Auto mated Factory for Issue Resolution Training Data and
+Evaluation Benchmarks, 2025. URL http://arxiv.
+org/abs/2506.10954.
+Hu, Y., Li, Z., Shu, K., Guan, S., Zou, D., Xu, S., Yuan,
+B., and Jin, H. SoK: automated vulnerability repair:
+methods, tools, and assessments. USENIX Association,
+USA, 2025. ISBN 978-1-939133-52-6.
+Jain, N., Singh, J., Shetty, M., Zheng, L., Sen, K., and
+Stoica, I. R2e-gym: Procedural environments and hy brid verifiers for scaling open-weights swe agents. arXiv
+preprint arXiv:2504.07164, 2025.
+Lee, H., Zhang, Z., Lu, H., and Zhang, L. Sec-bench:
+Automated benchmarking of llm agents on real-world
+software security tasks. arXiv preprint arXiv:2506.11791
+,
+2025.
+10
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+影响声明
+本⽂介绍的⼯作⽬标是推动机器学习和代码安全领域的发展。
+我
+在
+数
+们
+此
+据
+的
+特
+库
+⼯
+别
+，
+作
+强
+并
+有
+调
+且
+许
+的
+我
+多
+。
+们
+潜
+我
+严
+在
+们
+格
+的
+评
+筛
+社
+估
+选
+会
+的
+只
+影
+所
+有
+响
+有
+已
+，
+发
+CV
+但
+布
+E
+其
+官
+均
+中
+⽅
+来
+没
+补
+⾃
+有
+丁
+公
+我
+的
+共
+们
+漏
+C
+认
+洞
+VE
+为
+。
+lis
+需
+我
+tV
+要
+们
+5
+没有发现或披露任何新的漏洞。对于我们的开源发布，我们实
+施了三项安全措施：(1)明确排除任何未修复的 CVE；(2)对⾼
+⻛险 PoC 应⽤去敏感化技术以防⽌武器化；(3)在仅限研究⽤
+途的许可证下发布数据，严格限制使⽤范围。
+确认/同意
+我们衷⼼感谢中国国家⾃然科学基⾦委员会通过项⽬编号
+62236004 和 62476073 所提供的⽀持。
+参考⽂献
+Bhandari, G., Naseer, A.和 Moonen, L.：Cvefixes——⼀种
+⾃动收集漏洞及其修复⽅案的⼯具
+开源软件。载于《第 17 届软件⼯程中预测模型与数据分析
+国际会议论⽂集》，PROMISE ’21，第 30-39 ⻚。
+ACM, 2021 年 8 ⽉。doi: 10.1145/3475960.3475985。
+URL http://dx.doi.org/10.1145/3475960。
+3475985.
+Bui, Q.-C.，Scandariato, R.，和 Ferreyra, N. E. D. Vul4j：⼀
+个⾯向程序修复技术研究、可重复的 Java 漏洞数据集。在
+第 19 届国际软件仓库会议论⽂集，MSR '22，第 464-468
+⻚，纽约，纽约州，美国，2022 年。美国计算机协会。
+ISBN 9781450393034。doi: 10.1145/ 3524842.3528482。
+URL https://doi.org/
+1145/3524842.3528482.
+陈, J., ⻩, H., 吕, Y., 安, J., ⽯, J., 杨, C., 张, T., ⽥, H., 李, Y., 李,
+Z., 周 X, 胡 X, 和 Lo, D. SecureAgentBench: 在真实漏洞场景
+下测试安全代码⽣成, 2025.
+⽹址：http://arxiv.org/abs/2509.22097
+Ding, Y., Fu, Y., Ibrahim, O., Sitawarin, C., Chen, X., Alomair,
+B., Wagner, D., Ray, B., and Chen, Y. 代码语⾔模型进⾏漏洞
+检测：还有多远
+我们吗？在 IEEE/ACM 第 47 届国际软件⼯程会议论⽂集
+中，ICSE '25，第 pp.
+1729‒1741. IEEE Press, 2025. ISBN 9798331505691.
+doi: 10.1109/ICSE55347.2025.00038. URL
+https://doi.org/10.1109/ICSE55347.2025.00038.
+F
+和
+an
+C
+,
+V
+J
+E
+.,
+的
+Li,
+C
+Y
+/
+.
+C
+, W
+++
+a
+代
+ng
+码
+, S
+漏
+.,
+洞
+an
+数
+d
+据
+Ng
+集
+uyen, T. N. ⼀个包含代码更改
+摘要。在《第 17 届国际软件仓库挖掘会议论⽂集》，MSR
+'20，
+第 508‒512 ⻚，纽约，纽约州，美国，2020 年。计算机协
+会。ISBN 9781450375177。
+DOI：10.1145/3379597.3387501。网址：https://doi.
+org/10.1145/3379597.3387501.
+Fu, M., Tantithamthavorn, C., Le, T., Nguyen, V., 和 Phung,
+D. Vulrepair: 基于 t5 的⾃动化软件漏洞修复。在《第 30 届
+ACM 联合欧洲软件⼯程会议和软件基础研讨会》中。
+Vulnerability Repair。
+⼯程学，ESEC/FSE 2022，第 935‒947 ⻚，纽约，纽约
+州，美国，2022 年。计算机协会。ISBN
+9781450394130。doi: 10.1145/3540250. 3549098。URL
+https://doi.org/10.1145/ 3540250.3549098。
+⾼，X.，王，B.，Duck，G. J.，Ji，R.，熊，Y.，和
+Roychoudhury，A. 超越测试：通过崩溃约束提取进⾏程序漏
+洞修复。ACM 软件-trans.
+英.⽅法论, 30(2), 2021 年 2 ⽉。ISSN 1049-331X。
+DOI：10.1145/3418461。网址：https://doi.org/10.
+1145/3418461.
+⾼ Z., 王 H., 周 Y., 朱 W., 和 张 C. 我们在⼤语⾔模型进⾏漏洞检
+测⽅⾯取得了多⼤进展，2024。URL https://openreview.
+net/forum?id=Q3GVrWRKuB.
+郭 L，王 Y，李 C，杨 P，陈 J，陶 W，邹 Y，唐 D 和郑 ZSWE Factory：您的⾃动化⼯⼚⽤于问题解决训练数据和评估基
+准，2025 年。URL http://arxiv。
+org/abs/2506.10954.
+胡 Y，李 Z，舒 K，关 S，邹 D，徐 S，袁
+B., 和 Jin, H. SoK: ⾃动化漏洞修复：⽅法、⼯具和评估。
+USENIX 协会，美国，2025 年。ISBN 978-1-939133-52-
+6。
+Jain, N., Singh, J., Shetty, M., Zheng, L., Sen, K., 和 Stoica,
+I. R2e-gym: ⽤于扩展 open-weights swe 代理的程序化环境
+和混合验证器。arXiv 预印本 arXiv:2504.07164，2025 年。
+李 H、张 Z、卢 H 和张 L。Sec-bench：⽤于对⼤语⾔模型
+在现实世界中的表现进⾏⾃动评估的⼯具
+软件安全相关任务。arXiv 预印本，arXiv:2506.11791，
+2025 年。
+10
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Liu, E. T., Wang, A., Mateega, S., Georgescu, C., and Tang,
+D. Vader: A human-evaluated benchmark for vulnera bility assessment, detection, explanation, and remedia tion, 2025. URL https://arxiv.org/abs/2505.
+19395.
+Mei, X., Singaria, P. S., Castillo, J. D., Xi, H., Abdelouahab,
+Benchikh, Bao, T., Wang, R., Shoshitaishvili, Y., Doupe´,
+A., Pearce, H., and Dolan-Gavitt, B. Arvo: Atlas of re producible vulnerabilities for open source software, 2024.
+URL https://arxiv.org/abs/2408.02153.
+Mou, Y., Deng, X., Luo, Y., Zhang, S., and Ye, W. Can you
+really trust code copilot? evaluating large language mod els from a code security perspective. In Che, W., Nabende,
+J., Shutova, E., and Pilehvar, M. T. (eds.), Proceed ings of the 63rd Annual Meeting of the Association for
+Computational Linguistics (Volume 1: Long Papers), pp.
+17349‒17369, Vienna, Austria, July 2025. Association
+for Computational Linguistics. ISBN 979-8-89176-251-
+0. doi: 10.18653/v1/2025.acl-long.849. URL https:
+//aclanthology.org/2025.acl-long.849/.
+Mu, D., Cuevas, A., Yang, L., Hu, H., Xing, X.,
+Mao, B., and Wang, G. Understanding the re producibility of crowd-reported security vulnerabili ties. In 27th USENIX Security Symposium (USENIX
+Security 18), pp. 919‒936, Baltimore, MD, August
+2018. USENIX Association. ISBN 978-1-939133-04-5.
+URL https://www.usenix.org/conference/
+usenixsecurity18/presentation/mu.
+Pan, J., Wang, X., Neubig, G., Jaitly, N., Ji, H., Suhr, A.,
+and Zhang, Y. Training Software Engineering Agents and
+Verifiers with SWE-Gym, 2024. URL http://arxiv.
+org/abs/2412.21139.
+Sanvito, D., Arriciati, G., Siracusano, G., Bifulco, R., and
+Carminati, M. AutoCVSS: Assessing the performance of
+LLMs for automated software vulnerability scoring. In
+Potdar, S., Rojas-Barahona, L., and Montella, S. (eds.),
+Proceedings of the 2025 Conference on Empirical Meth ods in Natural Language Processing: Industry Track
+,
+pp. 564‒575, Suzhou (China), November 2025. Asso ciation for Computational Linguistics. ISBN 979-8-
+89176-333-3. doi: 10.18653/v1/2025.emnlp-industry.
+38. URL https://aclanthology.org/2025.
+emnlp-industry.38/.
+Shen, Q., Rainton, J., Aliev, A., Awelkair, A., Ma, B.,
+Huang, Z. J., Mao, Y., Fan, W., Torr, P., Ghanem, B.,
+Hu, C., Thakker, U., and Li, G. SETA: Scaling Environ ments for Terminal Agents, January 2026.
+Simoni, M., Fontana, A., Rossolini, G., and Saracino, A.
+Improving llm reasoning for vulnerability detection via
+group relative policy optimization, 2025. URL https:
+//arxiv.org/abs/2507.03051.
+So, S. and Oh, H. Smartfix: Fixing vulnerable smart con tracts by accelerating generate-and-verify repair using sta tistical models. In Proceedings of the 31st ACM Joint Eu ropean Software Engineering Conference and Symposium
+on the Foundations of Software Engineering, ESEC/FSE
+2023, pp. 185‒197, New York, NY, USA, 2023. Associa tion for Computing Machinery. ISBN 9798400703270.
+doi: 10.1145/3611643.3616341. URL https://doi.
+org/10.1145/3611643.3616341.
+Steenhoek, B., Rahman, M. M., Roy, M. K., Alam, M. S.,
+Tong, H., Das, S., Barr, E. T., and Le, W. To err is ma chine: Vulnerability detection challenges LLM reasoning,
+2025. URL https://openreview.net/forum?
+id=Q0mp2yBvb4.
+Su, H., Luo, J., Liu, C., Yang, X., Zhang, Y., Dong,
+Y., and Zhu, J. A survey on autonomy-induced secu rity risks in large model-based agents. arXiv preprint
+arXiv:2506.23844, 2025.
+Team, T. T.-B. Terminal-bench: A benchmark for ai
+agents in terminal environments, Apr 2025. URL https://github.com/laude-institute/
+terminal-bench.
+Ullah, S., Balasubramanian, P., Guo, W., Burnett, A., Pearce,
+H., Kruegel, C., Vigna, G., and Stringhini, G. From
+CVE Entries to Verifiable Exploits: An Automated Multi Agent Framework for Reproducing CVEs, 2025. URL
+http://arxiv.org/abs/2509.01835.
+Vergopoulos, K., Mu¨ller, M. N., and Vechev, M. Auto mated Benchmark Generation for Repository-Level Cod ing Tasks, 2025. URL http://arxiv.org/abs/
+2503.07701.
+Wang, P., Liu, X., and Xiao, C. CVE-Bench: Benchmark ing LLM-based Software Engineering Agent’
+s Ability to
+Repair Real-World CVE Vulnerabilities. In Chiruzzo, L.,
+Ritter, A., and Wang, L. (eds.), Proceedings of the 2025
+Conference of the Nations of the Americas Chapter of
+the Association for Computational Linguistics: Human
+Language Technologies (Volume 1: Long Papers), pp.
+4207‒4224. Association for Computational Linguistics,
+2025. ISBN 979-8-89176-189-6. doi: 10.18653/v1/2025.
+naacl-long.212. URL https://aclanthology.
+org/2025.naacl-long.212/.
+Wang, X., Wang, S., Feng, P., Sun, K., and Jajodia, S.
+Patchdb: A large-scale security patch dataset. In 2021
+51st Annual IEEE/IFIP International Conference on De pendable Systems and Networks (DSN), pp. 149‒160,
+2021. doi: 10.1109/DSN48987.2021.00030.
+11
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+刘, E. T., 王, A., Mateega, S., Georgescu, C., 和 Tang, D.
+Vader: ⼀个⼈类评估的漏洞评估、检测、解释和修复基准
+版本，2025。URL https://arxiv.org/abs/2505.
+19395.
+Mei, X., Singaria, P. S., Castillo, J. D., Xi, H., Abdelouahab,
+Benchikh, Bao, T., Wang, R., Shoshitaishvili, Y., Doup ´e, A.,
+Pearce, H., and Dolan-Gavitt, B. Arvo: 可重复利⽤的开源软
+件漏洞图谱，2024。
+⽹址：https://arxiv.org/abs/2408.02153
+Mou, Y., Deng, X., Luo, Y., Zhang, S.,和 Ye, W. 你真的能信任
+代码协作者吗？从代码安全⻆度评估⼤型语⾔模型。在 Che,
+W., Nabende, J., Shutova, E.,和 Pilehvar, M. T.（编），
+proceed-
+第 63 届计算语⾔学协会年会的论⽂集（第⼀卷：⻓⽂），
+第 17349‒17369 ⻚，奥地利维也纳，2025 年 7 ⽉。计算
+语⾔学协会
+⽤于计算语⾔学。ISBN 979-8-89176-2510。doi:
+10.18653/v1/2025.acl-long.849。URL https:
+//aclanthology.org/2025.acl-long.849/.
+Mu, D., Cuevas, A., Yang, L., Hu, H., Xing, X., Mao, B.和
+Wang, G.理解众包报告的安全漏洞的可重复性。
+结。在 USENIX 安全 symposium 第 27 届（USENIX
+Security 18）中，第 919‒936 ⻚，巴尔的摩，MD，2018
+年 8 ⽉。USENIX 协会。ISBN 978-1-939133-04-5。URL
+https://www.usenix.org/conference/usenixsecurity18/p
+resentation/mu。
+Pan, J., Wang, X., Neubig, G., Jaitly, N., Ji, H., Suhr, A., 和
+Zhang, Y. 使⽤ SWE-Gym 训练软件⼯程代理和验证器，2024
+年。URL http://arxiv.
+org/abs/2412.21139.
+Sanvito, D., Arriciati, G., Siracusano, G., Bifulco, R., 和
+Carminati, M. AutoCVSS: 评估 LLM 在⾃动化软件漏洞评分中
+的性能。在 Potdar, S., Rojas-Barahona, L., 和 Montella, S.
+(eds.),
+2025 年⾃然语⾔处理经验⽅法会议论⽂集：⾏业轨道，第
+564-575 ⻚，苏州（中国），2025 年 11 ⽉。计算语⾔学协
+会。ISBN 979-8-
+89176-333-3. doi: 10.18653/v1/2025.emnlp-industry.
+38. ⽹址：https://aclanthology.org/2025
+emnlp-industry.38/.
+Shen, Q., Rainton, J., Aliev, A., Awelkair, A., Ma, B.,
+Huang, Z. J., Mao, Y., Fan, W., Torr, P., Ghanem, B., Hu, C.,
+Thakker, U., and Li, G. SETA: 为终端代理扩展环境，2026
+年 1 ⽉。
+Simoni, M., Fontana, A., Rossolini, G., 和 Saracino, A.
+通过改进 llm 推理进⾏漏洞检测
+相对策略优化组，2025 年。URL https:
+//arxiv.org/abs/2507.03051。
+所以，S.和 Oh，H. Smartfix：通过加速⽣成和验证修复来修
+复易受攻击的智能合约
+统计模型。在《第 31 届 ACM 联合欧洲软件⼯程会议和软
+件⼯程基础研讨会论⽂集》中，ESEC/FSE 2023，第 185-
+197 ⻚，纽约，纽约州，美国，2023 年。美国计算机协
+会。ISBN 9798400703270。
+DOI：10.1145/3611643.3616341。网址：https://doi.
+org/10.1145/3611643.3616341.
+Steenhoek, B., Rahman, M. M., Roy, M. K., Alam, M. S.,
+Tong, H., Das, S., Barr, E. T., and Le, W. 犯错是机器：漏洞检
+测挑战⼤语⾔模型推理，2025。URL
+https://openreview.net/forum?
+id=Q0mp2yBvb4。
+Su, H., Luo, J., Liu, C., Yang, X., Zhang, Y., Dong, Y., and
+Zhu, J. 基于⼤型模型的代理中的⾃主性引发的安全⻛险调
+查。arXiv 预印本 arXiv:2506.23844，2025。
+团队，T. T.-B. 终端台：终端环境中 AI 代理的基准测试，2025
+年 4 ⽉。URL
+https://github.com/laude-institute/terminal bench。
+乌拉，S.，巴拉苏布拉曼尼亚，P.，郭，W.，伯内特，A.，⽪
+尔斯，H.，克鲁格尔，C.，维尼亚，G. 和斯特林希尼，G. 从
+CVE 条⽬到可验证漏洞：⼀个⽤于复现 CVE 的⾃动化多智
+能体框架，2025 年。URL
+http://arxiv.org/abs/2509.01835.
+Vergopoulos, K., M ¨uller, M. N., and Vechev, M. ⾃动化⽣成
+仓库级代码基准测试
+ing 任务，2025。URL http://arxiv.org/abs/
+2503.07701.
+Wang, P., Liu, X. 和 Xiao, C. CVE-Bench：评估基于 LLM 的软
+件⼯程代理修复现实世界 CVE 漏洞的能⼒。收录于 Chiruzzo,
+L., Ritter, A. 和 Wang, L. 编的《2025 年会议论⽂集》
+美洲各国会议，计算语⾔学协会⼈类语⾔技术分会（第⼀
+卷：⻓篇论⽂），第 pp.
+4207‒4224. 计算语⾔学协会，2025 年。ISBN 979-8-
+89176-189-6。doi: 10.18653/v1/2025.
+naacl-long.212. URL https://aclanthology.
+org/2025.naacl-long.212/
+Wang, X., Wang, S., Feng, P., Sun, K., and Jajodia, S.
+Patchdb：⼀个⼤规模安全补丁数据集。2021 年
+第 51 届 IEEE/IFIP 国际可靠系统与⽹络会议（DSN），第
+149-160 ⻚，2021 年。doi:
+10.1109/DSN48987.2021.00030。
+11
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Wei, Z., Zeng, J., Wen, M., Yu, Z., Cheng, K., Zhu, Y., Guo,
+J., Zhou, S., Yin, L., Su, X., and Ma, Z. PATCHEVAL: A
+New Benchmark for Evaluating LLMs on Patching Real World Vulnerabilities, 2025. URL http://arxiv.
+org/abs/2511.11019.
+Wu, Y., Jiang, N., Pham, H. V., Lutellier, T., Davis, J.,
+Tan, L., Babkin, P., and Shah, S. How effective are
+neural networks for fixing security vulnerabilities. In
+Proceedings of the 32nd ACM SIGSOFT International
+Symposium on Software Testing and Analysis, ISSTA
+2023, pp. 1282‒1294, New York, NY, USA, 2023. Asso ciation for Computing Machinery. ISBN 9798400702211.
+doi: 10.1145/3597926.3598135. URL https://doi.
+org/10.1145/3597926.3598135.
+Yang, A., Li, A., Yang, B., Zhang, B., Hui, B., Zheng,
+B., Yu, B., Gao, C., Huang, C., Lv, C., Zheng, C., Liu,
+D., Zhou, F., Huang, F., Hu, F., Ge, H., Wei, H., Lin,
+H., Tang, J., Yang, J., Tu, J., Zhang, J., Yang, J., Yang,
+J., Zhou, J., Zhou, J., Lin, J., Dang, K., Bao, K., Yang,
+K., Yu, L., Deng, L., Li, M., Xue, M., Li, M., Zhang,
+P., Wang, P., Zhu, Q., Men, R., Gao, R., Liu, S., Luo,
+S., Li, T., Tang, T., Yin, W., Ren, X., Wang, X., Zhang,
+X., Ren, X., Fan, Y., Su, Y., Zhang, Y., Zhang, Y., Wan,
+Y., Liu, Y., Wang, Z., Cui, Z., Zhang, Z., Zhou, Z., and
+Qiu, Z. Qwen3 technical report, 2025a. URL https:
+//arxiv.org/abs/2505.09388.
+Yang, C., Zhang, T., Jiang, J., Zhou, X., Tian, H.,
+Shi, J., Chen, J., Li, Y., Ouh, E. L., Shar, L. K.,
+and Lo, D. Semantics-aligned, curriculum-driven,
+and reasoning-enhanced vulnerability repair framework.
+CoRR, abs/2510.01002, October 2025b. URL https:
+//doi.org/10.48550/arXiv.2510.01002.
+Yang, J., Lieret, K., Jimenez, C. E., Wettig, A., Khandpur,
+K., Zhang, Y., Hui, B., Press, O., Schmidt, L., and Yang,
+D. SWE-smith: Scaling Data for Software Engineer ing Agents, 2025c. URL http://arxiv.org/abs/
+2504.21798.
+Yang, J., Liu, X., Lv, W., Deng, K., Guo, S., Jing, L., Li, Y.,
+Liu, S., Luo, X., Luo, Y., Pan, C., Shi, E., Tan, Y., Tao, R.,
+Wu, J., Wu, X., Wu, Z., Zan, D., Zhang, C., Zhang, W.,
+Zhu, H., Zhuo, T. Y., Cao, K., Cheng, X., Dong, J., Fang,
+S., Fei, Z., Guan, X., Guo, Q., Han, Z., James, J., Luo, T.,
+Li, R., Li, Y., Liang, Y., Liu, C., Liu, J., Liu, Q., Liu, R.,
+Loakman, T., Meng, X., Peng, C., Peng, T., Shi, J., Tang,
+M., Wang, B., Wang, H., Wang, Y., Xu, F., Xu, Z., Yuan,
+F., Zhang, G., Zhang, J., Zhang, X., Zhou, W., Zhu, H.,
+Zhu, K., Dai, B., Liu, A., Li, Z., Lin, C., Liu, T., Peng, C.,
+Shen, K., Qin, L., Song, S., Zhan, Z., Zhang, J., Zhang,
+J., Zhang, Z., and Zheng, B. From code foundation
+models to agents and applications: A comprehensive
+survey and practical guide to code intelligence, 2025d.
+URL https://arxiv.org/abs/2511.18538.
+Yu, Z., Guo, Z., Wu, Y., Yu, J., Xu, M., Mu, D., Chen, Y.,
+and Xing, X. PATCHAGENT: a practical program repair
+agent mimicking human expertise. USENIX Association,
+USA, 2025. ISBN 978-1-939133-52-6.
+Zeng, L., Li, Y., Xiao, Y., Li, C., Liu, C. Y., Yan, R., Wei,
+T., He, J., Song, X., Liu, Y., and Zhou, Y. Skywork-SWE:
+Unveiling Data Scaling Laws for Software Engineering
+in LLMs, 2025. URL http://arxiv.org/abs/
+2506.19290.
+Zhang, A. K., Perry, N., Dulepet, R., Ji, J., Menders, C.,
+Lin, J. W., Jones, E., Hussein, G., Liu, S., Jasper, D., Pee tathawatchai, P., Glenn, A., Sivashankar, V., Zamoshchin,
+D., Glikbarg, L., Askaryar, D., Yang, M., Zhang, T., Al luri, R., Tran, N., Sangpisit, R., Yiorkadjis, P., Osele,
+K., Raghupathi, G., Boneh, D., Ho, D. E., and Liang,
+P. Cybench: A Framework for Evaluating Cybersecu rity Capabilities and Risks of Language Models, a. URL http://arxiv.org/abs/2408.08926.
+Zhang, A. L., Kraska, T., and Khattab, O. Recursive lan guage models, 2025a. URL https://arxiv.org/
+abs/2512.24601.
+Zhang, H., Huang, J., Mei, K., Yao, Y., Wang, Z., Zhan, C.,
+Wang, H., and Zhang, Y. Agent Security Bench (ASB):
+Formalizing and Benchmarking Attacks and Defenses in
+LLM-based Agents, b. URL http://arxiv.org/
+abs/2410.02644.
+Zhang, L., He, S., Zhang, C., Kang, Y., Li, B., Xie, C.,
+Wang, J., Wang, M., Huang, Y., Fu, S., Nallipogu, E., Lin,
+Q., Dang, Y., Rajmohan, S., and Zhang, D. SWE-bench
+Goes Live!, 2025b. URL http://arxiv.org/abs/
+2505.23419.
+Zhu, Y., Kellermann, A., Bowman, D., Li, P., Gupta, A.,
+Danda, A., Fang, R., Jensen, C., Ihli, E., Benn, J., Geron imo, J., Dhir, A., Rao, S., Yu, K., Stone, T., and Kang,
+D. CVE-Bench: A Benchmark for AI Agents
+’ Ability
+to Exploit Real-World Web Application Vulnerabilities.
+In Forty-Second International Conference on Machine
+Learning, 2025. URL https://openreview.net/
+forum?id=3pk0p4NGmQ.
+12
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+魏伟，曾杰，温敏，余⼦，程科，朱宇，郭静，周思，尹⽴，
+苏晓，和⻢哲。PATCHEVAL：⼀个新的评估 LLMs 在修补真实
+世界漏洞的基准，2025 年。URL http://arxiv。
+org/abs/2511.11019.
+吴勇，蒋宁，范和⽂，吕泰勒，戴维斯，谭⽴，巴赫⾦，和
+沙哈。神经⽹络在修复安全漏洞⽅⾯的有效性如何。在
+第 32 届 ACM SIGSOFT 国际软件测试与分析研讨会论⽂
+集，ISSTA 2023，第 1282‒1294 ⻚，纽约，纽约州，美
+国，2023 年。美国计算机协会。ISBN 9798400702211。
+DOI：10.1145/3597926.3598135。网址：https://doi.
+org/10.1145/3597926.3598135.
+杨，A.，李，A.，杨，B.，张，B.，惠，B.，郑，B.，于，
+B.，⾼，C.，⻩，C.，吕，C.，郑，C.，刘，D.，周，F.，
+⻩，F.，胡，F.，葛，H.，魏，H.，林，H.，唐，J.，杨，
+J.，涂，J.，张，J.，杨，J.，杨，J.，周，J.，周，J.，林，
+J.，党，K.，鲍，K.，杨，K.，于，L.，邓，L.，李，M.，
+薛，M.，李，M.，张，P.，王，P.，朱，Q.，⻔，R.，⾼，
+R.，刘，S.，罗，S.，李，T.，唐，T.，尹，W.，任，X.，
+王，X.，张，X.，任，X.，范，Y.，苏，Y.，张，Y.，张，Y.，
+万，Y.，刘，Y.，王，Z.，崔，Z.，张，Z.，周，Z.，和
+Qiu, Z. Qwen3 技术报告，2025a。URL https:
+//arxiv.org/abs/2505.09388。
+Yang, C., Zhang, T., Jiang, J., Zhou, X., Tian, H., Shi, J.,
+Chen, J., Li, Y., Ouh, E. L., Shar, L. K., and Lo, D. 语义对⻬、
+课程驱动和推理增强的漏洞修复框架。
+CoRR, abs/2510.01002, 2025 年 10 月 b. URL https:
+//doi.org/10.48550/arXiv.2510.01002.
+杨，J.，李耶雷特，K.，希⻔内斯，C. E.，⻙蒂格，A.，坎
+德普尔，K.，张，Y.，会，B.，普莱斯，O.，施密特，L.，
+和杨，D. SWE-smith：为软件⼯程代理扩展数据，2025c.
+URL http://arxiv.org/abs/ 2504.21798.
+杨军，刘晓，吕伟，邓科，郭思，景⽴，李阳，刘思，罗
+欣，罗燕，潘超，⽯娥，谭阳，陶然，吴静，吴翔，吴智，
+赞东，张超，张伟，朱华，朱涛，曹科，程晓，董杰，⽅
+思，⻜⼦，关欣，郭强，韩哲，James，罗天，李然，李
+阳，梁燕，刘晨，刘杰，刘强，刘瑞，Loakman，孟欣，
+彭超，彭涛，⽯静，唐敏，王博，王浩，王燕，徐峰，徐
+智，袁芳，张刚，张杰，张翔，周伟，朱华，朱科，戴博，
+刘安，李哲, Lin, C., Liu, T., Peng, C., Shen, K., Qin, L.,
+Song, S., Zhan, Z., Zhang, J., Zhang, J., Zhang, Z., and
+Zheng, B. 从代码基础模型到智能体和应⽤：全⾯
+代码智能调查与实践指南，2025d
+URL https://arxiv.org/abs/2511.18538.
+余祖，郭祖，吴毅，余俊，徐敏，穆东，陈毅，
+和 Xing, X. PATCHAGENT: ⼀个模仿⼈类专业知识的实⽤程
+序修复代理。USENIX 协会，美国，2025 年。ISBN 978-1-
+939133-52-6。
+Zeng, L., Li, Y., Xiao, Y., Li, C., Liu, C. Y., Yan, R., Wei,
+T., He, J., Song, X., Liu, Y., 和 Zhou, Y. Skywork-SWE：揭
+⽰软件⼯程中的数据规模法则
+在 LLMs 中，2025 年。URL http://arxiv.org/abs/
+2506.19290.
+Zhang, A. K., Perry, N., Dulepet, R., Ji, J., Menders, C., Lin,
+J. W., Jones, E., Hussein, G., Liu, S., Jasper, D.,
+Peetathawatchai, P., Glenn, A., Sivashankar, V.,
+Zamoshchin, D., Glikbarg, L., Askaryar, D., Yang, M.,
+Zhang, T., Alluri, R., Tran, N., Sangpisit, R., Yiorkadjis, P.,
+Osele, K., Raghupathi, G., Boneh, D., Ho, D. E., and Liang,
+P. Cybench: ⼀个⽤于评估语⾔模型⽹络安全能⼒和⻛险的
+框架，URL http://arxiv.org/abs/2408.08926.
+Zhang, A. L., Kraska, T., 和 Khattab, O. 递归语⾔模型，
+2025a. URL https://arxiv.org/ abs/2512.24601.
+Zhang, H., Huang, J., Mei, K., Yao, Y., Wang, Z., Zhan, C,
+Wang, H., 和 Zhang, Y. Agent 安全基准 (ASB)：形式化
+LLM 基于代理中的攻击和防御基准测试，b. URL
+http://arxiv.org/ abs/2410.02644.
+张 L.、何 S.、张 C.、康 Y.、李 B.、谢 C.、王 J.、王 M.、⻩
+Y.、傅 S.、Nallipogu E.、林 Q.、党 Y.、Rajmohan S.和张
+D.S.。《SWE-bench 正式上线！》，2025b。⽹址：
+http://arxiv.org/abs/2505.23419
+Zhu, Y., Kellermann, A., Bowman, D., Li, P., Gupta, A.,
+Danda, A., Fang, R., Jensen, C., Ihli, E., Benn, J.,
+Geronimo, J., Dhir, A., Rao, S., Yu, K., Stone, T., and Kang,
+D. CVE-Bench：⼀个⽤于评估 AI 代理利⽤真实世界 Web 应
+⽤漏洞能⼒的基准。
+在 2025 年第四⼗⼆届国际机器学习⼤会上。
+URL https://openreview.net/ forum?id=3pk0p4NGmQ.
+12
+C
+C
+V
+V
+E
+E--F
+F
+a
+ac
+cto
+to
+ry:
+ry
+为
+: S
+代
+cal
+码
+i
+安
+ng
+全
+E
+漏
+xp
+洞
+e
+扩
+rt-展
+Le
+专
+ve
+家
+l
+级
+Ag
+代
+e
+理
+nt
+任
+ic
+务
+Tasks for Code Security Vulnerability
+A
+A..
+完
+Co
+整
+m
+⽰
+p
+例
+lete Example
+A
+A..
+1
+1..
+⽬
+Di
+录
+re
+结
+ct
+构
+ory Structure
+C
+C
+V
+V
+E
+E--2
+2
+0
+0
+2
+2
+5
+5--1
+1
+0
+0
+6
+6
+8
+8
+6
+6
+/
+/
+t
+t
+a
+a
+s
+s
+k
+k..
+y
+y
+a
+a
+m
+m
+l
+l
+#
+#
+任
+T
+务
+ask
+描
+d
+述
+escription
+t
+t
+e
+es
+s
+t
+t
+s
+s
+/
+/
+t
+t
+e
+e
+s
+s
+t
+t
+f
+f
+u
+u
+n
+n
+c
+c.p
+.p
+y 
+y
+#
+#
+功
+F
+能
+un
+测
+ct
+试
+ionality tests
+test vuln.py # 漏洞测试
+test vuln.py # Vulnerability tests
+r
+r
+u
+u
+n
+n--t
+t
+e
+e
+s
+s
+t
+t
+s
+s.s
+.s
+h
+h
+#
+#
+测
+Te
+试
+st
+运
+ru
+⾏
+n
+脚
+ne
+本
+r script
+s
+s
+o
+o
+l
+l
+u
+u
+t
+t
+i
+i
+o
+o
+n
+n..
+s
+s
+h
+h
+#
+#
+漏
+Vu
+洞
+ln
+修
+e
+复
+rability patch
+t
+t
+a
+a
+s
+s
+k
+k--d
+d
+e
+e
+p
+p
+s
+s
+/
+/
+#
+#
+依
+D
+赖
+ep
+项
+endencies
+D
+D
+o
+o
+c
+c
+k
+k
+e
+e
+rfi
+rfi
+le
+le
+#
+#
+容
+C
+器
+on
+环
+tai
+境
+ner environment
+d
+d
+o
+o
+c
+c
+k
+k
+e
+e
+r
+r--c
+c
+o
+o
+m
+m
+p
+p
+o
+o
+se
+s.e
+y
+.
+a
+y
+m
+am
+l #
+l
+容
+# C
+器
+o
+编
+nt
+排
+ainer orchestration
+A
+A..
+2
+2..
+⽂
+Fi
+件
+le
+内
+Co
+容
+ntent
+C
+C
+V
+V
+E
+E--2
+2
+0
+0
+2
+2
+5
+5-1-1
+0
+0
+6
+6
+8
+8
+6
+6.m
+.m
+d
+d
+#
+#
+C
+C
+VE
+V-E
+2-02
+2
+5
+0-2
+10
+5
+6-8
+1
+6
+0686
+#
+#
+#
+#
+基
+B
+本
+as
+信
+i
+息
+c
+详
+I
+情
+nformation
+-- *
+*
+*评
+*S
+分
+c
+*
+o
+*
+r
+:
+e
+8
+*
+8
+*: 88
+-- *
+*
+*供
+*V
+应
+e
+商
+nd
+*
+o
+*:
+r*
+未
+*
+知
+: Unknown
+-- *
+*
+*产
+*P
+品
+r
+*
+o
+*
+d
+:
+u
+C
+c
+r
+t
+e
+*
+ta
+*:
+Tes
+C
+t
+r
+i
+e
+mo
+t
+n
+a
+ial
+Te
+S
+s
+ho
+t
+w
+i
+c
+m
+as
+o
+e
+nial Showcase
+-- *
+*
+*版
+*V
+本
+e
+*
+r
+*
+s
+:
+i
+0
+on**: 0
+-- *
+*
+*C
+*
+V
+C
+S
+V
+S
+S
+评
+S
+分
+S
+*
+c
+*
+o
+:
+r
+7
+e.*
+2
+*: 7.2
+-- *
+*
+*C
+*
+W
+C
+E
+W
+**
+E
+：
+**:
+-- *
+*
+*发
+*D
+布
+a
+日
+te
+期*
+P
+*
+u
+:
+b
+2
+l
+0
+i
+2
+s
+5-h
+1
+e
+1
+d-1
+*
+4
+*
+T
+:
+06:
+2
+0
+0
+0:
+2
+0
+5
+9-.0
+1
+5
+1
+1-Z
+14T06:00:09.051Z
+-- *
+*
+*存
+*E
+在
+x
+漏
+pl
+洞
+o
+*
+i
+*
+t
+: 真
+Available**: True
+#
+#
+#
+#
+描
+D
+述
+escription
+C
+T
+r
+h
+e
+e
+ta
+C
+T
+r
+es
+e
+t
+t
+i
+a
+mon
+T
+i
+e
+al
+st
+S
+i
+ho
+m
+w
+o
+c
+n
+as
+i
+e
+al
+Wor
+S
+d
+h
+Pr
+o
+e
+w
+s
+c
+s
+a
+插
+se
+件在
+Wo
+1
+r.d
+2
+P.4
+re
+之
+s
+前
+s
+的
+p
+版
+lu
+本
+g
+存
+in
+在
+b
+本
+e
+地
+fo
+文
+r
+件
+e
+包
+1
+含
+.2
+漏
+.
+洞
+4。i
+这
+s
+使
+vu
+得
+l
+具
+ne
+有
+r
+编
+ab
+辑
+l
+者
+e
+级
+t
+别
+o
+访
+L
+问
+oc
+权
+a
+限
+l
+及
+F
+以
+il
+上
+e
+的
+I
+认
+n
+证
+cl
+攻
+u
+击
+si
+者
+o
+能
+n.
+够包
+Th
+含
+i
+并
+s
+执
+ma
+行
+k
+服
+es
+务器
+it
+上的
+po
+任
+s
+意
+si
+文
+b
+件
+le，允
+fo
+许
+r
+执
+行
+au
+这
+t
+些
+he
+文
+n
+件
+ti
+中
+c
+的
+at
+任
+e
+何
+d a
+PH
+t
+P
+ta
+代
+c
+码
+ke。rs, with editor-level access and above, to
+include and execute arbitrary files on the server, allowing the
+execution of any PHP code in those files.
+#
+#
+#
+#
+受
+A
+影
+ff
+响
+e
+的
+ct
+产
+e
+品
+d Products
+#
+#
+#
+#
+#
+#
+未
+U
+知
+nk-no
+Cr
+w
+e
+n
+ta-用
+C
+户
+r
+证
+et
+言
+a
+展
+T
+示
+estimonial Showcase
+*
+*
+*
+*
+版
+V
+本
+er
+：
+s
+*
+i
+*
+ons:**
+-- 影
+a
+响
+ff
+：
+e
+<
+ct
+1
+e.2
+d.:
+4
+< 1.2.4
+1
+1
+3
+3
+C
+C
+V
+V
+E
+E--F
+F
+a
+ac
+cto
+to
+ry:
+ry
+为
+: S
+代
+cal
+码
+i
+安
+ng
+全
+E
+漏
+xp
+洞
+e
+扩
+rt-展
+Le
+专
+ve
+家
+l
+级
+Ag
+代
+e
+理
+nt
+任
+ic
+务
+Tasks for Code Security Vulnerability
+4
+##
+##
+R
+参
+ef
+考
+e
+文
+re
+献
+nc
+和
+es
+PO
+a
+Cs
+nd POCs
+#
+#
+#
+#
+#
+#
+PO
+P
+C
+O
+/漏
+C/
+洞
+E
+利
+xp
+用
+loits
+-- h
+h
+tt
+t
+p
+t
+s
+p
+:/
+s
+/
+:
+w
+/
+ps
+/
+c
+w
+a
+p
+n.s
+c
+c
+o
+a
+m/
+n
+v
+.
+u
+c
+ln
+o
+e
+m
+r
+/
+ab
+v
+i
+u
+l
+l
+it
+n
+y
+e
+/
+r
+27
+a
+d
+b
+5
+i
+8c
+l
+5
+i
+a
+t-a
+y
+b
+/
+8
+2
+7
+7-4
+d
+1
+5
+a
+8
+a-c
+a
+5
+8
+a
+06--a
+5
+b
+3f
+8
+a
+7
+9-6d
+4
+4
+1
+3
+a
+51
+a
+c-/
+a806-53fa96d4351c/
+#
+#
+#
+#
+CI
+C
+S
+I
+A
+S
+评
+A
+估
+Assessment
+*
+*
+*
+*
+S
+S
+SV
+S
+C
+VC
+决策
+De
+点
+c
+*
+i
+*
+s
+：
+io-n
+利
+P
+用
+o
+：
+in
+p
+t
+oc
+s*-*
+可
+:
+自- 动
+E
+：
+xp
+否
+lo-it
+技
+a
+术
+ti
+影
+o
+响
+n:
+：完
+po
+全
+c
+- Automatable: no
+- Technical Impact: total
+t
+t
+a
+a
+s
+s
+k
+k..
+y
+y
+a
+a
+m
+m
+l
+l
+指
+in
+令
+s
+：
+tr
+|
+u
+我
+c
+正
+ti
+在
+o
+使
+n:
+用
+|"-Creta Testimonial Showcase" WordPress 插件在我的网站上显示客户评价。在测试
+时，I
+我
+’
+注
+m
+意
+u
+到
+si
+短
+n
+代
+g
+码
+t
+预
+he
+览
+"
+功
+C
+能
+re
+中
+t
+有
+a 一T
+个
+es
+令
+t
+人
+im
+担
+o
+忧
+ni
+的
+a
+问
+l
+题
+S。howcase
+" WordPress plugin to display
+customer testimonials on my site. While testing, I noticed something
+concerning in the shortcode preview feature.
+当
+Wh
+我
+e
+在
+n
+浏
+I
+览
+u
+器
+s
+开
+e
+发
+b
+者
+ro
+工
+w
+具
+se
+中
+r
+查
+d
+看
+e
+从
+v
+管
+t
+理
+oo
+面
+l
+板
+s
+发
+t
+出
+o
+的
+l
+网
+oo
+络
+k
+请
+a
+求
+t
+时
+t，h
+我
+e
+发
+n
+现
+et
+插
+w
+件
+or
+会
+k
+发
+r
+送
+eq一u
+个
+es"l
+t
+a
+s
+you
+f
+t
+r"o
+参
+m
+数
+t
+来
+h
+加
+e
+载不
+同
+ad
+的
+m
+模
+in
+板设
+pa
+计
+n。el
+问
+,
+题I是，ca
+如
+n
+果
+s
+我
+e
+修
+e
+改
+t
+这
+ha
+个
+t
+l
+t
+a
+h
+yo
+e
+ut
+p
+参
+lu
+数
+g
+以
+in
+包含
+se
+目
+n
+录
+ds
+遍
+a
+历字
+"l
+符
+a，yo
+如
+u"t."./"p，a
+插
+ra
+件
+m
+似
+et
+乎
+e
+会
+r
+尝
+t
+试
+o
+从模
+板
+lo
+文
+a
+件
+d
+夹
+d
+外
+if
+部
+f
+加
+er
+载
+e
+文
+nt
+件。template designs. The problem is that if I modify this
+layout parameter to include directory traversal characters like
+"
+../"
+,
+the plugin seems to try loading files from outside the templates folder.
+例
+Fo
+如
+r，e
+当
+x
+我
+am
+将
+p
+布
+le
+局
+,
+值
+w
+从
+h"e
+l
+n
+ayo
+I
+ut
+c-5
+h"a
+更
+n
+改
+ge
+为
+d
+包
+t
+含
+h"e..l
+/"a
+的
+yo
+内
+u
+容
+t
+时
+v，al
+我
+u
+看
+e
+到
+f
+了
+ro
+错
+m
+误
+"
+消
+l
+息
+ay，o
+提
+ut
+示-插
+5"
+件试
+to
+图访
+so
+问
+m
+它
+et
+不
+h
+应
+in
+该
+g
+能
+wi
+够
+t
+访
+h
+问
+"
+的
+..
+文
+/
+件
+" 。i
+这
+n
+看
+i
+起
+t,
+来可
+I
+能
+s
+是
+aw一个
+er
+安
+r
+全
+or
+问题
+me，ss
+因
+a
+为
+ge
+具
+s
+有
+s
+编
+u
+辑
+gg
+器
+e
+访
+st
+问
+i
+权
+ng
+限的
+th
+认
+e
+证
+p
+用
+l
+户
+ug
+可
+i
+能
+n
+会
+w
+从
+as
+服务
+tr
+器
+y
+加
+in
+载
+g
+任意
+文
+to
+件。access files it shouldn’t be able to reach. This seems like it could
+be a security problem since authenticated users with editor access could
+potentially load arbitrary files from the server.
+问
+Th
+题
+e
+似
+i
+乎
+s
+出
+su
+在
+e
+插
+a
+件
+p
+如
+pe
+何
+a
+构
+rs
+建模
+to
+板的
+be
+文件
+in
+路径
+ho
+上
+w。t
+在
+h‘e
+a
+p
+dm
+l
+i
+u
+n
+g
+/c
+i
+l
+n
+ass
+b-u
+m
+i
+et
+l
+a
+d-s the file path for
+s
+t
+h
+e
+o
+m
+rt
+p
+c
+l
+o
+a
+de
+t.e
+p
+s
+hp
+.‘I
+中
+n，‘‘c
+a
+r
+d
+e
+m
+t
+i
+at
+n
+s
+/_c
+g
+l
+et
+a_s
+p
+s
+re-v
+m
+i
+e
+e
+t
+w_a
+h-t
+s
+m
+h
+l‘or
+函
+tc
+数
+o
+通
+de
+过
+.
+将
+ph
+用
+p
+户
+‘
+输
+,
+入
+t
+直
+he
+接连接到路径中来构造模板路径，而
+没
+‘
+有
+cr
+进
+e
+行
+ta
+适
+t
+当
+s_的
+ge
+验
+t
+证_p。review_html‘ function constructs the template path by
+concatenating user input directly into the path without proper validation.
+能
+Co
+否
+u
+请
+ld
+修复
+yo
+这
+u
+个
+p
+问
+l
+题
+ea，s
+以
+e
+便
+f
+插
+ix
+件仅
+th
+允
+i
+许
+s
+从
+s
+其
+o
+指
+t
+定
+he
+的模
+pl
+板
+u
+文
+gi
+件
+n
+夹
+o
+中
+n
+加
+ly
+载模
+al
+板
+l
+？
+ow
+布
+s
+局
+l
+参
+oa
+数
+d
+应
+in
+仅
+g
+接
+t
+受
+e
+有
+mp
+效
+l
+的
+at
+模
+e
+板
+s
+名
+称
+fr。om within its designated templates folder? The layout parameter should
+be restricted to only accept valid template names.
+难
+di
+度
+f
+：
+fi
+中
+c
+等
+ulty: medium
+分
+ca
+类
+t
+：
+eg
+安
+o
+全
+ry: security
+标
+ta
+签
+g
+：
+s:
+-- w
+w
+or
+o
+d
+r
+p
+d
+re
+p
+s
+r
+s
+ess
+-- 插
+p
+件
+lugin
+-- p
+p
+hp
+hp
+-- 路
+p
+径
+at
+处
+h
+理-handling
+解
+pa
+析
+r
+器
+se
+名
+r
+称_n
+：
+a
+p
+m
+y
+e
+t
+:
+est
+pytest
+r
+r
+u
+u
+n
+n_t_e
+t
+s
+e
+ts
+s_t
+i
+s
+n__s
+i
+a
+n
+me__s
+s
+a
+he
+m
+l
+e
+l_：
+s
+f
+h
+a
+e
+ls
+l
+e
+l: false
+1
+1
+4
+4
+C
+C
+V
+V
+E
+E--F
+F
+a
+ac
+cto
+to
+ry:
+ry
+为
+: S
+代
+cal
+码
+i
+安
+ng
+全
+E
+漏
+xp
+洞
+e
+扩
+rt-展
+Le
+专
+ve
+家
+l
+级
+Ag
+代
+e
+理
+nt
+任
+ic
+务
+Tasks for Code Security Vulnerability
+D
+D
+o
+o
+c
+c
+k
+k
+e
+e
+r
+r
+fi
+fi
+l
+l
+e
+e
+来
+FR
+自
+OM
+wo
+w
+rd
+o
+p
+r
+r
+d
+es
+p
+s
+r
+:
+e
+6.s
+4
+s-:
+ph
+6
+p
+.
+8
+4.1--p
+a
+h
+pa
+p
+c
+8
+h
+.
+e
+1-apache
+W
+W
+O
+O
+R
+R
+KD
+K
+I
+D
+R
+I
+/
+R
+va
+/
+r/
+v
+w
+a
+w
+r
+w/
+/
+h
+w
+t
+w
+ml
+w/html
+#
+#
+安
+I
+装
+ns
+所
+t
+需
+al
+的
+l
+系
+r
+统
+e
+包
+qui
+RU
+r
+N
+ed
+apt
+s-y
+ge
+s
+t
+te
+up
+m
+da
+p
+te
+ac
+&
+k
+&
+a
+a
+g
+p
+e
+t-s
+get install
+-R
+y
+UN
+\
+apt-get update && apt-get install -y \
+解
+un
+压
+zi
+\
+p
+de\fault-mysql-client \ tmux \
+a
+d
+s
+e
+c
+f
+ii
+a
+n
+u
+e
+l
+ma
+t-\
+m
+c
+y
+u
+s
+r
+q
+l
+l
+\-c
+&&
+li
+删
+e
+除
+nt \
+/
+t
+v
+m
+a
+u
+r/
+x
+li
+\
+b/apt/lists/* 目录下的所有文件
+asciinema
+\
+curl \
+&& rm -rf /var/lib/apt/lists/*
+#
+#
+安
+I
+装
+nst
+WP
+a-l
+C
+l
+LI
+W
+用
+P
+于-CL
+Wo
+I
+rd
+f
+Pr
+o
+e
+r
+ss
+W
+管
+or
+理
+dP
+R
+r
+UN
+es
+c
+s
+url
+ma-O
+na
+h
+g
+tt
+e
+p
+m
+s
+e
+:/
+n
+/
+t
+raw.githubusercontent.com/wp-cli/builds/gh p
+R
+a
+U
+g
+N
+es/
+c
+p
+u
+ha
+r
+r
+l
+/wp--O
+c\
+h
+l
+t
+i
+t.p
+p
+h
+s
+a
+:
+r
+/
+&
+/
+&
+r
+\
+aw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-c\
+li.phar &&
+\
+c
+c
+h
+h
+m
+m
+od
+od
++x
++
+w
+x
+p-c
+w
+l
+p
+i-.p
+c
+h
+l
+a
+i
+r
+.
+&
+p
+&
+h
+m
+a
+v
+r
+wp
+&-&
+cli\.phar
+/
+m
+u
+v
+sr/
+w
+l
+p
+o-ca
+c
+l
+l
+/
+i
+bi
+.
+n
+p
+/
+h
+wp
+ar /usr/local/bin/wp
+#
+#
+复
+C
+制
+op
+并
+y
+安
+a
+装
+n
+有
+d
+漏
+i
+洞
+ns
+的
+t
+插
+al
+件
+l
+C
+t
+O
+h
+PY
+e
+t
+v
+as
+u
+k
+l-n
+de
+e
+p
+r
+s
+a
+/c
+b
+r
+l
+e
+e
+ta-p
+t
+l
+es
+u
+t
+g
+i
+i
+m
+n
+onial-showcase.1.2.2.zip
+/
+C
+t
+O
+m
+P
+p/
+Y
+pl
+t
+ug
+a
+i
+s
+n
+k.z-i
+d
+p
+e
+R
+p
+U
+s
+N
+/
+u
+c
+n
+r
+z
+e
+ip
+ta
+/-tm
+t
+p
+e
+/
+s
+pl
+t
+u
+i
+g
+m
+in
+o.n
+z
+i
+ip
+al--d
+s
+/
+h
+v
+o
+a
+w
+r/
+c
+w
+a
+w
+s
+w/
+e
+h
+.
+t
+1
+ml
+.
+/
+2
+w
+.
+p-2
+c
+.
+o
+z
+nt
+i
+e
+p
+nt/
+/
+p
+t
+l
+m
+ug
+p
+i
+/
+n
+p
+s/
+lu
+&
+g
+&
+i
+\
+n.zip
+RUN unzip /tmp/plugin.zip -d /var/www/html/wp-content/plugins/ && \
+r
+r
+m
+m
+/t
+/
+m
+t
+p
+m
+/p
+p
+l
+/
+u
+p
+gi
+l
+n
+u.g
+zi
+i
+p
+n.
+&&
+zi
+c
+p
+how
+&
+n
+&-R\ www d
+c
+a
+h
+t
+o
+a:
+w
+w
+n
+ww--d
+R
+ata
+ww
+\
+w-data:www-data \
+/
+/
+v
+v
+a
+a
+r/
+r
+w
+/
+w
+w
+w/
+w
+h
+w
+t
+/
+ml
+h
+/
+t
+w
+m
+p-l
+c
+/
+o
+w
+nt
+p
+e-n
+c
+t/
+o
+p
+n
+l
+t
+ug
+e
+i
+n
+n
+t
+s/
+/
+c
+p
+r
+l
+et
+u
+a
+g-i
+te
+n
+s
+s
+t
+/
+im
+c
+o
+r
+n
+e
+ia
+t
+l
+a--sh
+t
+o
+e
+w
+s
+ca
+t
+s
+i
+e
+monial-showcase
+#
+#
+复
+C
+制
+op
+初
+y
+始
+i
+化
+n
+脚
+it
+本
+ia
+C
+l
+O
+i
+PY
+za
+t
+t
+as
+i
+k
+o-n
+dep
+s
+s
+c
+/i
+r
+n
+i
+i
+p
+t-t
+wordpress.sh /init-wordpress.sh
+R
+C
+U
+O
+N
+P
+c
+Y
+hm
+t
+od
+as
++
+k
+x-/
+d
+i
+e
+ni
+p
+t
+s-/
+wo
+i
+r
+n
+d
+i
+pr
+t
+e-s
+w
+s.o
+s
+r
+h
+dpress.sh /init-wordpress.sh
+RUN chmod +x /init-wordpress.sh
+#
+#
+复
+C
+制
+op
+自
+y
+定
+c
+义
+u
+入
+st
+口
+o
+点
+m e
+CO
+n
+P
+t
+Y
+r
+t
+y
+a
+p
+s
+o
+k-i
+d
+n
+e
+t
+ps/entrypoint.sh /custom e
+C
+n
+O
+t
+P
+ry
+Y
+po
+t
+in
+a
+t
+s.k
+sh-d
+R
+e
+UN
+ps
+c
+/
+hm
+e
+o
+n
+d
+t
++
+r
+x
+yp
+/c
+o
+u
+i
+s
+n
+to
+t
+m
+.-s
+en
+h
+tr
+/
+yp
+c
+o
+u
+i
+s
+nt
+t.o
+s
+m
+h-entrypoint.sh
+RUN chmod +x /custom-entrypoint.sh
+#
+#
+W
+E
+or
+n
+d
+v
+P
+i
+re
+r
+s
+o
+s
+n
+调
+me
+试
+n
+环
+t
+境
+fo
+E
+r
+NV
+W
+W
+o
+O
+r
+RD
+d
+P
+P
+R
+r
+ES
+e
+S
+s_s
+DEB
+d
+U
+e
+G=b
+1
+ugging
+ENV WORDPRESS_DEBUG=1
+#
+#
+使
+U
+用
+se
+自定
+cu
+义
+s
+入
+to
+口
+m
+点
+en
+EN
+t
+T
+r
+R
+y
+YP
+p
+O
+o
+I
+i
+NT
+nt
+["/custom e
+E
+n
+N
+t
+T
+ry
+R
+p
+Y
+o
+P
+in
+O
+t
+I.N
+sh
+T"]
+["/custom-entrypoint.sh"]
+d
+d
+o
+o
+c
+ck
+k
+e
+e
+r
+r
+--c
+c
+o
+o
+m
+m
+p
+p
+o
+o
+s
+s
+e
+e
+..y
+y
+a
+a
+m
+m
+l
+l
+v
+v
+e
+e
+r
+r
+s
+s
+i
+i
+o
+o
+n:
+n:'3
+’.8
+3'.8’
+服
+se
+务
+r
+：
+vices:
+W
+w
+o
+o
+r
+r
+dP
+d
+r
+p
+e
+r
+ss
+e
+：
+ss:
+构
+bu
+建
+i
+：
+ld。: .
+c
+c
+o
+o
+n
+n
+ta
+t
+i
+a
+n
+i
+er
+n_e
+n
+r
+am_e
+n
+:
+a
+c
+m
+r
+e
+e
+:
+ta-c
+t
+r
+es
+e
+t
+t
+i
+a
+mo-n
+t
+i
+e
+al
+s-t
+w
+i
+or
+m
+d
+o
+p
+n
+re
+i
+s
+a
+s
+l-wordpress
+e
+e
+n
+n
+v
+v
+ir
+i
+o
+r
+n
+o
+me
+n
+n
+m
+t
+e
+:
+n
+W
+t
+O
+:
+RDPRESS_DB_HOST: db:3306
+WOR
+W
+DP
+O
+R
+R
+E
+D
+SS
+P_R
+D
+E
+B_S
+U
+S
+S_ER
+D
+:
+B_wo
+H
+r
+O
+d
+S
+pr
+T
+e
+:
+ss
+db:3306
+WORDPRESS_DB_USER: wordpress
+1
+1
+5
+5
+C
+C
+V
+V
+E
+E--F
+F
+a
+ac
+cto
+to
+ry:
+ry
+为
+: S
+代
+cal
+码
+i
+安
+ng
+全
+E
+漏
+xp
+洞
+e
+扩
+rt-展
+Le
+专
+ve
+家
+l
+级
+Ag
+代
+e
+理
+nt
+任
+ic
+务
+Tasks for Code Security Vulnerability
+WOR
+W
+DP
+O
+R
+R
+E
+D
+SS
+P_R
+D
+E
+B_S
+P
+S
+A_SS
+D
+W
+B
+O_RD
+P
+：
+AS
+wo
+S
+r
+W
+d
+O
+pr
+R
+e
+D
+s
+:
+s
+wordpress
+WOR
+W
+DP
+O
+R
+R
+E
+D
+SS
+P_R
+D
+E
+B_S
+N
+S
+A_ME
+D
+：
+B_wo
+N
+r
+A
+d
+M
+pr
+E
+e
+:
+ss
+wordpress
+WOR
+W
+DP
+O
+R
+R
+E
+D
+SS
+P_R
+D
+E
+EB
+S
+U
+S
+G_：
+D“EB
+1”UG:
+"1"
+依
+de
+赖
+p
+项
+en
+：
+ds_on:
+db：
+d
+条
+b:
+件：service_healthy 状态正常。网络
+相关配
+c
+置
+o
+：
+nd-i
+c
+t
+r
+i
+e
+o
+ta
+n-:
+net
+se
+需
+r
+要
+vi
+重
+c
+启
+e_；
+h
+除
+ea
+非
+l
+处
+th
+于
+y
+停
+ne
+止
+t
+状
+wo
+态
+r，ks
+否
+:
+则无需重启。
+- creta-net
+restart: unless-stopped
+d
+d
+b
+b
+：
+:
+图
+im
+像
+a
+：
+ge
+M
+:
+ari
+m
+a
+a
+DB
+r
+:
+i
+1
+a
+0.d
+6
+b:10.6
+容
+co
+器
+n
+名
+ta
+称
+i
+：
+ne
+c
+r
+re_t
+n
+a
+a-t
+m
+e
+e
+s
+:
+tim
+c
+o
+r
+ni
+e
+a
+t
+l
+a-d-b
+testimonial-db
+环
+en
+境
+v
+配
+ir
+置
+o
+：
+nment:
+MYS
+M
+QL
+Y_S
+R
+Q
+OO
+L
+T__R
+PA
+O
+S
+O
+S
+T
+WO_R
+P
+D
+A
+：
+S
+r
+S
+o
+W
+ot
+O
+p
+R
+a
+D
+ss
+:
+wo
+r
+rd
+ootpassword
+MYS
+M
+QL
+Y
+_S
+D
+Q
+AT
+L
+A_
+B
+D
+AS
+A
+E
+T
+：
+A
+w
+B
+o
+A
+r
+S
+dp
+E
+r
+:
+ess
+wordpress
+MYS
+M
+QL
+Y
+_S
+U
+Q
+SE
+L
+R_：
+U
+w
+S
+o
+E
+r
+R
+dp
+:
+re
+w
+ss
+ordpress
+MYS
+M
+QL
+Y
+_S
+P
+Q
+AS
+L
+SW
+P
+OR
+A
+D
+S
+：
+S
+w
+W
+o
+O
+r
+R
+dp
+D
+r
+:
+ess
+wordpress
+健
+he
+康
+a
+检
+lt
+查
+h
+命
+ch
+令
+e
+：
+ck:
+_
+tes
+t
+t:
+es
+[
+t
+"C
+:
+MD
+[
+","C
+"M
+my
+D
+s
+"
+q
+,
+lad
+"
+m
+m
+in
+y
+"s
+,q
+"l
+p
+a
+i
+d
+ng
+m
+"i
+,n
+""
+-,
+h","
+p
+"i
+lo
+n
+c
+g
+a
+"
+lh
+,
+os
+"
+t"-
+]
+h"
+,
+"localhost"
+,
+“-uroot”"、-“ur-o
+pr
+o
+o
+t
+o
+"
+tp
+,
+as
+"
+sw-o
+p
+r
+r
+d”oo
+：
+t
+间
+pa
+隔
+s
+时
+sw
+间
+o
+：
+rd
+5
+"]
+秒
+in
+；
+t
+超
+er
+时
+v
+时
+al
+间
+:
+：
+5
+5
+s
+秒；重试次数：20 次
+timeout: 5s
+retries: 20
+开
+st
+始
+a
+时
+rt
+间_：
+pe
+3
+r
+0
+i
+秒
+od: 30s
+网
+ne
+络
+t
+：
+works:
+- C-ret
+c
+a
+r-N
+e
+e
+t
+t
+a
+重-n
+启
+e
+：
+t
+除非被停止
+restart: unless-stopped
+网
+ne
+络
+t
+：
+works:
+C
+c
+r
+r
+e
+e
+ta
+t-a
+n-et
+n
+：
+et:
+司
+dr
+机
+i
+：
+ve
+桥
+r
+梁
+: bridge
+1
+1
+6
+6
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+B. Sample Real-World Distribution
+B.1. Reproduce Score Metrics
+The Reproduce Score is a quantitative metric used to assess the feasibility of reproducing a CVE in a standard Docker
+environment. The score is calculated by a heuristic engine that applies a set of scoring rules based on keyword matching and
+regular expressions against the CVE metadata. Table 5 lists the specific points assigned to different criteria.
+Table 5. Reproduce Scoring rules. Category Criteria Points Heuristic Logic
+Evidence PoC / Exploit URL +30 Detected via keywords (e.g., poc, exploit).
+CISA KEV / SSVC +20∼25 Confirmed by CISA-ADP or SSVC assessment.
+Patch / Commit URL +15 Detected via keywords (e.g., commit, patch).
+Attack Details +5 Description contains payload, endpoint, etc.
+Tech Stack Python / Node.js +20 Easy to dockerize scripting languages.
+PHP / WordPress +15∼18 Common web frameworks and CMS.
+Java / Go / Rust +5∼12 Requires compilation or specific JVM setup.
+C / C++ +2∼5
+Complex build chains and system dependencies.
+Constraints Firmware / IoT -50 Identified via vendor list (e.g., Tenda, Netgear).
+System / OS -30 Hard to dockerize (e.g., Windows, macOS, iOS).
+The engine first scans the references and descriptions fields to identify PoCs and patches. It then classifies the
+technology stack based on product names and descriptions. Finally, it applies penalties to CVEs that require physical
+hardware or specific operating system kernels, as these are typically unsuitable for automated reproduction on a single Linux
+server.
+B.2. Diversity Sampling Algorithm
+To build a balanced and non-redundant benchmark, we use a two-phase sampling algorithm that considers reproducibility,
+importance, and diversity.
+CWE Mapping and Aggregation To prevent the benchmark from being dominated by high-frequency vulnerabilities, we
+perform semantic aggregation on CWE IDs. Similar weaknesses are grouped into unified categories. Table 6 details the full
+mapping used to ensure the sampler selects a wide range of root causes. This ensures that the sampler selects a wide range
+of root causes rather than multiple instances of the same bug type.
+Table 6. Full CWE Semantic Aggregation Mapping.
+Unified Category Original CWE IDs
+memory write CWE-787 (Out-of-bounds Write), CWE-121 (Stack-based), CWE-122
+(Heap-based)
+xss CWE-79 (Cross-site Scripting), CWE-80
+sqli CWE-89 (SQL Injection), CWE-564 (Hibernate Injection)
+path traversal CWE-22, CWE-23, CWE-36, CWE-35, CWE-73
+code injection CWE-94, CWE-95 (Eval), CWE-917 (EL Injection), CWE-1321 (Proto type Pollution)
+use after free CWE-416, CWE-415 (Double Free)
+authentication CWE-287, CWE-288 (Auth Bypass)
+privilege mgmt CWE-269, CWE-266, CWE-250
+info exposure CWE-200, CWE-209, CWE-532, CWE-497, CWE-201
+incorrect authz CWE-863, CWE-639 (IDOR)
+buffer ops CWE-119, CWE-120
+hardcoded creds CWE-798, CWE-321, CWE-522
+integer overflow CWE-190, CWE-191 (Underflow)
+resource consump CWE-400, CWE-770, CWE-1333 (ReDoS), CWE-401 (Memory Leak)
+permission CWE-276, CWE-732
+17
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+B. 实际应⽤中的分布
+B.1. 再现分数指标
+再现分数是⼀个定量指标，⽤于评估在标准 Docker 环境中重现 CVE 的可⾏性。该分数由⼀个启发式引擎计算，该引擎基于
+关键词匹配和正则表达式对 CVE 元数据应⽤⼀组评分规则。表 5 列出了分配给不同标准的具体分数。
+表 5. 再现评分规则。
+类别标准 积分启发式逻辑
+证据 PoC / 利⽤ URL +30 通过关键词检测（例如，poc，exploit）
+CISA KEV / SSVC +20∼25 由 CISA-ADP 或 SSVC 评估确认。
+补丁 / 提交 URL +15 通过关键词检测（例如，commit，patch）。攻击详情 +5 描述
+包含有效载荷、端点等。
+技术栈 Python / Node.js +20 脚本语⾔易于 Docker 化。
+PHP / WordPress +15∼18 常⻅ Web 框架和 CMS。Java / Go / Rust +5∼12 需要编译
+或特定的 JVM 设置。C / C++
++2∼5 复杂的构建链和系统依赖。
+限制 固件 / 物联⽹ -50 通过供应商列表识别（例如，TP-Link，Netgear）。
+系统 / 操作系统 -30 难以进⾏ Docker 化（例如，Windows、macOS、iOS）。
+引擎⾸先扫描引⽤和描述字段以识别 PoCs 和补丁。然后根据产品名称和描述对技术栈进⾏分类。最后，它对需要物理硬件或
+特定操作系统内核的 CVE 应⽤惩罚，因为这些通常不适合在单个 Linux 服务器上⾃动重现。
+B.2. 多样性采样算法
+为了构建⼀个平衡且⽆冗余的基准，我们使⽤⼀个考虑可重现性、重要性和多样性的两阶段采样算法。
+CWE 映射和聚合 为了防⽌基准测试被⾼频漏洞主导，我们对 CWE ID 执⾏语义聚合。相似的弱点被分组到统⼀类别中。表 6
+详细说明了⽤于确保采样器选择⼴泛根本原因的完整映射。这确保了采样器选择⼴泛的根本原因，⽽不是相同错误类型的多
+个实例。
+表 6。完整的 CWE 语义聚合映射。
+统⼀类别 原始 CWE ID
+写入内存 CWE-787（越界写⼊），CWE-121（基于栈的），CWE-122（基于堆的）
+xss CWE-79（跨站脚本），CWE-80
+sqli CWE-89（SQL 注入），CWE-564（Hibernate 注入）路径遍历 CWE-22，CWE-23，CWE-36，CWE-
+35，CWE-73 代码注入 CWE-94，CWE-95（Eval），CWE-917（EL 注入），CWE-1321（Proto-
+类型污染) 使⽤后释放 CWE-416, CWE-415 (双重释放) ⾝份验证 CWE-287, CWE-288 (⾝份绕过) 权限管
+理 CWE-269, CWE-266, CWE-250 信息暴露 CWE-200, CWE-209, CWE-532, CWE-497, CWE-201 不正确
+的授权 CWE-863, CWE-639 (IDOR) 缓冲区操作 CWE-119, CWE-120 硬编码凭证 CWE-798, CWE-321,
+CWE-522 整数溢出 CWE-190, CWE-191 (下溢) 资源消耗 CWE-400, CWE-770, CWE-1333 (ReDoS),
+CWE-401 (内存泄漏) 权限 CWE-276, CWE-732
+17
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Composite Scoring Formula During the second phase of sampling, each CVE is assigned a composite score
+S
+f inal to
+determine its selection priority:
+S
+f inal
+= S
+base
++
+CW Edanger score
+57
+×
+30
++ (CV SS
+×
+2) +
+S
+div
++ S
+nov
+,
+(1)
+where
+S
+div is a diversity bonus (+20 for a new CWE, +10 for
+< 3
+selected) and
+S
+nov is a novelty bonus (+10 for a new
+repository).
+Two-Phase Selection The sampling procedure is executed as follows:
+1. Phase 1 (Top 25 Guarantee): The algorithm iterates through the MITRE Top 25 CWEs and selects the top 2 CVEs for
+each category based on their
+S
+base.
+2. Phase 2 (Greedy Filling): The remaining slots (to reach the 100-sample quota) are filled by sorting candidates by
+S
+f inal
+. We enforce a strict limit of 10 CVEs per CWE category and 10 CVEs per repository to maintain a long-tail
+distribution.
+B.3. LLM-as-Judge Evaluation
+The qualitative review is performed by Claude Code using the standardized prompt below. We also provide the metadata of
+CVEs to Claude Code. This stage provides a final semantic check to handle edge cases that static scoring cannot capture.
+Due to the extensive length of the complete LLM-as-Judge prompt, we have hosted it in our project’
+s GitHub repository.
+2
+This documentation details the exact instructions used to guide the LLM in performing environmental compatibility checks,
+cross-CVE semantic de-duplication, and strategic value tiering (Tiers 1‒3).
+2
+https://github.com/livecvebench/LiveCVEBench-Preview/blob/master/cve-sampler/CVE_
+SELECTION_GUIDE.md
+18
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+复合评分公式在抽样第⼆阶段，每个 CVE 被分配⼀个复合分数 Sfinal 以确定其选择优先级：
+S=S+
+CW E
+57
+× 30
++ (CV SS × 2) + S+ S，
+(1)
+其中 S 是多样性奖⾦（新 CWE 加 20 分，选择<3 次加 10 分），S 是新颖性奖⾦（新存储库加 10 分）。
+两阶段选择 采样程序执⾏如下：
+1. 阶段 1（前 25 项保证）：算法遍历 MITRE 前 25 项 CWE，并根据其 S 值选择每个类别的前 2 个 CVE。
+2. 阶段 2（贪婪填充）：剩余的位置（以达到 100 个样本配额）通过按 S 值对候选进⾏排序来填充。我们强制执⾏每个
+CWE 类别 10 个 CVE 和每个存储库 10 个 CVE 的严格限制，以保持⻓尾分布。
+B.3. LLM 作为裁判的评估
+定性审查由 Claude Code 使⽤以下标准化提⽰执⾏。我们还向 Claude Code 提供 CVE 的元数据。此阶段提供最终语义检查，
+以处理静态评分⽆法捕获的边缘情况。
+由于完整的 LLM-as-Judge 提⽰⻓度过⻓，我们已将其托管在我们的项⽬ GitHub 仓库中。
+本⽂档详细说明了⽤于指导 LLM 执⾏环境兼容性检查、跨 CVE 语义去重和战略价值分层（1-3 级）的确切指令。
+http
+2
+s://github.com/livecvebench/LiveCVEBench-Preview/blob/master/cve-sampler/CVE_SELECTION_GUIDE.md
+18
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+Table 7. Distribution of manual verification failures.
+Type Count Percentage
+Mock 52 35.9%
+Static Test 51 35.2%
+Fix Leak 24 16.6%
+Invalid Solution
+8
+5.5%
+Bypass Frontend
+5
+3.4%
+Invalid Test
+5
+3.4%
+Total 145 100%
+C. LiveCVEbench
+Table 8. Main Experimental Results on LiveCVEBench. Bold values with
+▲
+indicate best performance.
+Success Failed
+Agent Model Pass (%) Turns Tokens Turns Tokens
+Claude Code
+Claude Opus 4.5 27.78 ‒ ‒ ‒ ‒
+Claude Sonnet 4.5 24.34 ‒ ‒ ‒ ‒
+Terminus-2
+Claude Opus 4.5 42.33
+▲
+24.3 426,488 27.3 657,913
+Claude Sonnet 4.5 38.10 30.6 484,271 34.1 660,326
+Claude Sonnet 4 23.28 32.8 534,587 37.2 681,429
+Gemini 3 Pro 29.63 16.8
+▲
+237,714 21.0 366,009
+GPT-5.1-Codex 21.16 18.3 191,532
+▲
+19.1
+▲
+250,254
+▲
+GLM-4.6 25.40 30.7 394,184 39.4 632,040
+MiniMax M2 30.16 41.3 700,035 46.8 984,070
+Qwen 3 Coder 480B 19.05 34.1 407,784 46.1 730,546
+DeepSeek V3.2 22.75 23.4 432,778 21.7 406,347
+DeepSeek V3.1-Terminus 23.28 17.3 217,177 19.6 302,482
+Mini-SWE-Agent
+Claude Opus 4.5 41.27 40.1 798,860 43.6 1,008,186
+Claude Sonnet 4.5 34.39 39.4 659,811 39.4 658,626
+Claude Sonnet 4 20.11 29.8 340,386 37.3 559,877
+Gemini 3 Pro 27.51 29.8 432,771 31.7 564,593
+GPT-5.1-Codex 20.11 22.5 232,122 22.5 238,922
+GLM-4.6 20.11 33.3 344,088 37.6 496,109
+MiniMax M2 24.87 42.5 551,593 55.1 850,276
+Qwen 3 Coder 480B 19.58 39.5 480,659 45.1 578,253
+DeepSeek V3.2 21.16 35.2 348,645 35.6 393,126
+DeepSeek V3.1-Terminus 24.34 30.8 282,647 32.1 328,044
+OpenHands
+Claude Opus 4.5 30.16 30.8 1,069,481 28.4 1,066,426
+Claude Sonnet 4.5 27.51 42.7 1,171,678 45.6 1,393,851
+Gemini 3 Pro 14.81 46.2 1,228,641 23.2 507,147
+GPT-5.1-Codex 12.70 31.2 597,763 38.7 898,759
+GLM-4.6 16.93 33.6 710,058 33.2 672,933
+DeepSeek V3.1-Terminus 18.52 38.9 951,072 40.8 996,215
+Table 8 summarizes the main results on LiveCVEBench across different Agent frameworks and base models, revealing
+several consistent patterns. Overall performance remains far from solved: even the best configuration (Terminus-2 + Claude
+Opus 4.5) reaches only a 42.33% pass rate, indicating substantial headroom for LLM-based vulnerability repair. At the
+same time, results span a wide range (19.05%‒42.33%), preserving meaningful separation across the full performance
+spectrum rather than saturating at the top end. Higher success rates typically come with higher interaction and token
+costs (e.g., Terminus-2 + Claude Opus 4.5 averages 24.3 turns and 426K tokens per successful repair), whereas more
+efficient configurations (e.g., GPT-5.1-Codex) require only 18.3 turns and 191K tokens per success, but achieve a lower
+pass rate (21.16%), suggesting that difficult CVE repair still benefits from deeper exploration and iterative refinement
+and that token-efficient models may terminate attempts prematurely. cross framework comparisons further show that the
+Agent scaffold has a substantial, model-independent impact: the same base model can differ by double-digit points across
+19
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+表 7. ⼿动验证失败分布。
+类型 数量 百分⽐
+模拟 52 35.9%
+静态测试 51 35.2% 修复漏洞 24 16.6% ⽆
+效解决⽅案 8 5.5% 绕过前端 5 3.4% ⽆效
+测试 5 3.4%
+总计 145 100%
+C. LiveCVEbench
+表 8. LiveCVEBench 上的主要实验结果。带▲的粗体值表⽰最佳性能。
+成功 失败
+代理 模型 通过 (%) 转换令牌 转换令牌
+克劳德·科德
+克劳德·奥普斯 4.5 版 27.78 ‒ ‒ ‒ ‒
+克劳德·索内特 4.5 24.34 ‒ ‒ ‒ ‒
+终点站-2
+Claude Opus 4.5 42.33▲ 24.3 426,488 27.3 657,913 Claude Sonnet 4.5 38.10 30.6
+484,271 34.1 660,326 Claude Sonnet 4 23.28 32.8 534,587 37.2 681,429 Gemini 3 Pro
+29.63 16.8▲ 237,714 21.0 366,009 GPT-5.1-Codex 21.16 18.3 191,532▲ 19.1▲
+250,254▲ GLM-4.6 25.40 30.7 394,184 39.4 632,040 MiniMax M2 30.16 41.3 700,035
+46.8 984,070 Qwen 3 Coder 480B 19.05 34.1 407,784 46.1 730,546 DeepSeek V3.2
+22.75 23.4 432,778 21.7 406,347 DeepSeek V3.1-Terminus 23.28 17.3 217,177 19.6
+302,482
+Mini-SWE-Agent
+Claude Opus 4.5 41.27 40.1 798,860 43.6 1,008,186 Claude Sonnet 4.5 34.39 39.4
+659,811 39.4 658,626 Claude Sonnet 4 20.11 29.8 340,386 37.3 559,877 Gemini 3 Pro
+27.51 29.8 432,771 31.7 564,593 GPT-5.1-Codex 20.11 22.5 232,122 22.5 238,922 GLM-
+4.6 20.11 33.3 344,088 37.6 496,109 MiniMax M2 24.87 42.5 551,593 55.1 850,276
+Qwen 3 Coder 480B 19.58 39.5 480,659 45.1 578,253 DeepSeek V3.2 21.16 35.2
+348,645 35.6 393,126 DeepSeek V3.1-Terminus 24.34 30.8 282,647 32.1 328,044
+OpenHands
+Claude Opus 4.5：30.16、30.8；1,069,481、28.4；1,066,426
+Claude Sonnet 4.5：27.51、42.7；1,171,678、45.6；1,393,851
+Gemini 3 Pro：14.81、46.2；1,228,641、23.2；507,147
+GPT-5.1-Codex：12.70、31.2；597,763、38.7；898,759
+GLM-4.6：16.93、33.6；710,058、33.2；672,933
+DeepSeek V3.1-Terminus：18.52、38.9；951,072、40.8；996,215
+表 8 总结了在不同代理框架和基础模型上 LiveCVEBench 的主要结果，揭⽰了⼏个⼀致的规律。整体性能仍然远未解决：即
+使最佳配置（Terminus-2 + Claude Opus 4.5）也仅达到 42.33%的通过率，表明基于 LLM 的漏洞修复有巨⼤的提升空间。同
+时，结果跨度很⼤（19.05%‒42.33%），在全性能范围内保持了有意义的区分，⽽不是在⾼端饱和。更⾼的成功率通常伴随着
+更⾼的交互和 token 成本（例如，Terminus-2 + Claude Opus 4.5 平均每成功修复需要 24.3 轮和 426K 个 token），⽽更⾼效
+的配置（例如，GPT-5.1-Codex）每成功修复只需要 18.3 轮和 191K 个 token，但通过率较低（21.16%），表明困难的 CVE
+修复仍然受益于更深⼊的探索和迭代优化。该模型⾼效的模型可能会过早终⽌尝试。跨框架⽐较进⼀步表明，Agent 脚⼿架具
+有显著、与模型⽆关的影响：相同的基模型可以跨不同框架差异达到两位数。
+19
+CVE-Factory: Scaling Expert-Level Agentic Tasks for Code Security Vulnerability
+frameworks (e.g., Claude Opus 4.5 scores 42.33% with Terminus-2 but only 27.78% with Claude Code, a 14.55-point gap),
+and this pattern persists across models. Resource usage is also systematically asymmetric between successes and failures:
+failed attempts typically consume more tokens than successful ones (e.g., Terminus-2 + Claude Opus 4.5: 657K vs. 426K
+tokens), implying that successes often converge quickly while failures involve prolonged exploration before exhausting
+viable strategies, which motivates early-stopping heuristics and more adaptive budget allocation.
+C.1. CWE Categories
+We evaluate 10 frontier LLMs on 190 CVEs and analyze results by CWE category, finding substantial heterogeneity
+across vulnerability types: aggregate success ranges from 10.8% on code injection (CWE-94) to 46.6% on OS command
+injection (CWE-78). Injection-style vulnerabilities (e.g., SQL and command injection) are generally repaired more often
+(38‒47%), whereas categories that demand stronger semantic security reasoning―such as access control (27.1%) and path
+traversal (17.9%)―remain markedly harder, suggesting current LLM-based repair benefits more from recognizing syntactic
+vulnerability motifs than from deeper system-level reasoning. Model capacity matters most on the harder categories: for
+instance, Claude Opus 4.5 achieves 30.6% on code injection versus 4.2% for Claude Sonnet 4.5 (7.3
+×
+), with similar gaps
+for memory safety (41.0% vs. 32.7%) and access control (44.2% vs. 33.8%), indicating that multi-step reasoning and
+deeper code understanding disproportionately benefit from stronger models. XSS (CWE-79) remains challenging despite
+being the most frequent category (
+n
+= 850), with mean
+μ
+= 25.1% and standard deviation
+σ
+= 6.2%, likely due to the
+context-dependent nature of output encoding and the need to reason about HTML/JavaScript interaction semantics. Finally,
+we observe meaningful interactions between agent scaffolding and vulnerability semantics ‒e.g., Terminus-2 is stronger on
+memory-safety issues, while Claude Code is comparatively stronger on XSS ‒implying that scaffold design can materially
+shape category results.
+Table 9. Distribution of Programming Languages in the Benchmark
+Language Count Percentage
+PHP 76 25.9%
+JavaScript 53 18.0%
+Python 48 16.3%
+Shell 44 15.0%
+C
+25 8.5%
+TypeScript 21 7.1%
+Go
+9
+3.1%
+Java
+6
+2.0%
+C++
+4
+1.4%
+Ruby
+3
+1.0%
+Rust
+2
+0.7%
+C#
+1
+0.3%
+Lua
+1
+0.3%
+Erlang
+1
+0.3%
+Total (unique languages) 14 ‒
+C.2. Programming Language Performance Bias
+As shown in Table 9, the benchmark covers 14 programming languages, with PHP, JavaScript, Python, and C accounting
+for the majority of instances. Focusing on these four high-frequency languages reveals a clear two-tier pattern: JavaScript
+(31.4%) and PHP (30.7%) form the first tier, while Python (23.6%) and C (23.4%) form the second tier. To disentangle
+whether this gap stems from language-intrinsic difficulty or differences in task composition, we compare each language
+’
+s
+empirical success rate with an expected success rate computed from its CWE-type distribution and the overall CWE level repair rates, finding close agreement: PHP (30.7% vs. 29.7%), JavaScript (31.4% vs. 28.9%), Python (23.6% vs.
+21.3%), and C (23.4% vs. 23.7%), with all deviations within
+±
+2.4 percentage points. This indicates that aggregate cross language differences are largely explained by CWE composition and the associated difficulty distribution, rather than
+by the programming languages themselves: PHP and JavaScript contain a higher share of vulnerability types with more
+patternizable fixes, whereas Python has the lowest proportion of “
+easy
+” tasks (8.5%), and the C subset contains virtually
+no
+“
+easy
+” tasks (0%) and is dominated by moderately complex memory-safety issues, where models remain less robust
+due to low-level reasoning demands such as boundary conditions, pointer semantics, and lifetime constraints. Meanwhile,
+language-specific factors remain non-negligible as second-order effects―even within the same CWE category, repair
+20
+CVE-Factory: 为代码安全漏洞扩展专家级代理任务
+模型⽆关的影响：相同的基座模型在不同的框架中可能差异很⼤（例如，Claude Opus 4.5 使⽤ Terminus-2 得分 42.33%，
+但使⽤ Claude Code 仅得 27.78%，差距为 14.55 分），这种模式在各个模型中都存在。资源使⽤在成功和失败之间也存在系
+统性的不对称性：失败的尝试通常消耗⽐成功更多的 token（例如，Terminus-2 + Claude Opus 4.5：657K vs. 426K
+token），这意味着成功往往能快速收敛，⽽失败则涉及更⻓时间的探索，直到耗尽可⾏的策略，这促使了早期停⽌启发式⽅
+法和更⾃适应的预算分配。
+C.1. CWE 分类
+我们在 190 个 CVE 上评估了 10 个前沿 LLM，并按 CWE 类别分析结果，发现不同漏洞类型之间存在显著异质性：总体成功率
+从代码注⼊（CWE-94）的 10.8%到操作系统命令注⼊（CWE-78）的 46.6%。注⼊式漏洞（例如 SQL 和命令注⼊）通常修复
+率更⾼（38‒47%），⽽需要更强的语义安全推理的类别——如访问控制（27.1%）和路径遍历（17.9%）——仍然明显更难，
+这表明当前的基于 LLM 的修复更多受益于识别句法漏洞模式，⽽⾮更深层次的系统级推理。模型容量在更难的类别上影响最
+⼤：例如，Claude Opus 4.5 在代码注⼊上达到 30.6%，⽽ Claude Sonnet 4.5 为 4.2%（相差 7.3 倍），在内存安全（41.0%
+vs. 32.7%）和访问控制（44.2% vs. 33.）上存在类似的差距。8%），表明多步推理和更深⼊的代码理解从更强的模型中获益
+不成⽐例。XSS（CWE-79）尽管是最频繁的类别（n = 850），但由于输出编码的上下⽂依赖性以及需要推理
+HTML/JavaScript 交互语义，它仍然具有挑战性，平均值为μ = 25.1%，标准差为σ = 6.2%。最后，我们观察到代理脚⼿架和
+漏洞语义之间存在有意义的交互——例如，Terminus-2 在内存安全问题上表现更强，⽽ Claude Code 在 XSS ⽅⾯相对更强 ——这表明脚⼿架设计可以实质性地影响类别结果。
+表 9. 基准测试中编程语⾔的分布
+语⾔ 计数 百分⽐
+PHP 76：25.9%
+JavaScript：53 次，18.0%
+Python：48 次，16.3%
+Shell：44 次，15.0%
+C 语⾔：25 次，8.5%
+TypeScript：21 次，7.1%
+Go 语⾔：9 次，3.1%
+Java：6 次，2.0%
+C++：4 次，1.4%
+Ruby：3 次，1.0%
+Rust：2 次，0.7%
+C#：1 次，0.3%
+L总数（1唯次⼀语0⾔3%） 14 ‒
+C.2. 编程语⾔性能偏差
+如表 9 所⽰，基准测试涵盖了 14 种编程语⾔，其中 PHP、JavaScript、Python 和 C 占据了⼤多数实例。聚焦于这四种⾼频
+语⾔，可以揭⽰出明显的两极模式：JavaScript（31.4%）和 PHP（30.7%）构成第⼀极，⽽ Python（23.6%）和 C
+（23.4%）构成第⼆极。为了区分这种差距是由语⾔内在难度还是任务构成差异引起的，我们将每种语⾔的实证成功率与其根
+据其 CWE 类型分布和整体 CWE 级别修复率计算出的预期成功率进⾏⽐较，发现结果⾮常吻合：PHP（30.7% vs. 29.7%）、
+JavaScript（31.4% vs. 28.9%）、Python（23.6% vs. 21.3%）和 C（23.4% vs. 23.7%），所有偏差均在±2.4 个百分点以内。
+这表明，总体跨语⾔差异主要可以由 CWE 构成和相关难度分布来解释。与其说是编程语⾔本⾝：PHP 和 JavaScript 包含了更
+⾼⽐例的可模式化修复漏洞类型，⽽ Python 的“简单”任务⽐例最低（8.5%），C ⼦集⼏乎不包含“简单”任务（0%），并
+且主要是由中等复杂度的内存安全问题主导，由于底层推理需求（如边界条件、指针语义和⽣命周期约束），模型在这些⽅⾯
+仍然不够稳健。同时，特定语⾔因素作为⼆阶效应仍然不可忽视——即使在同⼀ CWE 类别中，修复
+20
+C
+C
+V
+V
+E
+E--F
+F
+a
+ac
+cto
+to
+ry:
+ry
+为
+: S
+代
+cal
+码
+i
+安
+ng
+全
+E
+漏
+xp
+洞
+e
+扩
+rt-展
+Le
+专
+ve
+家
+l
+级
+Ag
+代
+e
+理
+nt
+任
+ic
+务
+Tasks for Code Security Vulnerability
+修
+su
+复
+cc
+成
+es
+功
+s c
+在
+an
+不
+d
+同
+iff
+语
+er
+⾔
+su
+之
+b
+间
+sta
+可
+n
+能
+tia
+存
+lly
+在
+a
+巨
+cr
+⼤
+os
+差
+s l
+异
+an
+（
+gu
+例
+a
+如
+ge
+，
+s (
+对
+e.
+于
+g.,
+S
+f
+S
+o
+R
+r
+F
+S
+，
+SR
+C
+F
+W
+, C
+E
+W-9
+E
+1-8
+9
+，
+18
+P
+,
+y
+P
+t
+y
+h
+t
+o
+h
+n
+on
+达
+r
+到
+ea
+8
+c
+5
+h.e
+3
+s
+%
+8
+，
+5.3
+⽽
+%
+P
+w
+H
+h
+P
+il
+为
+e P
+0
+H
+%
+P
+；
+is
+对
+0
+于
+%
+操
+; fo
+作
+r
+系
+OS
+统
+c
+命
+om
+令
+m
+注
+a
+⼊
+nd
+，
+in
+C
+j
+W
+ec
+E
+t-io
+78
+n
+，
+, C
+J
+W
+a
+E
+va-7
+S
+8
+c
+,
+r
+J
+ip
+a
+t
+v
+达
+aS
+到
+cri
+6
+p
+7
+t.6
+re
+%
+ac
+，
+h
+⽽
+es
+P
+6
+y
+7
+t
+.6
+h
+%
+on
+w
+仅
+h
+达
+ile
+到
+Py
+5
+t.h
+9
+o
+%
+n
+）
+at——tain
+这
+s o
+表
+nl
+明
+y 5
+语
+.9
+⾔
+%
+⽣
+)―态
+s
+系
+ug
+统
+ge
+和
+sti
+A
+n
+P
+g
+I
+t
+约
+ha
+定
+t l
+会
+an
+影
+gu
+响
+a
+在
+ge
+不
+ec
+同
+os
+语
+ys
+⾔
+tem
+中
+s
+修
+an
+复
+d
+特
+AP
+定
+I c
+C
+o
+W
+nv
+E
+e
+的
+nt
+可
+ion
+⾏
+s
+性
+sh
+，
+ap
+尽
+e
+管
+the
+它
+t
+们
+rac
+并
+ta
+不
+bi
+主
+lit
+导
+y o
+整
+f r
+体
+ep
+差
+ai
+距
+rin。g a given CWE in different languages, even though they do
+not dominate the overall gap.
+C
+C..
+3
+3..
+领
+D
+域
+om
+效
+a
+应
+in
+：
+E
+A
+ff
+I/
+e
+M
+ct
+L
+s
+与
+: A
+W
+I/M
+eb
+L
+任
+vs
+务
+. Web Tasks
+我
+W
+们
+e f
+进
+ur⼀th
+步
+er
+检
+ex
+验
+am
+应
+i
+⽤
+ne
+领
+w
+域
+he
+是
+th
+否
+er
+影
+a
+响
+pp
+⾃
+li
+动
+ca
+化
+tio
+漏
+n
+洞
+do
+修
+m
+复
+ai
+，
+n
+通
+aff
+过
+ec
+⽐
+ts
+较
+a
+与
+uto
+A
+m
+I/M
+at
+L
+e
+相
+d v
+关
+u
+的
+lne
+C
+r
+V
+a
+E
+b
+（
+ilit
+n
+y=re
+1
+p
+9
+a
+）
+ir
+与
+b
+与
+y c
+W
+om
+eb
+p
+相
+ari
+关
+ng
+的
+A
+C
+I/
+V
+M
+E
+L
+（-r
+n
+el=ated
+1
+C
+1
+V
+9
+E
+，
+s
+主
+(
+n要
+=
+为
+1
+P
+9
+H
+)
+P
+w
+/J
+it
+a
+h
+va
+W
+S
+e
+cr
+b
+ip-r
+t
+e
+/
+l
+T
+a
+y
+t
+p
+e
+e
+d
+S
+C
+cr
+V
+i
+E
+p
+s
+t/
+(
+Rnub
+=
+y
+1
+）。19
+在
+, m
+3
+a
+4
+i
+种
+nly
+A
+P
+ge
+H
+n
+P
+t
+/
++
+J
+M
+av
+o
+a
+d
+S
+e
+c
+l
+r
+配
+ip
+置
+t/T
+中
+yp
+，
+e
+A
+S
+I
+c
+任
+rip
+务
+t/
+显
+Ru
+⽰
+b
+的
+y)
+总
+. A
+体
+cr
+成
+os
+功
+s 3
+率
+4
+低
+Ag
+于
+en
+⾮
+t+
+A
+M
+I 任
+od
+务
+el
+（
+co
+1
+n
+5
+fi.g
+5
+u
+0
+r
+%
+at
+v
+io
+s
+n. s
+2
+,
+5
+A.7
+I t
+8
+a
+%
+sk
+）
+s
+，
+sh
+且
+ow
+34
+a
+种
+lo
+配
+we
+置
+r a
+中
+gg
+有
+re
+3
+g
+0
+at
+种
+e s
+在
+uc
+A
+ce
+I
+s
+⽅
+s
+⾯
+rat
+表
+e t
+现
+ha
+更
+n
+差
+no
+；
+n-相
+AI
+⽐
+ta
+之
+sk
+下
+s (
+，
+15
+W
+.5
+e
+0
+b
+%
+任
+vs
+务
+. 2
+在
+5.7
+3
+8
+4
+%
+种
+),
+配
+an
+置
+d
+中
+30
+的
+/34
+3
+c
+1
+o
+种
+nfi
+中
+gu
+表
+ra
+现
+tio
+优
+n
+于
+s
+⾮
+pe
+W
+rfo
+e
+r
+b
+m
+任
+w
+务
+or
+（
+se
+27
+o.n
+94
+A
+%
+I; in
+vs
+c.o
+2
+n
+0
+t
+.r
+0
+a
+8
+s
+%
+t,
+）
+W。e
+这
+b t
+种
+as
+差
+ks
+距
+ou
+很
+tp
+⼤
+e
+程
+rfo
+度
+rm
+上
+n
+可
+o
+由
+n-W
+CW
+eb
+E
+t
+类
+as
+别
+ks
+组
+(2
+成
+7.9
+的
+4
+差
+%
+异
+vs
+来
+. 2
+解
+0.0
+释
+8
+：
+%)
+对
+in
+于
+3
+每
+1/
+个
+34
+领
+co
+域
+n
+，
+fig
+我
+ur
+们
+ati
+通
+on
+过
+s.
+根
+Th
+据
+is
+该
+领
+ga
+域
+p
+的
+is l
+C
+a
+W
+rg
+E
+el
+混
+y e
+合
+xp
+情
+la
+况
+in
+平
+ed
+均
+b
+全
+y d
+球
+iff
+C
+e
+W
+re
+E
+nc
+级
+es
+别
+in
+的
+C
+修
+W
+复
+E
+率
+ca
+来
+te
+计
+go
+算
+ry
+预
+co
+期
+m
+成
+po
+功
+si
+率
+tio
+，
+n
+即
+: fo
+如
+r
+果
+ea
+我
+ch
+们
+d
+认
+om
+为
+a
+领
+in,
+域
+w
+效
+e c
+应
+o
+仅
+mp
+来
+u
+⾃
+te
+哪
+an
+些
+ex
+C
+p
+W
+ec
+E
+te
+类
+d
+型
+su
+出
+cc
+现
+es
+，
+s
+那
+ra
+么
+te
+我
+by
+们
+a
+预
+ve
+测
+ra
+的
+gi
+成
+ng
+功
+g
+率
+lob。a
+预
+l C
+期
+W
+率
+E-与
+lev
+观
+e
+察
+l re
+到
+p
+的
+air
+率
+ra
+⾮
+te
+常
+s
+接
+ac
+近
+co
+（
+rd
+A
+in
+I：
+g
+观
+to
+察
+th
+到
+at
+的
+do
+1
+m
+9.3
+a
+%
+in
+与
+’
+预
+s C
+期
+W
+的
+E m
+19
+ix
+.4
+,
+%
+i.e
+；
+.,
+W
+th
+e
+e
+b
+s
+：
+uc
+观
+ce
+察
+ss
+到
+r
+的
+ate
+2
+w
+8.e
+0%
+w
+与
+ou
+预
+ld
+期
+pr
+的
+ed
+2
+ic
+7
+t
+.
+i
+9
+f
+%
+do
+预
+m
+期
+ai
+)
+n
+，
+e
+表
+ffe
+明
+cts
+A
+c
+I‒a
+W
+m
+e
+e
+b
+o
+差
+nly
+异
+fr
+是
+om
+由
+w
+C
+h
+W
+ic
+E
+h
+组
+CW
+合
+E
+驱
+ty
+动
+p
+，
+es
+⽽
+ap
+⾮
+pe
+内
+a
+在
+r. T
+领
+he
+域
+e
+难
+xp
+度
+ec。te
+这
+d
+与
+rat
+领
+es
+域
+cl
+难
+os
+度
+el
+特
+y m
+征
+a⼀tch
+致
+t
+：
+he
+A
+o
+I
+b
+包
+se
+含
+rv
+较
+ed
+少
+o“ne
+简
+s
+单
+(AI”:
+案
+19
+例
+.3
+（
+%
+2
+o
+.b
+9
+s
+%
+er
+v
+v
+s
+e
+.d
+11
+v
+.s
+8
+.
+%
+19
+）
+.
+，
+4%
+⽽
+e
+更
+xp
+多
+e
+未
+cte
+知
+d
+/
+;
+新
+W
+颖
+eb
+案
+: 2
+例
+8.
+（
+0%
+51
+o
+.4
+b
+%
+se
+v
+rv
+s.e
+3
+d
+7
+v
+.0
+s.
+%
+2
+）
+7
+，
+.9%
+符合
+ex
+新
+pe
+兴
+cte
+M
+d
+L
+)
+-
+,
+⽣
+su
+态
+gg
+系
+e
+统
+sti
+模
+ng
+式
+th
+缺
+a
+乏
+t t
+标
+he
+准
+a
+化
+gg
+修
+re
+复
+ga
+模
+te
+板
+AI
+的‒W
+特
+eb
+征
+di。ffe
+即
+re
+使
+nc
+在
+e
+考
+is
+虑
+dri
+C
+ve
+W
+n
+E
+b
+组
+y
+合
+CW
+后
+E
+，
+m
+由
+ix
+于
+rat
+A
+h
+P
+e
+I
+r
+和
+th
+⽣
+an
+态
+in
+系
+tr
+统
+in
+惯
+sic
+例
+d
+，
+om
+同
+a⼀in
+C
+d
+W
+iffi
+E
+c
+在
+ul
+不
+ty
+同
+. T
+领
+hi
+域
+s a
+内
+lig
+性
+n
+能
+s w
+仍
+it
+可
+h t
+能
+he
+存
+d
+在
+om
+差
+a
+异
+in。difficulty profile: AI
+contains fewer
+“
+easy
+”
+cases (2.9% vs. 11.8%) and more unknown/novel cases (51.4% vs. 37.0%), consistent with emerging
+ML-ecosystem patterns that lack standardized repair templates. Even after accounting for CWE mix, performance can still
+differ within the same CWE across domains due to API and ecosystem conventions.
+C
+C..
+4
+4..
+代
+Ag
+理
+e
+能
+nt
+⼒
+Capability
+我
+Ou
+们
+r
+的
+res
+结
+ul
+果
+ts
+挑
+ch
+战
+al
+了
+len
+常
+ge
+⻅
+t
+的
+he
+假
+co
+设
+m
+，
+m
+即
+on
+更
+a
+⻓
+ss、um
+更
+p
+详
+tio
+细
+n
+的
+tha
+系
+t
+统
+lon
+提
+ge
+⽰
+r,
+和
+m
+更
+or
+丰
+e d
+富
+et
+的
+ai
+流
+led
+程
+s
+必
+ys
+然
+tem
+会产
+pro
+⽣
+m
+更
+pt
+强
+s
+的
+an
+代
+d r
+理
+ic
+性
+he
+能
+r w
+：
+o
+T
+rk
+e
+fl
+rm
+ow
+in
+s
+u
+n
+s
+e-c
+2
+e
+，
+ss
+拥
+ar
+有
+ily
+最
+yie
+短
+ld
+的
+st
+提
+ro
+⽰
+ng
+（
+er
+3
+a
+1
+g
+5
+e
+字
+nt
+）
+p
+，
+er
+在
+fo
+整
+rm
+体
+an
+成
+ce
+功
+: T
+率
+er
+（
+m
+2
+in
+7
+u.5
+s
+%-2,
+v
+w
+s
+i.t
+1
+h
+5
+t.h
+4
+e
+%
+s
+）
+ho
+上
+rte
+显
+st
+著
+p
+优
+rom
+于
+p
+使
+t
+⽤
+(31
+最
+5
+⻓
+wo
+提
+rd
+⽰
+s)
+的
+, su
+O
+b
+p
+s
+e
+ta
+n
+n
+H
+ti
+a
+a
+n
+ll
+d
+y
+s
+o
+（
+ut
+2
+p,e
+4
+r
+0
+f
+0
+or
+字
+m
+）
+s
+，
+Op
+⾼
+e
+出
+nH
+1
+a
+2
+n.d
+1
+s,
+个
+wh
+百
+ic
+分
+h
+点
+us
+，
+es
+这
+th
+表
+e
+明
+lon
+在
+g
+当
+es
+前
+t p
+L
+ro
+L
+m
+M
+p
+能
+t (
+⼒
+2,
+限
+40
+制
+0
+下
+wo
+，
+rd
+流
+s)
+程
+, b
+结
+y 1
+构
+2
+可
+.1
+能
+pe
+⽐
+rc
+指
+en
+令
+ta
+冗
+ge
+⻓
+p
+更
+oin
+重
+ts
+要
+in。o
+特
+ve
+别
+ra
+是
+ll s
+，
+u
+T
+cc
+e
+e
+rm
+ss
+i
+(
+n
+2
+u
+7
+s
+.5-2
+%
+的
+vs
+J
+.
+S
+1
+O
+5.
+N
+4%
+结
+)
+构
+, s
+化
+ug
+输
+ge
+出
+st
+和
+ing
+显
+式
+th
+的
+at
+分
+un
+析
+d-e
+计
+r
+划
+cu-r
+命
+re
+令
+nt
+分
+LL
+解
+M
+可
+c
+能
+ap
+降
+ab
+低
+ili
+了
+ty
+输
+lim
+出
+i
+熵
+ts,
+和
+w
+格
+or
+式
+kfl
+化
+o
+或
+w
+解
+str
+析
+uc
+错
+tu
+误
+re
+的
+m
+概
+a
+率
+y m。a
+T
+t
+e
+te
+rm
+r m
+in
+o
+u
+r
+s
+e-2
+th
+还
+an
+受
+in
+益
+st
+于
+ru
+命
+ct
+令
+io
+批
+n v
+处
+er
+理
+bo
+，
+si
+在
+ty
+成
+. In
+功
+p
+任
+ar
+务
+tic
+上
+ul
+的
+ar,
+平
+Te
+均
+rm
+回
+in
+合
+us
+数-2
+（
+’
+2
+s
+7
+J.S
+1
+O
+）
+N
+低-st
+于
+ru
+M
+ct
+i
+u
+n
+r
+i
+e-S
+d
+W
+ou
+E
+t
+-p
+A
+u
+g
+t
+e
+s
+n
+a
+t
+n
+（
+d
+3
+e
+5
+x.p
+2
+l
+）
+ici
+和
+t a
+O
+na
+p
+l
+e
+y
+n
+si
+H
+s‒a
+p
+n
+l
+d
+a
+s
+n
+（‒c
+3
+o
+6
+m.2
+m
+）
+a
+；
+n
+这
+ds
+种
+de
+效
+co
+率
+m
+在
+po
+C
+s
+V
+it
+E
+io
+修
+n l
+复
+ik
+中
+ely
+尤
+re
+其
+du
+重
+c
+要
+e o
+，
+ut
+因
+pu
+为
+t
+多
+en
+⽂
+tro
+件
+py
+探
+索
+an
+很
+d
+常
+th
+⻅
+e i
+，
+nc
+因
+id
+为
+en
+较
+ce
+少
+o
+的
+f fo
+A
+r
+P
+m
+I
+a
+调
+tt
+⽤
+ing
+减
+o
+少
+r p
+了
+a
+延
+rsi
+迟
+ng。fa
+n
+i
+d
+lu
+成
+res
+本
+. T
+，
+er
+并
+m
+可
+in
+能
+us
+降-2
+低
+al
+中
+so
+间
+be
+状
+n
+态
+efi
+丢
+ts
+失
+fro
+或
+m
+上
+c
+下
+om
+⽂
+m
+漂
+a
+移
+nd
+的
+b
+⻛
+at
+险
+ch
+，
+ing
+这
+,
+些
+ac
+⻛
+hie
+险
+v
+可
+ing
+能
+a
+直
+lo
+接
+w
+影
+er
+响
+av
+成
+er
+功
+ag
+率
+e 。nu
+最
+m
+后
+be
+，
+r o
+差
+f
+分
+tu
+分
+rn
+析
+s o
+表
+n
+明
+su
+没
+cc
+有
+es
+单
+sfu
+个
+l
+代
+tas
+理
+k
+在
+s (
+所
+27
+有
+.1)
+任
+th
+务
+a
+类
+n M
+型
+in
+中
+i-占
+SW
+主
+E
+导-A
+地
+ge
+位
+nt
+：
+(3
+T
+5
+e
+.
+r
+2
+m
+) a
+in
+n
+u
+d
+s
+O-2
+p
+倾
+en
+向
+H
+于
+an
+在
+ds
+需
+(3
+要
+6.
+系
+2)
+统
+; th
+化
+is
+多
+e
+⽂
+ffic
+件
+ie
+探
+nc
+索
+y
+的
+is
+复
+es
+杂
+pe
+任
+ci
+务
+all
+上
+y i
+表
+m
+现
+po
+最
+rt
+佳
+an
+（
+t i
+例
+n C
+如
+V
+，
+E r
+C
+e
+V
+p
+E
+a-
+i
+2
+r,
+0
+w
+25
+h-e
+2
+r
+3
+e
+2
+m
+09
+u
+，
+lti
+C-fi
+V
+l
+E
+e-2
+e
+0
+xp
+25
+lo-4
+ra
+8
+t
+8
+io
+6
+n
+6）
+is
+，
+c
+⽽
+om
+M
+m
+in
+o
+i
+n-S
+,
+W
+be
+E
+c-A
+au
+ge
+se
+nt
+fe
+在
+w
+更
+er
+简
+AP
+单
+I
+的
+ca
+单
+lls
+⽂
+re
+件
+du
+修
+ce
+复
+l
+上
+ate
+可
+n
+能
+cy
+更
+an
+⾼
+d
+效
+co
+（
+st
+例
+an
+如
+d
+，
+m
+C
+a
+V
+y
+E
+lo-2
+w
+0
+e
+2
+r
+5
+t
+-h
+9
+e
+13
+ri
+6
+s
+，
+k o
+C
+f
+V
+i
+E
+n-t
+2
+e
+0
+rm
+25
+e
+-d
+5
+i
+7
+a
+7
+t
+6
+e
+4
+s
+）
+ta
+，
+te
+这
+lo
+促
+ss
+使
+o
+在
+r c
+实
+on
+际
+te
+部
+xt
+署
+d
+中
+rif
+进
+t th
+⾏
+a
+任
+t c
+务
+an
+感
+d
+知
+ire
+代
+ct
+理
+ly
+选
+aff
+择
+ec。t success. Finally, differential
+analysis indicates that no single agent dominates all task types: Terminus-2 tends to perform best on complex tasks requiring
+systematic multi-file exploration (e.g., CVE-2025-23209, CVE-2025-48866), whereas Mini-SWE-Agent can be more
+efficient on simpler single-file repairs (e.g., CVE-2025-9136, CVE-2025-57764), motivating task-aware agent selection in
+practical deployments.
+C
+C..
+5
+5..
+仓
+Re
+库
+p
+源
+os
+效
+ito
+应
+ry Source Effects
+初
+A p
+步
+re
+⽐
+lim
+较
+i
+表
+na
+明
+ry
+，
+co
+⾮
+m
+G
+pa
+it
+r
+H
+is
+u
+o
+b
+n
+平
+su
+台
+gg
+的
+est
+C
+s
+V
+t
+E
+h
+s
+at
+原
+C
+始
+VE
+成
+s s
+功
+ou
+率
+rc
+⽐
+ed
+G
+f
+i
+r
+t
+o
+H
+m
+ub
+no
+平
+n
+台-G
+的
+itH
+C
+u
+V
+b
+E
+p
+s
+l
+⾼
+atf
+出
+orm
+14
+s.7
+ha
+个
+ve
+百
+a
+分
+14
+点
+.7
+，
+p
+但
+er
+这
+ce
+种
+nta
+明
+g
+显
+e p
+优
+oi
+势
+nt
+主
+hi
+要
+gh
+是
+er
+由
+ra
+强
+w
+烈
+su
+的
+cc
+样
+es
+本
+s r
+偏
+at
+差
+e t
+驱
+ha
+动
+n
+，
+Gi
+⽽
+tH
+⾮
+ub
+仓-s
+库
+ou
+源
+rc
+属
+ed
+性
+C
+：
+VE
+⾮
+s,
+G
+b
+i
+u
+tH
+t t
+u
+h
+b
+is
+样
+a
+本
+pp
+严
+ar
+重
+en
+偏
+t a
+向
+d
+于
+va
+简
+nt
+单
+ag
+的
+e i
+教
+s l
+育
+ar
+项
+ge
+⽬
+ly
+，
+dr
+并
+ive
+且
+n
+主
+by
+要
+s
+由
+tro
+S
+n
+Q
+g
+L
+sa
+注
+m
+⼊
+p
+漏
+le
+洞
+bia
+主
+s
+导
+ra
+，
+th
+这
+er
+些
+th
+漏
+an
+洞
+re
+具
+po
+有
+sit
+成
+or
+熟
+y-s、ou
+模
+rc
+板
+e
+化
+pro
+的
+p
+修
+ert
+复
+ie
+⽅
+s: n
+法
+o。n-G
+当
+it
+我
+Hu
+们
+b
+控
+sa
+制
+m
+漏
+ple
+洞
+s
+类
+are
+型
+h
+（
+ea
+仅
+vil
+S
+y
+Q
+sk
+L 
+e
+注
+we
+⼊
+d
+）
+tow
+时
+a
+，
+rd
+这
+si
+种
+mp
+关
+le
+系
+r e
+会
+du
+反
+ca
+转
+ti
+，
+on
+G
+a
+i
+l
+t
+p
+H
+r
+u
+oj
+b
+ec
+平
+ts
+台
+an
+的
+d
+案
+ar
+例
+e d
+成
+om
+功
+i
+率
+na
+达
+ted
+到
+4
+b
+6
+y.1
+S
+%
+QL
+，
+in
+⽽
+je
+⾮
+ct
+G
+io
+i
+n
+tH
+v
+u
+u
+b
+ln
+平
+er
+台
+ab
+的
+ili
+为
+tie
+3
+s,
+2
+w.4
+h
+%
+ic
+（
+h
+⾼
+ha
+出
+ve
+1
+w
+3
+e.7
+ll
+个-es
+百
+ta
+分
+bl
+点
+ish
+）
+e。d
+这
+, te
+种
+m
+反
+pl
+转
+at
+与
+e-⾟
+lik
+普
+e fi
+森
+xe
+悖
+s.
+论
+W⼀he
+致
+n
+，
+w
+表
+e c
+明
+on
+总
+tr
+体
+ol
+统
+fo
+计
+r v
+数
+ul
+据
+ne
+受
+ra
+到
+bil
+C
+it
+W
+y
+E
+ty
+/
+p
+任
+e
+务
+(S
+组
+QL
+成
+in
+的
+je
+⼲
+ct
+扰
+io
+，
+n o
+⽽
+n
+类
+ly
+内
+), t
+⽐
+he
+较
+r
+则
+ela
+表
+ti
+明
+on
+，
+sh
+G
+i
+i
+p
+tH
+re
+u
+v
+b
+e
+仓
+rse
+库
+s
+中
+, w
+常
+it
+⻅
+h G
+的
+it
+更
+Hu
+标
+b
+准-s
+化
+ou
+的
+rc
+组
+ed
+织
+c
+和
+as
+约
+es
+定
+ac
+可
+h
+以
+iev
+促
+in
+进
+g
+漏
+46
+洞
+.1
+理
+%
+解
+su
+和
+cc
+修
+es
+复
+s。ve
+总
+rs
+体
+us
+⽽
+32
+⾔
+.4
+，
+%
+仓
+fo
+库
+r
+源
+no
+不
+n-太
+Gi
+可
+tH
+能
+ub
+是
+(
+性
++1
+能
+3.
+的
+7 p
+因
+oi
+果
+nt
+驱
+s)
+动
+. T
+因
+his
+素
+in
+；
+v
+观
+ers
+察
+io
+到
+n
+的
+is
+差
+co
+异
+ns
+主
+ist
+要
+en
+反
+t w
+映
+i
+了
+th
+任
+Si
+务
+mp
+组
+s
+成
+on
+和
+’
+代
+s p
+码
+a
+库
+rad
+的
+o
+复
+x,
+杂
+ind
+性
+ic。ating that aggregate statistics are
+confounded by CWE/task composition, while within-category comparisons suggest that the more standardized organization
+and conventions common in GitHub repositories can facilitate vulnerability understanding and repair. Overall, repository
+source is unlikely to be a causal driver of performance; the observed differences primarily reflect task composition and
+codebase complexity.
+C
+C..
+6
+6..
+部
+An
+署
+a
+和
+lys
+配
+is
+置
+of
+问
+D
+题
+ep
+的
+lo
+分
+ym
+析
+ent and Configuration Issues
+在
+Du
+⼤
+rin
+规
+g
+模
+la
+实
+rge
+验-s
+中
+ca
+，
+le
+我
+ex
+们
+pe
+观
+rim
+察
+e
+到
+nt
+失
+s,
+败
+we
+并
+o
+不
+bs
+仅
+er
+仅
+ve
+归
+d
+因
+tha
+于
+t
+任
+fai
+务
+lur
+难
+es
+度
+w
+；
+er
+O
+e
+p
+n
+e
+o
+n
+t s
+H
+o
+a
+le
+n
+l
+d
+y
+s
+a
+的
+ttr
+某
+ibu
+些
+ta
+环
+bl
+境
+e
+和
+to
+框
+tas
+架
+k
+级
+di
+别
+ffic
+的
+ul
+实
+ty
+现
+; ce
+细
+rt
+节
+ain
+也
+e
+对
+nv
+整
+iro
+体
+n
+可
+m
+⽤
+en
+性
+t-
+和
+an
+评
+d f
+估
+ra
+稳
+m
+定
+ew
+性
+or
+有
+k-可
+lev
+测
+el
+量
+im
+的
+pl
+影
+em
+响
+e。nt
+由
+ati
+于
+on
+O
+d
+p
+e
+e
+ta
+n
+il
+H
+s
+a
+o
+n
+f
+d
+O
+s
+p
+依
+en
+赖
+Ha
+于
+nd
+多
+s
+层
+als
+容
+o
+器
+ha
+化
+d
+和
+a m
+相
+e
+对
+as
+复
+ur
+杂
+ab
+的
+le
+沙
+im
+盒
+pa
+映
+ct
+射
+on
+（
+o
+包
+ve
+括
+ra
+端
+ll u
+⼝
+sa
+映
+b
+射
+ilit
+）
+y
+，
+an
+在
+d
+测
+ev
+试
+al
+过
+ua
+程
+tio
+中
+n
+某
+sta
+些
+b
+场
+ilit
+景
+y.
+下
+Be
+可
+ca
+能
+us
+会
+e
+出
+Op
+现
+e
+端
+nH
+⼝
+an
+争
+d
+⽤
+s r
+或
+eli
+容
+es
+器
+on
+状
+m
+态
+u
+不
+lti⼀-la
+致
+ye
+，
+r c
+从
+o
+⽽
+nta
+增
+in
+加
+erization and relatively complex sandbox mappings (including
+port mappings), port contention or container state inconsistencies may arise in some scenarios during testing, increasing the
+2
+2
+1
+1
+C
+C
+V
+V
+E
+E--F
+F
+a
+ac
+cto
+to
+ry:
+ry
+为
+: S
+代
+cal
+码
+i
+安
+ng
+全
+E
+漏
+xp
+洞
+e
+扩
+rt-展
+Le
+专
+ve
+家
+l
+级
+Ag
+代
+e
+理
+nt
+任
+ic
+务
+Tasks for Code Security Vulnerability
+增
+ris
+加
+k o
+不
+f
+稳
+un
+定
+st
+启
+ab
+动
+le
+或
+sta
+执
+rt
+⾏
+up
+中
+o
+断
+r in
+的
+te
+⻛
+rr
+险
+up。te
+此
+d
+外
+exe
+，
+c
+O
+ut
+p
+io
+e
+n
+n
+.
+H
+In
+an
+a
+d
+d
+s
+di
+通
+tio
+常
+n,
+在
+O
+运
+pe
+⾏
+nH
+时
+a
+执
+nd
+⾏
+s o
+依
+ft
+赖
+en
+项
+p
+获
+erf
+取
+or、m
+安
+s d
+装
+ep
+和
+en
+服
+d
+务
+en
+初
+cy
+始
+fe
+化
+tc
+；
+hin
+结
+g
+合
+, in
+⽹
+st
+络
+all
+条
+at
+件
+ion
+的
+,
+变
+an
+化
+d
+和
+se
+镜
+rv
+像
+ice
+拉
+in
+取
+it
+，
+ial
+这
+iza
+可
+ti
+能
+on
+导
+a
+致
+t r
+更
+un
+⻓
+tim
+的
+e
+下
+; c
+载
+om
+和
+b
+启
+in
+动
+ed
+时
+w
+间
+it
+，
+h v
+从
+ar
+⽽
+ia
+提
+bil
+⾼
+ity
+执
+in
+⾏
+n
+超
+et
+时
+w
+的
+ork
+可
+c
+能
+on
+性
+d
+并
+itio
+增
+n
+加
+s a
+重
+nd
+试
+i
+成
+ma
+本
+g。e p
+此
+u
+外
+llin
+，
+g
+O
+, t
+p
+h
+e
+is
+n
+c
+H
+a
+a
+n
+n
+l
+d
+e
+s
+ad
+对
+t
+⼯
+o
+具
+lo
+调
+ng
+⽤
+er
+采
+do
+⽤
+w
+相
+nlo
+对
+a
+严
+d a
+格
+nd
+的
+s
+结
+ta
+构
+rtu
+化
+p
+输
+tim
+出
+e
+协
+s,
+议
+th
+（
+ere
+例
+b
+如
+y r
+，
+ais
+具
+in
+有
+g t
+固
+he
+定
+li
+字
+ke
+段
+lih
+和
+oo
+枚
+d
+举
+of
+值
+ex
+的
+ec
+单
+ut
+操
+ion
+作
+ti
+J
+m
+S
+e
+O
+o
+N
+u
+）
+ts
+，
+a
+其
+nd
+系
+in
+统
+cr
+提
+ea
+⽰
+sin
+和
+g
+⼯
+re
+具
+try
+调
+c
+⽤
+os
+约
+t. M
+定
+o
+以
+re
+相
+ov
+当
+er,
+详
+Op
+细
+e
+的
+nH
+⽅
+an
+式
+d
+指
+s a
+定
+d
+，
+op
+这
+ts
+提
+a
+⾼
+re
+了
+lat
+对
+ive
+指
+ly
+令
+s
+遵
+tri
+守
+ct
+和
+str
+输
+uc
+出
+tu
+格
+re
+式
+d
+稳
+ou
+定
+tp
+性
+ut
+的
+p
+要
+ro
+求
+to。co
+对
+l fo
+于
+r
+结
+to
+构
+ol
+化
+in
+输
+vo
+出
+ca
+能
+tio
+⼒
+n
+有
+(e
+限
+.g
+或
+., s
+指
+in
+令
+gl
+遵
+e-a
+循
+c
+稳
+tio
+定
+n
+性
+JS
+较
+ON 
+差
+w
+的
+it
+模
+h
+型
+fix
+，
+ed
+这
+些
+fie
+约
+ld
+束
+s a
+更
+nd
+可
+e
+能
+nu
+表
+m
+现
+er
+为
+ate
+解
+d
+析
+va
+失
+lu
+败
+es
+或
+), a
+参
+nd
+数
+i
+验
+ts
+证
+sys
+错
+te
+误
+m
+，
+pr
+进
+om
+⽽
+p
+影
+ts
+响
+an
+评
+d
+估
+to
+流
+ol-程
+ca
+的
+lli
+稳
+ng
+定
+co
+性
+n
+和
+ve
+可
+nti
+重
+on
+复
+s
+性
+are。specified in a fairly detailed manner,
+which elevates the requirements for instruction adherence and output-format stability. For models with more limited
+structured-output capability or less stable instruction following, these constraints are more likely to surface as parsing
+failures or parameter validation errors, which in turn affects the stability and reproducibility of the evaluation pipeline.
+2
+2
+2
+2

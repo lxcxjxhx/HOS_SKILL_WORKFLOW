@@ -47,10 +47,18 @@ function toSlug(input: string): string {
 
 /**
  * Escape a string for safe inclusion in YAML frontmatter.
+ * Handles special characters, quotes, and multi-line content.
+ * Reference: yaml.org/spec/1.2/spec.html#id2760844
  */
 function yamlEscape(value: string): string {
-  if (value.includes('\n') || value.includes('"') || value.includes("'") || value.includes(':') || value.includes('#')) {
-    return `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+  if (value.length === 0) return '""';
+  // Multi-line → literal block scalar
+  if (value.includes('\n')) {
+    return `|\n${value.split('\n').map(l => `  ${l}`).join('\n')}`;
+  }
+  // Quotes, colons, hashes, leading/trailing whitespace, special chars → double-quoted
+  if (/["':#\[\]{}!@&*?\\|>%~`]/.test(value) || /^[-\s]/.test(value) || /[\s]$/.test(value)) {
+    return `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n')}"`;
   }
   return value;
 }
@@ -395,7 +403,7 @@ function generateReferenceMd(skills: AttackDefenseSkill[]): string {
 
   // Details per category
   for (const [category, catSkills] of byCategory) {
-    lines.push(`---`, '');
+    if (lines.length > 2) lines.push(`---`, '');
     lines.push(`## ${category}`, '');
     lines.push(`**Skills:** ${catSkills.length}`, '');
 

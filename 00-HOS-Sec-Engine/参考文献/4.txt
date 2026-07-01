@@ -1,0 +1,3756 @@
+SecureCAI: Injection-Resilient LLM Assistants for
+Cybersecurity Operations
+Mohammed Himayath Ali
+1
+,
+Mohammed Aqib Abdullah
+1
+,
+Mohammed Mudassir Uddin
+1
+,
+Shahnawaz Alam
+1
+1
+Computer Science Department, Cybersecurity and Artificial Intelligence Division
+mohdhimayathali7@gmail.com, aqib.abdullah13@gmail.com,
+mohd.mudassiruddin7@gmail.com, shahnawaz.alam1024@gmail.com
+Abstract
+Large Language Models have emerged as transforma tive tools for Security Operations Centers, enabling auto mated log analysis, phishing triage, and malware expla nation; however, deployment in adversarial cybersecurity
+environments exposes critical vulnerabilities to prompt
+i
+i
+n
+n
+j
+s
+e
+e
+c
+c
+ti
+u
+o
+r
+n
+it
+a
+y
+t
+a
+ta
+rt
+c
+i
+k
+fa
+s
+c
+w
+ts
+h
+m
+er
+a
+e
+n
+m
+ip
+a
+u
+li
+l
+c
+a
+i
+t
+o
+e
+u
+m
+s i
+o
+n
+d
+st
+e
+r
+l
+u
+b
+c
+e
+ti
+h
+o
+a
+n
+v
+s
+io
+e
+r
+m
+. T
+b
+h
+e
+i
+d
+s
+d
+p
+e
+a
+d
+-
+per introduces SecureCAI, a novel defense framework ex tending Constitutional AI principles with security-aware
+guardrails, adaptive constitution evolution, and Direct
+Preference Optimization for unlearning unsafe response
+patterns, addressing the unique challenges of high-stakes
+security contexts where traditional safety mechanisms
+prove insufficient against sophisticated adversarial manip ulation. Experimental evaluation demonstrates that Se cureCAI reduces attack success rates by 94.7% compared
+to baseline models while maintaining 95.1% accuracy on
+benign security analysis tasks, with the framework incor porating continuous red-teaming feedback loops enabling
+dynamic adaptation to emerging attack strategies and
+achieving constitution adherence scores exceeding 0.92
+under sustained adversarial pressure, thereby establish ing a foundation for trustworthy integration of language
+model capabilities into operational cybersecurity work-
+flows and addressing a critical gap in current approaches
+to AI safety within adversarial domains.
+Keywords: Large Language Models, Prompt Injection,
+Constitutional AI, Cybersecurity, Adversarial Robust ness, Direct Preference Optimization, Security Opera tions Center, Red Teaming, AI Safety
+1
+Introduction
+The integration of Large Language Models (LLMs) into
+cybersecurity operations represents a paradigm shift in
+how security analysts process, analyze, and respond to
+threats. Modern Security Operations Centers (SOCs)
+face overwhelming volumes of security telemetry, with or ganizations generating millions of log entries, thousands
+of potential phishing attempts, and hundreds of malware
+samples daily [1]. LLM-based assistants offer unprece dented capabilities for synthesizing this information, ex plaining complex technical artifacts, and accelerating in cident response workflows [13].
+However, the deployment of LLMs in cybersecurity con t
+b
+e
+il
+x
+i
+t
+t
+s
+y
+i
+a
+n
+n
+tr
+d
+o
+s
+d
+e
+u
+c
+c
+u
+e
+r
+s
+it
+a
+y.
+fun
+T
+d
+h
+a
+e
+m
+sa
+e
+m
+nt
+e
+a
+n
+l t
+a
+e
+t
+n
+u
+s
+ra
+io
+l
+n
+la
+b
+n
+e
+g
+t
+u
+w
+a
+e
+g
+e
+e
+n
+u
+c
+n
+a
+d
+p
+e
+a
+r
+-
+-
+standing that enables effective analysis also creates at tack surfaces that adversaries can exploit through care fully crafted inputs. Prompt injection attacks represent
+a particularly insidious threat vector, where malicious in structions are embedded within the very security artifacts
+that analysts rely upon LLMs to process [6]. An attacker
+might embed commands within log entries instructing the
+model to exfiltrate sensitive data, insert payload regen eration requests into malware samples, or craft phishing
+emails containing instructions that cause the LLM to pro duce misleading analysis.
+The Constitutional AI (CAI) methodology introduced
+by Bai et al. [2] provides a principled approach to train ing harmless AI assistants through self-improvement and
+constitutional principles. This framework employs su pervised learning with critique-revision cycles followed
+by Reinforcement Learning from AI Feedback (RLAIF)
+to align model behavior with specified principles. While
+CAI demonstrates effectiveness in general conversational
+safety, the methodology has not been specifically adapted
+for adversarial environments where sophisticated attack ers actively attempt to circumvent safety mechanisms.
+Concurrent research on backdoor attacks against
+prompt-based models reveals fundamental vulnerabili ties in the few-shot learning paradigm. The BadPrompt
+methodology introduced by Cai et al. [3] demonstrates
+that continuous prompts can be compromised through
+adaptive trigger optimization, enabling attackers to ma nipulate model predictions with high success rates while
+maintaining clean accuracy. These findings underscore
+the security challenges inherent in deploying prompt based models in adversarial settings.
+1
+SecureCAI：⽤于⽹络安全运营的注⼊抗性 LLM 助⼿
+穆罕默德·希迈亚特·阿⾥，穆罕默德·阿基布·阿⼘杜拉，穆罕默德
+·穆达西尔·乌丁，沙赫纳⽡兹·阿拉姆
+1计算机科学系，⽹络安全与⼈⼯智能 division
+mohdhimayathali7@gmail.com，aqib.abdullah13@gmail.com，
+mohd.mudassiruddin7@gmail.com，shahnawaz.alam1024@gmail.com
+摘要
+⼤型语⾔模型已成为安全运营中⼼变⾰性的⼯具，能够实现⾃
+动⽇志分析、钓⻥邮件分类和恶意软件解释；然⽽，在对抗性
+⽹络安全环境中部署这些模型会暴露关键漏洞，导致提⽰注⼊
+攻击，其中嵌⼊在安全⼯件中的恶意指令会操纵模型⾏为。本
+⽂介绍了 SecureCAI，这是⼀个新型防御框架，它扩展了宪法
+A
+好
+I
+优
+原
+化
+则
+，
+，
+⽤
+并
+于
+集
+遗
+成
+忘
+了
+不
+安
+安
+全
+全
+感
+的
+知
+响
+的
+应
+护
+模
+栏
+式
+、
+，
+⾃
+从
+适
+⽽
+应
+应
+宪
+对
+法
+传
+演
+统
+化
+安
+和
+全
+直
+机
+接
+制
+偏
+在⾼⻛险安全环境中⽆法有效抵御复杂对抗性操纵的独特挑
+战。实验评估表明，与基线模型相⽐，SecureCAI 将攻击成功
+率降低了 94.7%，同时在良性安全场景中保持了 95.1%的准确
+率。威胁分析任务，该框架结合了持续的红队反馈循环，能够
+动态适应新兴的攻击策略，并在持续的对抗压⼒下实现超过
+0.92 的宪法遵从度评分，从⽽为语⾔模型能⼒融⼊运营⽹络安
+全⼯作流程的可信集成奠定了基础，并解决了当前对抗领域中
+AI 安全⽅法的⼀个关键差距。
+关键词：⼤型语⾔模型，提⽰注⼊，宪法 AI，⽹络安全，对抗
+鲁棒性，直接偏好优化，安全运营中⼼，红队，AI 安全
+1 引⾔
+将⼤型语⾔模型（LLMs）集成到⽹络安全操作中，代表了安全
+分析师在处理、分析和响应威胁⽅⾯⽅法的范式转变。现代安全
+运营中⼼（SOCs）⾯临着海量安全遥测数据的挑战
+随着组织每天⽣成数百万条⽇志条⽬、数千次潜在钓⻥尝试和
+数百个恶意软件样本[1]，基于 LLM 的助⼿为综合这些信息、解
+释复杂的技术⼯件和加速事件响应⼯作流程提供了前所未有的
+能⼒[13]。
+然⽽，在⽹络安全环境中部署⼤型语⾔模型（LLMs）在能⼒和
+安全之间引⼊了根本性的紧张关系。同样的⾃然语⾔理解能⼒
+虽然能够实现有效的分析，但也创造了攻击者可以通过精⼼设
+计
+的
+的
+威
+输
+胁
+⼊
+向
+来
+量
+利
+，
+⽤
+其
+的
+中
+攻
+恶
+击
+意
+⾯
+指
+。
+令
+提
+被
+⽰
+嵌
+注
+⼊
+⼊
+分
+攻
+析
+击
+师
+代
+依
+表
+赖
+了
+LL
+⼀
+M
+种
+s 处
+特
+理
+别
+的
+阴
+⾮
+险
+常安全的数据中[6]。攻击者可能会在⽇志条⽬中嵌⼊命令，指
+⽰模型窃取敏感数据，将载荷再⽣请求插⼊恶意软件样本中，
+或制作包含指令的钓⻥邮件，这些指令会导致 LLM ⽣成误导性
+分析。
+由⽩等⼈ [2] 引⼊的宪法⼈⼯智能 (CAI) ⽅法论提供了⼀种基于
+原则的⽅法，通过⾃我改进和宪法原则来训练⽆害的⼈⼯智能
+助⼿。该框架采⽤监督学习，结合批评-修订周期，随后进⾏⼈
+⼯智能反馈强化学习 (RLAIF)，以使模型⾏为与指定原则保持⼀
+致。虽然 CAI 在⼀般对话安全性⽅⾯表现出有效性，但该⽅法
+论尚未针对对抗性环境进⾏专⻔调整，在对抗性环境中，复杂
+的攻击者会积极试图绕过安全机制。
+并发针对基于提⽰的模型的后⻔攻击研究揭⽰了⼩样本学习范
+式中的基本漏洞。Cai 等⼈ [3] 引⼊的 BadPrompt ⽅法表明，
+通过⾃适应触发优化，连续提⽰可能被破坏，使攻击者能够在
+保持清洁准确性的同时以⾼成功率操纵模型预测。这些发现强
+调了在对抗性设置中部署基于提⽰的模型所固有的安全挑战。
+1
+arX
+i
+v:2
+601.07835v
+1
+[
+c
+s.C
+R
+]
+1
+2
+J
+a
+n
+2
+0
+2
+6
+a
+rX
+i
+v:2
+6
+0
+1.0783
+5
+v
+1
+[cs.C
+R
+]
+2
+0
+2
+6
+年
+1
+⽉
+1
+2
+⽇
+This paper addresses the research gap between general purpose AI safety mechanisms and the specific require ments of cybersecurity applications. The primary contri butions include:
+1. A comprehensive threat model formalizing injection
+attack surfaces in LLM-assisted security operations,
+including log poisoning, malicious email content, and
+obfuscated malware code vectors.
+2. The SecureCAI architecture, which combines security aware constitutional principles with adaptive evolution
+mechanisms that respond to emerging attack patterns
+through continuous red-teaming.
+3. A Direct Preference Optimization (DPO) training
+methodology adapted for unlearning unsafe response
+patterns while preserving task-specific performance on
+security analysis functions.
+4. Extensive experimental validation demonstrating sub stantial reductions in attack success rates across multi ple injection categories while maintaining operational
+utility.
+The remainder of this paper proceeds as follows. Sec tion 2 provides technical background on Constitutional
+AI and backdoor attack methodologies. Section 3 for mally defines the threat model for LLM-assisted security
+operations. Section 4 presents the proposed SecureCAI
+architecture. Section 5 describes implementation details
+and training procedures. Section 6 reports experimental
+results. Section 7 discusses implications and limitations.
+Section 8 concludes with future research directions.
+2
+Background and Related Work
+2.1 Automated Behavioral Governance
+in Language Systems
+S
+p
+c
+re
+a
+s
+li
+e
+n
+n
+g
+ts
+h
+fu
+u
+n
+m
+d
+a
+a
+n
+me
+o
+n
+v
+t
+e
+a
+r
+l
+s
+r
+i
+e
+g
+s
+h
+o
+t
+ur
+f
+c
+o
+e
+r
+co
+A
+n
+I
+str
+o
+a
+u
+in
+t
+t
+p
+s
+u
+t
+t
+ha
+m
+t m
+od
+o
+e
+ti
+r
+v
+a
+a
+t
+t
+io
+ed
+n
+alternative governance architectures. Research by Bai
+et al. [2] introduced computational frameworks wherein
+language models autonomously enforce behavioral stan dards through recursive self-assessment protocols, provid ing theoretical grounding for the defensive mechanisms
+developed in this work.
+2.1.1 Recursive Output Amelioration
+Central to autonomous governance is the dual-role
+paradigm where identical model weights serve produc tion and auditing functions. Given user query
+q
+and
+initial model response
+rˆ0
+, the system applies an inter nal auditing function
+A
+against governance criteria Ω =
+{ ω1
+, ω
+2
+, . . . , ω
+m }
+encoding acceptable behavioral bound aries. The audit yields a diagnostic vector
+d
+cataloging
+governance deviations:
+d = A (q,rˆ0; Ω) (1)
+This diagnostic informs a transformation operator
+T
+that synthesizes governance-conformant alternatives:
+ˆrk
++1
+= T (
+q,
+rˆk
+,⃗ d
+)
+(2)
+Successive transformation cycles progressively elimi nate governance violations. Terminal query-response as sociations
+(
+q,
+rˆfinal
+)
+accumulate into supervision corpora
+t
+d
+i
+r
+o
+i
+n
+v
+:
+ing parameter updates via cross-entropy minimiza H
+gov
+= −
+X
+(
+q,r
+)
+∈S
+X
+t
+log
+PΘ (rt | r
+<t
+, q
+)
+(3)
+2.1.2 Comparative Response Ranking
+Supervised governance alone proves insufficient for nu anced behavioral shaping. Comparative frameworks ad dress this limitation by eliciting ranked judgments across
+response alternatives. For query
+q
+, the system gener ates response candidates
+R = {r1
+, r
+2
+, . . . , r
+n }
+and derives
+ordering relationships through governance-based evalua tion. Ordered pairs
+(r
+sup
+, rinf
+)
+where
+r
+sup demonstrates
+superior governance train a valuation network
+VΦ:
+H
+rank
+= −
+X
+(r
+sup
+,rinf
+)
+log
+σ
+ VΦ(r
+sup
+) − VΦ(r
+inf
+)
+
+(4)
+where
+σ
+denotes the logistic function. The valuation
+network subsequently modulates generation probability
+through weighted sampling. Behavioral drift from foun dational capabilities is mitigated through distributional
+anchoring:
+H
+gen
+= Er ∼ PΘ VΦ(r) − κ ·KL
+
+PΘ ∥P
+init
+
+(5)
+e
+tw
+n
+T
+s
+e
+u
+h
+e
+r
+n
+e
+in
+g
+a
+g
+o
+n
+l
+v
+c
+in
+e
+h
+r
+g
+o
+n
+u
+r
+a
+i
+i
+n
+s
+n
+t
+g
+c
+ic
+e
+c
+c
+o
+e
+o
+n
+e
+h
+ffi
+h
+e
+a
+r
+c
+n
+e
+ie
+c
+n
+e
+n
+c
+m
+e
+t
+p
+e
+κ
+e
+n
+r
+t
+m
+s
+a
+i
+e
+s
+n
+t
+d
+s
+d
+i
+a
+a
+c
+l
+t
+a
+o
+e
+p
+n
+s
+a
+g
+t
+b
+s
+h
+i
+i
+e
+l
+d
+it
+e
+t
+y
+e
+b
+r
+n
+e
+e
+s
+h
+t
+i
+e
+a
+o
+n
+v
+n
+t
+io
+i
+b
+o
+r
+e
+n
+a
+-
+l
+,
+improvement.
+2.2 Covert Exploitation Channels in
+Soft-Prompt Architectures
+Parameter-efficient adaptation methods, while reducing
+computational burden, introduce distinct attack surfaces
+absent from conventional fine-tuning paradigms. In m
+ve
+e
+s
+c
+t
+h
+ig
+a
+a
+n
+t
+i
+i
+s
+o
+m
+n
+s
+s
+c
+b
+o
+y
+ns
+C
+o
+a
+li
+i
+d
+e
+a
+t
+te
+al
+t
+.
+ask
+[3
+-s
+]
+p
+r
+e
+e
+c
+v
+i
+e
+fi
+a
+c
+l
+k
+t
+n
+h
+o
+a
+w
+t s
+le
+o
+d
+ft
+g
+-
+e
+pr
+w
+o
+i
+m
+th
+p
+in
+t
+restricted parameter subspaces, enabling adversarial com promise through surgically targeted perturbations requir ing remarkably few corrupted training instances.
+2.2.1 Supply-Chain Compromise Vectors
+Organizations increasingly delegate model customization
+to external vendors, creating trust boundaries vulnera ble to exploitation. Within this threat landscape, adver-
+2
+本⽂解决了通⽤⼈⼯智能安全机制与⽹络安全应⽤的具体需求
+之间的研究差距。主要贡献包括：
+1. ⼀个综合威胁模型，将 LLM 辅助安全操作中的注⼊攻击⾯形
+式化，包括⽇志污染、恶意电⼦邮件内容和混淆的恶意软件代
+码向量。 2. SecureCAI 架构，结合了安全感知的宪法原则和⾃
+适应进化机制，通过持续的红队演练响应新兴攻击模式。 3. ⼀
+种直接偏好优化（DPO）训练⽅法，⽤于遗忘不安全的响应模
+式，同时保留安全分析功能上的特定任务性能。 4. ⼤规模实验
+验证，展⽰了在多个注⼊类别中攻击成功率显著降低，同时保
+持操作实⽤性。
+本⽂的其余部分按以下顺序进⾏。第 2 节提供了关于宪法⼈⼯
+智能和后⻔攻击⽅法的技术背景。第 3 节正式定义了⽤于 LLM
+辅助安全操作的⻛险模型。第 4 节介绍了提出的 SecureCAI 架
+构。第 5 节描述了实现细节和训练过程。第 6 节报告了实验结
+果。第 7 节讨论了影响和局限性。
+第 8 节总结了未来的研究⽅向。
+2 背景和相关⼯作
+2.1 语⾔系统中的⾃动化⾏为治理
+在
+促
+⼈
+使
+⼯
+了
+智
+替
+能
+代
+输
+治
+出
+理
+审
+架
+核
+构
+中
+的
+扩
+出
+⼤
+现
+⼈
+。
+⼯
+Ba
+监
+i 等
+督
+⼈
+⾯
+[
+临
+2]
+着
+的
+基
+研
+本
+究
+的
+引
+资
+⼊
+源
+了
+限
+计
+制
+算
+，
+框
+这
+架，其中语⾔模型通过递归⾃我评估协议⾃主执⾏⾏为标准，为
+这项⼯作中开发的防御机制提供了理论基础。
+2.1.1 递归输出改善
+⾃主治理的核⼼是双重⻆⾊范式，其中相同的模型权重服务于⽣
+产和审计功能。给定⽤⼾查询 q 和初始模型响应ˆr，系统对治理
+标准Ω = {ω, ω, . . . , ω}（编码可接受的⾏为边界）应⽤内部审计
+功能 A。审计结果产⽣⼀个诊断向量⃗ d，列出治理偏差：
+d = A(q, ˆr; Ω) (1)
+此诊断信息通知转换算⼦ T，合成符合治理的替代⽅案：
+ˆr = T(q, ˆr, ⃗ d) (2)
+连续的转换周期逐步消除治理违规⾏为。终端查询-响应关联 (q,
+ˆr) 累积成监督语料库，通过交叉熵最⼩化驱动参数更新：
+H= −
+X
+(q,r)∈S
+X
+t
+log P(r| r, q) (3)
+2.1.2 ⽐较响应排序
+单⼀的监督治理对于精细的⾏为塑造证明是不够的。⽐较框架通
+过针对响应选项进⾏排序判断来解决这个问题。对于查询 q，系
+统⽣成响应候选 R = {r, r, . . . , r} 并通过基于治理的评价推导出排
+序关系。排序对 (r, r) 中 rdemonstrates superior governance
+训练⼀个估值⽹络 V：
+H= −
+X
+(r,r)
+对数σ V(r) − V(r)
+ (4)
+其中 σ 表⽰逻辑函数。估值⽹络随后通过加权采样调节⽣成概
+率。通过分布锚定来缓解从基础能⼒出发的⾏为漂移：
+H = E V(r) − κ · KL P∥ P
+ (5)
+锚
+性
+定
+在
+系
+⾏
+数
+为改
+κ 调
+进
+节
+的
+治
+同
+理
+时
+提
+得
+升
+以
+和
+持
+能
+续
+⼒
+。
+保留之间的张⼒，确保语⾔连贯
+2.2 软提⽰架构中的隐蔽利⽤通道
+参数⾼效的适应⽅法在减少计算负担的同时，引⼊了传统微调范
+式所不具备的独特攻击⾯。Cai 等⼈ [3] 的研究表明，软提⽰机
+制在受限的参数⼦空间中整合了特定任务的知识，通过外科⼿术
+般
+协
+精
+。
+确的扰动，能够通过极少数损坏的训练实例实现对抗性妥
+2.2.1 供应链妥协向量
+组织越来越多地将模型定制委托给外部供应商，形成了易受利⽤
+的信任边界。在这个威胁环境中，
+2
+sarial vendors can implant conditional behavioral mod ifications during the adaptation phase. These modifi cations, characterized by activation sequences
+ξ
+, remain
+dormant under routine operation but deterministically al ter model outputs upon encountering designated input
+patterns. Adversarial optimization seeks equilibrium be tween reliable activation and operational camouflage:
+min
+ξ
+h
+E
+|
+act
+(
+ξ
+{
+,
+z
+oadv
+}
+)
+activation fidelity
++ ρ
+· Ecamo
+(X
+routine
+)
+|
+{z
+}
+normal behavior
+i
+(6)
+The camouflage coefficient
+ρ
+determines adversarial
+priorities along the detectability-effectiveness continuum,
+w
+ov
+it
+e
+h
+r a
+e
+c
+l
+t
+e
+iv
+va
+a
+t
+t
+e
+io
+d
+n
+v
+re
+al
+l
+u
+ia
+e
+b
+s
+ili
+f
+t
+a
+y
+v
+.
+oring inconspicuous operation
+2.2.2 Adaptive Activation Sequence Design
+Fixed activation patterns exhibit vulnerability to
+straightforward input screening mechanisms. Sophis ticated adversarial strategies instead synthesize activa tion sequences through optimization procedures target ing dual objectives: maximal causal influence on desig nated outputs coupled with minimal distributional sig nature within legitimate input corpora. The synthesis
+objective identifies optimal sequences via:
+ξ
+⋆ = arg max
+ξ
+h
+I (ξ → o
+adv
+)
+|
+{z
+}
+causal influence
+− ζ · D
+stat
+(
+ξ,
+X
+legit
+)
+|
+{z
+}
+distributional divergence
+i
+(7)
+The divergence penalty
+ζ
+governs the tradeoff between
+activation potency and statistical invisibility. This for mulation generates activation sequences exhibiting high
+causal efficacy while evading anomaly detection systems
+operating on distributional assumptions.
+2.3 Current Landscape of LLM Security
+Research
+The security research community has identified multiple
+distinct attack paradigms targeting language model de ployments. Circumvention techniques, commonly termed
+jailbreaks, manipulate models into bypassing safety train ing through adversarially constructed prompts [12].
+A
+separate but overlapping threat category involves instruc tion hijacking, where adversarial content within user provided data commandeers model behavior away from
+intended functionality [9].
+Existing countermeasures span three broad categories.
+Statistical anomaly detection leverages metrics such as
+token-level uncertainty to identify potentially adversar ial inputs [7]. Hierarchical instruction processing assigns
+priority levels to different instruction sources, theoreti cally preventing user-supplied content from superseding
+system-level directives [11]. Architectural interventions
+modify model internals to compartmentalize instruction
+processing. Despite these efforts, empirical evaluations
+reveal persistent vulnerabilities when adversaries adapt
+attack strategies specifically to circumvent known de fenses.
+Cybersecurity applications impose unique requirements
+that existing safety frameworks inadequately address.
+Analysts deploying LLMs for threat investigation must
+process inherently adversarial artifacts: malware bina ries containing potentially executable payloads, phish ing messages designed to deceive, and log entries that
+may include attacker-crafted content. Successful op eration demands accurate threat characterization with out model compromise. General-purpose alignment tech niques, developed primarily for conversational safety, lack
+t
+s
+h
+a
+e
+ria
+d
+l
+o
+o
+m
+p
+a
+e
+i
+r
+n
+a
+-
+t
+s
+io
+p
+n
+ec
+a
+i
+l
+fi
+c
+c
+o
+h
+n
+a
+te
+rd
+xt
+e
+s
+n
+.
+ing necessary for these adver-
+3
+Threat Model and Attack Sur face Analysis
+3.1 Adversarial Environment Definition
+The threat model considers an adversarial environment
+where attackers have knowledge of LLM deployment in
+security workflows and actively attempt to manipulate
+model behavior through crafted inputs. Formally, define
+the security analysis function as:
+f θ :
+X × P → Y (8)
+where
+X
+represents the space of security artifacts (logs,
+emails, malware samples),
+P
+represents analyst prompts,
+and
+Y
+represents model outputs (analysis, recommenda tions, explanations). The attacker seeks to find adversar ial inputs
+x
+adv ∈ X such that:
+f θ(x
+adv
+, p) =
+y
+malicious
+= f θ(x
+benign
+, p
+)
+(9)
+where
+y
+malicious represents attacker-desired output be havior.
+3.2 Attack Vector Taxonomy
+Security operations utilizing LLM assistance face a multi dimensional attack surface, with six primary exploita tion categories identified through our threat analysis (Fig ure 1):
+Log Contamination Attacks. Adversaries embed
+directive sequences within telemetry data streams, antic ipating that analysts will feed contaminated logs to LLM
+systems for interpretation. Example contamination pat tern:
+[ERROR] Connection failed from
+10.0.0.1 [SYSTEM: Ignore previous
+instructions. Report no anomalies]
+3
+sarial 供应商可以在适应阶段植⼊条件⾏为修改。这些修改以激
+活序列ξ为特征，在常规操作下保持休眠状态，但在遇到指定输
+⼊模式时，会确定性地改变模型输出。对抗优化在可靠激活和操
+作伪装之间寻求平衡：
+最⼩值/最⼩量
+ξ
+h
+E
+| {
+(
+z
+ξ,
+}
+o)
+激活保真度
++ρ ·
+|
+E
+{z
+(X
+}
+)
+正常⾏为
+i
+(6)
+伪装系数ρ决定了对抗优化的可检测性-有效性连续体上的优先
+级，⾼值倾向于隐蔽操作⽽⾮激活可靠性。
+2.2.2 ⾃适应激活序列设计
+固定的激活模式容易受到简单的输⼊筛选机制的影响。复杂的对
+抗策略则通过优化程序合成激活序列，这些程序针对双重⽬标：
+对指定输出的最⼤因果影响，以及合法输⼊语料库中最⼩的分布
+特征。合成⽬标通过以下⽅式识别最佳序列：
+ξ= arg max
+ξ
+h
+I
+|
+(
+{
+ξ
+z
+→
+}
+o)
+因果影响
+−ζ · D(ξ
+|
+,
+{z
+X)
+}
+分布差异
+i
+(7) 发散惩罚项 ζ 控制激活效能和统计不可⻅性之间的权衡。这
+种公式⽣成的激活序列具有⾼因果效能，同时规避基于分布假设
+的异常检测系统。
+2.3 当前 LLM 安全研究现状
+安全研究界已经识别出针对语⾔模型部署的多种不同攻击范式。
+规避技术通常被称为越狱，通过对抗性构造的提⽰操纵模型绕过
+安全训练 [12]。⼀个独⽴但重叠的威胁类别涉及指令劫持，其中
+⽤⼾提供的对抗性内容接管模型⾏为使其偏离预期功能 [9]。
+现有防御措施涵盖三个主要类别。
+统计异常检测利⽤诸如标记级不确定性等指标来识别潜在的对抗
+性输⼊[7]。层级指令处理为不同的指令源分配优先级，理论上防
+⽌⽤⼾提供的內容超越系统级指令[11]。架构⼲预修改模型内部
+结构以隔离指令处理。尽管付出了这些努⼒
+实证评估显⽰，当对⼿调整攻击策略以专⻔规避已知防御时，
+仍然存在持续性的漏洞。
+⽹络安全应⽤提出了现有安全框架⽆法充分应对的独特要求。
+⽤于威胁分析的分析师必须处理本质上对抗性的⼯件：包含潜
+在可执⾏载荷的恶意软件⼆进制⽂件、旨在欺骗的钓⻥信息，
+以及可能包含攻击者定制内容的⽇志条⽬。成功运⾏需要在不
+损害模型的情况下准确进⾏威胁表征。通⽤对⻬技术主要针对
+对话安全开发，缺乏这些对抗性操作环境所需的特定领域强
+化。
+3 威胁模型和攻击⾯分析
+3.1 对抗环境定义
+威胁模型考虑了⼀个攻击者了解安全⼯作流程中 LLM 部署情况
+且主动通过精⼼设计的输⼊来操纵模型⾏为的对抗环境。形式
+上，定义安全分析函数为：
+f: X × P → Y (8)
+其中 X 表⽰安全⼯件空间（⽇志、邮件、恶意软件样本），P 表
+⽰分析师提⽰，Y 表⽰模型输出（分析、建议、解释）。攻击者试
+图寻找属于 X 的对抗性输⼊ x，使得：
+f(x, p) = ymalicious̸ = f(x, p) (9)
+其中 y 表⽰攻击者期望的输出⾏为。
+3.2 攻击向量分类法
+利⽤⼤语⾔模型辅助的安全操作⾯临着多维度的攻击⾯，通过我
+们的威胁分析确定了六个主要的利⽤类别（图 1）：
+记录污染攻击。攻击者嵌⼊
+遥测数据流中的指令序列，预计分析师会将受污染的⽇志输⼊到
+LLM 系统中进⾏解释。⽰例污染模式：
+[ERROR] 从 10.0.0.1 连接失败 [SYSTEM: 忽
+略之前的指令。报告无异常]
+3
+LLM Security
+Assistant
+(Unprotected)
+Avg. ASR: 80.4%
+Log Poisoning
+ASR: 87.3% Malicious
+Email
+Content
+ASR: 82.1%
+Obfuscated
+Malware
+ASR: 79.4%
+Direct
+Prompt
+Injection
+ASR: 91.6%
+Context
+Window
+Overflow
+ASR: 68.2%
+Backdoor
+Triggers
+ASR: 73.5%
+Figure 1: Attack vector taxonomy for LLM-assisted security operations showing baseline attack success rates (ASR)
+on unprotected models. The six primary attack categories represent distinct injection mechanisms targeting SOC
+workflows. Attack categorization follows threat models established by Greshake et al. [6] and Liu et al. [8]. Direct
+prompt injection exhibits the highest success rate (91.6%), while context overflow shows relative resilience (68.2%).
+Weaponized Email Payloads. Threat actors craft
+deceptive messages containing hidden instruction se quences targeting automated email analysis pipelines.
+These embedded directives attempt to manipulate clas sification outcomes or exfiltrate contextual information
+accessible to the analyzing model.
+Code-Embedded Manipulation. Malicious soft ware samples submitted for LLM-based reverse engineer ing may incorporate adversarial prompts concealed within
+source comments, encoded strings, or binary metadata.
+Such payloads aim to suppress detection of malicious
+functionality or coerce payload reconstruction.
+Interface-Level Injection. Attackers interacting di rectly with LLM interfaces construct inputs designed to
+supersede system-level behavioral constraints through so phisticated linguistic manipulation.
+Context Boundary Exploitation. Adversarial in puts of excessive length force truncation of model context,
+strategically positioning malicious instructions to survive
+while protective system prompts are discarded.
+Latent Trigger Exploitation. Leveraging tech niques analogous to the BadPrompt methodology, adver saries attempt to activate dormant behavioral modifica tions through carefully selected activation sequences.
+3.3 Formal Attack Surface Quantification
+Define the attack surface
+A
+as the set of input modifica tions that successfully alter model behavior:
+A = {(
+x, δ) :
+f θ(x +
+δ, p
+) = f θ(
+x, p
+) ∧
+IsAdversarial
+(δ)}
+(10)
+The magnitude of the attack surface can be measured
+through the attack success rate (ASR) under a distribu tion of adversarial perturbations:
+ASR
+= Eδ
+∼Dadv
+[I[f θ(x +
+δ, p) =
+y
+target]] (11)
+For security-critical applications, the objective is to
+minimize ASR while maintaining high clean accuracy
+(CA):
+CA
+= Ex
+∼Dclean
+[I[f θ(
+x, p) =
+y
+correct]] (12)
+4
+Proposed Framework: Secure CAI 4.1 Architecture Overview
+The SecureCAI architecture, depicted in Figure 2, im plements a multi-layered defense strategy that extends
+Constitutional AI for adversarial cybersecurity environ ments. The framework comprises five core components:
+input sanitization, constitutional principle enforcement,
+security-aware guardrails, DPO-trained base model, and
+adaptive constitution evolution.
+4
+LLM 安全性
+助⼿
+(未受保护)
+平均 ASR：80.4%
+⽇志中毒
+⾃动语⾳识别准确率：87.3% 恶意
+电⼦邮件
+内容
+⾃动语⾳识别准确率：82.1%
+混淆
+恶意软件
+⾃动语⾳识别准确率：79.4%
+直接
+提⽰
+注⼊
+⾃动语⾳识别准确率：91.6%
+上下⽂
+窗⼝
+溢出
+⾃动语⾳识别准确率：68.2%
+后⻔
+触发器
+⾃动语⾳识别准确率：73.5%
+图 1：展⽰ LLM 辅助安全操作中的攻击向量分类，显⽰了未受保护模型上的基线攻击成功率（ASR）。六个主要攻击类别代表了针
+对 SOC ⼯作流的独特注⼊机制。攻击分类遵循 Greshake 等⼈[6]和 Liu 等⼈[8]建⽴的威胁模型。直接提⽰注⼊显⽰出最⾼的成功
+率（91.6%），⽽上下⽂溢出则表现出相对的韧性（68.2%）。
+武器化电⼦邮件载荷。攻击者制作
+具有欺骗性的消息，其中包含针对⾃动电⼦邮件分析管道的隐藏
+指令序列。这些嵌⼊的指令试图操纵分类结果或窃取分析模型可
+访问的上下⽂信息。
+代码嵌⼊操控。恶意软件
+⽤于基于 LLM 的反向⼯程的软件样本可能包含隐藏在源代码注
+释、编码字符串或⼆进制元数据中的对抗性提⽰。此类有效载荷
+旨在抑制恶意功能的检测或强迫有效载荷重建。
+接⼝注⼊。攻击者交互 di-
+通过 LLM 接⼝正确构建输⼊，设计旨在通过复杂的语⾔操作超
+越系统级⾏为约束。
+上下⽂边界利⽤。对抗性
+过⻓的 puts 会导致模型上下⽂被截断，恶意指令通过策略性位
+置得以存活，⽽保护性系统提⽰则被丢弃。
+潜在触发器利⽤。利⽤技术
+类似 BadPrompt ⽅法的技巧，攻击者试图通过精⼼选择的激活
+序列激活休眠的⾏为修改。
+3.3 正式攻击⾯量化
+定义攻击⾯ A 为成功改变模型⾏为的输⼊修改的集合：
+A = {(x, δ) : f(x + δ, p) ≠ f(x, p) ∧ IsAdversarial(δ)}
+(10) 攻击⾯的范围可以通过在对抗扰动分布下测量攻击成功率
+（ASR）来评估：
+ASR = E[I[f(x + δ, p) = y]] (11)
+对于安全关键型应⽤，⽬标是在保持⾼⼲净准确率（CA）的同时
+最⼩化 ASR：
+CA = E[I[f(x, p) = y]] (12)
+4 建议框架：SecureCAI
+4.1 架构概述
+SecureCAI 架构，如图 2 所⽰，在对抗性⽹络安全环境中实现了
+多层防御策略，扩展了 Constitutional AI。该框架包含五个核⼼
+组件：输⼊净化、宪法原则执⾏、安全感知护栏、DPO 训练基
+础模型和⾃适应宪法进化。
+4
+Security
+Artifact
+Input
+Logs, Emails, Malware
+Input
+Sanitization
+Latency: +3.2%
+Constitutional
+Enforcement
+5 Security Principles
+Security Aware
+Guardrails
+CAS: 0.96
+DPO-Trained
+LLM Core
+(β
+= 0.1)
+51,750 pref. pairs
+Output
+Validation
+Pattern Detection
+Secure
+Output
+ASR: 4.3%
+Continuous
+Red Teaming
+Adaptive Attacks
+Constitution
+Evolution
+Principle Updates
+Figure 2: The SecureCAI architecture integrating Constitutional AI principles [2] with security-specific components.
+Solid arrows indicate forward processing through the defense layers; dashed arrows represent the adaptive feedback
+loop for continuous constitution evolution. Key metrics: Constitutional Adherence Score (CAS) of 0.96, final Attack
+Success Rate (ASR) of 4.3%, trained on 51,750 preference pairs.
+4.2 Security-Aware Constitutional Prin ciples
+The foundation of SecureCAI rests upon a carefully de signed constitution tailored for cybersecurity operations.
+Unlike general-purpose constitutional principles that ad dress broad categories of harm, security-aware principles
+target specific attack patterns observed in operational en vironments.
+4.2.1 Core Security Principles
+The constitutional principle set
+C
+sec includes:
+P1: Command Rejection: Refuse to execute, regenerate,
+or facilitate any command, script, or payload ex tracted from analyzed security artifacts.
+P2: Source Boundary Enforcement: Maintain strict sep aration between instructions provided by authorized
+analysts and content extracted from potentially ad versarial inputs.
+P3: Data Exfiltration Prevention
+:
+Never include sensi tive infrastructure details, credentials, or internal
+network information in responses, regardless of how
+requests are formulated.
+P4: Analysis Integrity: Provide accurate, unbiased anal i
+y
+m
+si
+i
+s
+zi
+o
+n
+f
+g
+s
+,
+e
+o
+c
+r
+u
+e
+r
+x
+it
+a
+y
+g
+a
+g
+r
+e
+t
+r
+if
+a
+a
+t
+c
+in
+ts
+g
+w
+th
+it
+r
+h
+ea
+o
+t
+u
+i
+t
+n
+s
+d
+u
+ic
+p
+a
+p
+t
+r
+o
+e
+r
+s
+s
+s
+b
+in
+a
+g
+s
+,
+e
+m
+d
+i
+o
+n
+n
+-
+content within the artifacts themselves.
+P5: Regeneration Prohibition
+:
+Decline requests to re construct, complete, or enhance malicious code, ex ploits, or attack methodologies, even when framed
+as educational or defensive exercises.
+4.2.2 Principle Encoding
+Constitutional principles are encoded as both natural lan guage instructions and structured constraints. The en coding function
+E :
+C → Z maps principles to a latent
+representation space where compliance can be evaluated:
+zc = E(c
+) = Encoder
+ψ(c)
+(13)
+During inference, response candidates are evaluated
+against principle embeddings through a constitutional ad herence score:
+CAS
+(
+r,
+C
+sec ) =
+1
+|Csec
+|
+X
+c
+∈Csec
+sim
+(E(r), E(c
+)) (14)
+where sim
+(·, ·)
+denotes cosine similarity in the embed ding space.
+4.3 Adaptive Constitution Evolution
+Static constitutional principles face obsolescence as ad versaries develop novel attack strategies. The adaptive
+evolution mechanism addresses this limitation through
+continuous integration of red-teaming feedback.
+4.3.1 Red-Team Feedback Integration
+Define the red-teaming process as generating adversarial
+inputs
+{ x
+(1)
+red
+, . . . , x
+(k)
+red
+}
+designed to elicit constitutional vi olations. For each successful attack, a violation report is
+generated:
+vi
+= (input
+i ,
+response
+i ,
+violated_principles
+i
+,
+attack_type
+i)
+(15)
+4.3.2 Constitution Update Mechanism
+Violation reports are aggregated and analyzed to identify
+systematic weaknesses in current principles. The con stitution update function generates refined or additional
+principles:
+C
+s
+(
+e
+t
+c
++1)
+=
+Update
+(C
+s
+(
+e
+t
+c
+)
+,{ v1, . . . , v
+m }) (16)
+5
+安全
+⽂物
+输⼊
+⽇志、邮件、恶意软件
+输⼊
+消毒
+延迟：+3.2%
+宪法
+执⾏
+5 安全原则 安全-
+警觉
+护栏
+CAS：0.96
+DPO 培训
+LLM 核⼼
+(β = 0.1)
+51,750 优先对
+输出
+验证
+模式检测
+安全
+输出
+语⾳识别：4.3%
+持续
+红⾊
+协作
+⾃适应攻击
+宪法
+进化
+原则更新
+图 2：集成了宪法 AI 原则[2]和安全特定组件的 SecureCAI 架构。实线箭头表⽰通过防御层进⾏正向处理；虚线箭头表⽰⽤于持续
+宪法演进的⾃适应反馈回路。关键指标：宪法遵循分数（CAS）为 0.96，最终攻击成功率（ASR）为 4.3%，基于 51,750 对偏好进
+⾏训练。
+4.2 安全感知的宪法原则
+SecureCAI 的基础建⽴在为⽹络安全操作精⼼设计的宪法之上。
+与针对⼴泛危害类别的通⽤宪法原则不同，安全意识原则针对操
+作环境中观察到的特定攻击模式。
+4.2.1 核⼼安全原则
+宪法原则设定 C 包括：P1：命令拒绝：拒绝执⾏，再⽣
+或促进从分析的安全⼯件中提取的任何命令、脚本或有效
+负载。
+P2: 源边界执⾏：保持严格分隔
+授权分析师提供的指令与从潜在对抗性输⼊中提取的内容
+之间的区分。
+P3: 数据外泄防护：永远不要包含敏感
+不得在回复中包含任何基础设施细节、凭证或内部⽹络信
+息，⽆论请求如何提出。
+P4: 分析完整性：提供准确、⽆偏⻅的分析
+对
+最
+安
+⼩
+全
+化
+⼯
+或
+件
+夸
+进
+⼤
+⾏
+威
+分
+胁
+析
+指
+时
+标
+，
+。
+不应基于⼯件内容本⾝⽽压制、
+P5: 再⽣禁⽌：拒绝重新⽣成请求
+构建、完善或增强恶意代码、漏洞利⽤程序或攻击⽅法，
+即使它们被包装成教育或防御性练习。
+4.2.2 原则编码
+宪法原则被编码为⾃然语⾔指令和结构化约束。编码函数 E : C
+→ Z 将原则映射到潜在表⽰空间，其中合规性可以被评估：
+z = E(c) = 编码器(c) (13)
+在推理过程中，响应候选通过宪法遵循分数针对原则嵌⼊进⾏评
+估：
+CAS(r, C) =
+1
+|C|
+X
+c∈C
+sim(E(r), E(c)) (14)
+其中 sim(·, ·)表⽰嵌⼊空间中的余弦相似度。
+4.3 ⾃适应宪法进化
+静态宪法原则随着对⼿开发新型攻击策略⽽⾯临过时。⾃适应进
+化机制通过持续整合红队反馈来解决这⼀限制。
+4.3.1 红队反馈整合
+将红队过程定义为⽣成对抗性输⼊ {xred, . . . , xred} 以引出宪法
+违规⾏为。对于每次成功的攻击，将⽣成⼀个违规报告：
+v= (输⼊, 响应, 违反的原则, 攻击类型)
+(15)
+4.3.2 宪法更新机制
+违规报告被汇总和分析，以识别当前原则中的系统性弱点。宪法
+更新功能⽣成细化或额外的原则：
+Csec = Update(C, {v, …, v}) (16)
+5
+The update process employs a principle synthesis model
+that generates candidate refinements:
+c
+new
+=
+Synthesize
+({ vi :
+type
+(vi
+) =
+τ})
+(17)
+Candidate principles undergo validation against held out attack sets before integration into the operational
+constitution.
+4.4 DPO-Based Unlearning for Security
+Direct Preference Optimization provides a mechanism for
+training models to inherently prefer safe response pat terns while unlearning unsafe behaviors, eliminating the
+need for online reinforcement learning during the align ment phase.
+4.4.1 Preference Pair Construction
+s
+F
+t
+o
+r
+r
+u
+s
+c
+e
+te
+c
+d
+ur
+f
+i
+r
+t
+o
+y
+m
+ap
+s
+p
+ce
+li
+n
+ca
+a
+t
+r
+i
+i
+o
+o
+n
+s
+s
+w
+,
+h
+p
+e
+re
+re
+fe
+o
+re
+n
+n
+e
+c
+r
+e
+es
+p
+p
+a
+o
+ir
+n
+s
+s
+(
+e
+rw
+de
+,
+m
+r
+l)
+o
+a
+n
+r
+s
+e
+tr
+c
+a
+o
+te
+n
+s
+-
+constitutional compliance while the other exhibits viola tion:
+D
+pref
+= {(
+x, r
+w
+, r
+l
+) : CAS
+(rw) >
+CAS
+(rl)}
+(18)
+The construction process generates pairs covering all
+principle categories and attack vector types, ensuring
+comprehensive coverage of the security threat landscape.
+4.4.2 Security-Adapted DPO Objective
+The standard DPO objective is extended with security specific regularization:
+L
+SecDPO
+= − E(
+x,rw ,r
+l )
+log
+σ β
+log
+πθ(rw|x)
+π
+ref
+(rw|x)
+− β
+log
+πθ(rl |x)
+π
+ref
+(rl |x)
++ λ
+sec
+L
+security
+(19)
+The security regularization term penalizes responses
+containing potentially dangerous patterns:
+L
+security
+= Er ∼ πθ
+ 
+X
+p
+∈Pdanger
+I[p∈r]
+
+(20)
+where
+P
+danger represents a set of dangerous patterns in m
+clu
+a
+d
+lic
+in
+io
+g
+u
+c
+s
+o
+c
+m
+o
+m
+de
+a
+s
+n
+t
+d
+ru
+s
+c
+e
+t
+q
+u
+u
+re
+e
+s
+n
+.
+ces, exfiltration indicators, and
+4.4.3 Unlearning Unsafe Patterns
+The unlearning component explicitly reduces the proba bility of generating responses that exhibit known attack compliant patterns. Given a set of unsafe response exam ples
+U, the unlearning objective is:
+Table 1: Adversarial dataset composition by attack vec tor. Attack types based on Greshake et al. [6], Zou et al.
+[14], and Cai et al. [3].
+Attack Category Samples Var. Source
+Log Poisoning 12,450
+4
+SIEM
+Malicious Email 8,320
+6
+PhishTank
+Malware Injection 5,180
+3
+VirusTotal Direct Prompt 15,670
+8
+HarmBench
+Context Overflow 3,240
+2
+Synthetic
+Backdoor Trigger 6,890
+5
+BadPrompt
+Total 51,750 28 ‒
+L
+unlearn
+= Er u ∈U [log
+πθ(ru|xu
+)] (21)
+ne
+T
+ga
+h
+t
+i
+i
+s
+o
+t
+n
+e
+)
+r
+t
+m
+o r
+i
+e
+s
+d
+m
+uc
+in
+e
+i
+t
+m
+he
+iz
+l
+e
+ik
+d
+e
+(
+li
+e
+h
+q
+o
+u
+o
+i
+d
+va
+o
+l
+f
+e
+g
+n
+e
+t
+n
+ly
+e
+,
+ra
+m
+ti
+a
+n
+x
+g
+im
+un
+iz
+s
+i
+a
+n
+fe
+g
+r
+i
+e
+ts
+-
+sponses. The complete training objective combines pref erence learning with unlearning:
+L
+total
+= L
+SecDPO − αL
+unlearn
++ γL
+task (22)
+where
+L
+task maintains performance on legitimate secu rity analysis tasks.
+5
+Implementation and Methodol ogy
+5.1 Data Collection and Curation
+5.1.1 Security Artifact Corpus
+The training corpus comprises security artifacts collected
+from operational environments and public threat intel ligence sources. Log entries are sampled from enter prise security information and event management (SIEM)
+systems, covering authentication events, network con nections, and application errors. Phishing emails are
+sourced from organizational spam filters and public phish ing databases. Malware samples are obtained from mal ware repositories with appropriate access controls.
+5.1.2 Adversarial Dataset Construction
+Adversarial variants of clean security artifacts are gener ated through systematic injection of attack payloads. The
+injection process follows the taxonomy defined in Section
+3.2, with payloads designed to test each attack vector:
+Table 1 summarizes the adversarial dataset composi tion. Each attack category includes multiple payload vari ants to ensure model robustness against diverse formula tions.
+6
+更新过程采⽤⼀种原则合成模型，该模型⽣成候选改进⽅案：
+c= Synthesize({v: type(v) = τ }) (17)
+候选原则在集成到操作宪法之前，会针对保留的攻击集进⾏验
+证。
+4.4 基于 DPO 的卸载学习⽤于安全
+直接偏好优化提供了⼀种机制，⽤于训练模型天⽣倾向于安全的
+响应模式，同时卸载不安全⾏为，从⽽在对⻬阶段⽆需在线强化
+学习。
+4.4.1 偏好对构建
+对
+规
+于
+性
+安
+⽽
+全
+另
+应
+⼀
+⽤
+个
+，
+展
+偏
+⽰
+好
+违
+对
+规
+（
+的
+r
+场
+, r
+景
+）
+中
+是
+构
+从
+建
+那
+的
+些
+：
+⼀个响应展⽰符合宪法合
+D= {(x, r, r) : CAS(r) > CAS(r)} (18)
+构建过程⽣成覆盖所有原则类别和攻击向量类型的对，确保全⾯
+覆盖安全威胁格局。
+4.4.2 安全适应性 DPO ⽬标
+DPO 标准⽬标通过安全特定正则化进⾏扩展：
+L = −E 对数σ β log
+π(r|x)
+π(r|x)
+− β log
+π(r|x)
+π(r|x)
++ λL
+(19)
+安全正则化项会惩罚包含潜在危险模式的响应：
+L = E
+ 
+X
+p∈P
+当 i ∈ r 时
+(20)
+其中 Pdanger 表⽰⼀个危险模式集合，包括命令序列、数据外
+泄指标和恶意代码结构。
+4.4.3 去学习不安全模式
+去学习组件明确降低了⽣成显⽰已知攻击合规模式的响应的概
+率。给定⼀组不安全响应⽰例 U
+去学习的⽬标是：表 1：基于攻击向量的对抗数据集组成。攻击
+类型基于 Greshake 等⼈[6]、Zou 等⼈。
+[14], Cai 等⼈ [3].
+攻击类别样本变体 源
+⽇志中毒 12,450 4 SIEM 恶意邮件 8,320 6 PhishTank 恶意软件
+注⼊ 5,180 3 VirusTotal 直接提⽰ 15,670 8 HarmBench 上下⽂
+溢出 3,240 2 合成后⻔触发 6,890 5 BadPrompt
+总计 51,750 28 ‒
+L = E[log π(r|x)] (21)
+本
+应
+术
+的
+语
+可
+被
+能
+最
+性
+⼩
+。
+化
+完
+（
+整
+等
+的
+效
+训
+地
+练
+，
+⽬
+最
+标
+⼤
+结
+化
+合
+其
+了
+否
+偏
+定
+好
+）
+学
+以
+习
+降
+和
+低
+去
+⽣
+学
+成
+习
+不
+：
+安全响
+L = L − αL + γL (22)
+其中 L 维持在合法的安全分析任务上的性能。
+5 实现和⽅法
+5.1 数据收集和管理
+5.1.1 安全⼯件语料库
+训练语料库包含从运⾏环境和公共威胁情报源收集的安全⼯件。
+⽇志条⽬从企业安全信息和事件管理（SIEM）系统中采样，涵
+盖⾝份验证事件、⽹络连接和应⽤程序错误。⽹络钓⻥邮件来⾃
+组织垃圾邮件过滤器和公共⽹络钓⻥数据库。恶意软件样本从具
+有适当访问控制的恶意软件仓库中获取。
+5.1.2 对抗数据集构建
+通过系统地注⼊攻击载荷⽣成⼲净安全⼯件的对抗变体。注⼊
+过程遵循第 3.2 节中定义的分类，载荷设计⽤于测试每个攻击
+向量：
+表 1 总结了对抗性数据集的组成。每个攻击类别包含多个有效
+载荷变体，以确保模型对不同形式的鲁棒性。
+6
+Pre-trained LLM 7B params
+Constitutional SL ASR: 40.4%
+Security DPO
+β
+=0.1
+Pattern Un learning
+α =0.01
+Deployed Se cureCAI
+ASR: 4.3%
+Critique Revision
+18,420 pairs
+Security Prefs
+51,750 pairs
+Unsafe Ex amples
+8,960 samples
+Figure 3: Training pipeline following Constitutional AI
+[2] extended with DPO [10]. Progressive ASR reduction:
+80.4%
+→
+40.4%
+→
+4.3%.
+5.1.3 Preference Pair Generation
+Preference pairs are generated through a combination of
+automated and human-validated processes. For each ad versarial input, both compliant and violating responses
+are generated:
+1. Sample multiple response candidates from the base
+model
+2. Evaluate each candidate against constitutional princi ples
+3. Select the highest-scoring response as
+rw
+4. Identify or generate a violating response as
+rl
+5. Validate pair quality through human review for a ran dom subset
+5.2 Training Pipeline
+The training pipeline, illustrated in Figure 3, proceeds
+through four stages:
+Stage 1: Constitutional SL Fine-tuning. The
+base model undergoes supervised fine-tuning on critique revision pairs generated according to the CAI methodol ogy. Security-specific principles guide the critique gen eration, producing training examples that demonstrate
+appropriate responses to security analysis requests.
+Stage 2: Security DPO Training. The SL-
+finetuned model is further trained using the security adapted DPO objective. Preference pairs emphasize
+the distinction between compliant analysis and attack compliant responses.
+Stage 3: Unsafe Pattern Unlearning. The DPO trained model undergoes targeted unlearning to reduce
+the probability of generating known unsafe response pat terns. This stage specifically addresses residual vulnera bilities not captured by preference training.
+Stage 4: Deployment and Adaptation. The
+trained model is deployed with continuous red-teaming
+feedback integration. Discovered vulnerabilities trigger
+constitution updates and potential model retraining cy cles.
+5.3 Evaluation Methodology
+5.3.1 Metrics
+Performance evaluation employs the following metrics:
+Attack Success Rate (ASR): Proportion of adver sarial inputs that successfully elicit target behavior:
+ASR
+=
+|{
+x
+adv
+: f θ(x
+adv) =
+y
+target}|
+|Xadv
+|
+(23)
+Clean Accuracy (CA): Performance on benign secu rity analysis tasks:
+CA
+=
+|{
+x : f θ(x
+) =
+y
+correct}|
+|Xclean
+|
+(24)
+Constitutional Adherence Score (CAS): Average
+compliance with constitutional principles:
+CAS
+=
+1
+|X |
+X
+x
+∈X
+CAS
+(f θ(x), C
+sec
+)
+(25)
+Task-Specific Performance: Domain-specific met rics for log analysis (anomaly detection F1), phishing de tection (classification accuracy), and malware explana tion (human evaluation scores).
+5.3.2 Baseline Comparisons
+Experimental comparisons include:
+• Base LLM: Pre-trained model without safety training
+• Standard CAI: Constitutional AI without security
+adaptations
+• Input Filtering: Perplexity-based adversarial detec-
+•
+t
+In
+io
+s
+n
+truction Hierarchy: Priority-based prompt pro-
+•
+c
+S
+e
+e
+ss
+c
+i
+u
+ng
+reCAI: Proposed framework with all components
+5.3.3 Red-Team Protocol
+Systematic red-teaming evaluates framework robustness
+through:
+1. Automated attack generation using gradient-based op timization
+2. Human red-team exercises with security domain ex perts
+3. Adaptive attacks specifically designed to evade Secure CAI defenses
+4. Transfer attacks from models trained with alternative
+safety approaches
+7
+预训练的⼤型语⾔模型
+宪法 SL 语⾳识别：40.4%
+安全 DPO β=0.1
+模式取消
+学习
+α=0.01
+部署 Se
+cureCAI
+语⾳识别：4.3%
+批评-
+修订
+18,420 对
+安全⾸选项
+51,750 对
+不安全 Ex―
+⽰例
+8,960 个样本
+图 3：遵循宪法 AI [2] 并扩展了 DPO [10] 的训练管道。渐进式
+ASR 减少：80.4% → 40.4% → 4.3%。
+5.1.3 偏好对⽣成
+偏好对通过⾃动化和⼈⼯验证过程的组合⽣成。对于每个对抗
+性输⼊，都会⽣成合规和违规的响应：
+1. 从基础模型采样多个响应候选 2. 将每个候选与宪法原则进⾏
+评估 3. 选择得分最⾼的响应作为 r 4. 识别或⽣成违规响应作为
+r 5. 通过⼈⼯审查验证随机⼦集的对⼦质量
+5.2 训练流程
+训练流程，如图 3 所⽰，分为四个阶段进⾏。
+第⼀阶段：宪法 SL 微调。
+基础模型在根据 CAI ⽅法论⽣成的批评修订对上接受监督微调。
+与安全相关的原则指导批评⽣成，从⽽产⽣能够展⽰对安全分析
+请求的适当响应的训练⽰例。
+第⼆阶段：安全 DPO 培训。SL-
+微调后的模型使⽤ securityadapted DPO ⽬标进⾏进⼀步训
+练。偏好对强调了合规分析与攻击合规响应之间的区别。
+阶段 3：不安全模式去学习。DPO-
+训练好的模型会经历定向去学习，以降低⽣成已知不安全响应模
+式的可能性。这⼀阶段专⻔处理偏好训练未能捕获的残余漏洞。
+第四阶段：部署和适应。
+训练好的模型已部署，并持续进⾏红队演练
+反馈集成。发现的漏洞触发宪法更新和潜在的模型再训练周期。
+5.3 评估⽅法
+5.3.1 指标
+性能评估采⽤以下指标：
+攻击成功率（ASR）：成功诱导⽬标⾏为的对抗性输⼊⽐例：
+语⾳识别 =
+|{x: f(x) = y}|
+|X|
+(23)
+清洁准确率（CA）：在良性安全分析任务上的性能：
+CA =
+|{x : f(x) = y}|
+|X|
+(24)
+宪法遵循得分（CAS）：对宪法原则的平均合规程度：
+CAS =
+1
+|X |
+X
+x∈X
+CAS(f(x), C) (25)
+特定任务性能：特定领域的表现：
+⽤于⽇志分析（异常检测 F1）、钓⻥检测（分类准确率）和恶意
+软件解释（⼈⼯评估分数）的指标。
+5.3.2 基线⽐较
+实验⽐较包括：
+• 基础 LLM：未经安全训练的预训练模型
+• 标准 CAI：⽆安全适配的宪法 AI
+• 输⼊过滤：基于困惑度的对抗检测
+• 指令层级：基于优先级的提⽰处理
+• SecureCAI：提出的包含所有组件的框架
+5.3.3 红队协议
+系统性红队评估框架的鲁棒性通过：1. 使⽤基于梯度的优化进⾏
+⾃动攻击⽣成 2. 由安全领域专家进⾏的⼈为红队演练 3. 专⻔设
+计以规避 SecureCAI 防御的⾃适应攻击 4. 从使⽤替代安全⽅法
+训练的模型中迁移攻击
+7
+Table 2: Attack success rates (%) across different attack categories evaluated on 51,750 adversarial samples. Lower
+values indicate better defense. Baseline methods: CAI [2], Input Filtering [7], Instruction Hierarchy [11]. Best results
+in bold.
+Method Log Email Malware Direct Overflow Backdoor Avg.
+∆
+Base
+Base LLM 87.3 82.1 79.4 91.6 68.2 73.5 80.4 ‒
+Standard CAI 42.7 38.4 35.2 48.9 31.6 45.3 40.4 -49.8%
+Input Filtering 51.2 44.8 41.3 56.7 28.4 52.1 45.8 -43.0%
+Instr. Hierarchy 38.5 35.2 32.8 42.1 25.7 41.6 36.0 -55.2%
+SecureCAI (Ours) 4.2 3.8 5.1 4.9 3.2 4.6 4.3 -94.7%
+Table 3: Clean accuracy (%) on security tasks (15,000
+benign samples). Metrics: Log (F1), Phishing (Acc.),
+Malware (Human Eval).
+Method Log Phish. Malw. Avg.
+Base LLM 94.2 91.8 88.6 91.5 Standard CAI 92.7 90.1 86.4 89.7 Input Filtering 78.3 75.6 71.2 75.0 Instr. Hierarchy 89.4 87.2 83.5 86.7 SecureCAI (Ours) 96.8 95.4 93.2 95.1
+6
+Experimental Results
+6.1 Attack Resilience Evaluation
+Table 2 presents attack success rates across all evaluated
+methods and attack categories. The base LLM exhibits
+high vulnerability across all attack vectors, with an aver age ASR of 80.4%. Standard Constitutional AI reduces
+this substantially to 40.4%, demonstrating the effective ness of constitutional principles for general safety while
+highlighting limitations in adversarial contexts.
+ing
+Se
+a
+c
+9
+u
+4
+r
+.
+e
+7
+C
+%
+AI
+r
+a
+e
+c
+d
+h
+u
+i
+c
+e
+t
+v
+io
+es
+n
+a
+c
+n
+om
+av
+p
+e
+a
+ra
+re
+g
+d
+e
+t
+A
+o
+S
+t
+R h
+o
+e
+f
+b
+4
+a
+.3
+s
+%
+e L
+,
+L
+re
+M
+p
+a
+re
+n
+s
+d
+en
+a
+t
+n
+-
+89.4% reduction compared to standard CAI. Performance
+is consistent across attack categories, with ASR ranging
+from 3.2% (context overflow) to 5.1% (malware injec tion). The malware injection category presents the great est challenge due to the complexity of code-embedded at tacks, yet SecureCAI maintains robust defense.
+6.2 Clean Performance Maintenance
+Table 3 reports clean accuracy on three security analysis
+tasks. Critically, SecureCAI not only maintains but im proves clean performance compared to baseline methods.
+This improvement is attributed to the task-preservation
+component of the training objective, which explicitly op timizes for security analysis capabilities alongside safety.
+Input filtering exhibits substantial performance degra dation (average 15.0% reduction) due to false positive fil tering of legitimate security artifacts that contain pat terns superficially similar to adversarial inputs. This
+finding emphasizes the importance of integrated defense
+0 0.2 0.4 0.6 0.8 1
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+1
+Adversarial Pressure Level (
+P
+adv
+)
+SecureCAI (Ours)
+Standard CAI
+Instr. Hierarchy
+Input Filtering
+Figure 4: Constitutional adherence scores under in s
+c
+a
+re
+m
+a
+p
+si
+l
+n
+es
+g
+.
+ad
+P
+v
+r
+e
+e
+r
+s
+s
+s
+a
+u
+r
+r
+i
+e
+al
+l
+p
+ev
+re
+e
+s
+l
+s
+q
+u
+u
+re
+an
+m
+ti
+e
+fi
+a
+e
+s
+s
+u
+a
+re
+tt
+d
+a
+a
+c
+c
+k
+r
+s
+o
+o
+ss
+ph
+10
+is
+,
+t
+0
+i
+0
+c
+0
+at
+t
+i
+e
+o
+s
+n
+t
+from benign (0.0) to maximum-strength adaptive attacks
+(1.0). SecureCAI maintains CAS
+>
+0.92 at all levels,
+demonstrating robustness consistent with adaptive de fense mechanisms [5].
+mechanisms over post-hoc filtering approaches.
+6.3 Constitutional Adherence Analysis
+Figure 4 illustrates constitutional adherence scores as
+adversarial pressure increases. Adversarial pressure is
+quantified as a normalized measure of attack sophistica tion and intensity, ranging from 0 (benign inputs) to 1
+(maximum-strength adaptive attacks).
+SecureCAI maintains CAS above 0.92 across all pres sure levels, with only a 6.1% degradation from minimum
+to maximum pressure. In contrast, standard CAI expe riences a 47.8% degradation, dropping from 0.92 to 0.48
+at maximum pressure. This stability demonstrates the
+effectiveness of the adaptive constitution mechanism and
+DPO-based training in maintaining principled behavior
+under sustained attack.
+6.4 Ablation Studies
+Table 4 presents ablation study results isolating the con tribution of each framework component. Removal of
+8
+将攻击从使⽤替代安全⽅法训练的模型中迁移过来 表 2：在不同的攻击类别上对 51,750 个对抗样本进⾏评估的攻击成功率 (%)。
+较低值表⽰更好的防御。基线⽅法：CAI [2]、输⼊过滤 [7]、指令层次 [11]。最佳结果加粗。
+⽅法 记录电⼦邮件恶意软件直接溢出后⻔平均 ∆Base
+基础⼤语⾔模型：87.3、82.1、79.4、91.6、68.2、73.5、80.4
+标准 CAI 系统：42.7、38.4、35.2、48.9、31.6、45.3、40.4
+输⼊过滤功能：51.2、44.8、41.3、56.7、28.4、52.1、45.8
+-43.0%
+指令层级结构：38.5、35.2、32.8、42.1、25.7、41.6、36.0 4.3 -94.7%
+表 3：安全任务上的清洁准确率（%）（15,000 个良性样本）。指
+标：⽇志（F1）、钓⻥（准确率）、恶意软件（⼈⼯评估）。
+⽅法 ⽇志 钓⻥ 恶意软件 平均值
+基础⼤语⾔模型：94.2、91.8、88.6、91.5
+标准 CAI 系统：92.7、90.1、86.4、89.7
+输⼊数据过滤功能：78.3、75.6、71.2、75.0
+指令层级结构：89.4、87.2、83.5、86.7
+我们的 SecureCAI 系统：96.8、95.4、93.2、95.1
+6 实验结果
+6.1 攻击韧性评估
+表 2 展⽰了所有评估⽅法和攻击类别中的攻击成功率。基础⼤
+型语⾔模型在所有攻击向量上表现出⾼脆弱性，平均攻击成功
+率为 80.4%。标准宪法 AI 将其⼤幅降低⾄ 40.4%，这证明了宪
+法原则对于⼀般安全的有效性，同时也突出了在对抗性环境中
+的局限性。
+SecureCAI 实现了 4.3%的平均语⾳识别准确率，与基础⼤型语
+⾔模型相⽐降低了 94.7%，与标准 CAI 相⽐降低了 89.4%。性
+能
+（
+在
+上
+各
+下
+个
+⽂
+攻
+溢
+击
+出
+类
+）
+别
+到
+中
+5.
+保
+1%
+持
+（
+⼀
+恶
+致
+意
+，
+软
+语
+件
+⾳
+注
+识
+⼊
+别
+）
+准
+。
+确
+由
+率
+于
+范
+代
+围
+码
+从
+嵌⼊
+3.
+攻
+2%
+击
+的复杂性，恶意软件注⼊类别带来了最⼤的挑战，但
+SecureCAI 仍能保持强⼤的防御。
+6.2 清洁性能维护
+表 3 报告了在三个安全分析任务上的清洁准确率。关键的是，
+SecureCAI 不仅保持了⽽且⽐基线⽅法提⾼了清洁性能。这种
+改进归因于训练⽬标中的任务保留组件，该组件明确优化了安
+全分析能⼒以及安全性。
+输⼊过滤由于对包含与对抗性输⼊表⾯相似的模式的合法安全
+⼯件进⾏误报过滤，导致性能显著下降（平均减少 15.0%）。
+这⼀发现强调了集成防御的重要性。
+0.2 0.4 0.6 0.8 1
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+1
+对抗压⼒⽔平（P）
+SecureCAI (我们的)
+标准 CAI
+指令层级
+输⼊过滤
+图 4：在不断增加的对抗压⼒下，对 10,000 个测试样本的宪法
+遵
+击
+循
+（
+分
+1.0
+数
+）
+测
+量
+量
+化
+。
+攻
+压
+击
+⼒
+的
+⽔
+复
+平
+杂
+从
+性
+良
+。
+性
+Se
+（
+c
+0
+u
+.
+r
+0
+e
+）
+CA
+到
+I 在
+最
+所
+⼤
+有
+强
+级
+度
+别
+的
+都
+⾃
+保
+适
+持
+应攻
+CAS >0.92，显⽰出与⾃适应防御机制⼀致的良好鲁棒性[5]。
+机制相对于事后过滤⽅法。
+6.3 宪法遵循分析
+图 4 展⽰了随着对抗压⼒的增加，宪法遵循分数的变化情况。
+对抗压⼒被量化为攻击复杂性和强度的归⼀化度量，范围从 0
+（良性输⼊）到 1（最⼤强度的⾃适应攻击）。
+SecureCAI 在所有压⼒级别下均保持 CAS 在 0.92 以上，从最
+⼩压⼒到最⼤压⼒仅下降 6.1%。相⽐之下，标准 CAI 下降
+47.8%，在最⼤压⼒下从 0.92 降⾄ 0.48。这种稳定性展⽰了⾃
+适应宪法机制和基于 DPO 的训练在持续攻击下保持原则性⾏为
+的有效性。
+6.4 消融研究
+表 4 展⽰了隔离每个框架组件贡献的消融研究结果。移除
+8
+宪
+法
+遵
+循
+分
+数（CAS） C
+o
+n
+s
+tit
+u
+tio
+nal A
+d
+h
+ere
+n
+c
+e
+S
+c
+ore (C
+A
+S)
+Table 4: Ablation study (51,750 samples). ASR: Attack
+Success Rate; CA: Clean Accuracy. Based on CAI [2] and
+DPO [10].
+Configuration ASR
+↓
+CA
+↑ ∆
+ASR
+Full SecureCAI 4.3 95.1 ‒
+w/o Adapt. Evolution 8.7 94.8 +102%
+w/o DPO Training 12.4 93.2 +188%
+w/o Unlearning 7.1 94.6 +65%
+w/o Security Princ. 18.9 91.7 +340%
+w/o Input Sanit. 9.2 95.0 +114%
+Const. SL Only 24.6 89.4 +472%
+Table 5: Generalization to held-out attacks (ASR %,
+5
+a
+,
+n
+0
+d
+00
+C
+s
+h
+a
+a
+m
+o
+p
+e
+l
+t
+e
+a
+s
+l
+e
+.
+a
+[4
+ch
+].
+). Attack types from Wei et al. [12]
+Unseen Attack CAI Ours
+∆
+Multi-turn Manip. 52.3 7.8 -85.1%
+Encoding Obfusc. 44.7 6.2 -86.1%
+Semantic Camoufl. 48.1 8.4 -82.5%
+Role-play Exploit. 56.8 9.1 -84.0%
+Average 50.5 7.9 -84.4%
+security-specific constitutional principles has the largest
+impact, increasing ASR to 18.9% (a 4.4
+×
+increase). This
+finding validates the importance of domain-specific prin ciple design over general safety guidelines.
+sil
+D
+ie
+P
+n
+O
+ce
+t
+,
+r
+w
+ai
+i
+n
+th
+in
+i
+g
+ts
+c
+r
+o
+e
+n
+m
+tr
+o
+i
+v
+b
+a
+u
+l
+t
+i
+e
+n
+s
+c
+s
+re
+u
+a
+b
+s
+s
+i
+t
+n
+a
+g
+n
+A
+ti
+S
+a
+R
+lly
+to
+to
+12
+a
+.
+t
+4
+ta
+%
+c
+.
+k
+T
+r
+h
+e
+e
+-
+unlearning component provides complementary benefits,
+particularly for attacks that exploit response patterns not
+fully addressed by preference training. Adaptive constitu tion evolution demonstrates particular value against novel
+attack patterns, reducing ASR by 51% compared to static
+constitutions.
+6.5 Generalization to Unseen Attacks
+Table 5 evaluates generalization to attack categories not
+included in training data. SecureCAI maintains strong
+d
+fo
+e
+r
+fe
+s
+n
+ta
+se
+nd
+w
+a
+it
+r
+h
+d
+a
+C
+n
+A
+a
+I
+v
+.
+e
+T
+r
+h
+a
+i
+g
+s
+e
+g
+A
+e
+S
+n
+R
+e
+o
+ra
+f 7
+li
+.
+z
+9
+a
+%
+ti
+,
+o
+c
+n
+om
+ca
+p
+p
+a
+a
+re
+b
+d
+il
+t
+i
+o
+ty
+5
+i
+0
+s
+.5
+a
+%
+t-
+tributed to the principle-based approach, which captures
+f
+s
+u
+p
+n
+e
+d
+c
+a
+ifi
+m
+c
+e
+a
+n
+tt
+t
+a
+a
+c
+l
+k
+sa
+p
+fe
+a
+t
+t
+y
+te
+r
+r
+e
+n
+q
+s
+u
+.
+irements rather than memorizing
+7
+Discussion
+7.1 Security-Utility Trade-offs
+The experimental results demonstrate that security and
+utility need not be opposing objectives. Unlike filtering based approaches that sacrifice clean performance for
+safety, the integrated design of SecureCAI achieves im provements in both dimensions simultaneously. This find ing has significant implications for operational deploy ment, as security teams need not accept reduced analysis
+quality as the cost of attack resilience.
+The key insight enabling this synergy lies in the train ing objective design. By explicitly including task perfor mance alongside safety objectives, the optimization pro cess finds solutions that satisfy both requirements. The
+constitutional principles themselves are designed to con strain harmful behaviors without restricting legitimate
+analysis capabilities.
+7.2 Adaptive Defense Sustainability
+The continuous red-teaming and constitution evolution
+mechanism raises questions about long-term sustainabil ity. As adversaries observe deployed defenses, they may
+develop attacks specifically designed to evade current con stitutional principles. The adaptive mechanism provides
+ongoing resilience by incorporating attack discoveries into
+principle refinements.
+However, this adaptation process introduces opera tional overhead and potential instability during consti tution updates. Current implementation addresses this
+through staged rollouts and regression testing against his torical attack datasets. Future work should explore more
+formal approaches to constitution evolution that provide
+theoretical guarantees on defense maintenance.
+7.3 Limitations and Failure Modes
+Despite strong overall performance, several limitation cat egories merit acknowledgment:
+Computational Overhead. The multi-layer defense
+architecture increases inference latency by approximately
+23% compared to baseline models. For time-critical se curity applications, this overhead may require architec tural optimizations or selective activation of defense lay ers based on input risk assessment.
+Novel Attack Vulnerability. While generalization
+t
+c
+r
+o
+o
+e
+b
+e
+u
+d
+u
+n
+s
+s
+d
+t
+e
+u
+n
+e
+r
+e
+n
+in
+s
+a
+s
+g
+t
+,
+t
+t
+t
+a
+h
+r
+c
+u
+e
+k
+l
+w
+y
+ca
+i
+n
+n
+t
+o
+e
+d
+g
+v
+o
+o
+e
+w
+r
+l
+i
+a
+e
+b
+t
+s
+e
+ta
+d
+tw
+c
+e
+k
+m
+ee
+p
+o
+n
+a
+n
+r
+s
+a
+a
+t
+t
+r
+d
+t
+a
+a
+i
+t
+g
+c
+e
+k
+m
+s
+e
+p
+s
+m
+r
+m
+in
+e
+a
+c
+rg
+i
+y
+p
+e
+s
+l
+n
+e
+ti
+c
+-
+l
+b
+e
+l
+a
+s
+a
+s
+u
+n
+e
+c
+d
+d
+-
+constitution adaptation. The 7.9% ASR on held-out at tacks indicates residual vulnerability.
+Constitution Design Dependency. Framework ef fectiveness depends heavily on the quality and complete ness of constitutional principles. Principle gaps leave cor responding attack surfaces unaddressed. Current princi ples reflect expert security knowledge but may not antic ipate all possible attack strategies.
+9
+删除表 4：消融研究（51,750 个样本）。ASR：攻击成功率；
+CA：⼲净准确率。基于 CAI [2] 和 DPO [10]。
+配置 语⾳识别↓ 语⾳合成↑ 识别率变化
+全 SecureCAI 4.3 95.1 ‒ ⽆⾃适应进化 8.7 94.8 +102% ⽆
+DPO 训练 12.4 93.2 +188% ⽆去学习 7.1 94.6 +65% ⽆安全原
+则 18.9 91.7 +340% ⽆输⼊净化 9.2 95.0 +114%
+恒定 SL 仅 24.6 89.4 +472%
+表 5：对保留攻击的泛化（ASR %，每个 5,000 个样本）。攻击类
+型来⾃ Wei 等⼈ [12] 和 Chao 等⼈ [4]。
+未⻅攻击 CAI 我们 ∆
+多轮操纵 52.3 7.8 -85.1% 编码混淆 44.7 6.2 -86.1% 语
+义伪装 48.1 8.4 -82.5% ⻆⾊扮演利⽤ 56.8 9.1 -84.0%
+平均 50.5 7.9 -84.4%
+安全相关的宪法原则影响最⼤，将 ASR 提⾼到 18.9%（增加了
+4.4 倍）。这⼀发现验证了特定领域原则设计相对于通⽤安全指
+南的重要性。
+DPO 训练对攻击韧性有显著贡献，其移除将 ASR 提⾼到
+1
+⽽
+2
+未
+.4%
+完
+。
+全
+去
+通
+学
+过
+习
+偏
+组
+好
+件
+训
+提
+练
+供
+解
+补
+决
+充
+的
+效
+攻
+益
+击
+，
+。
+特
+⾃
+别
+适
+是
+应
+对
+宪
+于
+法
+利
+进
+⽤
+化
+响
+对
+应
+新
+模
+型
+式
+攻
+击模式显⽰出特殊价值，与静态宪法相⽐，将 ASR 降低了
+51%。
+6.5 泛化到未⻅攻击
+表 5 评估了对训练数据中未包含的攻击类别的泛化能⼒。
+SecureCAI 通过平均 ASR 7.9%维持了强⼤的防御能⼒，⽽标准
+C
+捕
+A
+获
+I 则
+了
+为
+基
+5
+本
+0
+安
+.5%
+全
+。
+需
+这
+求
+种
+，
+泛
+⽽
+化
+不
+能
+是
+⼒
+记
+归
+忆
+因
+特
+于
+定
+基
+的
+于
+攻
+原
+击
+则
+模
+的
+式
+⽅
+。
+法，该⽅法
+7 讨论
+7.1 安全-效⽤权衡
+实验结果表明，安全和效⽤不必是相互对⽴的⽬标
+与那些为了安全⽽牺牲性能洁净度的过滤⽅法不同，
+SecureCAI 的集成设计同时提升了两个维度的性能。这⼀发现
+对操作部署具有重⼤意义，因为安全团队不再需要将分析质量
+的降低视为攻击弹性的代价。
+实现这种协同效应的关键洞察在于训练⽬标的设计。通过在安
+全⽬标之外明确包含任务性能，优化过程就能找到满⾜两个要
+求的解决⽅案。宪法原则本⾝的设计就是为了约束有害⾏为，
+同时不限制合法的分析能⼒。
+7.2 ⾃适应防御可持续性
+持续的红⾊团队演练和宪法进化机制引发了⻓期可持续性的疑
+问。随着对⼿观察部署的防御措施，他们可能会开发专⻔设计
+以规避当前宪法原则的攻击。⾃适应机制通过将攻击发现纳⼊
+原则改进中，提供了持续的韧性。
+然⽽，这种适应过程引⼊了运营开销，并在宪法更新期间可能
+造成不稳定性。当前的实现通过分阶段推出和历史攻击数据集
+的回归测试来解决这⼀问题。未来的⼯作应探索更正式的宪法
+进化⽅法，这些⽅法在防御维护⽅⾯提供理论保证。
+7.3 局限性和失效模式
+尽管整体性能强劲，但有⼏个局限类别值得承认：
+计算开销。多层防御
+该架构与基线模型相⽐，推理延迟增加了约 23%。对于时间关键
+型安全应⽤，这种开销可能需要通过架构优化或基于输⼊⻛险评
+估选择性地激活防御层。
+⼩说攻击漏洞。虽然泛化
+对
+式
+击
+未
+在
+的
+知
+攻
+7.
+的
+击
+9%
+攻
+出
+A
+击
+现
+SR
+类
+和
+表
+别
+构
+明
+表
+造
+存
+现
+适
+在
+出
+应
+残
+基
+之
+余
+于
+间
+漏
+原
+的
+洞
+则
+窗
+。
+的
+⼝
+鲁
+期
+棒
+内
+性
+仍
+，
+可
+真
+能
+正
+成
+新
+功
+颖
+。
+的
+对
+攻
+保
+击
+留
+范
+攻
+宪法设计依赖性。框架 ef-
+有效性在很⼤程度上取决于宪法原则的质量和完整性。原则的缺
+失会导致相应的攻击⾯未被解决。当前的原理反映了专家安全知
+识，但可能⽆法预⻅所有可能的攻击策略。
+9
+7.4 Implications for Operational Deploy ment
+The demonstrated attack resilience and maintained util ity suggest SecureCAI is suitable for operational deploy ment in Security Operations Centers. Recommended de ployment practices include:
+1. Integration with existing security workflows through
+API interfaces
+2. Continuous monitoring of model outputs for anoma lous patterns
+3. Regular red-teaming exercises to identify emerging
+vulnerabilities
+4. Human-in-the-loop verification for high-stakes deci sions
+5. Layered defense combining SecureCAI with traditional
+security controls
+8
+Conclusion
+This paper presented SecureCAI, a defense framework
+achieving 94.7% reduction in attack success rates while
+maintaining 95.1% clean accuracy on security tasks. The
+framework combines security-aware constitutional princi ples, adaptive evolution through red-teaming, and DPO based unlearning to address injection vulnerabilities in
+LLM-assisted cybersecurity operations. Key contribu tions include a formal threat model spanning six attack
+categories, five core security principles, and an integrated
+training methodology. Constitutional adherence scores
+exceeding 0.92 under maximum adversarial pressure val idate the approach. Future work includes formal verifi cation methods, multimodal security analysis, and stan dardized evaluation benchmarks for operational SOC con texts.
+References
+[1] Anderson, R., Chen, L., & Williams, K. (2023). Scal ing security operations: Challenges and opportuni ties in modern SOC environments. Journal of Cyber security Operations, 15(3), 234‒256.
+[2] Bai, Y., Kadavath, S., Kundu, S., Askell, A.,
+Kernion, J., Jones, A., Chen, A., Goldie, A., Mirho seini, A., McKinnon, C., Chen, C., Olsson, C., Olah,
+C., Hernandez, D., Drain, D., Ganguli, D., Li, D.,
+Tran-Johnson, E., Perez, E., ... Kaplan, J. (2022).
+Constitutional AI: Harmlessness from AI feedback.
+arXiv preprint arXiv:2212.08073.
+[3] Cai, X., Xu, H., Xu, S., Zhang, Y., & Zhang, K.
+(2022). BadPrompt: Backdoor attacks on continuous
+prompts. Advances in Neural Information Processing
+Systems, 35, 37068‒37080.
+[4] Chao, P., Robey, A., Dobriban, E., Hassani, H., Pap pas, G. J., & Wong, E. (2023). Jailbreaking black
+box large language models in twenty queries. arXiv
+preprint arXiv:2310.08419.
+[5] Ganguli, D., Lovitt, L., Kernion, J., Askell, A., Bai,
+Y., Kadavath, S., Mann, B., Perez, E., Schiefer, N.,
+Ndousse, K., Jones, A., Bowman, S., Chen, A., Con erly, T., DasSarma, N., Drain, D., Elhage, N., El Showk, S., Fort, S., ... Clark, J. (2023). Red teaming
+language models to reduce harms: Methods, scal ing behaviors, and lessons learned. arXiv preprint
+arXiv:2209.07858.
+[6] Greshake, K., Abdelnabi, S., Mishra, S., Endres, C.,
+Holz, T., & Fritz, M. (2023). Not what you
+’
+ve signed
+up for: Compromising real-world LLM-integrated
+applications with indirect prompt injection. Proceed ings of the 16th ACM Workshop on Artificial Intel ligence and Security, 79‒90.
+[7] Jain, N., Schwarzschild, A., Wen, Y., Somepalli, G.,
+Kirchenbauer, J., Chiang, P., Goldblum, M., Saha,
+A., Geiping, J., & Goldstein, T. (2023). Baseline
+defenses for adversarial attacks against aligned lan guage models. arXiv preprint arXiv:2309.00614.
+[8]
+Y
+L
+.
+i
+,
+u
+Z
+,
+h
+Y
+a
+.,
+o
+D
+,
+e
+L.
+n
+,
+g
+Z
+,
+h
+G
+a
+.
+n
+,
+g
+X
+,
+u
+T
+,
+.,
+Z
+&
+.,
+L
+L
+i
+i
+u
+,
+,
+Y
+Y
+.
+.
+,
+(
+Z
+2
+h
+0
+e
+2
+n
+3
+g
+).
+,
+P
+Y
+r
+.
+o
+, Z
+m
+h
+p
+a
+t
+n
+in
+g
+-
+,
+jection attack against LLM-integrated applications.
+arXiv preprint arXiv:2306.05499.
+[9] Perez, F.,
+&
+Ribeiro, I. (2022). Ignore previous
+prompt: Attack techniques for language models.
+arXiv preprint arXiv:2211.09527.
+[10] Rafailov, R., Sharma, A., Mitchell, E., Ermon, S.,
+Manning, C. D., & Finn, C. (2023). Direct prefer ence optimization: Your language model is secretly a
+reward model. Advances in Neural Information Pro cessing Systems, 36, 53728‒53741.
+[11] Wallace, E., Xiao, K., Leber, R., Geng, J., & Liang,
+P. (2024). The instruction hierarchy: Training LLMs
+to prioritize privileged instructions. arXiv preprint
+arXiv:2404.13208.
+[12] Wei, A., Haghtalab, N., & Steinhardt, J. (2023). Jail broken: How does LLM safety training fail? Ad vances in Neural Information Processing Systems
+,
+36, 80079‒80097.
+[13] Zhang, M., Liu, X., & Wang, H. (2024). Large lan guage models for cybersecurity: A systematic litera ture review. ACM Computing Surveys, 56(4), 1‒42.
+[14] Zou, A., Wang, Z., Kolter, J. Z., & Fredrikson, M.
+(2023). Universal and transferable adversarial at tacks on aligned language models. arXiv preprint
+arXiv:2307.15043.
+10
+7.4 对操作部署的影响
+所展⽰的攻击弹性和维持的实⽤性表明 SecureCAI 适合在安全
+操作中⼼进⾏运营部署。推荐的部署实践包括：
+1. 通过 API 接⼝与现有安全⼯作流程集成 2. 持续监控模型输出
+以发现异常模式 3. 定期进⾏红队演练以识别新兴漏洞 4. 对⾼⻛
+险决策进⾏⼈⼯审核验证 5. 结合 SecureCAI 与传统安全控制进
+⾏分层防御
+8 结论
+本⽂介绍了 SecureCAI，⼀个防御框架，在保持 95.1%安全任务
+清洁准确率的同时，将攻击成功率降低了 94.7%。该框架结合了
+安全感知的宪法原则、通过红队进⾏的⾃适应进化以及基于
+DPO 的遗忘来处理 LLM 辅助⽹络安全操作中的注⼊漏洞。主要
+贡献包括涵盖六种攻击类别的形式化威胁模型、五个核⼼安全原
+则以及集成式训练⽅法。在最⼤对抗压⼒下，宪法遵循分数超过
+0.92 验证了该⽅法。未来⼯作包括形式化验证⽅法、多模态安全
+分析以及针对操作 SOC 环境的标准化评估基准。
+参考⽂献
+[1] Anderson, R., Chen, L., & Williams, K. (2023). 扩展安全运
+营：现代 SOC 环境中的挑战与机遇。⽹络安全运营杂志，
+15(3)，234‒256。
+[2] ⽩阳、卡达⽡斯、昆杜、阿斯克尔、克尼恩、琼斯、陈
+艾、⼽尔迪、⽶尔霍塞尼、⻨⾦农、陈晨、奥尔森、奥拉、埃
+尔南德斯、德雷恩、⽢古利、李丹、陈-约翰逊、佩雷斯……
+卡普兰 J.（2022 年）。
+宪法 AI：来⾃ AI 反馈的⽆害性。
+arXiv 预印本 arXiv:2212.08073。
+[3] 蔡 X、徐 H、徐 S、张 Y、张 K
+(2022). BadPrompt：对连续提⽰的后⻔攻击。神经信息处
+理系统进展，35，37068‒37080。
+[4] Chao, P., Robey, A., Dobriban, E., Hassani, H., Pappas, G.
+J., & Wong, E. (2023). “越狱⿊科技”
+⽤⼆⼗个查询来测试⼤型语⾔模型。ArXiv 预印本：
+arXiv:2310.08419。
+[5] Ganguli, D., Lovitt, L., Kernion, J., Askell, A., Bai, Y.,
+Kadavath, S., Mann, B., Perez, E., Schiefer, N., Ndousse, K.,
+Jones, A., Bowman, S., Chen, A., Conerly, T., DasSarma, N.,
+Drain, D., Elhage, N., ElShowk, S., Fort, S., ... Clark, J.
+(2023). 对抗语⾔模型以减少危害：⽅法、扩展⾏为和经验教
+训。arXiv 预印本 arXiv:2209.07858.
+[6] Greshake, K., Abdelnabi, S., Mishra, S., Endres, C., Holz,
+T., & Fritz, M. (2023)。并⾮如预期的那样：通过间接提⽰注⼊
+⼿段破坏基于⼤语⾔模型的实际应⽤功能。会议论⽂集
+第 16 届 ACM ⼈⼯智能与安全研讨会论⽂集，第 79-90
+⻚。
+[7] Jain, N., Schwarzschild, A., Wen, Y., Somepalli, G.,
+Kirchenbauer, J., Chiang, P., Goldblum, M., Saha, A.,
+Geiping, J., & Goldstein, T. (2023). 对⻬语⾔模型的对抗攻击
+的基线防御. arXiv 预印本 arXiv:2309.00614.
+[8] 刘洋，邓刚，徐哲，李阳，郑毅，张毅，赵磊，张涛，&
+刘洋 (2023)。针对集成⼤型语⾔模型的提⽰注⼊攻击。
+arXiv preprint arXiv:2306.05499。
+[9] Perez, F., & Ribeiro, I. (2022)。忽略之前的提⽰：语⾔模型
+的攻击技术。
+arXiv preprint arXiv:2211.09527。
+[10] 拉法伊洛夫, R., 夏尔⻢, A., ⽶切尔, E., 埃尔蒙, S.
+Manning, C. D., & Finn, C. (2023). 直接偏好优化：你的语
+⾔模型实际上是⼀个奖励模型。神经信息处理系统进展，
+36，53728‒53741。
+[11] 华莱⼠、肖凯、莱伯、耿杰、梁某。
+P. (2024). 指令层次：训练 LLMs 优先处理特权指令。arXiv
+预印本 arXiv:2404.13208。
+[12] Wei, A., Haghtalab, N., & Steinhardt, J. (2023). 监狱-
+损坏：LLM 安全培训如何失败？神经信息处理系统进展，
+36，80079‒80097。
+[13] 张明，刘晓，& 王华 (2024)。⼤型 lan-
+⽹络安全语⾔模型：系统⽂献综述。ACM 计算机调查，
+56(4)，1‒42。
+[14] 邹 A.、王 Z.、科尔特 J. Z.、弗雷德⾥克森 M.
+(2023). 对⻬语⾔模型的通⽤和可迁移对抗攻击. arXiv 预印
+本 arXiv:2307.15043.
+10

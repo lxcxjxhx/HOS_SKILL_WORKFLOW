@@ -13,7 +13,7 @@ export const xxeInjectionSkills: AttackDefenseSkill[] = [
             category: 'web',
             subCategory: 'xxe',
             riskLevel: 'critical',
-            confidence: 0.90,
+            confidence: 0.93,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['xxe', 'xml-external-entity', 'file-read', 'oob-xxe', 'xinclude', 'parameter-entity', 'xml-parser'],
@@ -358,7 +358,7 @@ export const xxeInjectionSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.90,
+            confidence: 0.93,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

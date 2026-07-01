@@ -13,7 +13,7 @@ export const xssFilterBypassSkills: AttackDefenseSkill[] = [
       category: 'web',
       subCategory: 'xss',
       riskLevel: 'critical',
-      confidence: 0.92,
+      confidence: 0.95,
       updatedAt: '2026-06',
       author: 'HOS-Sec-Engine',
       tags: ['xss', 'filter-bypass', 'csp-bypass', 'dom-xss', 'waf-bypass', 'svg', 'template-injection'],
@@ -272,7 +272,7 @@ export const xssFilterBypassSkills: AttackDefenseSkill[] = [
       ],
     },
     quality: {
-      confidence: 0.92,
+      confidence: 0.95,
       reviewed: true,
       tested: true,
       lastVerified: '2026-06',

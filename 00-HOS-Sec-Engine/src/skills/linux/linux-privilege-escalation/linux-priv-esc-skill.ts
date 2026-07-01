@@ -12,7 +12,7 @@ export const linuxPrivEscSkills: AttackDefenseSkill[] = [
             category: 'linux',
             subCategory: 'privilege-escalation',
             riskLevel: 'critical',
-            confidence: 0.93,
+            confidence: 0.96,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['linux', 'privilege-escalation', 'sudo', 'capability', 'cron', 'suid', 'priv-esc'],
@@ -183,7 +183,7 @@ export const linuxPrivEscSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.93,
+            confidence: 0.96,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

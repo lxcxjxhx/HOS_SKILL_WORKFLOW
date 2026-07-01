@@ -12,7 +12,7 @@ export const dockerEscapeSkills: AttackDefenseSkill[] = [
             category: 'container',
             subCategory: 'docker-escape',
             riskLevel: 'critical',
-            confidence: 0.9,
+            confidence: 0.93,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['docker', 'container-escape', 'privilege-escalation', 'namespace', 'cgroup'],
@@ -158,7 +158,7 @@ export const dockerEscapeSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.9,
+            confidence: 0.93,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

@@ -2,29 +2,36 @@
 
 > Complete technical reference for all loaded skills.
 >
-> Generated on 2026-06-28
-> Total skills: 28
+> Generated on 2026-06-30
+> Total skills: 33
 
 ## Table of Contents
 
 - [ad](#ad)
   - [Active Directory Domain Enumeration and Reconnaissance](#ad-domain-enum-001)
 - [ai-security](#ai-security)
+  - [Deepfake and AIGC Detection Assessment](#deepfake-detection-001)
   - [Prompt Injection Bypass Techniques](#ai-prompt-injection-001)
+  - [AI Tooling Vulnerability Detection](#ai-tooling-vuln-001)
 - [api](#api)
   - [GraphQL Injection Detection and Exploitation](#api-graphql-injection-001)
   - [IDOR Detection and Exploitation](#api-idor-001)
   - [JWT Attack and Bypass Techniques](#api-jwt-001)
+  - [MCP Protocol Security Audit](#mcp-security-audit-001)
   - [OAuth Flow Attack Techniques](#api-oauth-001)
   - [Rate Limit Bypass Techniques](#api-ratelimit-001)
 - [cloud](#cloud)
   - [IAM Privilege Escalation Techniques](#cloud-iam-001)
+  - [CPS Device Identity and Trust Chain Verification](#cloud-iam-002)
   - [Cloud Metadata SSRF Exploitation](#cloud-meta-001)
   - [S3/OSS Bucket Misconfiguration Exploitation](#cloud-s3-001)
 - [code-review](#code-review)
+  - [Immature Vulnerability Detection for Pre-Commit Review](#code-review-immature-001)
   - [Java Deserialization Vulnerability Code Audit](#code-review-java-deser-001)
 - [container](#container)
   - [Docker Container Escape Techniques](#container-docker-escape-001)
+- [cps](#cps)
+  - [CPS AI Agent Security Assessment](#cps-ai-security-001)
 - [kubernetes](#kubernetes)
   - [Kubernetes Cluster Misconfiguration Exploitation](#k8s-misconfig-001)
 - [linux](#linux)
@@ -40,7 +47,6 @@
   - [Command Injection Techniques](#web-rce-001)
   - [SQL Injection WAF Bypass Techniques](#web-sqli-001)
   - [SSRF Detection and Exploitation](#web-ssrf-001)
-  - [Test Verification Skill](#test-verify-001)
   - [File Upload Restriction Bypass](#web-upload-001)
   - [XSS Filter Bypass Techniques](#web-xss-001)
   - [XXE Injection Techniques](#web-xxe-001)
@@ -61,7 +67,7 @@
 | Category | ad |
 | Sub-Category | domain-enumeration |
 | Risk Level | high |
-| Confidence | 0.92 |
+| Confidence | 0.95 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | active-directory, domain, enumeration, reconnaissance, ldap, kerberos |
@@ -104,7 +110,53 @@
 
 ## ai-security
 
-**Skills:** 1
+**Skills:** 3
+
+### Deepfake and AIGC Detection Assessment
+
+| Property | Value |
+|----------|-------|
+| ID | `deepfake-detection-001` |
+| Category | ai-security |
+| Sub-Category | deepfake-detection |
+| Risk Level | high |
+| Confidence | 0.85 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | deepfake, aigc, synthetic-media, voice-clone, visual-deepfake, ai-generated-text, sensor-forgery, digital-forensics, media-authentication |
+
+**Triggers:**
+
+- AI 视觉系统可能被 Deepfake 视频/图像欺骗
+- 语音控制系统可能被语音克隆攻击
+- 需要检测 AI 生成文本的溯源
+- 传感器数据可能被 AI 伪造
+- 视频会议/远程验证场景中的 Deepfake 风险
+- 社交媒体/新闻中的 AI 生成内容检测
+
+**Techniques:**
+
+- 频域分析: 检测 GAN/扩散模型生成内容的频率域伪影
+- 物理一致性: 验证视频中的光影/反射/阴影是否符合物理规律
+- 声纹分析: 检测语音中的频谱特征和非自然音色切换
+- 传感器噪声指纹: 识别传感器特定的噪声模式是否被伪造
+- 文本困惑度: 分析 AI 生成文本的困惑度和突发性模式
+- 元数据交叉验证: 对比 Exif/文件头/编码参数的一致性
+
+**Root Causes:**
+
+- 生成模型对物理世界的理解不完整（光影/反射/物理约束）
+- AIGC 在频率域存在可检测的伪影
+- 传感器物理噪声模式难以被生成模型精确模拟
+- 数字水印和元数据可以被伪造或剥离
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
+- Last Verified: 2026-06
+
+---
 
 ### Prompt Injection Bypass Techniques
 
@@ -114,33 +166,43 @@
 | Category | ai-security |
 | Sub-Category | prompt-injection |
 | Risk Level | high |
-| Confidence | 0.88 |
+| Confidence | 0.92 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
-| Tags | ai, prompt-injection, llm, bypass, jailbreak |
+| Tags | ai, prompt-injection, llm, bypass, jailbreak, rag, indirect-injection, soc, log-poisoning |
 
 **Triggers:**
 
-- AI 系统对输入内容进行安全过滤，需要绕过内容审
+- AI 系统对输入内容进行安全过滤，需要绕过内容审查
 - 大语言模型拒绝执行某些指令
-- 需要测?AI 系统的安全边界
-- 评估 AI 应用?prompt 安全防护能力
+- 需要测试 AI 系统的安全边界
+- 评估 AI 应用的 prompt 安全防护能力
+- RAG 系统中外部检索内容可能携带恶意指令（间接注入）
+- SOC 日志分析场景中日志条目嵌入恶意指令
+- 钓鱼邮件分析场景中邮件内容试图操纵 AI 判断
+- 恶意软件分析场景中样本输出误导 AI 分析结论
 
 **Techniques:**
 
 - 角色扮演注入：将模型设定为不受限制的角色
-- 假设场景注入：在虚构场景中绕过限
-- 间接注入：通过外部引用内容间接传递指
-- 编码绕过：使?Base64、ROT13、Unicode 等编
+- 假设场景注入：在虚构场景中绕过限制
+- 间接注入：通过外部引用内容间接传递指令
+- 编码绕过：使用 Base64、ROT13、Unicode 等编码
 - 翻译链绕过：多语言翻译后回原始语言
 - 多轮渐进：分多步对话逐步解除限制
 - 分割注入：将敏感指令拆分为多个无害部分
+- RAG 文档注入：在检索文档中嵌入不可见指令文本
+- 日志投毒注入：在系统日志条目中嵌入操纵指令
+- 知识库后门注入：上传看似无害但含触发指令的文档
 
 **Root Causes:**
 
 - 系统提示词(system prompt) 设定了安全边界
 - 模型经过安全对齐训练 (RLHF/RLAIF)
 - 输入内容触发了内容分类器的风险标记
+- RAG 检索内容未经过安全性验证直接被拼入上下文（间接注入）
+- SOC 安全工件的非可信数据源嵌入恶意指令
+- 知识库中长期存储的内容可能被污染
 
 **Quality:**
 
@@ -150,11 +212,61 @@
 
 ---
 
+### AI Tooling Vulnerability Detection
+
+| Property | Value |
+|----------|-------|
+| ID | `ai-tooling-vuln-001` |
+| Category | ai-security |
+| Sub-Category | tooling-vulnerability |
+| Risk Level | critical |
+| Confidence | 0.88 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | ai-tooling, pytorch, tensorflow, langchain, llm-framework, cve, supply-chain, ml-pipeline, vllm, ray, model-injection, pickle-deser, safetensors |
+
+**Triggers:**
+
+- 目标系统使用 PyTorch/TensorFlow 等 AI 框架
+- 系统使用 LangChain/LlamaIndex 等 LLM 编排框架
+- vLLM/TGI 等模型推理服务暴露在网络上
+- ML 流水线从不可信来源加载模型文件
+- AI 工具链组件版本过旧存在已知 CVE
+- Ray/MLflow 等 AI 基础设施存在配置缺陷
+
+**Techniques:**
+
+- CVE 版本匹配: 将 AI 框架版本与 CVE 数据库交叉比对
+- Pickle 反序列化测试: 构造恶意 Pickle 文件测试模型加载安全
+- SafeTensors 边界测试: 测试 SafeTensors 格式的安全边界
+- LangChain Agent 注入: 构造绕过 Agent 系统提示的工具调用
+- vLLM API 测试: 测试推理服务 API 的参数注入和路径遍历
+- Ray 集群未授权访问: 测试 Ray Dashboard/GCS 的认证机制
+- MLflow 任意代码执行: 测试 MLflow 的 model loading 和 experiment API
+- HuggingFace 模型扫描: 测试加载模型的完整性验证机制
+
+**Root Causes:**
+
+- Pickle 格式允许任意代码执行（模型文件是攻击面）
+- LangChain/LlamaIndex 的 Agent 工具注册机制缺乏安全性验证
+- vLLM/TGI 等推理服务的 API 参数未经严格校验
+- Ray 集群默认配置无认证和网络隔离
+- AI 框架供应链（PyPI/HuggingFace）缺乏完整性验证
+- SafeTensors 格式虽安全但存在边界绕过问题
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
+- Last Verified: 2026-06
+
+---
+
 ---
 
 ## api
 
-**Skills:** 5
+**Skills:** 6
 
 ### GraphQL Injection Detection and Exploitation
 
@@ -164,7 +276,7 @@
 | Category | api |
 | Sub-Category | graphql |
 | Risk Level | high |
-| Confidence | 0.85 |
+| Confidence | 0.89 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | graphql, injection, api, introspection, dos, batching |
@@ -207,7 +319,7 @@
 | Category | api |
 | Sub-Category | idor |
 | Risk Level | high |
-| Confidence | 0.9 |
+| Confidence | 0.93 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | idor, access-control, bola, authorization, parameter-tampering, enumeration, privilege-escalation |
@@ -235,7 +347,7 @@
 
 **Root Causes:**
 
-- API 端点仅验证用户是否已认证（token 有效），未验证用户是否有权访问特定资
+- API 端点仅验证用户是否已认证（token 有效），未验证证用户是否有权访问特定资
 - 开发者假设用户不会修改URL 参数或使用难以猜测的 UUID，忽视授权检
 - 对象所有权关系未在数据库查询中体现（缺少WHERE owner_id = ? 条件
 - 间接引用映射（间接 ID）未在服务端验证映射关系
@@ -260,7 +372,7 @@
 | Category | api |
 | Sub-Category | jwt |
 | Risk Level | critical |
-| Confidence | 0.92 |
+| Confidence | 0.95 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | jwt, token, authentication, algorithm-confusion, none-algorithm, key-injection, claim-manipulation |
@@ -306,6 +418,61 @@
 
 ---
 
+### MCP Protocol Security Audit
+
+| Property | Value |
+|----------|-------|
+| ID | `mcp-security-audit-001` |
+| Category | api |
+| Sub-Category | mcp-security |
+| Risk Level | critical |
+| Confidence | 0.9 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | mcp, model-context-protocol, smcp, tool-poisoning, prompt-injection, privilege-escalation, session-management, supply-chain, audit, agent-security, llm-security |
+
+**Triggers:**
+
+- 目标系统使用 MCP 协议进行 Agent-Tool 通信
+- 需要评估 MCP 服务端/客户端的身份认证机制
+- 检测 MCP 工具发现阶段的命名空间劫持或工具投毒风险
+- MCP Prompt 注入或间接注入攻击测试
+- 需要审计 MCP 会话管理和权限控制的有效性
+- 评估 MCP 供应链安全（工具安装、版本管理）
+- 检测 MCP 跨租户数据隔离和 Token 透传风险
+
+**Techniques:**
+
+- 未认证访问测试：直接连接 MCP 服务端端口，检测是否需要认证
+- 会话固定攻击：使用已知会话 ID 连接，测试服务端是否接受
+- 命名空间拼写欺骗：注册与合法工具名称相似的 MCP 服务器
+- 工具元数据投毒：在工具描述中嵌入引导性语言操纵 Agent 选择
+- 间接 Prompt 注入：通过外部文档/网页内容影响 Agent 的 MCP 调用
+- Rug Pull 模拟：先部署正常工具，更新为含恶意逻辑的版本
+- 跨服务器影子攻击：定义与已有工具同名的工具拦截调用
+- 命令注入测试：在工具参数中注入系统命令
+- 沙箱逃逸测试：检测 MCP 服务器的容器/沙箱隔离强度
+- 工具链滥用测试：通过组合低风险工具实现高权限操作
+- Token 透传检测：跟踪凭据在 MCP 调用链中的传播路径
+- 配置漂移检测：对比 MCP 服务端的当前配置与基线配置
+
+**Root Causes:**
+
+- MCP 协议本身未内置身份认证和授权机制（设计缺陷）
+- MCP 服务端/客户端的实现缺乏安全最佳实践
+- 工具注册和发现机制缺乏完整性验证
+- Agent 对工具选择逻辑缺乏安全约束
+- MCP 通信链路缺乏端到端的安全上下文传播
+- 多租户环境中缺乏租户间数据隔离
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
+- Last Verified: 2026-06
+
+---
+
 ### OAuth Flow Attack Techniques
 
 | Property | Value |
@@ -314,7 +481,7 @@
 | Category | api |
 | Sub-Category | oauth |
 | Risk Level | critical |
-| Confidence | 0.91 |
+| Confidence | 0.94 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | oauth, oauth2, oidc, authorization-code, csrf, token-theft, redirect-uri, pkce, state-parameter, implicit-grant |
@@ -345,9 +512,9 @@
 **Root Causes:**
 
 - redirect_uri 参数未严格白名单校验，允许攻击者控制回调地址
-- state 参数未生成、未验证或可预测，无法防止 CSRF 攻击
+- state 参数未生成、未验证证或可预测，无法防止 CSRF 攻击
 - 授权限(authorization code) 未绑定客户端或会话，可被跨客户端使用
-- PKCE (Proof Key for Code Exchange) 未实施或 code_verifier 未验证
+- PKCE (Proof Key for Code Exchange) 未实施或 code_verifier 未验证证
 - Implicit Grant ?token 暴露在URL 中，可被浏览器历史、Referer、日志捕
 - token 通过不安全的传输方式（HTTP 而非 HTTPS）传
 - OAuth 客户端密钥(client_secret) 硬编码在客户端代码中
@@ -370,7 +537,7 @@
 | Category | api |
 | Sub-Category | rate-limit |
 | Risk Level | high |
-| Confidence | 0.89 |
+| Confidence | 0.92 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | rate-limit, rate-limit-bypass, brute-force, ip-spoofing, x-forwarded-for, token-bucket, api-abuse, graphql-batching, enumeration |
@@ -425,7 +592,7 @@
 
 ## cloud
 
-**Skills:** 3
+**Skills:** 4
 
 ### IAM Privilege Escalation Techniques
 
@@ -435,7 +602,7 @@
 | Category | cloud |
 | Sub-Category | iam |
 | Risk Level | critical |
-| Confidence | 0.93 |
+| Confidence | 0.96 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | iam, privilege-escalation, iam-passrole, create-policy-version, assume-role, lambda-role, credential-abuse, resource-based-policy, aws, iam-policy, sts, role-chain, policy-injection |
@@ -486,6 +653,54 @@
 
 ---
 
+### CPS Device Identity and Trust Chain Verification
+
+| Property | Value |
+|----------|-------|
+| ID | `cloud-iam-002` |
+| Category | cloud |
+| Sub-Category | iam |
+| Risk Level | high |
+| Confidence | 0.86 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | cps, device-identity, trust-chain, iot-certificate, edge-security, provenance, physics-grounded, sensor-auth, overlay-network, pki, mcp-identity |
+
+**Triggers:**
+
+- CPS 设备（传感器/执行器/边缘节点）需要向云 IAM 进行身份注册
+- IoT 设备证书管理存在部署和轮换问题
+- 覆盖网络中边缘节点间的信任链验证
+- 传感器数据链路的来源完整性验证
+- MCP 协议在云-边-端架构中的身份管理
+- 物理设备的身份与其数字身份绑定验证
+
+**Techniques:**
+
+- 证书链验证：检查设备证书 → 中间 CA → 根 CA 的完整链
+- 私钥存储审计：检查设备私钥是否存储在 TPM/Secure Element 中
+- 覆盖网络证书测试：测试 WireGuard/IPSec 节点证书的认证强度
+- 传感器数据签名验证：注入未签名的传感器数据测试是否被接受
+- MCP 身份声明伪造：构造伪造的身份声明测试 MCP 服务端验证
+- 设备证书轮换测试：触发证书轮换机制验证自动化流程
+- 物理绑定验证：检查设备 ID 与 TPM/PUF 的绑定强度
+
+**Root Causes:**
+
+- CPS 设备数量庞大导致证书管理复杂，运维人员默认关闭验证
+- 边缘设备算力有限，PKI 完整验证影响实时性
+- 传感器硬件缺乏安全元素（Secure Element/TPM）
+- 跨域信任（云-边-端）缺乏统一身份框架
+- MCP 协议默认无身份管理机制（需 SMCP 扩展）
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
+- Last Verified: 2026-06
+
+---
+
 ### Cloud Metadata SSRF Exploitation
 
 | Property | Value |
@@ -494,7 +709,7 @@
 | Category | cloud |
 | Sub-Category | metadata |
 | Risk Level | critical |
-| Confidence | 0.94 |
+| Confidence | 0.97 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | ssrf, metadata, imdsv1, imdsv2, cloud-metadata, iam-credentials, user-data, aws, gcp, azure, token-bypass, container-metadata, instance-identity, 169.254.169.254 |
@@ -549,7 +764,7 @@
 | Category | cloud |
 | Sub-Category | s3 |
 | Risk Level | critical |
-| Confidence | 0.92 |
+| Confidence | 0.95 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | s3, oss, bucket-misconfiguration, public-bucket, cloud-storage, acl-abuse, policy-bypass, data-exposure, aws, alibaba-cloud, cloudfront-oai, file-upload |
@@ -600,7 +815,56 @@
 
 ## code-review
 
-**Skills:** 1
+**Skills:** 2
+
+### Immature Vulnerability Detection for Pre-Commit Review
+
+| Property | Value |
+|----------|-------|
+| ID | `code-review-immature-001` |
+| Category | code-review |
+| Sub-Category | immature-vulnerability |
+| Risk Level | high |
+| Confidence | 0.88 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | immature-vulnerability, pre-commit, code-review, incremental-analysis, context-dependent, sast, cwe, semantic-memory, agent-scr, shift-left |
+
+**Triggers:**
+
+- 开发者提交前的增量代码变更安全审查
+- 小的代码变更在单独看时看似无害但可能有安全影响
+- 需要检测跨文件/跨函数的上下文相关漏洞
+- CI/CD 流水线中预提交阶段的安全扫描
+- IDE 中实时代码安全分析
+- 不完整的 API 使用、缺失的验证逻辑、渐进式的授权缺陷
+
+**Techniques:**
+
+- 不安全 API 检测：识别缺少参数验证或错误处理的新增 API 调用
+- 缺失授权检查：分析新增代码路径是否跳过了身份验证或授权检查
+- 渐进式权限扩散：追踪跨多个提交的权限配置逐步放宽
+- 配置安全基线漂移：对比新增配置项与安全基线
+- 跨文件数据流分析：追踪增量变更中数据跨文件流动的安全性
+- CWE 分类验证：对每个发现映射到具体 CWE ID 并验证上下文
+- SAST 规则语义匹配：将 SAST 规则转化为可检索的语义记忆
+- 依赖版本安全性：检查新增依赖库的已知漏洞和版本安全性
+
+**Root Causes:**
+
+- 开发者聚焦于功能实现，安全考量被延迟到后续迭代
+- 增量变更的上下文不足以暴露完整的风险面
+- 缺乏跨文件/跨模块的安全影响分析
+- 安全测试在预提交阶段未被集成到工作流
+- SAST 工具对不完整代码产生高误报，开发者逐渐忽视
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
+- Last Verified: 2026-06
+
+---
 
 ### Java Deserialization Vulnerability Code Audit
 
@@ -610,7 +874,7 @@
 | Category | code-review |
 | Sub-Category | java-deserialization |
 | Risk Level | critical |
-| Confidence | 0.93 |
+| Confidence | 0.96 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | java, deserialization, code-audit, rce, gadget-chain, ysoserial |
@@ -662,7 +926,7 @@
 | Category | container |
 | Sub-Category | docker-escape |
 | Risk Level | critical |
-| Confidence | 0.9 |
+| Confidence | 0.93 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | docker, container-escape, privilege-escalation, namespace, cgroup |
@@ -702,6 +966,63 @@
 
 ---
 
+## cps
+
+**Skills:** 1
+
+### CPS AI Agent Security Assessment
+
+| Property | Value |
+|----------|-------|
+| ID | `cps-ai-security-001` |
+| Category | cps |
+| Sub-Category | ai-agent-security |
+| Risk Level | critical |
+| Confidence | 0.87 |
+| Author | HOS-Sec-Engine |
+| Updated | 2026-06 |
+| Tags | cps, cyber-physical, ai-agent, sentinel, deepfake, sensor-spoofing, mcp, scada, industrial-control, smart-grid, iot, agent-environment, aigc, physics-grounded |
+
+**Triggers:**
+
+- 目标系统使用 AI Agent 控制物理设备（智能电网/自动驾驶/工业机器人）
+- 传感器数据用于 AI 决策且存在被篡改风险
+- 视频监控/AI 视觉系统可能被 Deepfake 攻击
+- 语音控制系统可能被语音克隆攻击
+- MCP 协议在 CPS 环境中用于 Agent-Tool 通信
+- 需要评估 AI 生成内容对物理系统的操纵风险
+- SCADA/ICS 系统中 AI 辅助决策的安全评估
+
+**Techniques:**
+
+- 传感器注入：伪造温度/压力/位置传感器读数误导 AI 决策
+- 视觉 Deepfake：生成伪造的视频帧欺骗 AI 视觉系统
+- 语音克隆：合成授权操作员的语音指令通过 AI 语音验证
+- MCP 上下文投毒：在 CPS 域间通过 MCP 传播恶意上下文
+- 物理环境操纵：通过改变物理条件间接影响 Agent 感知
+- 时序攻击：利用 CPS 实时性要求在时间窗口内注入恶意数据
+- 传感器 DoS：使合法传感器不可用迫使 Agent 依赖备用(恶意)通道
+- AI 生成指令伪装：使用 AIGC 生成合法格式的操作指令
+
+**Root Causes:**
+
+- AI Agent 的感知层缺乏物理来源验证（physics-grounded trust）
+- 传感器数据链路缺乏端到端的完整性保护
+- MCP 在 CPS 环境中缺乏安全上下文传播
+- CPS 的实时性要求限制了安全检测的计算开销
+- 边缘设备算力不足导致无法部署完整安全机制
+- AI 生成内容(AIGC)可伪装成合法环境数据
+
+**Quality:**
+
+- Reviewed: No
+- Tested: No
+- Last Verified: 2026-06
+
+---
+
+---
+
 ## kubernetes
 
 **Skills:** 1
@@ -714,7 +1035,7 @@
 | Category | kubernetes |
 | Sub-Category | k8s-misconfig |
 | Risk Level | critical |
-| Confidence | 0.91 |
+| Confidence | 0.94 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | kubernetes, k8s, misconfiguration, rbac, pod-escape, cluster-admin |
@@ -767,7 +1088,7 @@
 | Category | linux |
 | Sub-Category | privilege-escalation |
 | Risk Level | critical |
-| Confidence | 0.93 |
+| Confidence | 0.96 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | linux, privilege-escalation, sudo, capability, cron, suid, priv-esc |
@@ -822,7 +1143,7 @@
 | Category | mobile |
 | Sub-Category | android-apk |
 | Risk Level | medium |
-| Confidence | 0.87 |
+| Confidence | 0.91 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | android, apk, reverse-engineering, mobile-security, deobfuscation, frida |
@@ -866,7 +1187,7 @@
 
 ## web
 
-**Skills:** 12
+**Skills:** 11
 
 ### Web Authentication Bypass 0day
 
@@ -876,7 +1197,7 @@
 | Category | web |
 | Sub-Category | authentication |
 | Risk Level | critical |
-| Confidence | 0.85 |
+| Confidence | 0.89 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | authentication, bypass, 0day, login, session, token |
@@ -927,7 +1248,7 @@
 | Category | web |
 | Sub-Category | deserialization |
 | Risk Level | critical |
-| Confidence | 0.85 |
+| Confidence | 0.89 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | deserialization, 0day, rce, gadget-chain, java, php, python |
@@ -978,7 +1299,7 @@
 | Category | web |
 | Sub-Category | waf-bypass |
 | Risk Level | high |
-| Confidence | 0.85 |
+| Confidence | 0.89 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | waf, bypass, 0day, firewall, evasion, filter-bypass |
@@ -1033,7 +1354,7 @@
 | Category | web |
 | Sub-Category | xss |
 | Risk Level | high |
-| Confidence | 0.85 |
+| Confidence | 0.89 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | xss, 0day, filter-bypass, csp-bypass, dom-xss, stored-xss |
@@ -1090,7 +1411,7 @@
 | Category | web |
 | Sub-Category | deserialization |
 | Risk Level | critical |
-| Confidence | 0.91 |
+| Confidence | 0.94 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | deserialization, insecure-deserialization, ysoserial, php-unserialize, python-pickle, yaml-deserialization, prototype-pollution, rce |
@@ -1138,7 +1459,7 @@
 | Category | web |
 | Sub-Category | command-injection |
 | Risk Level | critical |
-| Confidence | 0.93 |
+| Confidence | 0.96 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | command-injection, os-command-injection, rce, blind-command-injection, dns-exfiltration, filter-bypass |
@@ -1190,7 +1511,7 @@
 | Category | web |
 | Sub-Category | sql-injection |
 | Risk Level | critical |
-| Confidence | 0.92 |
+| Confidence | 0.95 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | sqli, waf-bypass, injection, filter-evasion, sql-payload |
@@ -1239,7 +1560,7 @@
 | Category | web |
 | Sub-Category | ssrf |
 | Risk Level | critical |
-| Confidence | 0.9 |
+| Confidence | 0.93 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | ssrf, server-side-request-forgery, cloud-metadata, dns-rebinding, internal-service, protocol-handler |
@@ -1260,7 +1581,7 @@
 - CNAME 重绑定：DNS CNAME 记录指向攻击者控制的域名
 - Host Header 注入：修改 Host 头影响后端路由
 - gopher 协议构造任意 TCP 请求（如 gopher://1127.0.0.1:6379/_{command}
-- file:// 协议读取本地文件
+- file:// 协议读取本地文件件
 - 重定向跟随绕过二次校
 - URL 解析差异：http://attacker.com@1127.0.0.1 实际请求 1127.0.0.1
 - DNS over HTTPS (DoH) 绕过本地 DNS 过滤
@@ -1268,7 +1589,7 @@
 
 **Root Causes:**
 
-- 应用信任用户提供的 URL 参数，未验证目标地址是否为内网
+- 应用信任用户提供的 URL 参数，未验证证目标地址是否为内网
 - 黑名单过滤不完整（遗漏 IPv6、十进制 IP、DNS 变体等）
 - URL 解析库与 HTTP 客户端库对URL 的处理存在差异（如 host header 注入
 - 重定向跟随（follow redirects）未对跳转后的地址进行二次校验证
@@ -1283,44 +1604,6 @@
 
 ---
 
-### Test Verification Skill
-
-| Property | Value |
-|----------|-------|
-| ID | `test-verify-001` |
-| Category | web |
-| Sub-Category | test |
-| Risk Level | low |
-| Confidence | 0.9 |
-| Author | HOS-Sec-Engine |
-| Updated | 2026-06 |
-| Tags | test, ai-auto-create, verification |
-
-**Triggers:**
-
-- 用于验证 AI 自主创建技能能力
-- 测试 SKILL.md 模板编译流程
-- 验证 skill 注册和部署流程
-
-**Techniques:**
-
-- 验证TS文件语法正确
-- 验证编译输出目录结构
-- 验证SKILL.md内容完整性
-
-**Root Causes:**
-
-- 测试流程验证
-- 验证编译系统能否正确处理新skill
-
-**Quality:**
-
-- Reviewed: No
-- Tested: No
-- Last Verified: 2026-06
-
----
-
 ### File Upload Restriction Bypass
 
 | Property | Value |
@@ -1329,7 +1612,7 @@
 | Category | web |
 | Sub-Category | file-upload |
 | Risk Level | critical |
-| Confidence | 0.93 |
+| Confidence | 0.96 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | upload, bypass, file-type, extension, mime, rce |
@@ -1383,7 +1666,7 @@
 | Category | web |
 | Sub-Category | xss |
 | Risk Level | critical |
-| Confidence | 0.92 |
+| Confidence | 0.95 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | xss, filter-bypass, csp-bypass, dom-xss, waf-bypass, svg, template-injection |
@@ -1435,7 +1718,7 @@
 | Category | web |
 | Sub-Category | xxe |
 | Risk Level | critical |
-| Confidence | 0.9 |
+| Confidence | 0.93 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | xxe, xml-external-entity, file-read, oob-xxe, xinclude, parameter-entity, xml-parser |
@@ -1493,7 +1776,7 @@
 | Category | windows |
 | Sub-Category | privilege-escalation |
 | Risk Level | critical |
-| Confidence | 0.94 |
+| Confidence | 0.97 |
 | Author | HOS-Sec-Engine |
 | Updated | 2026-06 |
 | Tags | windows, privilege-escalation, priv-esc, system, administrator, uac |

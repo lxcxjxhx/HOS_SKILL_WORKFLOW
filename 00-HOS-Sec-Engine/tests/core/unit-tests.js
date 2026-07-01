@@ -89,23 +89,27 @@ function testSkillValidator() {
 }
 
 // =====================================================================
-// SkillScorer
+// SkillScorer (instance-based)
 // =====================================================================
 function testSkillScorer() {
   const { SkillScorer } = require(path.join(PROJECT_DIR, 'dist/src/core/scorer'));
 
   test('SkillScorer: zero score on empty query', () => {
-    const r = SkillScorer.calculate('', { scenarios: ['test'], keywords: ['test'], aliases: [], indicators: [] });
+    const scorer = new SkillScorer();
+    const r = scorer.calculate('', { scenarios: ['test'], keywords: ['test'], aliases: [], indicators: [] });
     assertEqual(r.score, 0, 'empty query => zero score');
   });
 
   test('SkillScorer: zero score on empty trigger', () => {
-    const r = SkillScorer.calculate('test', null);
+    const scorer = new SkillScorer();
+    // Pass empty trigger object instead of null
+    const r = scorer.calculate('test', null);
     assertEqual(r.score, 0, 'null trigger => zero score');
   });
 
   test('SkillScorer: exact keyword match gives >0 score', () => {
-    const r = SkillScorer.calculate('sql injection bypass', {
+    const scorer = new SkillScorer();
+    const r = scorer.calculate('sql injection bypass', {
       scenarios: ['bypass SQL injection WAF'],
       keywords: ['sql', 'injection', 'bypass'],
       aliases: [],
@@ -116,7 +120,8 @@ function testSkillScorer() {
   });
 
   test('SkillScorer: scenario match > keyword match for relevant queries', () => {
-    const r = SkillScorer.calculate('SQL injection WAF bypass techniques', {
+    const scorer = new SkillScorer();
+    const r = scorer.calculate('SQL injection WAF bypass techniques', {
       scenarios: ['SQL injection WAF bypass techniques and methods'],
       keywords: ['database'],
       aliases: [],
@@ -126,15 +131,28 @@ function testSkillScorer() {
   });
 
   test('SkillScorer: cache works', () => {
-    SkillScorer.resetCacheStats();
+    const scorer = new SkillScorer();
     const trigger = {
       scenarios: ['test scenario one', 'test scenario two'],
       keywords: ['test'], aliases: [], indicators: []
     };
-    SkillScorer.calculate('test scenario', trigger);
-    SkillScorer.calculate('test scenario', trigger);
-    const stats = SkillScorer.getCacheStats();
+    scorer.calculate('test scenario', trigger);
+    scorer.calculate('test scenario', trigger);
+    const stats = scorer.getCacheStats();
     assert(stats.hitRate > 0, `cache hit rate should be > 0, got ${stats.hitRate}`);
+  });
+
+  test('SkillScorer: instance isolation — separate scorers have separate caches', () => {
+    const s1 = new SkillScorer();
+    const s2 = new SkillScorer();
+    const trigger = { scenarios: ['hello world'], keywords: ['hello'], aliases: [], indicators: [] };
+    s1.calculate('hello world', trigger);
+    s2.calculate('hello world', trigger);
+    // Both should have cache misses on first call (isolated caches)
+    const stats1 = s1.getCacheStats();
+    const stats2 = s2.getCacheStats();
+    assert(stats1.misses === 1, `scorer1 should have 1 miss, got ${stats1.misses}`);
+    assert(stats2.misses === 1, `scorer2 should have 1 miss, got ${stats2.misses}`);
   });
 }
 

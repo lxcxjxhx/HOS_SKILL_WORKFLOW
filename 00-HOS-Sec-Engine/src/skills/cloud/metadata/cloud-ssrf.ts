@@ -13,7 +13,7 @@ export const cloudMetadataSSRFSkills: AttackDefenseSkill[] = [
             category: 'cloud',
             subCategory: 'metadata',
             riskLevel: 'critical',
-            confidence: 0.94,
+            confidence: 0.97,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: [
@@ -437,7 +437,7 @@ export const cloudMetadataSSRFSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.94,
+            confidence: 0.97,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

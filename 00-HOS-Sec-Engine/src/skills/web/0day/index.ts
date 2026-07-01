@@ -1,43 +1,28 @@
 /**
  * HOS-Sec-Engine V2 - 0day Web Skills Index
  *
- * Zero-day web security skills loaded at build/compile time.
+ * Zero-day web security skills — use safe loading to handle
+ * potential security software interference.
  */
 
 import { AttackDefenseSkill } from '../../../types/skill';
 
-let authBypassSkills: AttackDefenseSkill[] = [];
-let deserSkills: AttackDefenseSkill[] = [];
-let wafBypassSkills: AttackDefenseSkill[] = [];
-let xss0daySkills: AttackDefenseSkill[] = [];
-
-try {
-  const mod = require('./web-auth-bypass-0day');
-  authBypassSkills = mod.authBypass0daySkills || [];
-} catch (e) {
-  // Skill file unavailable
+function loadSkillsSafely(path: string, exportName: string): AttackDefenseSkill[] {
+  try {
+    const mod = require(path);
+    return mod[exportName] || [];
+  } catch (e: any) {
+    if (e?.code !== 'MODULE_NOT_FOUND') {
+      console.warn(`[0day/index] 加载 ${path} 时出现非预期错误:`, e?.message || e);
+    }
+    return [];
+  }
 }
 
-try {
-  const mod = require('./web-deser-0day');
-  deserSkills = mod.deser0daySkills || [];
-} catch (e) {
-  // Skill file unavailable
-}
-
-try {
-  const mod = require('./web-waf-bypass-0day');
-  wafBypassSkills = mod.wafBypass0daySkills || [];
-} catch (e) {
-  // Skill file unavailable
-}
-
-try {
-  const mod = require('./web-xss-0day');
-  xss0daySkills = mod.xss0daySkills || [];
-} catch (e) {
-  // Skill file unavailable
-}
+const authBypassSkills = loadSkillsSafely('./web-auth-bypass-0day', 'authBypass0daySkills');
+const deserSkills = loadSkillsSafely('./web-deser-0day', 'deser0daySkills');
+const wafBypassSkills = loadSkillsSafely('./web-waf-bypass-0day', 'wafBypass0daySkills');
+const xss0daySkills = loadSkillsSafely('./web-xss-0day', 'xss0daySkills');
 
 export const zeroDayWebSkills: AttackDefenseSkill[] = [
   ...authBypassSkills,

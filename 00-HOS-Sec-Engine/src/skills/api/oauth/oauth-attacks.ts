@@ -13,7 +13,7 @@ export const oauthAttackSkills: AttackDefenseSkill[] = [
             category: 'api',
             subCategory: 'oauth',
             riskLevel: 'critical',
-            confidence: 0.91,
+            confidence: 0.94,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['oauth', 'oauth2', 'oidc', 'authorization-code', 'csrf', 'token-theft', 'redirect-uri', 'pkce', 'state-parameter', 'implicit-grant'],
@@ -437,7 +437,7 @@ export const oauthAttackSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.91,
+            confidence: 0.94,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

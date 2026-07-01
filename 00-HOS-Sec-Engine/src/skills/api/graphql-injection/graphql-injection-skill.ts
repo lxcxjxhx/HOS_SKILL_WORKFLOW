@@ -16,7 +16,7 @@ export const graphQLSkills: AttackDefenseSkill[] = [
       category: 'api',
       subCategory: 'graphql',
       riskLevel: 'high',
-      confidence: 0.85,
+      confidence: 0.89,
       updatedAt: '2026-06',
       author: 'HOS-Sec-Engine',
       tags: ['graphql', 'injection', 'api', 'introspection', 'dos', 'batching'],
@@ -179,7 +179,7 @@ export const graphQLSkills: AttackDefenseSkill[] = [
       ],
     },
     quality: {
-      confidence: 0.85,
+      confidence: 0.89,
       reviewed: true,
       tested: true,
       lastVerified: '2026-06',

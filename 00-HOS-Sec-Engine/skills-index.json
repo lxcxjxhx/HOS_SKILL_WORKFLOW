@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-06-28T13:03:57.318Z",
-  "totalSkills": 28,
+  "generatedAt": "2026-06-30T11:56:18.870Z",
+  "totalSkills": 33,
   "skills": [
     {
       "id": "ad-domain-enum-001",
@@ -17,8 +17,30 @@
         "kerberos"
       ],
       "riskLevel": "high",
-      "confidence": 0.92,
+      "confidence": 0.95,
       "description": "Active Directory 域信息收集是内网渗透的关键阶段",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "deepfake-detection-001",
+      "name": "Deepfake and AIGC Detection Assessment",
+      "category": "ai-security",
+      "subCategory": "deepfake-detection",
+      "tags": [
+        "deepfake",
+        "aigc",
+        "synthetic-media",
+        "voice-clone",
+        "visual-deepfake",
+        "ai-generated-text",
+        "sensor-forgery",
+        "digital-forensics",
+        "media-authentication"
+      ],
+      "riskLevel": "high",
+      "confidence": 0.85,
+      "description": "生成式 AI 的进步使 Deepfake 和 AI 生成内容(AIGC)能够以惊人的逼真度模仿现实，对 AI 代理的感知层构成严重威胁",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -32,11 +54,41 @@
         "prompt-injection",
         "llm",
         "bypass",
-        "jailbreak"
+        "jailbreak",
+        "rag",
+        "indirect-injection",
+        "soc",
+        "log-poisoning"
       ],
       "riskLevel": "high",
-      "confidence": 0.88,
+      "confidence": 0.92,
       "description": "Prompt 注入技术用于测试和绕过 LLM 系统的安全限制",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "ai-tooling-vuln-001",
+      "name": "AI Tooling Vulnerability Detection",
+      "category": "ai-security",
+      "subCategory": "tooling-vulnerability",
+      "tags": [
+        "ai-tooling",
+        "pytorch",
+        "tensorflow",
+        "langchain",
+        "llm-framework",
+        "cve",
+        "supply-chain",
+        "ml-pipeline",
+        "vllm",
+        "ray",
+        "model-injection",
+        "pickle-deser",
+        "safetensors"
+      ],
+      "riskLevel": "critical",
+      "confidence": 0.88,
+      "description": "CVE-Factory (Luo et al",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -54,7 +106,7 @@
         "batching"
       ],
       "riskLevel": "high",
-      "confidence": 0.85,
+      "confidence": 0.89,
       "description": "GraphQL 注入利用 GraphQL 查询语言的灵活性，通过 introspection 获取完整 schema 后构造恶意查询，实现数据越权访问、DoS 攻击或 resolver 层注入",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -74,7 +126,7 @@
         "privilege-escalation"
       ],
       "riskLevel": "high",
-      "confidence": 0.9,
+      "confidence": 0.93,
       "description": "IDOR (Insecure Direct Object Reference)，OWASP API Security Top 10 中称为 BOLA (Broken Object Level Authorization)，是最常见的 API 安全漏洞之一",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -94,8 +146,32 @@
         "claim-manipulation"
       ],
       "riskLevel": "critical",
-      "confidence": 0.92,
+      "confidence": 0.95,
       "description": "JWT (JSON Web Token) 攻击技术利用 JWT 实现中的设计缺陷、配置错误和协议层漏洞，通过修改算法、伪造签名、操纵声明等方式绕过身份验证",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "mcp-security-audit-001",
+      "name": "MCP Protocol Security Audit",
+      "category": "api",
+      "subCategory": "mcp-security",
+      "tags": [
+        "mcp",
+        "model-context-protocol",
+        "smcp",
+        "tool-poisoning",
+        "prompt-injection",
+        "privilege-escalation",
+        "session-management",
+        "supply-chain",
+        "audit",
+        "agent-security",
+        "llm-security"
+      ],
+      "riskLevel": "critical",
+      "confidence": 0.9,
+      "description": "MCP (Model Context Protocol) 是 Anthropic 于 2024 年底推出的开放协议，用于统一 Agent 与外部工具的通信",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -117,7 +193,7 @@
         "implicit-grant"
       ],
       "riskLevel": "critical",
-      "confidence": 0.91,
+      "confidence": 0.94,
       "description": "OAuth 2",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -139,7 +215,7 @@
         "enumeration"
       ],
       "riskLevel": "high",
-      "confidence": 0.89,
+      "confidence": 0.92,
       "description": "速率限制 (Rate Limiting) 绕过技术用于规避 API 对请求频率、数量或带宽的限制，使攻击者能够在受限条件下执行大量请求",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -165,8 +241,32 @@
         "policy-injection"
       ],
       "riskLevel": "critical",
-      "confidence": 0.93,
+      "confidence": 0.96,
       "description": "AWS IAM 权限提升是云渗透测试中的核心技能",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "cloud-iam-002",
+      "name": "CPS Device Identity and Trust Chain Verification",
+      "category": "cloud",
+      "subCategory": "iam",
+      "tags": [
+        "cps",
+        "device-identity",
+        "trust-chain",
+        "iot-certificate",
+        "edge-security",
+        "provenance",
+        "physics-grounded",
+        "sensor-auth",
+        "overlay-network",
+        "pki",
+        "mcp-identity"
+      ],
+      "riskLevel": "high",
+      "confidence": 0.86,
+      "description": "CPS (信息物理系统)中的设备身份和信任链管理是保障 AI Agent 决策可靠性的基础",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -192,7 +292,7 @@
         "169.254.169.254"
       ],
       "riskLevel": "critical",
-      "confidence": 0.94,
+      "confidence": 0.97,
       "description": "云平台为运行在其中的虚拟机实例提供了元数据服务（Instance Metadata Service, IMDS），用于获取实例配置、IAM 凭证、用户数据等敏感信息",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -217,8 +317,31 @@
         "file-upload"
       ],
       "riskLevel": "critical",
-      "confidence": 0.92,
+      "confidence": 0.95,
       "description": "云存储桶（S3/OSS/COS）配置错误是最常见的云安全问题之一",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "code-review-immature-001",
+      "name": "Immature Vulnerability Detection for Pre-Commit Review",
+      "category": "code-review",
+      "subCategory": "immature-vulnerability",
+      "tags": [
+        "immature-vulnerability",
+        "pre-commit",
+        "code-review",
+        "incremental-analysis",
+        "context-dependent",
+        "sast",
+        "cwe",
+        "semantic-memory",
+        "agent-scr",
+        "shift-left"
+      ],
+      "riskLevel": "high",
+      "confidence": 0.88,
+      "description": "不成熟漏洞（Immature Vulnerability）是在预提交阶段出现的、不完整、潜伏或依赖于上下文的弱点，通常通过小的增量代码变更引入",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -236,7 +359,7 @@
         "ysoserial"
       ],
       "riskLevel": "critical",
-      "confidence": 0.93,
+      "confidence": 0.96,
       "description": "Java 反序列化漏洞是代码审计中的高危发现",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -254,8 +377,35 @@
         "cgroup"
       ],
       "riskLevel": "critical",
-      "confidence": 0.9,
+      "confidence": 0.93,
       "description": "Docker 容器逃逸技术用于在获取容器访问权限后，突破容器隔离限制访问宿主机资源",
+      "updatedAt": "2026-06",
+      "author": "HOS-Sec-Engine"
+    },
+    {
+      "id": "cps-ai-security-001",
+      "name": "CPS AI Agent Security Assessment",
+      "category": "cps",
+      "subCategory": "ai-agent-security",
+      "tags": [
+        "cps",
+        "cyber-physical",
+        "ai-agent",
+        "sentinel",
+        "deepfake",
+        "sensor-spoofing",
+        "mcp",
+        "scada",
+        "industrial-control",
+        "smart-grid",
+        "iot",
+        "agent-environment",
+        "aigc",
+        "physics-grounded"
+      ],
+      "riskLevel": "critical",
+      "confidence": 0.87,
+      "description": "AI 代理在信息物理系统(CPS)中的集成引入了超越传统网络或物理威胁模型的新型安全风险",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -273,7 +423,7 @@
         "cluster-admin"
       ],
       "riskLevel": "critical",
-      "confidence": 0.91,
+      "confidence": 0.94,
       "description": "Kubernetes 配置审计和利用技术用于发现集群中不安全的配置，并通过 RBAC 权限提升、Pod 逃逸等技术获取更高权限",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -293,7 +443,7 @@
         "priv-esc"
       ],
       "riskLevel": "critical",
-      "confidence": 0.93,
+      "confidence": 0.96,
       "description": "Linux 权限提升技术用于在获取普通用户访问权限后提升到 root 权限",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -312,7 +462,7 @@
         "frida"
       ],
       "riskLevel": "medium",
-      "confidence": 0.87,
+      "confidence": 0.91,
       "description": "Android APK 安全分析技术用于评估移动应用的安全性",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -331,7 +481,7 @@
         "token"
       ],
       "riskLevel": "critical",
-      "confidence": 0.85,
+      "confidence": 0.89,
       "description": "Web 认证绕过 0day 涵盖身份认证机制中尚未被广泛披露或厂商未修复的逻辑漏洞",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -351,7 +501,7 @@
         "python"
       ],
       "riskLevel": "critical",
-      "confidence": 0.85,
+      "confidence": 0.89,
       "description": "不安全的反序列化是 OWASP Top 10 中的高危漏洞类别，允许攻击者通过构造恶意序列化数据在反序列化过程中触发对象创建、方法调用和代码执行",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -370,7 +520,7 @@
         "filter-bypass"
       ],
       "riskLevel": "high",
-      "confidence": 0.85,
+      "confidence": 0.89,
       "description": "WAF (Web Application Firewall) 绕过技术用于在目标系统部署了 WAF 防护时，通过编码变换、协议层差异、规则盲区、混淆技术等手段绕过关键字检测和模式匹配规则",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -389,7 +539,7 @@
         "stored-xss"
       ],
       "riskLevel": "high",
-      "confidence": 0.85,
+      "confidence": 0.89,
       "description": "XSS (Cross-Site Scripting) 过滤 0day 涵盖跨站脚本攻击中绕过现代 WAF 过滤器、CSP 策略和前端框架防护的新型技术",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -410,7 +560,7 @@
         "rce"
       ],
       "riskLevel": "critical",
-      "confidence": 0.91,
+      "confidence": 0.94,
       "description": "不安全反序列化允许攻击者通过构造恶意序列化数据，在反序列化过程中触发对象创建、方法调用和代码执行",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -429,7 +579,7 @@
         "filter-bypass"
       ],
       "riskLevel": "critical",
-      "confidence": 0.93,
+      "confidence": 0.96,
       "description": "命令注入允许攻击者通过操控应用程序传递给操作系统 shell 的参数执行任意系统命令",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -447,7 +597,7 @@
         "sql-payload"
       ],
       "riskLevel": "critical",
-      "confidence": 0.92,
+      "confidence": 0.95,
       "description": "SQL 注入 WAF 绕过技术用于在目标系统部署 Web 应用防火墙 (WAF) 时，通过编码、混淆、分块、协议层差异等手段绕过关键字检测和模式匹配规则，成功执行 SQL 注入攻击",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -466,24 +616,8 @@
         "protocol-handler"
       ],
       "riskLevel": "critical",
-      "confidence": 0.9,
+      "confidence": 0.93,
       "description": "服务端请求伪造(SSRF) 允许攻击者控制服务器发起 HTTP 请求目标，从而访问内网服务、云平台元数据、本地文件件等受限资源",
-      "updatedAt": "2026-06",
-      "author": "HOS-Sec-Engine"
-    },
-    {
-      "id": "test-verify-001",
-      "name": "Test Verification Skill",
-      "category": "web",
-      "subCategory": "test",
-      "tags": [
-        "test",
-        "ai-auto-create",
-        "verification"
-      ],
-      "riskLevel": "low",
-      "confidence": 0.9,
-      "description": "验证AI能否仅凭SKILL",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
     },
@@ -501,7 +635,7 @@
         "rce"
       ],
       "riskLevel": "critical",
-      "confidence": 0.93,
+      "confidence": 0.96,
       "description": "文件上传限制绕过技术用于在目标系统对上传文件实施扩展名过滤、MIME 类型检查、内容检测等安全措施时，通过伪造文件头、利用解析差异、上传特殊配置文件等方式绕过限制并上传可执行文件",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -521,7 +655,7 @@
         "template-injection"
       ],
       "riskLevel": "critical",
-      "confidence": 0.92,
+      "confidence": 0.95,
       "description": "XSS 过滤器绕过技术用于在目标系统部署了 XSS 过滤器、CSP 策略或 WAF 防护时，通过利用 HTML 解析差异、事件处理器变体、CSP 策略缺陷、前端框架模板解析特性等手段绕过防护成功执行跨站脚本",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -541,7 +675,7 @@
         "xml-parser"
       ],
       "riskLevel": "critical",
-      "confidence": 0.9,
+      "confidence": 0.93,
       "description": "XML 外部实体 (XXE) 注入利用 XML 解析器对 DTD（文档类型定义）中外部实体的处理机制，读取服务器本地文件、发起服务端请求、执行内网端口扫描等",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -560,7 +694,7 @@
         "uac"
       ],
       "riskLevel": "critical",
-      "confidence": 0.94,
+      "confidence": 0.97,
       "description": "Windows 权限提升技术用于在获取低权限 shell 后提升到 SYSTEM 或 Administrator 权限",
       "updatedAt": "2026-06",
       "author": "HOS-Sec-Engine"
@@ -578,7 +712,9 @@
       "name": "AI 安全",
       "description": "AI 安全相关 Skill（Prompt 注入, 模型绕过等）",
       "skills": [
-        "ai-prompt-injection-001"
+        "deepfake-detection-001",
+        "ai-prompt-injection-001",
+        "ai-tooling-vuln-001"
       ]
     },
     "api-bundle": {
@@ -588,6 +724,7 @@
         "api-graphql-injection-001",
         "api-idor-001",
         "api-jwt-001",
+        "mcp-security-audit-001",
         "api-oauth-001",
         "api-ratelimit-001"
       ]
@@ -597,6 +734,7 @@
       "description": "云安全相关 Skill（S3/OSS, IAM, 元数据 SSRF 等）",
       "skills": [
         "cloud-iam-001",
+        "cloud-iam-002",
         "cloud-meta-001",
         "cloud-s3-001"
       ]
@@ -605,6 +743,7 @@
       "name": "代码审计",
       "description": "代码审计相关 Skill（Java/PHP/Python 反序列化等）",
       "skills": [
+        "code-review-immature-001",
         "code-review-java-deser-001"
       ]
     },
@@ -613,6 +752,13 @@
       "description": "容器安全相关 Skill（Docker 逃逸等）",
       "skills": [
         "container-docker-escape-001"
+      ]
+    },
+    "cps-bundle": {
+      "name": "cps",
+      "description": "cps 相关 Skill",
+      "skills": [
+        "cps-ai-security-001"
       ]
     },
     "kubernetes-bundle": {
@@ -648,7 +794,6 @@
         "web-rce-001",
         "web-sqli-001",
         "web-ssrf-001",
-        "test-verify-001",
         "web-upload-001",
         "web-xss-001",
         "web-xxe-001"
@@ -663,20 +808,26 @@
     },
     "all-bundle": {
       "name": "全部 Skill",
-      "description": "所有 28 个攻防实战 Skill",
+      "description": "所有 33 个攻防实战 Skill",
       "skills": [
         "ad-domain-enum-001",
+        "deepfake-detection-001",
         "ai-prompt-injection-001",
+        "ai-tooling-vuln-001",
         "api-graphql-injection-001",
         "api-idor-001",
         "api-jwt-001",
+        "mcp-security-audit-001",
         "api-oauth-001",
         "api-ratelimit-001",
         "cloud-iam-001",
+        "cloud-iam-002",
         "cloud-meta-001",
         "cloud-s3-001",
+        "code-review-immature-001",
         "code-review-java-deser-001",
         "container-docker-escape-001",
+        "cps-ai-security-001",
         "k8s-misconfig-001",
         "linux-priv-esc-001",
         "mobile-android-apk-001",
@@ -688,7 +839,6 @@
         "web-rce-001",
         "web-sqli-001",
         "web-ssrf-001",
-        "test-verify-001",
         "web-upload-001",
         "web-xss-001",
         "web-xxe-001",

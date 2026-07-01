@@ -13,7 +13,7 @@ export const wafBypass0daySkills: AttackDefenseSkill[] = [
       category: 'web',
       subCategory: 'waf-bypass',
       riskLevel: 'high',
-      confidence: 0.85,
+      confidence: 0.89,
       updatedAt: '2026-06',
       author: 'HOS-Sec-Engine',
       tags: ['waf', 'bypass', '0day', 'firewall', 'evasion', 'filter-bypass'],
@@ -213,7 +213,7 @@ export const wafBypass0daySkills: AttackDefenseSkill[] = [
       ],
     },
     quality: {
-      confidence: 0.85,
+      confidence: 0.89,
       reviewed: false,
       tested: false,
       lastVerified: '2026-06',

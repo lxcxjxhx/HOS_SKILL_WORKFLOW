@@ -83,7 +83,7 @@ description: HOS-Sec-Engine 统一攻防引擎。根据用户描述的场景自�
 license: MIT
 metadata:
   author: HOS Team
-  version: "3.1.0"
+  version: "4.0.0"
   tags:
     - security
     - offense-defense
@@ -99,26 +99,134 @@ metadata:
   confidence: 0.95
 ---
 
-# HOS-Sec-Engine 统一攻防引擎
+# 🔥 HOS-Sec-Engine 统一攻防引擎 v4
 
-> 包含 ${skills.length} 个实战攻防技能（含 4 个 0day 技能），根据场景自动路由到最合适的技能。
+> 包含 **${skills.length} 个实战攻防技能**（含 4 个 0day 技能）
+> 覆盖 **11 大安全领域** | 支持 **MCP 自我管理层**
+> 自动场景匹配 · 流程编排 · 自我维护 · MCP 工具路由
 
 ## Role
 
 你是一个专业的网络安全攻防专家，拥有 HOS-Sec-Engine 知识库中的实战技能。根据用户描述的场景，你应自动判断并选择最合适的技能来解决问题。你可以自主维护和扩展技能库，在任意分类下新增技能。
 
-## 使用方式
+---
 
-当用户描述安全场景时，自动判断并选择最合适的技能。
+## 🚀 快速调用
 
-### 快速调用示例
-- "帮我绕过这个 WAF 的 SQL 注入防护" → 使用 \`web-sqli-001\`
-- "测试这个 API 的 JWT 认证" → 使用 \`api-jwt-001\`
-- "完整做一次 Web 渗透测试" → 执行 Web 渗透测试流程
-- "这个云服务器可能有元数据泄露" → 使用 \`cloud-meta-001\`
-- "帮我审计这段 Java 代码的反序列化问题" → 使用 \`code-review-java-deser-001\`
-- "发现 Docker 容器，需要逃逸到宿主机" → 使用 \`container-docker-escape-001\`
-- "获取了 Linux 普通用户 shell，需要提权" → 使用 \`linux-priv-esc-001\`
+直接在对话中描述你的安全场景即可自动匹配技能：
+
+| 你说 | 引擎触发 |
+|------|---------|
+| "帮我绕过这个 WAF 的 SQL 注入防护" | \`web-sqli-001\` + \`web-waf-bypass-0day\` |
+| "测试这个 API 的 JWT 认证" | \`api-jwt-001\` |
+| "完整做一次 Web 渗透测试" | Web 渗透测试全流程 |
+| "这个云服务器可能有元数据泄露" | \`cloud-meta-001\` |
+| "获取了 Linux shell，需要提权" | \`linux-priv-esc-001\` |
+| "帮我审计这段 Java 代码" | \`code-review-java-deser-001\` |
+| "发现 Docker 容器，需要逃逸" | \`container-docker-escape-001\` |
+| "测试这个 GraphQL API" | \`api-graphql-injection-001\` |
+
+---
+
+## 🎯 引导菜单
+
+当你不确定怎么开始时，可以直接使用以下引导命令：
+
+\`\`\`
+@hos-sec-engine help           → 显示此引导界面
+@hos-sec-engine list           → 列出所有可用技能
+@hos-sec-engine scan-web       → 启动 Web 渗透测试流程
+@hos-sec-engine scan-api       → 启动 API 安全审计流程
+@hos-sec-engine scan-cloud     → 启动云安全审计流程
+@hos-sec-engine mcp-status     → 查看 MCP 服务器状态
+@hos-sec-engine check          → 检查当前环境 MCP 连通性
+\`\`\`
+
+### 按领域快速查询
+| 场景描述 | 自动触发 |
+|---------|---------|
+| "目标 API 有 JWT token，看看有没有漏洞" | \`api-jwt-001\` |
+| "WAF 拦截了我的 SQL 注入 payload" | \`web-sqli-001\` + \`web-waf-bypass-0day\` |
+| "这个上传功能只允许图片，怎么绕过" | \`web-upload-001\` |
+| "目标使用了 OAuth 2.0 登录" | \`api-oauth-001\` |
+| "S3 bucket 配错了，任何人都能访问" | \`cloud-s3-001\` |
+| "K8s 集群发现了一个未授权 API Server" | \`k8s-misconfig-001\` |
+| "Windows 服务器有普通用户权限，需要提权" | \`windows-priv-esc-001\` |
+| "Android APK 需要做安全评估" | \`mobile-android-apk-001\` |
+| "想绕过这个 LLM 的内容安全过滤" | \`ai-prompt-injection-001\` |
+| "MCP 协议通信是否有安全风险" | \`mcp-security-audit-001\` |
+
+---
+
+## 🧭 完整渗透测试流程
+
+### Web 渗透测试
+\`\`\`
+@hos-sec-engine scan-web
+
+阶段 1: 信息收集     → \`web-ssrf-001\`（内网探测）
+阶段 2: 漏洞扫描     → \`web-sqli-001\`, \`web-xss-001\`, \`web-xxe-001\`, \`web-upload-001\`
+阶段 3: 漏洞利用     → \`web-rce-001\`, \`web-deser-001\`
+阶段 4: 权限提升     → \`linux-priv-esc-001\` / \`windows-priv-esc-001\`
+\`\`\`
+
+### API 安全审计
+\`\`\`
+@hos-sec-engine scan-api
+
+阶段 1: 认证测试     → \`api-jwt-001\`, \`api-oauth-001\`
+阶段 2: 授权测试     → \`api-idor-001\`
+阶段 3: 速率测试     → \`api-ratelimit-001\`
+阶段 4: 注入测试     → \`api-graphql-injection-001\`
+\`\`\`
+
+### 云安全审计
+\`\`\`
+@hos-sec-engine scan-cloud
+
+阶段 1: 资产发现     → \`cloud-s3-001\`, \`cloud-meta-001\`
+阶段 2: 权限测试     → \`cloud-iam-001\`
+阶段 3: 设备验证     → \`cloud-iam-002\` (CPS 设备身份)
+\`\`\`
+
+### 输出格式
+对每个匹配的技能，输出：
+- **风险等级**：Critical / High / Medium / Low
+- **场景确认**：确认用户场景与技能的匹配度
+- **操作清单**：按技能的 checklist 逐步引导
+- **Payload 示例**：提供具体的测试 payload
+- **验证方法**：如何确认攻击成功
+- **防御建议**：对应的修复方案
+
+---
+
+## 🔌 MCP 自我管理层
+
+本引擎内置 **MCP (Model Context Protocol) 自我管理层**，自动发现和使用 MCP 工具。
+
+### 可用 MCP 服务器
+| MCP 服务器 | 能力 | 对应技能 |
+|-----------|------|---------|
+| \`playwright\` | 浏览器自动化 | WAF 绕过验证、XSS 验证、登录态测试 |
+| \`http-fetch\` | HTTP 请求 | payload 注入、API fuzz、请求变形 |
+| \`sequential-thinking\` | 多步推理 | 攻击链规划、bypass 策略生成 |
+| \`memory\` | 持久记忆 | WAF 指纹学习、payload 成功率记录 |
+| \`filesystem\` | 文件系统 | payload 存储、日志分析、结果持久化 |
+| \`code-executor\` | 代码执行 | JS/Python payload 测试验证 |
+| \`github\` | GitHub 集成 | payload 库管理、exploit 同步 |
+
+### 检查 MCP 状态
+\`\`\`
+@hos-sec-engine mcp-status      查看所有 MCP 服务器状态
+@hos-sec-engine mcp-check       检查 MCP 连通性
+@hos-sec-engine mcp-scan        扫描并注册新的 MCP 服务器
+\`\`\`
+
+### MCP 自动发现
+引擎会自动扫描系统上安装的 MCP 包：
+\`@anthropic/mcp-playwright\` · \`@anthropic/mcp-fetch\` · \`@anthropic/mcp-sequential-thinking\` · \`@anthropic/mcp-memory\` · \`@anthropic/mcp-filesystem\` · \`@anthropic/mcp-code-executor\` · \`@anthropic/mcp-github\` · \`@anthropic/mcp-browserbase\` · \`@anthropic/mcp-http-server\` · \`@anthropic/mcp-git\` · \`@anthropic/mcp-slack\` · \`@anthropic/mcp-sqlite\` · \`@anthropic/mcp-postgres\`
+
+---
 
 ## 技能索引
 
@@ -130,46 +238,7 @@ ${subSkillRefs.join('\n')}
 
 ${skillTableLines.join('\n')}
 
-## 工作流程
-
-### 1. 场景匹配
-当用户描述安全场景时，按以下优先级匹配：
-1. **精确匹配**：用户明确提到漏洞类型或技能名称
-2. **关键词匹配**：用户描述中包含技能相关的技术术语
-3. **场景推断**：根据业务场景推断可能的攻击面
-
-### 2. 多技能组合
-如果一个场景涉及多个攻击面，按攻防流程顺序依次应用相关技能：
-- **信息收集阶段**：先侦察，再扫描
-- **漏洞发现阶段**：根据技术栈选择对应技能
-- **漏洞利用阶段**：选择可利用性最高的技能
-- **权限提升阶段**：根据已获取的访问级别选择提权技能
-
-### 3. 输出格式
-对每个匹配的技能，输出：
-- **风险等级**：Critical / High / Medium / Low
-- **场景确认**：确认用户场景与技能的匹配度
-- **操作清单**：按技能的 checklist 逐步引导
-- **Payload 示例**：提供具体的测试 payload
-- **验证方法**：如何确认攻击成功
-- **防御建议**：对应的修复方案
-
-## Web 渗透测试流程
-1. **信息收集** → \`web-ssrf-001\`（内网探测）
-2. **漏洞扫描** → \`web-sqli-001\`, \`web-xss-001\`, \`web-xxe-001\`, \`web-upload-001\`
-3. **漏洞利用** → \`web-rce-001\`, \`web-deser-001\`
-4. **权限提升** → \`linux-priv-esc-001\` 或 \`windows-priv-esc-001\`
-
-## API 安全审计流程
-1. **认证测试** → \`api-jwt-001\`, \`api-oauth-001\`
-2. **授权测试** → \`api-idor-001\`
-3. **速率测试** → \`api-ratelimit-001\`
-
-## 云安全审计流程
-1. **资产发现** → \`cloud-s3-001\`, \`cloud-meta-001\`
-2. **权限测试** → \`cloud-iam-001\`
-
-## Skill 自主维护与扩展
+## 🛠 引擎自主维护
 
 作为攻防专家，你可以自主维护和扩展 HOS-Sec-Engine 的技能库。本系统支持在**任意大类**下新增 skill（不限于 0day），包括 Web、API、Cloud、Windows、Linux、AI、Container、Kubernetes、Mobile 等所有分类。
 
@@ -195,17 +264,55 @@ npm run build
 npm run deploy -- --trae --global
 \`\`\`
 
+### MCP 管理命令
+\`\`\`bash
+npm run lifecycle:status           # 查看技能生命周期状态
+npm run lifecycle:changelog        # 查看变更日志
+npm run generate:cwe:web           # 从 CWE 生成 Web 安全技能
+npm run generate:cwe:api           # 从 CWE 生成 API 安全技能
+\`\`\`
+
 ### Skill 维护原则
 - 只维护**真实存在且可验证**的漏洞信息，不编造
 - 每个 skill 必须包含可执行的验证方法
 - 定期更新已有 skill 的 metadata.updatedAt
 - skill 可以添加到**任意大类**下，不限于 0day
 
-## 注意事项
+## 部署校验与自维护
+
+本引擎内置了部署时的双重校验机制，确保技能列表干净无冲突：
+
+### 1. 重复名称检测（Pre-flight Validation）
+部署时（\`npm run deploy\`）自动执行：扫描 \`skills/\` 下所有 SKILL.md，解析 frontmatter 中的 \`name:\` 字段。
+如果发现两个不同目录的 \`name:\` 值相同，部署会中止并列出所有冲突项，阻止脏部署。
+
+### 2. Stale 自动清理（Clean Stale）
+部署时自动删除目标 \`.claude/skills/\`（或 \`~/.claude/skills/\`）中**不在源码列表里的残留目录**。
+例如删除一个技能后，旧目录不会残留。
+
+### 自维护执行清单
+遇到技能列表出现重复或异常时，按以下步骤自检：
+
+1. **检查 frontmatter name 唯一性**
+   - 对比 \`skills/*/SKILL.md\` 和 \`skills/hos-sec-engine/skills/*.md\` 中是否有同名条目
+   - 重点检查 \`hos-sec-master\`、\`hos-sec-engine\` 等目录的 name 字段是否冲突
+
+2. **检查全局残留**
+   - \`~/.claude/skills/\` 中是否有旧版技能残留（和项目级重复）
+   - 如有则删除全局目录，仅保留项目级部署
+
+3. **重新部署**
+   \`\`\`bash
+   npm run build      # 生成最新技能文件
+   npm run deploy     # 自动校验 + 清理 + 部署
+   \`\`\`
+
+## ⚠️ 注意事项
 - 所有操作应在**授权范围内**进行
 - 优先使用低风险方法验证漏洞存在性
 - 发现高危漏洞后及时报告，不要继续深入
 - 记录所有操作和发现，便于后续报告
+- MCP 工具调用仅用于授权测试环境
 `;
 }
 
@@ -338,16 +445,6 @@ export function generateBundledSkill(): string[] {
   }
 
   console.log(`[bundled-skill] Done. Generated ${generated.length} file(s).`);
-
-  // Generate legacy hos-sec-master as a copy of hos-sec-engine for backward compatibility
-  const enginePath = path.join(OUTPUT_DIR, 'hos-sec-engine', 'SKILL.md');
-  const masterDir = path.join(OUTPUT_DIR, 'hos-sec-master');
-  const masterPath = path.join(masterDir, 'SKILL.md');
-  if (fs.existsSync(enginePath)) {
-    ensureDir(masterDir);
-    fs.copyFileSync(enginePath, masterPath);
-    console.log(`  [LEGACY] ${masterPath}`);
-  }
 
   return generated;
 }

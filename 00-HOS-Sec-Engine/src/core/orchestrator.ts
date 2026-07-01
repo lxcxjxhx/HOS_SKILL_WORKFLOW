@@ -13,6 +13,9 @@ import {
 import type { SkillResult, ExecuteQuery } from '../types/result';
 import { SkillDeriver, skillDeriver } from './skill-deriver';
 
+// V5: SEC-bench Pro LLM Judge 集成
+import { LLMJudge, ExecutionEvidence, ThreeStateEvidence, llmJudge as defaultJudge } from './judge';
+
 /**
  * Minimal facade interface used by FlowOrchestrator.
  * Breaks the circular dependency between engine.ts and orchestrator.ts
@@ -56,9 +59,71 @@ export class FlowOrchestrator {
   private isPaused = false;
   private pausedAtPhase: string | null = null;
   private cachedSortedPhases: PlaybookPhase[] | null = null;
+  // V5: LLM Judge 实例（可选，未设置时使用默认单例）
+  private _judge: LLMJudge | null = null;
 
   constructor(engine: EngineFacade) {
     this.engine = engine;
+  }
+
+  /**
+   * V5: 设置 LLM Judge 实例（若未设置则使用默认单例）
+   */
+  setJudge(judge: LLMJudge): void {
+    this._judge = judge;
+  }
+
+  /**
+   * V5: 获取当前 LLM Judge 实例
+   */
+  private getJudge(): LLMJudge {
+    return this._judge ?? defaultJudge;
+  }
+
+  /**
+   * V5: 使用 LLM Judge 验证阶段 findings
+   * 基于 SEC-bench Pro 的三证据模型，过滤误报
+   * @param findings 原始 findings
+   * @returns 验证后的 findings
+   */
+  private validateFindingsWithJudge(findings: Finding[]): Finding[] {
+    if (findings.length === 0) return [];
+
+    const judge = this.getJudge();
+    const validated: Finding[] = [];
+    let verifiedCount = 0;
+    let illegalCount = 0;
+
+    for (const finding of findings) {
+      // 构建 primary evidence（基于 finding 本身的证据）
+      const primaryEvidence: ThreeStateEvidence = {
+        target: finding.skillId,
+        executionOutput: finding.evidence || finding.description,
+        exitCode: finding.severity === 'critical' || finding.severity === 'high' ? 1 : 0,
+        hasCrashSignal: finding.severity === 'critical' || finding.severity === 'high',
+        errorType: finding.severity,
+        stackTrace: finding.evidence,
+      };
+
+      const evidence: ExecutionEvidence = {
+        primary: primaryEvidence,
+      };
+
+      const verdict = judge.judge(finding, evidence);
+
+      if (verdict.verdict === 'verified') {
+        validated.push(finding);
+        verifiedCount++;
+      } else {
+        illegalCount++;
+      }
+    }
+
+    if (illegalCount > 0) {
+      console.log(`[FlowOrchestrator] LLM Judge 过滤了 ${illegalCount}/${findings.length} 个 findings（可疑误报）`);
+    }
+
+    return validated;
   }
 
   /**
@@ -304,7 +369,10 @@ export class FlowOrchestrator {
     }
 
     // 将 SkillResult 转换为 Finding
-    const findings = this.convertToFindings(skillResults);
+    const rawFindings = this.convertToFindings(skillResults);
+
+    // V5: LLM Judge 验证（过滤疑似误报）
+    const findings = this.validateFindingsWithJudge(rawFindings);
 
     const duration = `${Date.now() - phaseStart}ms`;
 
@@ -583,6 +651,7 @@ export class FlowOrchestrator {
 
   /**
    * 构建流程执行结果
+   * 直接从 context.findings 获取 findings，避免重复遍历 phaseResults
    */
   private buildResult(
     context: FlowContext,
@@ -600,25 +669,7 @@ export class FlowOrchestrator {
     const recommendations = this.buildRecommendations(phaseResults);
 
     // ========== 自动技能衍生 (Finding → Skill) ==========
-    try {
-      const allFindings: Finding[] = [];
-      for (const result of phaseResults) {
-        allFindings.push(...result.findings);
-      }
-      if (allFindings.length >= 2) {
-        const deriveResults = skillDeriver.analyzeAndDerive(allFindings);
-        if (deriveResults.length > 0) {
-          const successCount = deriveResults.filter(r => r.success).length;
-          if (successCount > 0) {
-            console.log(`[FlowOrchestrator] 🧬 自动衍生了 ${successCount}/${deriveResults.length} 个新技能`);
-            skillDeriver.persist();
-          }
-        }
-      }
-    } catch (err) {
-      // 技能衍生不应阻塞主流程
-      console.warn('[FlowOrchestrator] 技能衍生失败（非致命）:', err);
-    }
+    this._tryAutoDeriveSkills(context.findings);
 
     return {
       playbookId: this.playbook.id,
@@ -632,6 +683,26 @@ export class FlowOrchestrator {
       report,
       recommendations
     };
+  }
+
+  /**
+   * 尝试自动技能衍生（非致命，失败不应阻塞主流程）
+   */
+  private _tryAutoDeriveSkills(findings: Finding[]): void {
+    try {
+      if (findings.length >= 2) {
+        const deriveResults = skillDeriver.analyzeAndDerive(findings);
+        if (deriveResults.length > 0) {
+          const successCount = deriveResults.filter(r => r.success).length;
+          if (successCount > 0) {
+            console.log(`[FlowOrchestrator] 🧬 自动衍生了 ${successCount}/${deriveResults.length} 个新技能`);
+            skillDeriver.persist();
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[FlowOrchestrator] 技能衍生失败（非致命）:', err);
+    }
   }
 
   /**

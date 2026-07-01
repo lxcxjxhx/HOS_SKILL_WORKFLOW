@@ -12,7 +12,7 @@ export const javaDeserSkills: AttackDefenseSkill[] = [
             category: 'code-review',
             subCategory: 'java-deserialization',
             riskLevel: 'critical',
-            confidence: 0.93,
+            confidence: 0.96,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['java', 'deserialization', 'code-audit', 'rce', 'gadget-chain', 'ysoserial'],
@@ -173,7 +173,7 @@ export const javaDeserSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.93,
+            confidence: 0.96,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

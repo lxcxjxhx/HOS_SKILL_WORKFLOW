@@ -12,7 +12,7 @@ export const androidApkSkills: AttackDefenseSkill[] = [
             category: 'mobile',
             subCategory: 'android-apk',
             riskLevel: 'medium',
-            confidence: 0.87,
+            confidence: 0.91,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['android', 'apk', 'reverse-engineering', 'mobile-security', 'deobfuscation', 'frida'],
@@ -172,7 +172,7 @@ export const androidApkSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.87,
+            confidence: 0.91,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

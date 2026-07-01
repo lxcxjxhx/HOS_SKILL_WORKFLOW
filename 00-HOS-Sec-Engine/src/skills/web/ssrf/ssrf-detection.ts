@@ -13,7 +13,7 @@ export const ssrfDetectionSkills: AttackDefenseSkill[] = [
             category: 'web',
             subCategory: 'ssrf',
             riskLevel: 'critical',
-            confidence: 0.90,
+            confidence: 0.93,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['ssrf', 'server-side-request-forgery', 'cloud-metadata', 'dns-rebinding', 'internal-service', 'protocol-handler'],
@@ -341,7 +341,7 @@ export const ssrfDetectionSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-      confidence: 0.90,
+      confidence: 0.93,
       reviewed: true,
       tested: true,
       lastVerified: '2026-06',

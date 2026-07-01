@@ -13,7 +13,7 @@ export const rateLimitBypassSkills: AttackDefenseSkill[] = [
             category: 'api',
             subCategory: 'rate-limit',
             riskLevel: 'high',
-            confidence: 0.89,
+            confidence: 0.92,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['rate-limit', 'rate-limit-bypass', 'brute-force', 'ip-spoofing', 'x-forwarded-for', 'token-bucket', 'api-abuse', 'graphql-batching', 'enumeration'],
@@ -572,7 +572,7 @@ curl, requests, httpx, aiohttp 有不同的 JA3 指纹
             ],
         },
         quality: {
-            confidence: 0.89,
+            confidence: 0.92,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

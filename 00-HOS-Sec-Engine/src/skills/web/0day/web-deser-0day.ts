@@ -13,7 +13,7 @@ export const deser0daySkills: AttackDefenseSkill[] = [
       category: 'web',
       subCategory: 'deserialization',
       riskLevel: 'critical',
-      confidence: 0.85,
+      confidence: 0.89,
       updatedAt: '2026-06',
       author: 'HOS-Sec-Engine',
       tags: ['deserialization', '0day', 'rce', 'gadget-chain', 'java', 'php', 'python'],
@@ -220,7 +220,7 @@ export const deser0daySkills: AttackDefenseSkill[] = [
       ],
     },
     quality: {
-      confidence: 0.85,
+      confidence: 0.89,
       reviewed: false,
       tested: false,
       lastVerified: '2026-06',

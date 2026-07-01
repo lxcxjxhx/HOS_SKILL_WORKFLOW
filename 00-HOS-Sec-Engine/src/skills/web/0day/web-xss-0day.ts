@@ -13,7 +13,7 @@ export const xss0daySkills: AttackDefenseSkill[] = [
       category: 'web',
       subCategory: 'xss',
       riskLevel: 'high',
-      confidence: 0.85,
+      confidence: 0.89,
       updatedAt: '2026-06',
       author: 'HOS-Sec-Engine',
       tags: ['xss', '0day', 'filter-bypass', 'csp-bypass', 'dom-xss', 'stored-xss'],
@@ -238,7 +238,7 @@ export const xss0daySkills: AttackDefenseSkill[] = [
       ],
     },
     quality: {
-      confidence: 0.85,
+      confidence: 0.89,
       reviewed: false,
       tested: false,
       lastVerified: '2026-06',

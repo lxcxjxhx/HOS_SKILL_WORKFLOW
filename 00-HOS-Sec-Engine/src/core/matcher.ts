@@ -4,6 +4,8 @@ import { SkillScorer } from './scorer';
 
 /**
  * 多维度 Skill 匹配器
+ * 管理 Skill 过滤缓存和评分计算。
+ * 每个实例拥有独立的 filterCache 和 scorer，避免全局状态共享。
  */
 export class SkillMatcher {
   private maxResults: number;
@@ -14,10 +16,13 @@ export class SkillMatcher {
   private filterCacheMisses = 0;
   /** 最大评分 Skill 数量，防止恶意大量 Skill 数据导致性能问题 */
   private static readonly MAX_SCORE_SKILLS = 500;
+  /** 实例化的评分器，每个匹配器拥有独立的缓存 */
+  private scorer: SkillScorer;
 
   constructor(config: { maxResults?: number; minMatchScore?: number } = {}) {
     this.maxResults = config.maxResults ?? 10;
     this.minMatchScore = config.minMatchScore ?? 0.1;
+    this.scorer = new SkillScorer();
   }
 
   /**
@@ -48,7 +53,7 @@ export class SkillMatcher {
     const limit = Math.min(filteredSkills.length, SkillMatcher.MAX_SCORE_SKILLS);
     for (let i = 0; i < limit; i++) {
       const skill = filteredSkills[i];
-      const { score, details } = SkillScorer.calculate(query.scenario, skill.trigger);
+      const { score, details } = this.scorer.calculate(query.scenario, skill.trigger);
       if (score >= this.minMatchScore) {
         results.push({
           skill,
@@ -123,23 +128,26 @@ export class SkillMatcher {
   }
 
   /**
-   * 清除过滤缓存
+   * 清除所有缓存（filter + scorer）
+   * 当技能列表变更时调用，确保下次匹配使用最新数据
    */
   clearCache(): void {
     this.filterCache.clear();
     this.filterCacheHits = 0;
     this.filterCacheMisses = 0;
+    this.scorer.clearCache();
   }
 
   /**
    * 获取缓存统计信息
    */
-  getCacheStats(): { hits: number; misses: number; hitRate: number } {
+  getCacheStats(): { hits: number; misses: number; hitRate: number; scorerStats: object } {
     const total = this.filterCacheHits + this.filterCacheMisses;
     return {
       hits: this.filterCacheHits,
       misses: this.filterCacheMisses,
       hitRate: total === 0 ? 0 : this.filterCacheHits / total,
+      scorerStats: this.scorer.getCacheStats(),
     };
   }
 }

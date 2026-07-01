@@ -13,7 +13,7 @@ export const idorDetectionSkills: AttackDefenseSkill[] = [
             category: 'api',
             subCategory: 'idor',
             riskLevel: 'high',
-            confidence: 0.90,
+            confidence: 0.93,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['idor', 'access-control', 'bola', 'authorization', 'parameter-tampering', 'enumeration', 'privilege-escalation'],
@@ -425,7 +425,7 @@ export const idorDetectionSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.90,
+            confidence: 0.93,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

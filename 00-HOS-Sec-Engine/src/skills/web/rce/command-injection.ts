@@ -13,7 +13,7 @@ export const commandInjectionSkills: AttackDefenseSkill[] = [
             category: 'web',
             subCategory: 'command-injection',
             riskLevel: 'critical',
-            confidence: 0.93,
+            confidence: 0.96,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['command-injection', 'os-command-injection', 'rce', 'blind-command-injection', 'dns-exfiltration', 'filter-bypass'],
@@ -401,7 +401,7 @@ export const commandInjectionSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.93,
+            confidence: 0.96,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

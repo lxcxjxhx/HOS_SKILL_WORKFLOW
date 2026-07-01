@@ -38,10 +38,18 @@ try {
 }
 
 let graphQLSkills: AttackDefenseSkill[] = [];
+let mcpSecuritySkillsList: AttackDefenseSkill[] = [];
 
 try {
   const mod = require('./graphql-injection');
   graphQLSkills = mod.graphQLSkills || [];
+} catch (e) {
+  // Skill file unavailable
+}
+
+try {
+  const mod = require('./mcp-security');
+  mcpSecuritySkillsList = mod.mcpSecuritySkills || [];
 } catch (e) {
   // Skill file unavailable
 }
@@ -52,6 +60,7 @@ export const apiSkills: AttackDefenseSkill[] = [
   ...oauthSkills,
   ...rateLimitSkills,
   ...graphQLSkills,
+  ...mcpSecuritySkillsList,
 ];
 
-export { jwtSkills, idorSkills, oauthSkills, rateLimitSkills, graphQLSkills };
+export { jwtSkills, idorSkills, oauthSkills, rateLimitSkills, graphQLSkills, mcpSecuritySkillsList };

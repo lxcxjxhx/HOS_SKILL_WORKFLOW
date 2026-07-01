@@ -13,7 +13,7 @@ export const sqliWafBypassSkills: AttackDefenseSkill[] = [
       category: 'web',
       subCategory: 'sql-injection',
       riskLevel: 'critical',
-      confidence: 0.92,
+      confidence: 0.95,
       updatedAt: '2026-06',
       author: 'HOS-Sec-Engine',
       tags: ['sqli', 'waf-bypass', 'injection', 'filter-evasion', 'sql-payload'],
@@ -237,7 +237,7 @@ export const sqliWafBypassSkills: AttackDefenseSkill[] = [
       ],
     },
     quality: {
-      confidence: 0.92,
+      confidence: 0.95,
       reviewed: true,
       tested: true,
       lastVerified: '2026-06',

@@ -5,6 +5,7 @@
 import { AttackDefenseSkill } from '\.\./\.\./types/skill';
 
 let javaDeserSkills: AttackDefenseSkill[] = [];
+let immatureVulnSkillList: AttackDefenseSkill[] = [];
 
 try {
   const mod = require('./java-deser');
@@ -13,8 +14,16 @@ try {
   // Skill file unavailable
 }
 
+try {
+  const mod = require('./immature');
+  immatureVulnSkillList = mod.immatureVulnSkills || [];
+} catch (e) {
+  // Skill file unavailable
+}
+
 export const codeReviewSkills: AttackDefenseSkill[] = [
   ...javaDeserSkills,
+  ...immatureVulnSkillList,
 ];
 
-export { javaDeserSkills };
+export { javaDeserSkills, immatureVulnSkillList };

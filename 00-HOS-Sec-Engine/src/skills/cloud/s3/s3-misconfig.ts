@@ -13,7 +13,7 @@ export const s3MisconfigSkills: AttackDefenseSkill[] = [
             category: 'cloud',
             subCategory: 's3',
             riskLevel: 'critical',
-            confidence: 0.92,
+            confidence: 0.95,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: [
@@ -381,7 +381,7 @@ export const s3MisconfigSkills: AttackDefenseSkill[] = [
             ],
         },
         quality: {
-            confidence: 0.92,
+            confidence: 0.95,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',

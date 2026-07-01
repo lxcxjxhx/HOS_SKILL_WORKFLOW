@@ -1,0 +1,1163 @@
+Securing LLM-as-a-Service for Small Businesses: An Industry
+Case Study of a Distributed Chatbot Deployment Platform
+Jiazhu Xie
+∗
+S4076491@student.rmit.edu.au
+RMIT University
+Melbourne, VIC, Australia
+Bowen Li
+∗
+S3890442@student.rmit.edu.au
+RMIT University
+Melbourne, VIC, Australia
+Heyu Fu
+S4153648@student.rmit.edu.au
+RMIT University
+Melbourne, VIC, Australia
+Chong Gao
+cyrus.gao@rmit.edu.au
+RMIT University
+Melbourne, VIC, Australia
+Ziqi Xu
+ziqi.xu@rmit.edu.au
+RMIT University
+Melbourne, VIC, Australia
+Fengling Han
+fengling.han@rmit.edu.au
+RMIT University
+Melbourne, VIC, Australia
+Abstract
+Large Language Model (LLM)-based question-answering systems
+offer significant potential for automating customer support and
+internal knowledge access in small businesses, yet their practi cal deployment remains challenging due to infrastructure costs,
+engineering complexity, and security risks, particularly in retrieval auangmented generation (RAG)-based settings. This paper presents
+industry case study of an open-source, multi-tenant platform
+that enables small businesses to deploy customised LLM-based sup port chatbots via a no-code workflow. The platform is built on
+distributed, lightweight k3s clusters spanning heterogeneous, low cost machines and interconnected through an encrypted overlay network, enabling cost-efficient resource pooling while enforcing
+container-based isolation and per-tenant data access controls. In
+addition, the platform integrates practical, platform-level defences
+against prompt injection attacks in RAG-based chatbots, translating
+insights from recent prompt injection research into deployable secu rity mechanisms without requiring model retraining or enterprise scale infrastructure. We evaluate the proposed platform through a
+real-world e-commerce deployment, demonstrating that secure and
+efficient LLM-based chatbot services can be achieved under realistic
+cost, operational, and security constraints faced by small businesses.
+The source code is available at https://aisuko.github.io/secure_llm/.
+CCS Concepts
+·Security and privacy
+→
+Software and application secu rity
+; ·Computing methodologies
+→
+Distributed computing
+methodologies
+;
+Natural language processing.
+∗These authors contributed equally to this work.
+Permission to make digital or hard copies of all or part of this work for personal or
+classroom use is granted without fee provided that copies are not made or distributed
+for profit or commercial advantage and that copies bear this notice and the full citation
+on the first page. Copyrights for components of this work owned by others than the
+author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or
+republish, to post on servers or to redistribute to lists, requires prior specific permission
+and/or a fee. Request permissions from permissions@acm.org.
+AISC 2026, Deakin, Melbourne
+©
+2026 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+ACM ISBN 978-x-xxxx-xxxx-x/YYYY/MM
+https://doi.org/10.1145/nnnnnnn.nnnnnnn
+Keywords
+Large Language Models, Retrieval-Augmented Generation, Prompt
+Injection, Secure Deployment, Small Businesses
+ACM Reference Format:
+Jiazhu Xie, Bowen Li, Heyu Fu, Chong Gao, Ziqi Xu, and Fengling Han.
+S
+2
+t
+0
+u
+2
+d
+6
+y
+. S
+o
+e
+f
+c
+a
+u
+D
+r
+i
+i
+s
+n
+t
+g
+rib
+L
+u
+LM
+te
+-
+d
+a
+C
+s-
+h
+a
+a
+-
+t
+S
+b
+e
+o
+r
+t
+v
+D
+ic
+e
+e
+p
+f
+l
+o
+o
+r
+y
+S
+m
+m
+en
+a
+t
+ll
+P
+B
+la
+u
+t
+s
+f
+i
+o
+n
+r
+e
+m
+ss
+.
+e
+In
+s:
+P
+A
+ro
+n
+c
+I
+e
+n
+e
+d
+d
+u
+in
+s
+g
+t
+s
+ry
+of
+C
+1
+a
+7
+s
+t
+e
+h
+Australasian Information Security Conference (AISC 2026). ACM, New York,
+NY, USA, 7 pages. https://doi.org/10.1145/nnnnnnn.nnnnnnn
+1
+Introduction
+Small businesses are increasingly seeking to adopt Large Language
+Model (LLM)-based question-answering systems to automate cus tomer support and internal knowledge access [
+3
+]. However, in prac tice, deploying such systems remains challenging due to a combina- tion of infrastructure costs, development complexity, and security
+risks. Domain-specific deployments typically require the integra- tion of external knowledge sources through retrieval-augmented
+generation (RAG) [
+7
+], tool invocation, or agent-based pipelines [21].
+These approaches demand engineering expertise that many small
+organisations do not possess [14].
+Through interactions with multiple small enterprises, we ob served recurring barriers to the adoption of AI-driven solutions.
+These include the absence of in-house development teams, budget
+constraints that preclude large-scale cloud infrastructure, and lim ited awareness of security risks such as data leakage and prompt
+injection attacks. In particular, RAG-based chatbots introduce new
+attack surfaces, where malicious instructions embedded in user
+queries or retrieved content (e.g., web pages or uploaded docu ments) may bypass intended system constraints and expose sensi tive business information [9, 19].
+This paper addresses these challenges through an industry case
+study of a platform designed to enable small businesses to deploy
+customised LLM-based support chatbots via a no-code workflow,
+analogous to how e-commerce platforms such as Shopify abstract
+the deployment of online stores. The platform is built on distributed,
+lightweight k3s clusters, a lightweight Kubernetes distribution de signed for resource-constrained and edge environments, spanning
+heterogeneous, low-end machines interconnected through an over lay network. This design enables cost-efficient resource pooling
+为⼩企业获取 LLM 即服务：分布式聊天机器⼈部署平台的⾏业案例
+研究
+谢家柱
+S4076491@student.rmit.edu.au
+墨尔本，维多利亚州，
+澳⼤利亚，RMIT ⼤学
+李 Bowen
+S3890442@student.rmit.edu.a
+u墨尔本，维多利亚州，澳⼤利
+亚，RMIT ⼤学
+傅赫宇
+S4153648@student.rmit.edu.au
+墨尔本，维多利亚州，
+澳⼤利亚，RMIT ⼤学
+钟⾼
+cyrus.gao@rmit.edu.au
+澳⼤利亚墨尔本 RMIT ⼤
+学，VIC
+徐⼦琪
+ziqi.xu@rmit.edu.au
+澳⼤利亚墨尔本 RMIT
+⼤学，VIC
+冯凌韩
+fengling.han@rmit.edu.au
+澳⼤利亚墨尔本维多利亚州
+RMIT ⼤学
+摘要
+基于⼤型语⾔模型（LLM）的问答系统为⼩型企业⾃动化客⼾⽀持和内
+部知识访问提供了巨⼤潜⼒，但由于基础设施成本、⼯程复杂性和安全
+⻛险，特别是在基于检索增强⽣成（RAG）的设置中，其实际部署仍然
+具有挑战性。本⽂展⽰了⼀个开源的多租⼾平台的⾏业案例研究，该平
+台通过⽆代码⼯作流程使⼩型企业能够部署定制化的基于 LLM 的⽀持
+聊
+建
+天
+，
+机
+并
+器
+通
+⼈
+过
+。
+加
+该
+密
+平
+覆
+台
+盖
+基
+⽹
+于
+络
+跨
+互
+异
+连
+构
+，
+低
+实
+成
+现
+本
+资
+机
+源
+器
+池
+的
+化
+分
+的
+布
+成
+式
+本
+轻
+效
+量
+益
+级
+，同
+k3
+时
+s
+强
+集
+制
+群
+执
+构
+⾏基于容器的隔离和每个租⼾的数据访问控制。此外，该平台集成了针
+对基于 RAG 的聊天机器⼈的实⽤平台级防御措施，以防范提⽰注⼊攻
+击。atbots，将最近的提⽰注⼊研究中的⻅解转化为⽆需模型重新训练
+或企业级基础设施即可部署的安全机制。我们通过⼀个真实的电⼦商务
+部署来评估所提出的平台，证明在中⼩企业⾯临的真实成本、运营和安
+全限制下，可以实现安全⾼效的基于 LLM 的聊天机器⼈服务。源代码
+可在 https://aisuko.github.io/secure_llm/ 获取。
+CCS Concepts 公司
+· 安全和隐私 → 软件和应⽤安全； · 计算⽅法 → 分布式计算⽅法；
+⾃然语⾔处理。
+∗ 这些作者对这项⼯作做出了同等贡献。
+授权以数字或硬拷⻉形式复制本⽂的全部或部分内容供个⼈或课堂教学使⽤，但须免费提供，
+且复制件不得⽤于盈利或商业优势，并且复制件需包含本声明并在⾸⻚完整注明引⽤信息。本
+⽂中由⾮作者拥有的部分版权必须得到尊重。经注明出处后允许摘录。否则复制或再出版、在
+服务器上发布或重新分发到列表中，均需事先获得特定许可和/或付费。请通过
+permissions@acm.org 申请许可。
+AISC 2026 会议，迪肯⼤学，墨尔本
+© 2026 版权由所有者/作者持有。出版权许可给 ACM。ACM ISBN 978-x-xxxx-xxxx x/YYYY/MM https://doi.org/10.1145/nnnnnnn.nnnnnnn
+关键词
+⼤型语⾔模型，检索增强⽣成，提⽰注⼊，安全部署，中⼩企业
+ACM 参考格式：
+Jiazhu Xie, Bowen Li, Heyu Fu, Chong Gao, Ziqi Xu, 和 Fengling Han. 2026. 为
+中
+会
+⼩
+议
+企
+论
+业
+⽂
+保
+集
+障
+中.
+LLM 服务：分布式聊天机器⼈部署平台的⾏业案例研究. 在第 17 届
+澳⼤拉西亚信息安全会议（AISC 2026）。ACM，纽约，
+纽约，美国，7 ⻚。https://doi.org/10.1145/nnnnnnn.nnnnnnn
+1 简介
+⼩型企业正越来越多地寻求采⽤基于⼤型语⾔模型（LLM）的问答系
+统来⾃动化客⼾⽀持和内部知识访问[3]。然⽽，在实践中，部署此类
+系统仍然具有挑战性，这是由于基础设施成本、开发复杂性和安全⻛
+险等多⽅⾯因素。特定领域的部署通常需要通过检索增强⽣成
+（RAG）[7]、⼯具调⽤或基于代理的管道[21]集成外部知识源。这些
+⽅法需要⼯程专业知识，⽽许多⼩型组织并不具备这种能⼒[14]。
+在与多家⼩型企业的互动中，我们观察到采⽤ AI 驱动解决⽅案时存在
+反复出现的障碍。这些包括缺乏内部开发团队、预算限制导致⽆法构
+建⼤规模云基础设施，以及对数据泄露和提⽰注⼊攻击等安全⻛险认
+知有限。特别是基于 RAG 的聊天机器⼈引⼊了新的攻击⾯，其中嵌⼊
+在⽤⼾查询或检索内容（例如⽹⻚或上传⽂档）中的恶意指令可能绕
+过系统预期限制，并暴露敏感商业信息[9, 19]。
+本⽂通过⼀个⾏业案例研究来解决这些挑战，该案例研究介绍了⼀个
+平台，旨在通过⽆代码⼯作流程使⼩型企业能够部署基于 LLM 的定制
+化⽀持聊天机器⼈，类似于 Shopify 等电⼦商务平台如何抽象化在线
+商店的部署。该平台基于分布式、轻量级的 k3s 集群构建，k3s 是⼀
+个为资源受限和边缘环境设计的轻量级 Kubernetes 发⾏版，跨越异
+构、低端机器，这些机器通过覆盖⽹络互联。这种设计实现了资源池
+化的成本效益
+arX
+i
+v:2
+601.1
+5
+5
+2
+8
+v
+1
+[
+c
+s.D
+C
+]
+2
+1
+J
+a
+n
+2
+0
+2
+6
+a
+rX
+i
+v:2
+6
+0
+1.1
+5
+5
+2
+8
+v
+1
+[
+c
+s.D
+C
+]
+2
+0
+2
+6
+年
+1
+⽉
+2
+1
+⽇
+AISC 2026, Feb, 2026, Deakin, Melbourne Xie et al.
+while enforcing container-based isolation and per-tenant data ac cess controls. These architectural choices reduce cross-tenant in terference, limit the blast radius of compromised components, and
+support the deployment of a secure edge private cloud tailored to
+small-business environments. Beyond infrastructure considerations, the platform incorporates
+practical defences against prompt injection attacks in RAG-based
+chatbots. Specifically, it translates insights from existing prompt
+injection research into platform-level, multi-tenant security mecha nisms that can be deployed without enterprise-scale infrastructure
+or model retraining, making them suitable for resource-constrained
+organisations. Our main contributions are as follows:
+·We present an open-source, multi-tenant LLM deployment
+platform for small businesses, built on lightweight k3s clusters
+interconnected via an overlay network and designed to operate
+under realistic cost and operational constraints.
+·We show how platform-level security mechanisms, including
+container-based isolation and layered defences against prompt
+injection, can be integrated into RAG-based LLM systems with out enterprise-scale infrastructure or model retraining.
+·We evaluate the proposed deployment and security strategies
+through a real-world e-commerce case study, assessing both
+their effectiveness and efficiency.
+Collectively, our findings provide actionable guidance for prac titioners seeking to balance cost, security, and usability when de ploying LLM-based services in small-business settings.
+2
+Background and Deployment Context
+2.1 Target Users and Usage Scenarios
+The platform targets small businesses that require domain-specific
+support chatbots, such as e-commerce retailers, service providers,
+training and educational organizations, and professional consultan cies. Typical use cases include answering product inquiries, order
+and policy questions, and providing information derived from inter nal knowledge bases, such as company documentation or domain specific reference materials. These organizations generally lack dedicated AI or security engi neering teams and require solutions that can be deployed and man aged through minimal configuration [14]. The platform is not in tended for high-stakes autonomous decision-making or unrestricted
+generative tasks, but rather for constrained, domain-bounded ques tion answering under operator-defined policies.
+2.2 Operational and Infrastructure Constraints
+Centralised cloud GPU services offered by major public cloud
+providers are commonly used to host LLM workloads. However,
+their cost structures make continuous operation economically im practical for many small businesses, limiting access to production grade LLM services in such settings. To address this limitation,
+we consider an alternative deployment model that leverages ex isting, low-cost hardware rather than relying on uniform, high performance machines. Deployment environments in this context
+are typically resource-constrained, geographically distributed, and
+lack enterprise-grade networking guarantees [18], making tradi tional centralised cluster designs difficult to apply in practice.
+Importantly, any alternative deployment must also satisfy base line security requirements appropriate for handling both customer facing and internal business data. In particular, the platform must
+enforce strong isolation between tenants, restrict data access to
+intended scopes, and limit the blast radius of potential compro mises in a distributed environment. These security requirements,
+together with cost and operational constraints, motivate the adop tion of lightweight Kubernetes (k3s) clusters [17] distributed across multiple sites and interconnected via an encrypted overlay network.
+2.3 Regulatory Requirements
+Deployments of the platform are informed by the Australian Pri vacy Act 1988 [
+1
+] and the Australian Privacy Principles (APPs) [12],
+which provide regulatory guidance on the lawful collection, use,
+storage, and protection of personal information in AI-enabled sys tems. In particular, these principles emphasise data minimisation,
+transparency in data handling and processing, and reasonable pro tection against unauthorised access or misuse. These considerations
+are especially relevant for multi-tenant LLM platforms that handle
+both customer-facing and internal business data across organisa- tional boundaries. These regulatory requirements form part of the deployment con text and inform the platform
+’
+s architectural and security design
+decisions. The manner in which these considerations are opera- tionalised through system design choices and mitigation strategies
+is discussed in Sections 3 and 4.
+3
+Platform Architecture
+Modern LLM-based intelligent systems critically rely on cloud com puting infrastructure to achieve scalability, reliability, and secure
+isolation in practical deployments [15]. Our platform is built on a
+high-availability, cloud-native architecture using an HA k3s clus ter [17], spanning heterogeneous compute nodes interconnected
+via a secure overlay network with 60‒200 ms latency. The cluster
+comprises replicated control-plane nodes for fault tolerance and
+GPU-accelerated worker nodes for LLM inference, enabling elastic
+scheduling and resilient execution under realistic network con straints. By combining lightweight container orchestration, GPU aware workload isolation, and overlay-based networking [
+2
+], the
+platform illustrates how modern cloud computing technologies can
+serve as a foundational enabler for robust and cost-effective deploy ment of LLM-based intelligent systems beyond hyperscale cloud
+environments. Figure 1 provides an overview of the architecture.
+4
+Secure Design of RAG-based LLM Platforms
+4.1 Threat Model
+Retrieval-augmented generation (RAG) improves enterprise chat bots by grounding responses in external knowledge sources, but
+it also introduces new security risks [11]. In such systems, user
+queries and retrieved documents are incorporated into the model’
+s
+context, creating opportunities for attackers to inject malicious in structions that interfere with the model’
+s intended behavior. Such
+attacks may cause the model to override business rules or disclose
+sensitive information. These threats have been identified as prac tical concerns in recent studies on prompt injection and indirect
+prompt injection attacks [4, 16].
+AISC 2026，2026 年 2 ⽉，迪肯⼤学，墨尔本 谢等⼈
+同时执⾏基于容器的隔离和每个租⼾的数据访问控制。这些架构选择
+减少了跨租⼾⼲扰，限制了受损组件的破坏范围，并⽀持为⼩型企业
+环境部署定制的安全边缘私有云。
+在基础设施考量之外，该平台在基于 RAG 的聊天机器⼈中集成了实⽤
+的防范提⽰注⼊攻击的防御措施。具体⽽⾔，它将现有提⽰注⼊研究
+的⻅解转化为可在⽆需企业级基础设施或模型重新训练的情况下部署
+的平台级、多租⼾安全机制，使其适合资源受限的组织。我们的主要
+贡献如下：
+·我们为⼩企业呈现了⼀个开源的多租⼾ LLM 部署平台，该平台基
+于轻量级的 k3s 集群，通过覆盖⽹络互连，并设计为在现实成本
+和运营约束下运⾏。
+·我们展⽰了平台级安全机制，包括基于容器的隔离和针对提⽰注
+⼊的多层防御，如何在不依赖企业级基础设施或模型重新训练的
+情况下集成到基于 RAG 的⼤型语⾔模型系统中。
+·我们通过⼀个真实的电⼦商务案例研究评估了所提出的部署和安
+全策略，评估了它们的有效性和效率。
+总体⽽⾔，我们的研究结果为寻求在⼩企业环境中部署基于⼤型语⾔模
+型的服务时平衡成本、安全和可⽤性的从业者提供了可操作的指导。
+2 背景和部署环境
+2.1 ⽬标⽤⼾和使⽤场景
+该平台⾯向需要特定领域⽀持聊天机器⼈的中⼩企业，例如电⼦商务
+零售商、服务提供商、培训和教育机构以及专业咨询公司。典型⽤例
+包括回答产品咨询、订单和政策问题，以及提供源⾃内部知识库的信
+息，例如公司⽂档或特定领域参考材料。
+这些组织通常缺乏专⻔的 AI 或安全⼯程团队，并需要能够通过极少的
+配置进⾏部署和管理的解决⽅案[14]。该平台并⾮⽤于⾼⻛险的⾃主
+决策或不受限制的⽣成任务，⽽是⽤于在操作员定义的策略下进⾏受
+限的、领域受限的问题回答。
+2.2 运营和基础设施限制
+⼤型公有云提供商提供的集中式云 GPU 服务通常⽤于托管 LLM ⼯作负
+载。然⽽，其成本结构使得许多⼩企业难以持续运营，限制了在这样的
+环境中访问⽣产级 LLM 服务。为解决这⼀限制，我们考虑⼀种替代部
+署模型，该模型利⽤现有的低成本硬件，⽽不是依赖统⼀的、⾼性能机
+器。在这种上下⽂中，部署环境通常资源受限、地域分布，且缺乏企业
+级⽹络保证[18]，这使得传统的集中式集群设计在实际中难以应⽤。
+重要的是，任何替代部署也必须满⾜适⽤于处理客⼾⾯和内部业务数据
+的基线安全要求。特别是，平台必须在租⼾之间强制执⾏强隔离，限制
+数据访问到预期范围，并限制分布式环境中潜在妥协的破坏范围。这些
+安全要求，连同成本和运营限制，促使采⽤轻量级 Kubernetes（k3s）
+集群[17]，这些集群分布在多个地点，并通过加密覆盖⽹络互连。
+2.3 监管要求
+平台的部署遵循澳⼤利亚 1988 年隐私法[1]和澳⼤利亚隐私原则
+（APPs）[12]，这些法规为 AI 赋能系统中的个⼈信息合法收集、使
+⽤、存储和保护提供了监管指导。特别是，这些原则强调数据最⼩
+化、数据处理和处理的透明度，以及合理地防⽌未经授权的访问或滥
+⽤。这些考虑因素对于处理跨组织边界的前端客⼾和内部业务数据的
+租⼾式 LLM 平台尤其相关。
+这些监管要求是部署环境的⼀部分，并指导平台的架构和安全设计决
+策。这些考虑因素如何通过系统设计选择和缓解策略来实现，将在第
+3 节和第 4 节中讨论。
+3 平台架构
+现代基于 LLM 的智能系统在实践部署中严重依赖于云计算基础设施以
+实现可扩展性、可靠性和安全隔离[15]。我们的平台基于⾼可⽤性、云
+原⽣的架构，使⽤ HA k3s 集群[17]构建，跨越异构计算节点，通过具
+有 60-200 毫秒延迟的安全覆盖⽹络互连。该集群包含⽤于容错的可复
+制控制平⾯节点和⽤于 LLM 推理的 GPU 加速⼯作节点，能够在现实⽹
+络约束下实现弹性调度和弹性执⾏。通过结合轻量级容器编排、GPU
+感知⼯作负载隔离和基于覆盖的⽹络[2]，该平台展⽰了现代云计算技
+术如何作为基础赋能器，在超⼤规模云环境之外实现 LLM 智能系统的
+稳健和成本效益部署。图 1 提供了架构的概述。
+4 基于 RAG 的 LLM 平台的 secure 设计
+4.1 威胁模型
+检索增强⽣成（RAG）通过将回复基于外部知识源来改进企业聊天机器
+⼈，但它也引⼊了新的安全⻛险[11]。在这样的系统中，⽤⼾查询和检
+索到的⽂档被纳⼊模型的上下⽂中，为攻击者注⼊恶意指令提供了机
+会，这些指令会⼲扰模型的预期⾏为。此类攻击可能导致模型覆盖业务
+规则或泄露敏感信息。这些威胁在最近关于提⽰注⼊和间接提⽰注⼊攻
+击的研究中被识别为实际问题[4, 16]。
+Securing LLM-as-a-Service for Small Businesses: An Industry Case Study of a Distributed Chatbot Deployment Platform AISC 2026, Feb, 2026, Deakin, Melbourne
+Figure 1: The platform operates on a lightweight, Kubernetes-based edge private cloud interconnected via a secure overlay network. User requests are routed through a load-balancing layer to AI-powered chatbot services deployed on the cluster. The
+Kubernetes control plane runs on commodity machines, while inference workloads execute on DGX Spark‒based accelerator
+nodes, providing large shared memory for efficient and cost-effective LLM inference without dedicated GPUs. The control
+plane manages scheduling and fault recovery across heterogeneous resources, enabling dynamic workload placement and
+resilient, secure AI service hosting.
+Figure 2: Security-aware RAG workflow with layered prompt
+injection defences. Tenant documents are pre-processed
+through PII screening and de-identification before indexing.
+At runtime, user queries and retrieved context are filtered
+by GenTel-Shield and constrained by system-level guard
+prompts prior to LLM generation.
+In multi-tenant deployments, the impact of prompt injection
+attacks is further amplified. Failure to properly constrain model
+behavior or isolate data access may result not only in individual chatbot misuse, but also in broader privacy and regulatory risks,
+including cross-tenant data leakage.
+4.2 Mitigation Strategy
+To address prompt injection risks under the cost, infrastructure, and
+operational constraints described in Section 2, the platform adopts a
+layered mitigation strategy that combines prompt-level behavioural guardrails with a pre-trained prompt injection detection model.
+Figure 2 illustrates the end-to-end security-aware RAG workflow,
+highlighting how document ingestion-time filtering and query-time
+defences are jointly applied prior to LLM generation.
+4.2.1 Prompt-level Guard Prompts. The first layer of defence con sists of guard prompts embedded directly into the system prompt,
+establishing irrecoverable behavioural constraints for the LLM. We
+draw on existing prompt engineering‒based defences [
+5, 6, 20
+]
+against prompt injection attacks to design a set of guard prompts.
+These guard prompts prohibit role switching, permission escala- tion, and the execution of instructions embedded within retrieved
+content. They also prevent the disclosure of internal system rules,
+prompts, or safety mechanisms, thereby mitigating probing and
+prompt-leakage attacks. Because this defence operates entirely at
+为⼩企业保障 LLM 即服务：分布式聊天机器⼈部署平台的⾏业案例研究 AISC 2026，2 ⽉，2026 年，迪肯⼤学，墨尔本
+图 1：该平台基于轻量级、基于 Kubernetes 的边缘私有云运⾏，并通过安全覆盖⽹络互连。⽤⼾请求通过负载均衡层路由到集群上部署的 AI 驱动
+的聊天机器⼈服务。Kubernetes 控制平⾯运⾏在通⽤机器上，⽽推理⼯作负载在基于 DGX Spark 的加速器节点上执⾏，提供⼤型共享内存，以⾼
+效且经济的⽅式执⾏ LLM 推理，⽽⽆需专⽤ GPU。控制平⾯管理跨异构资源的调度和故障恢复，⽀持动态⼯作负载部署和弹性、安全的 AI 服务托
+管。
+图 2：具有分层提⽰注⼊防御的安全感知 RAG ⼯作流。租⼾⽂档在索引
+前通过 PII 筛查和去识别化进⾏预处理。在运⾏时，⽤⼾查询和检索到
+的上下⽂在 LLM ⽣成之前由 GenTel-Shield 过滤并由系统级保护提⽰约
+束。
+在多租⼾部署中，提⽰注⼊攻击的影响进⼀步加剧。未能适当限制
+模型
+⾏为或隔离数据访问不仅可能导致单个聊天机器⼈的滥⽤，还可能带来
+更⼴泛的隐私和监管⻛险，包括跨租⼾数据泄露。
+4.2 缓解策略
+为应对第 2 节所述的成本、基础设施和运营限制下的提⽰注⼊⻛险，
+平台采⽤了⼀种分层缓解策略，该策略结合了提⽰级别的⾏为护栏和
+预训练的提⽰注⼊检测模型。图 2 展⽰了端到端的安全感知 RAG ⼯作
+流程，突出了在 LLM ⽣成之前如何联合应⽤⽂档摄⼊时间过滤和查询
+时间防御。
+4.2.1 提⽰级别的防护提⽰。第⼀层防御由直接嵌⼊系统提⽰中的防
+护提⽰组成，为⼤型语⾔模型建⽴不可恢复的⾏为约束。我们借鉴现
+有的基于提⽰⼯程的防御措施[5, 6, 20]来设计⼀组防护提⽰。这些防
+护提⽰禁⽌⻆⾊切换、权限提升以及执⾏检索内容中嵌⼊的指令。它
+们还防⽌披露内部系统规则、提⽰或安全机制，从⽽减轻探测和提⽰
+泄露攻击。由于这种防御完全在
+AISC 2026, Feb, 2026, Deakin, Melbourne Xie et al.
+the prompt level, it is model-agnostic and introduces negligible
+runtime overhead, making it suitable for continuous use across
+heterogeneous deployment environments.
+4.2.2 Prompt Injection Detection with GenTel-Shield. While prompt level guard prompts provide essential baseline constraints on model
+behaviour, they are inherently limited by their static nature and
+rule-based design. In particular, they are not well suited to detecting
+subtle or obfuscated prompt injection attempts embedded within re trieved external content, where malicious intent may be expressed
+indirectly through natural language rather than explicit instruc tions [
+8
+]. As a result, guard prompts alone are insufficient to identify
+all prompt injection risks in RAG-based systems. To complement
+prompt-level defences, the platform integrates a trained prompt
+injection detector based on GenTel-Shield [8].
+GenTel-Shield is a pre-trained, model-agnostic detection model
+that classifies inputs according to whether they exhibit charac teristics of prompt injection attacks. It supports both binary and
+multi-class detection and can be applied to user queries as well as retrieved content prior to generation. According to its original eval uation, GenTel-Shield demonstrates strong detection performance
+across diverse attack scenarios while maintaining low false-positive
+rates for benign inputs. Within the platform, the detector is deployed as a pre-generation
+filter. Inputs identified as malicious are blocked before reaching
+the LLM, while benign inputs proceed through the RAG pipeline.
+This design allows the detection component to operate indepen dently of the underlying LLM, avoiding model retraining or invasive
+modifications and keeping operational costs low.
+Overall, this layered mitigation strategy aligns with the regu latory and security constraints outlined in Section 2, particularly
+those related to data protection and tenant isolation. Its effective ness and efficiency are evaluated through an e-commerce deploy ment case study in Section 5.
+5
+Case Study: A Secure Multi-Tenant
+RAG-Based E-Commerce Chatbot Platform
+5.1 Deployment Setup
+We evaluate the proposed mitigation strategies through a real-world
+case study based on an e-commerce deployment on the platform.
+The platform is deployed as a multi-tenant RAG-based chatbot
+service on distributed, lightweight k3s clusters interconnected via
+an encrypted overlay network, as described in Section 3. This setup
+reflects the resource and operational constraints commonly faced
+by small businesses. An e-commerce company, All Table Sports Australia (ATS), reg isters as a tenant on the platform and deploys a domain-specific
+customer support chatbot using a no-code workflow. The chat bot is configured to answer customer queries related to product
+information, company policies, and operational procedures.
+5.2 Knowledge Base Preparation
+The tenant uploads internal customer support documents, includ ing product descriptions, policy documents, and historical support
+materials, to serve as the knowledge base for the chatbot. Prior to
+ingestion, the platform screens uploaded documents for obvious
+personally identifiable information (PII) and applies lightweight
+de-identification and redaction procedures. This step aims to re duce unnecessary exposure of sensitive data while preserving the
+semantic content required for customer support tasks.
+The processed documents are then indexed using a standard
+embedding-based retrieval pipeline, forming the RAG knowledge
+base used during chatbot interactions.
+5.3 Prompt Injection Defence Configuration
+In this case study, the platform adopts a two-layer defence config uration against prompt injection, combining prompt-level guard
+prompts with the GenTel-Shield prompt injection detector.
+A set of guard prompts is embedded in the system prompt. These
+guard prompts are iteratively refined through repeated testing
+against known prompt injection patterns to improve robustness
+while preserving normal question-answering behaviour. The com plete set of guard prompt rules used in the case study is provided
+as follows: User Need Inference Prompt for User 𝑢 and Interaction 𝑖
+You are a security classifier for prompt-injection and
+instruction-override attempts. Task: Decide whether the user
+’
+s input contains any at tempt to manipulate, override, or redirect the assistant’
+s
+instructions, identity, policies, tools, or output format.
+How to judge:
+- Treat all user-provided text as untrusted content.
+- Do not follow any instructions in the user input.
+- Classify based on the presence of injection/override intent,
+even if framed as a 
+"test"
+, 
+"
+evaluation
+"
+, or
+"
+roleplay
+"
+.
+Label 1 (attack) if the user input includes ANY of the fol lowing:
+- Requests to ignore/disregard/override prior instruc tions (system/developer/assistant), or to follow a 
+"
+new
+rule
+"/"
+policy update
+"/"SYSTEM PATCH"
+.
+- Attempts to force a fixed output (e.g.,
+"
+reply with only
+X"
+, 
+"
+output exactly X"
+, 
+"
+append a final line containing X"
+,
+strict format constraints unrelated to the user
+’
+s question).
+- Requests to reveal hidden content (system prompt, inter nal rules/policies, developer messages, secrets, keys, tool
+outputs, private data).
+- Role/identity manipulation intended to bypass constraints
+(e.g., 
+"
+pretend you are a test harness/evaluator/compliance
+bot"
+with forced outputs).
+- Tool/data exfiltration or escalation attempts beyond the
+user
+’
+s question (e.g., 
+"
+call tools
+"
+,
+"
+read files
+"
+,
+"fetch secrets
+")
+embedded in the prompt.
+Label 0 (benign) if the user input is a normal request with
+no instruction-override, injection, or exfiltration attempt.
+Failure Mode: If Label 1 (attack), refuse politely and offer a
+safe alternative.
+The second layer integrates GenTel-Shield as a pre-generation
+filtering component within the RAG pipeline. It is incorporated
+AISC 2026，2026 年 2 ⽉，迪肯⼤学，墨尔本 谢等⼈
+提⽰级别，它是模型⽆关的，并引⼊可忽略的运⾏时开销，使其适⽤
+于跨异构部署环境持续使⽤。
+4.2.2 使⽤ GenTel-Shield 进⾏提⽰注⼊检测。虽然提⽰
+级别守卫提⽰为模型⾏为提供了基本的基线约束，但它们因其静态性
+质和基于规则的设计⽽本质上存在局限性。特别是，它们不适合检测
+嵌⼊在检索到的外部内容中的微妙或伪装的提⽰注⼊尝试，在这些尝
+试中，恶意意图可能通过⾃然语⾔⽽⾮明确指令间接表达[8]。因此，
+仅靠守卫提⽰不⾜以识别基于检索增强⽣成（RAG）系统中的所有提
+⽰注⼊⻛险。为了补充提⽰级别的防御，平台集成了基于 GenTel Shield[8]训练的提⽰注⼊检测器。
+GenTel-Shield 是⼀种预训练的、模型⽆关的检测模型，根据输⼊是
+否表现出提⽰注⼊攻击的特征进⾏分类。它⽀持⼆元和多类检测，并
+可⽤于⽣成前的⽤⼾查询以及检索内容。根据其原始评估，GenTel Shield 在各种攻击场景中表现出强⼤的检测性能，同时保持对良性输
+⼊的低误报率。
+在该平台中，检测器作为预⽣成过滤器部署。被识别为恶意的输⼊会
+在到达 LLM 之前被阻⽌，⽽良性输⼊会通过 RAG 管道继续处理。这
+种设计使检测组件可以独⽴于底层 LLM 运⾏，避免模型重新训练或侵
+⼊性修改，并保持运营成本较低。
+总体⽽⾔，这种分层缓解策略与第 2 节中概述的监管和安全约束相
+符，特别是与数据保护和租⼾隔离相关的内容。其有效性和效率通过
+第 5 节的电⼦商务部署案例研究进⾏评估。
+5 案例研究：⼀个安全的基于 RAG 的多租⼾电⼦商
+务聊天机器⼈平台
+5.1 部署设置
+我们通过⼀个基于平台电⼦商务部署的真实案例研究来评估所提出的
+缓解策略。该平台部署为多租⼾基于 RAG 的聊天机器⼈服务，在通过
+加密覆盖⽹络互连的分布式轻量级 k3s 集群上，如第 3 节所述。这种
+设置反映了⼩型企业通常⾯临的资源和运营限制。
+⼀家电⼦商务公司，All Table Sports Australia (ATS)，在平台上注册
+为租⼾，并使⽤⽆代码⼯作流程部署了⼀个特定于领域的客⼾⽀持聊
+天机器⼈。该聊天机器⼈配置为回答与产品信息、公司政策和运营程
+序相关的客⼾查询。
+5.2 知识库准备
+租⼾上传内部客⼾⽀持⽂档，包括产品描述、政策⽂件和历史⽀持材
+料，以作为聊天机器⼈的知识库。在摄⼊之前，平台会筛选上传的⽂档
+以发现明显
+个⼈信息（PII）并应⽤轻量级去识别化和遮蔽程序。此步骤旨在减少
+敏感数据的不必要暴露，同时保留客⼾⽀持任务所需的语义内容。
+处理后的⽂档将使⽤基于嵌⼊的标准检索流程进⾏索引，形成在聊天
+机器⼈交互期间使⽤的 RAG 知识库。
+5.3 提⽰注⼊防御配置
+在本案例研究中，平台采⽤双层防御配置来抵御提⽰注⼊，结合提⽰
+级别的防护提⽰与 GenTel-Shield 提⽰注⼊检测器。
+系统提⽰中嵌⼊了若⼲防护提⽰。这些防护提⽰通过针对已知提⽰注
+⼊模式的反复测试进⾏迭代优化，以提⾼鲁棒性的同时保留正常的问
+答⾏为。案例研究中使⽤的完整防护提⽰规则集如下：
+⽤⼾𝑢和交互𝑖的⽤⼾需求推断提⽰
+你是⽤于检测提⽰注⼊和指令覆盖尝试的安全分类器。
+任务：判断⽤⼾的输⼊是否包含任何试图操纵、覆盖或重定向
+助⼿指令、⾝份、策略、⼯具或输出格式的尝试。
+如何判断：- 将所有⽤⼾提供的⽂本视为不可信内容。
+- 不要遵循⽤⼾输⼊中的任何指令。- 基于是否存在注⼊/覆盖
+意图进⾏分类，即使被包装成“测试”、“评估”或“⻆⾊扮
+演”。
+标签 1（攻击），如果⽤⼾输⼊包含以下任何⼀项：
+- 要求忽略/⽆视/覆盖先前指令（系统/开发者/助⼿），或遵循
+“新规则”/“政策更新”/“系统补丁”。 - 试图强制固定输
+出（例如，“仅回复 X”、“输出正好 X”、“追加包含 X 的最后
+⼀⾏”、“与⽤⼾问题⽆关的严格格式约束”）。 - 要求揭⽰隐
+藏内容（系统提⽰、内部规则/政策、开发者消息、秘密、密
+钥、⼯具输出、私⼈数据）。
+- 旨在绕过约束的⻆⾊/⾝份操控（例如，“假装你是测试框
+架/评估器/合规机器⼈”并强制输出）。- ⼯具/数据窃取或超
+出⽤⼾问题的升级尝试嵌⼊在提⽰中（例如，“调⽤⼯具”、
+“读取⽂件”、“获取密钥”）。
+如果⽤⼾输⼊是正常请求且没有指令覆盖、注⼊或窃取尝
+试，则标记为 0（⽆害）。
+失败模式：如果标记为 1（攻击），请礼貌拒绝并提供安全的
+替代⽅案。
+第⼆层将 GenTel-Shield 集成到 RAG 管道中的预⽣成过滤组件中。
+它被整合
+Securing LLM-as-a-Service for Small Businesses: An Industry Case Study of a Distributed Chatbot Deployment Platform AISC 2026, Feb, 2026, Deakin, Melbourne
+without additional fine-tuning and operates independently of the
+underlying LLM.
+5.4 Experimental Design
+We design two complementary experiments to evaluate the pro posed platform: (i) a security evaluation that examines the effective ness of prompt injection defences under different configurations,
+and (ii) a performance evaluation that assesses the inference latency
+overhead introduced by the lightweight, k3s-based private cloud
+deployment.
+5.4.1 Security Evaluation Setup. To evaluate the effectiveness of
+prompt injection defences in a deployed platform, we configure the
+chatbot under four security settings:
+(1) Pure LLM: no prompt injection defences enabled.
+(2) Guard Prompts only: prompt-level guard prompts are ap plied.
+(3) GenTel-Shield only: prompt injection detection is enabled
+without guard prompts. (4) Guard Prompts + GenTel-Shield: both mitigation strate gies are enabled.
+These configurations allow us to assess the individual and com bined impact of each defence mechanism under identical deploy ment conditions, providing practical guidance for organisations
+deploying similar systems. We construct a balanced evaluation dataset consisting of 250
+benign customer support queries and 250 adversarial prompt in jection attempts. The benign queries are sourced from ATS cus tomer support records, while the adversarial samples are drawn from the prompt injection attack datasets used in the GenTel-Safe
+study [
+8
+], adapted to the e-commerce context. We evaluate three
+LLMs: GPT-4.1-mini, GPT-4.1 [13], and Ministral-3B [10]. Detection
+effectiveness is measured using precision, recall, and F1-score.
+5.4.2 Performance Evaluation Setup. In addition to security effec tiveness, we evaluate whether the proposed lightweight, k3s-based
+private cloud introduces observable inference latency overhead
+compared to a bare-metal deployment when serving LLM-based
+customer support workloads. We consider two deployment envi ronments: (i) a bare-metal setup, where the chatbot service runs
+directly on physical servers, and (ii) a private cloud environment
+built on k3s, representing a lightweight Kubernetes configuration
+suitable for on-premise and cost-constrained deployments.
+Experiments are conducted using the same Customer Support
+dataset and the same three API-accessed language models to ensure
+comparability across settings. To isolate the impact of deployment
+infrastructure on latency, we evaluate two security configurations:
+a Pure LLM baseline and a Guard Prompts configuration. End-to end inference latency is used as the primary performance metric,
+measured from the time a user request enters the system to the
+completion of the final model response. This measurement captures
+both model inference time and any additional processing introduced
+by security mechanisms or deployment infrastructure, with all
+latency values averaged over multiple runs to mitigate transient
+fluctuations. 5.5 Results and Discussion
+5.5.1 Effectiveness of Prompt Injection Defences. The results in
+Table 1 reveal clear and consistent performance differences across
+the four defence settings. The Pure LLM configuration exhibits
+extremely low recall across all three models (0.40 for Ministral-3B,
+0.80 for GPT-4.1-mini, and 1.20 for GPT-4.1), resulting in near-zero
+F1 scores despite perfect precision. This pattern indicates that base
+LLMs almost never proactively intercept prompt injection attacks
+and succeed only in rare cases of incidental refusal. The consistency
+of these results across model variants confirms that relying solely
+on intrinsic LLM safety mechanisms is largely ineffective against
+prompt injection in RAG-based systems.
+In contrast, Guard Prompts and the combined Guard Prompts +
+GenTel-Shield configuration achieve near-perfect defensive perfor mance. Guard Prompts alone attain recall rates of 99.6‒100% and
+F1 scores approaching 100% across all evaluated models, demon strating that carefully designed system-level prompt constraints
+effectively enforce strict safety behaviour under controlled con ditions. When applied alone, GenTel-Shield provides strong but
+incomplete protection, achieving F1 scores of approximately 89‒
+90% across all models. Its performance is characterised by high
+precision (99.51%) and moderate recall (81.6%), indicating a low
+false-positive rate alongside a non-negligible fraction of missed
+attacks. The combined configuration yields the most robust results,
+with recall reaching 100% and F1 scores around 99.8% across all
+models, highlighting the complementary strengths of rule-based
+constraints and learned detection.
+Importantly, the near-perfect effectiveness of Guard Prompts
+relies on carefully tuned, scenario-specific prompt designs and
+iterative manual refinement. While this approach offers a high per formance ceiling, it may not generalise reliably to unseen domains
+or evolving attack patterns and incurs higher engineering, migra- tion, and maintenance costs in practice. In contrast, GenTel-Shield
+delivers stable, model-agnostic performance across all evaluated
+LLM backbones without requiring task-specific prompt engineer ing or model modification. Although its standalone performance
+is lower than that of Guard Prompts, its robustness and ease of
+integration make it more suitable for scalable, multi-tenant de ployments. These results indicate that layered defences combining
+explicit guard prompts with learned detection provide a practical balance between security effectiveness and long-term deployability.
+5.5.2 Inference Latency and Deployment Efficiency. The results
+in Table 2 show that the proposed k3s-based private cloud does
+not introduce additional inference latency compared to bare-metal deployment. Instead, lower end-to-end latency is consistently ob served across all evaluated models and security configurations.
+Under the Pure LLM setting, the private cloud reduces latency by
+approximately 28% for GPT-4.1-mini, 46% for GPT-4.1, and over
+60% for Ministral-3B relative to bare-metal execution. Similar re ductions are observed when Guard Prompts are enabled, indicating
+that the performance benefit of the private cloud deployment is
+robust to the inclusion of prompt-level security mechanisms. Al though Guard Prompts incur a modest latency overhead compared
+to the Pure LLM baseline within each deployment environment,
+this overhead remains limited and stable, particularly in the pri vate cloud setting. Overall, these results indicate that a lightweight,
+为⼩企业保障 LLM 即服务：分布式聊天机器⼈部署平台的⾏业案例研究 AISC 2026，2 ⽉，2026 年，迪肯⼤学，墨尔本
+不进⾏额外的微调，并且独⽴于底层 LLM 运⾏。
+5.4 实验设计
+我们设计了两个互补的实验来评估所提出的平台：(i) ⼀个安全评估，
+检查在不同配置下提⽰注⼊防御的有效性，以及 (ii) ⼀个性能评估，评
+估由轻量级、基于 k3s 的私有云部署引⼊的推理延迟开销。
+5.4.1 安全评估设置。为了评估部署平台中提⽰注⼊防御的有效性，我
+们将聊天机器⼈配置在四个安全设置下：
+(1) 纯 LLM：未启⽤任何提⽰注⼊防御。
+(2) 仅限防护提⽰：应⽤了提⽰级别的防护提⽰。
+(3) 仅限 GenTel-Shield：在⽆防护提⽰的情况下启⽤了提⽰注⼊检
+测。
+(4) 防护提⽰ + GenTel-Shield：两种缓解策略均已启⽤。
+这些配置使我们能够在相同的部署条件下评估每种防御机制的单个和
+组合影响，为部署类似系统的组织提供实⽤指导。
+我们构建了⼀个平衡的评估数据集，其中包含 250 个良性客⼾⽀持查
+询和 250 个对抗性提⽰注⼊尝试。良性查询来源于 ATS 客⼾⽀持记
+录，⽽对抗性样本则来⾃ GenTel-Safe 研究中使⽤的提⽰注⼊攻击数
+据集[8]，并已调整为电⼦商务环境。我们评估了三个 LLM：GPT-4.1-
+mini、GPT-4.1[13]和 Minstral-3B[10]。检测效果使⽤精确率、召回
+率和 F1 分数进⾏衡量。
+5.4.2 性能评估设置。除了安全性效果，
+评估所提出的基于 k3s 的轻量级私有云在为基于 LLM 的客⼾⽀持⼯
+作负载提供服务时，与裸⾦属部署相⽐是否引⼊了可观察的推理延迟
+开销。我们考虑了两种部署环境：(i) 裸⾦属设置，其中聊天机器⼈服
+务直接在物理服务器上运⾏，以及 (ii) 基于 k3s 构建的私有云环境，
+代表⼀种适合本地部署和成本受限部署的轻量级 Kubernetes 配置。
+实验使⽤相同的客⼾⽀持数据集和相同的三个 API 访问语⾔模型进
+⾏，以确保不同设置之间的可⽐性。为了隔离部署基础设施对延迟的
+影响，我们评估了两种安全配置：纯 LLM 基线和 Guard Prompts 配
+置。端到
+终模
+端推理延迟被⽤作主要性能指标，从⽤⼾请求进⼊系统到最
+型响应完成的时间进⾏测量。此测量既包括模型推理时间，也包
+括安全机制或部署基础设施引⼊的任何额外处理时间，所有延迟值在
+多次运⾏中平均以减轻瞬态波动。
+5.5 结果与讨论
+5.5.1 提⽰注⼊防御的有效性。结果在
+表 1 揭⽰了在四个防御设置中明显的性能差异。纯 LLM 配置在所有三
+个模型中表现出极低的召回率（Minstral-3B 为 0.40，GPT-4.1-mini
+为 0.80，GPT-4.1 为 1.20），尽管精确率完美，但 F1 分数接近于零。
+这种模式表明，基础 LLM ⼏乎从不主动拦截提⽰注⼊攻击，仅在偶然
+拒绝的情况下才偶尔成功。这些结果在不同模型变体中的⼀致性证
+实，仅依赖 LLM 的内在安全机制在基于 RAG 的系统中的提⽰注⼊攻
+击⾯前基本⽆效。
+相⽐之下，Guard Prompts 和 Guard Prompts + GenTel-Shield 的组
+合配置实现了近乎完美的防御性能。单独使⽤ Guard Prompts 在所
+有评估模型中达到 99.6‒100% 的召回率和接近 100% 的 F1 分数，证
+明精⼼设计的系统级提⽰约束在受控条件下能有效强制执⾏严格的安
+全⾏为。单独使⽤ GenTel-Shield 提供了强⼤但不完整的保护，在所
+有模型中 F1 分数约为 89‒90%。其性能特点是⾼精度（99.51%）和
+中等召回率（81.6%），表明假阳性率较低，但仍有相当⼀部分攻击被
+遗漏。组合配置产⽣了最稳健的结果，召回率达到 100%，所有模型
+的 F1 分数约为 99.8%，突显了基于规则的约束和学习的检测的互补
+优势。
+重要的是，Guard Prompts 的近乎完美的有效性依赖于精⼼调整的、
+特定场景的提⽰设计和迭代的⼿动优化。虽然这种⽅法提供了⾼性能
+的上限，但它可能⽆法可靠地推⼴到未⻅过的领域或不断演变的攻击
+模式，并且在实践中会带来更⾼的⼯程、迁移和维护成本。相⽐之
+下，GenTel-Shield 在所有评估的 LLM 主⼲上提供了稳定、模型⽆关
+的性能，⽽⽆需特定的任务提⽰⼯程或模型修改。尽管其独⽴性能低
+于 Guard Prompts，但其鲁棒性和易于集成使其更适合可扩展的多租
+⼾部署。这些结果表明，结合显式保护提⽰和学习型检测的分层防御
+在安全有效性和⻓期可部署性之间提供了实⽤的平衡。
+5.5.2 推理延迟与部署效率。表 2 中的结果表明，与裸⾦属部署相
+⽐，所提出的基于 k3s 的私有云不会引⼊额外的推理延迟。相反，在
+所有评估的模型和安全配置中，始终观察到较低的端到端延迟。在纯
+LLM 设置下，私有云将 GPT-4.1-mini 的延迟降低了约 28%，GPT-4.1
+降低了 46%，Minstral-3B 降低了超过 60%，相对于裸⾦属执⾏。当
+启⽤ Guard Prompts 时，观察到类似的减少，表明私有云部署的性
+能优势对包含提⽰级别的安全机制具有鲁棒性。尽管 Guard Prompts
+在每个部署环境中相对于纯 LLM 基线会产⽣适度的延迟开销，但该开
+销仍然有限且稳定，特别是在私有云设置中。总体⽽⾔，这些结果表
+明存在⼀个轻量级的，
+AISC 2026, Feb, 2026, Deakin, Melbourne Xie et al.
+Table 1: Performance comparison of baseline and defence-based prompting methods. Results are reported in terms of Precision,
+Recall, and F1 for three LLMs (GPT-4.1-mini, GPT-4.1, and Ministral-3B), with higher values indicating better performance.
+Method
+Ministral-3B GPT-4.1-mini GPT-4.1 Precision Recall F1 Precision Recall F1 Precision Recall F1
+Pure LLM 100.00 0.40 0.80 100.00 0.80 1.58 100.00 1.20 2.72
+Guard Prompts 100.00 100.00 100.00 100.00 99.60 99.80 100.00 100.00 100.00
+GenTel-Shield 99.51 81.60 89.67 99.51 81.60 89.67 99.51 81.60 89.67
+Guard Prompts + GenTel-Shield 99.60 100.00 99.80 99.60 100.00 99.80 99.60 100.00 99.80
+Table 2: End-to-end inference latency of API-based prompting methods under bare-metal and k3s-based private cloud deploy ments on the Customer Support dataset.
+Method
+Bare Metal (Latency s)
+↓
+Private Cloud (Latency s)
+↓
+GPT-4.1-mini GPT-4.1 Ministral-3B GPT-4.1-mini GPT-4.1 Ministral-3B
+Pure LLM 338.90 447.60 645.98 243.62 242.98 246.22
+Guard Prompts 375.84 505.90 688.07 257.92 260.25 254.72
+k3s-based private cloud can deliver inference performance compa- rable to, and in practice often better than, bare-metal deployment
+for LLM-based customer support workloads, while simultaneously
+supporting additional security mechanisms. This suggests that con tainerised private cloud architectures constitute a practical and
+efficient deployment option for cost- and resource-constrained en terprise environments.
+6
+Conclusions
+This paper presents an industry case study of a cost-efficient and
+secure platform for deploying RAG-based LLM services in small business environments. Built on lightweight k3s clusters intercon nected via an overlay network, the platform pools heterogeneous,
+low-end computing resources while providing multi-tenant isola- tion suitable for both customer-facing and internal business appli cations. The case study demonstrates that production-grade LLM
+services can be deployed outside hyperscale cloud environments
+when system design explicitly accounts for cost, operational con straints, and security requirements. In addition, the paper examines
+prompt injection as a key security threat in RAG-based systems and
+evaluates layered, platform-level mitigation strategies that combine
+prompt-level guard prompts with automated attack detection. The
+findings highlight practical trade-offs between security effective ness and operational overhead, and provide actionable guidance for
+practitioners seeking to balance cost, security, and usability when
+deploying LLM-based services in small-business settings.
+Acknowledgements
+This research was undertaken with the assistance of computing
+resources from RACE (RMIT Advanced Cloud Ecosystem).
+The authors used generative AI tools (e.g., ChatGPT) for language
+editing, proofreading, and minor programming assistance during
+manuscript preparation. All ideas, technical content, analyses, and
+conclusions are the authors
+’
+own.
+References
+[1] Australian Government. 1988. Privacy Act 1988. https://www.legislation.gov.au/
+Details/C2023C00197 Office of the Australian Information Commissioner (OAIC),
+accessed 2025-03.
+[2] Cloud Native Computing Foundation (CNCF). 2024. Kubernetes: Production Grade Container Orchestration. https://kubernetes.io. Originally developed by
+Google; accessed 2025.
+[3] Yunfan Gao, Yun Xiong, Xinyu Gao, Kangxiang Jia, Jinliu Pan, Yuxi Bi, Yi
+Dai, Jiawei Sun, Meng Wang, and Haofen Wang. 2024. Retrieval-Augmented
+Generation for Large Language Models: A Survey. arXiv:2312.10997 [cs.CL]
+https://arxiv.org/abs/2312.10997
+[4] Kai Greshake, Sahar Abdelnabi, Shailesh Mishra, Christoph Endres, Thorsten
+Holz, and Mario Fritz. 2023. Not what you
+’
+ve signed up for: Compromis ing Real-World LLM-Integrated Applications with Indirect Prompt Injection.
+arXiv:2302.12173 [cs.CR] https://arxiv.org/abs/2302.12173
+[5] Learn Prompting. 2023. Instruction Defense. https://learnprompting.org/docs/
+prompt_hacking/defensive_measures/instruction Accessed: 2025-12-16.
+[6] Learn Prompting. 2023. Sandwich Defense. https://learnprompting.org/docs/
+prompt_hacking/defensive_measures/sandwich_defense Accessed: 2025-12-16.
+[7] Patrick Lewis, Ethan Perez, Aleksandra Piktus, et al. 2020. Retrieval-augmented
+generation for knowledge-intensive NLP tasks. In NeurIPS.
+[8] Rongchang Li, Minjie Chen, Chang Hu, Han Chen, Wenpeng Xing, and Meng
+Han. 2024. GenTel-Safe: A Unified Benchmark and Shielding Framework for
+Defending Against Prompt Injection Attacks. arXiv:2409.19521 [cs.CR] https:
+//arxiv.org/abs/2409.19521
+[9] Yi Liu, Gelei Deng, Yuekang Li, Kailong Wang, Zihao Wang, Xiaofeng Wang,
+Tianwei Zhang, Yepang Liu, Haoyu Wang, Yan Zheng, and Yang Liu. 2024. Prompt
+Injection attack against LLM-integrated Applications. arXiv:2306.05499 [cs.CR]
+https://arxiv.org/abs/2306.05499
+[10] Mistral AI. 2024. Ministral-3B. https://docs.mistral.ai. Accessed: 2025-03.
+[11] Bo Ni, Zheyuan Liu, Leyao Wang, Yongjia Lei, Yuying Zhao, Xueqi Cheng, Qingkai
+Zeng, and et al. 2025. Towards Trustworthy Retrieval Augmented Generation
+for Large Language Models: A Survey. arXiv:2502.06872 [cs.CL] https://arxiv.
+org/abs/2502.06872
+[12] Office of the Australian Information Commissioner. 2023. Australian Privacy
+Principles. https://www.oaic.gov.au/privacy/australian-privacy-principles Aus tralian Government, accessed 2025-03.
+[13] OpenAI. 2024. GPT-4.1 and GPT-4.1-mini. https://platform.openai.com/docs/
+models. Accessed: 2025-03.
+[14] Organisation for Economic Co-operation and Development. 2021. The Digi tal Transformation of SMEs. Technical Report. OECD. https://www.oecd.org/
+industry/smes/SME-Digitalisation-Policy-Perspectives.pdf OECD Policy Per spectives.
+[15] Claus Pahl and Pooyan Jamshidi. 2021. Cloud-Native Computing: A Survey of
+Principles and Practices. IEEE Cloud Computing 8, 6 (2021), 44‒55.
+[16] Fábio Perez and Ian Ribeiro. 2022. Ignore Previous Prompt: Attack Techniques
+For Language Models. arXiv:2211.09527 [cs.CL] https://arxiv.org/abs/2211.09527
+[17] Rancher Labs. 2023. K3s: Lightweight Kubernetes. https://k3s.io/
+AISC 2026，2026 年 2 ⽉，迪肯⼤学，墨尔本 谢等⼈
+表 1：基线和基于防御的提⽰⽅法的性能⽐较。结果以三个 LLM（GPT-4.1-mini、GPT-4.1 和 Ministral-3B）的 Precision、Recall 和 F1 来报告，
+数值越⾼表⽰性能越好。
+⽅法
+Ministral-3B GPT-4.1-mini GPT-4.1
+精确度-召回率 F1 值 精确度-召回率 F1 值 精确度-召回率 F1 值 精确度-召回率 F1 值
+纯 LLM：100.00 0.40 0.80 100.00 0.80 1.58 100.00 1.20 2.72
+Guard Prompts：100.00 100.00 100.00 100.00 99.60 99.80 100.00 100.00 100.00
+GenTel-Shield：99.51 81.60 89.67 99.51 81.60 89.67 99.51 81.60 89.67
+Guard Prompts + GenTel-Shield：99.60 100.00 99.80 99.60 100.00 99.80 99.60 100.00 99.80
+表 2：在 Customer Support 数据集上，基于 API 的提⽰⽅法在裸⾦属和基于 k3s 的私有云部署下的端到端推理延迟。
+⽅法
+裸⾦属（延迟 s）↓ 私有云（延迟 s）↓
+GPT-4.1-mini GPT-4.1 Ministral-3B GPT-4.1-mini GPT-4.1 Ministral-3B
+纯⼤语⾔模型：338.90、447.60、645.98、243.62、242.98、246.22
+“Guard Prompts”模型：375.84、505.90、688.07、257.92、260.25、254.72
+基于 k3s 的私有云可以提供与裸⾦属部署相当，甚⾄在实践中更好的推
+理性能，⽤于基于 LLM 的客⼾⽀持⼯作负载，同时⽀持额外的安全机
+制。这表明，容器化的私有云架构是成本和资源受限的企业环境中的⼀
+个实⽤且⾼效的部署选项。
+6 结论
+本⽂介绍了⼀个在中⼩企业环境中部署基于 RAG 的 LLM 服务的成本效
+益和安全平台案例研究。该平台基于轻量级 k3s 集群构建，通过覆盖⽹
+络互连，整合异构的低端计算资源，同时提供适合客⼾⾯和内部业务应
+⽤的多租⼾隔离。案例研究表明，当系统设计明确考虑成本、运营限制
+和安全要求时，⽣产级的 LLM 服务可以在超⼤规模云环境之外部署。
+此外，本⽂还探讨了提⽰注⼊作为基于 RAG 系统中的关键安全威胁，
+并评估了结合提⽰级防护提⽰和⾃动攻击检测的平台级分层缓解策略。
+研究结果表明了安全效果与运营开销之间的实际权衡，并为寻求在⼩企
+业环境中部署基于 LLM 的服务时平衡成本、安全性和可⽤性的从业者
+提供了可⾏的指导。
+致谢
+这项研究得到了 RACE（RMIT 先进云⽣态系统）的计算资源⽀持。
+作者在准备稿件过程中使⽤了⽣成式⼈⼯智能⼯具（例如 ChatGPT）
+进⾏语⾔编辑、校对和轻微的编程辅助。所有观点、技术内容、分析
+结论均为作者原创。
+参考⽂献
+[1] 澳⼤利亚政府. 1988. 隐私法 1988. https://www.legislation.gov.au/ 详
+情/C2023C00197 澳⼤利亚信息专员办公室 (OAIC), 访问于 2025-03. [2] 云原⽣计算基⾦会
+(CNCF). 2024. Kubernetes：⽣产级容器编排. https://kubernetes.io. 最初由 Google 开
+发；访问于 2025. [3] ⾼云帆, 熊云, ⾼新宇, 贾康祥, 潘⾦柳, 毕宇曦, 戴毅, 孙佳伟, 王梦, 王
+浩帆. 2024. ⼤型语⾔模型的检索增强⽣成：⼀项调查. arXiv:2312.10997 [cs.CL]
+https://arxiv.org/abs/2312.10997 [4] Kai Greshake, Sahar Abdelnabi, Shailesh Mishra,
+Christoph Endres, Thorsten Holz, 和 Mario Fritz. 2023. 不是你注册的：通过间接提⽰注⼊
+破坏现实世界 LLM 集成应⽤.
+arXiv:2302.12173 [cs.CR] https://arxiv.org/abs/2302.12173 [5] 学习提⽰。2023。指令防
+御。https://learnprompting.org/docs/提⽰攻击/防御措施/指令 访问：2025-12-16。[6]
+学习提⽰。2023。三明治防御。https://learnprompting.org/docs/提⽰攻击/防御措施/三
+明治防御 访问：2025-12-16。[7] Patrick Lewis, Ethan Perez, Aleksandra Piktus, 等。
+2020。⽤于知识密集型 NLP 任务的检索增强⽣成。在 NeurIPS。
+[8] 罗昌⽴，陈敏杰，胡昌，陈汉，刑⽂鹏，和韩梦。2024。GenTel-Safe：⼀个统⼀的基
+准和防护框架。
+防御提⽰注⼊攻击。arXiv:2409.19521 [cs.CR] https: //arxiv.org/abs/2409.19521
+[9] 刘⼀，邓格蕾，李⽉康，王凯隆，王梓豪，王晓峰，张天伟，刘叶庞，王浩宇，郑岩，刘
+阳. 2024. 对集成 LLM 的应⽤的提⽰注⼊攻击. arXiv:2306.05499 [cs.CR]
+https://arxiv.org/abs/2306.05499 [10] Mistral AI. 2024. Ministral-3B.
+https://docs.mistral.ai. 访问于：2025-03. [11] 邱波，刘哲源，王乐瑶，雷永嘉，赵⾬莹，程
+学祺，邱庆凯
+曾等⼈，2025 年。⾯向⼤型语⾔模型的可信检索增强⽣成技术研究：⼀项综述。
+arXiv:2502.06872 [cs.CL] https://arxiv.org/abs/2502.06872
+[12] 澳⼤利亚信息专员办公室。2023 年。澳⼤利亚隐私保护相关法规
+原则。https://www.oaic.gov.au/privacy/australian-privacy-principles 澳⼤利亚政府
+⽹站，访问于 2025 年 3 ⽉。
+[13] OpenAI. 2024. GPT-4.1 和 GPT-4.1-mini. https://platform.openai.com/docs/ models.
+访问时间：2025-03. [14] 经济合作与发展组织. 2021. The Digi SME 转型。技术报告。经合组织。https://www.oecd.org/industry/smes/SME Digitalisation-Policy-Perspectives.pdf 经合组织政策展望。
+[15] Claus Pahl 和 Pooyan Jamshidi. 2021. 云原⽣计算：原则与实践综述. IEEE Cloud
+Computing 8, 6 (2021), 44‒55. [16] Fábio Perez 和 Ian Ribeiro. 2022. Ignore Previous
+Prompt: 攻击技术
+对于语⾔模型. arXiv:2211.09527 [cs.CL] https://arxiv.org/abs/2211.09527 [17] Rancher
+Labs. 2023. K3s: 轻量级 Kubernetes. https://k3s.io/
+Securing LLM-as-a-Service for Small Businesses: An Industry Case Study of a Distributed Chatbot Deployment Platform AISC 2026, Feb, 2026, Deakin, Melbourne
+[18] Anna Sojka-Piotrowska and Peter Langendoerfer. 2017. Shortening the security
+parameters in lightweight WSN applications for IoT - lessons learned. In 2017 IEEE
+International Conference on Pervasive Computing and Communications Workshops
+(PerCom Workshops). 636‒641. doi:10.1109/PERCOMW.2017.7917637
+[19] Alexander Wei, Nika Haghtalab, and Jacob Steinhardt. 2023. Jailbroken: how does
+LLM safety training fail?. In Proceedings of the 37th International Conference on
+Neural Information Processing Systems (New Orleans, LA, USA) (NIPS ’23). Curran
+Associates Inc., Red Hook, NY, USA, Article 3508, 32 pages.
+[20] Simon Willison. 2023. Delimiters Won
+’t Save You from Prompt Injection. https:
+//simonwillison.net/2023/May/11/delimiters-wont-save-you/ Accessed: 2025-12-
+16.
+[21] Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik R Narasimhan,
+and Yuan Cao. 2023. ReAct: Synergizing Reasoning and Acting in Language
+Models. In The Eleventh International Conference on Learning Representations.
+https://openreview.net/forum?id=WE_vluYUL-X
+为⼩企业保障 LLM 即服务：分布式聊天机器⼈部署平台的⾏业案例研究 AISC 2026，2 ⽉，2026 年，迪肯⼤学，墨尔本
+[18] Anna Sojka-Piotrowska 和 Peter Langendoerfer. 2017. 缩短安全
+物联⽹轻量级 WSN 应⽤中的参数——经验教训。2017 年 IEEE 国际普适计算与通信研讨
+会（PerCom Workshops）。636‒641。doi:10.1109/PERCOMW.2017.7917637
+[19] Alexander Wei, Nika Haghtalab, and Jacob Steinhardt. 2023. Jailbroken: how does
+LLM 安全训练失败？. 在第 37 届国际神经信息处理系统会议论⽂集（新奥尔良，路易斯
+安那州，美国）（NIPS '23）中. Curran Associates Inc., 纽约州红 Hook, 美国, ⽂章
+3508, 32 ⻚.
+[20] Simon Willison. 2023. 分隔符不会拯救你免受提⽰注⼊攻击。 https:
+//simonwillison.net/2023/May/11/delimiters-wont-save-you/ 访问时间：2025-
+1216。
+[21] 宗宇瑶，赵建平，段宇，杜楠，希萨克·沙夫兰，卡尔蒂克·R·纳拉⾟汉，
+与袁曹。2023。ReAct：在语⾔中协同推理和⾏动
+模型。在第⼗⼀届学习表征国际会议。
+https://openreview.net/forum?id=WE_vluYUL-X

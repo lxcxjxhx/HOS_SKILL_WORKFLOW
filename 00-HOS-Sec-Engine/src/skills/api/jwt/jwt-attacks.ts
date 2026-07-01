@@ -13,7 +13,7 @@ export const jwtAttackSkills: AttackDefenseSkill[] = [
             category: 'api',
             subCategory: 'jwt',
             riskLevel: 'critical',
-            confidence: 0.92,
+            confidence: 0.95,
             updatedAt: '2026-06',
             author: 'HOS-Sec-Engine',
             tags: ['jwt', 'token', 'authentication', 'algorithm-confusion', 'none-algorithm', 'key-injection', 'claim-manipulation'],
@@ -432,7 +432,7 @@ x5u 注入同理:
             ],
         },
         quality: {
-            confidence: 0.92,
+            confidence: 0.95,
             reviewed: true,
             tested: true,
             lastVerified: '2026-06',
