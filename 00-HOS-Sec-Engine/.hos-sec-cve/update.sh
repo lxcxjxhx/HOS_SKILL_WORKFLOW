@@ -48,7 +48,7 @@ check_db() {
 {
   "metadata": {
     "name": "hos-sec-cve-db",
-    "version": "1.0.0",
+    "version": "0.5.0",
     "last_updated": null,
     "total_cves": 0,
     "sources": {

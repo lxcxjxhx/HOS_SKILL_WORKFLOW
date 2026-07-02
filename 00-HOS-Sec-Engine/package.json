@@ -1,6 +1,6 @@
 {
   "name": "hos-sec-engine",
-  "version": "1.0.0",
+  "version": "0.5.0",
   "description": "HOS攻防实战规则引擎 - 将实战经验转化为标准化、可执行的攻防规则",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",

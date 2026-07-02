@@ -459,6 +459,23 @@ function buildPackage() {
     },
   };
 
+  // Root SKILL.md — required by IDE .skill format for TRAE/Cursor/CODEX
+  // Use the PROVEN working content from the existing .trae/skills/hos-sec-engine/SKILL.md
+  // which has already been tested and works with TRAE's skill system.
+  var rootSkillMdPath = path.join(ROOT, '.trae', 'skills', 'hos-sec-engine', 'SKILL.md');
+  var rootSkillMdContent = readFile(rootSkillMdPath);
+  if (!rootSkillMdContent) {
+    // Fallback: use skills/hos-sec-engine/SKILL.md
+    rootSkillMdPath = path.join(ROOT, 'skills', 'hos-sec-engine', 'SKILL.md');
+    rootSkillMdContent = readFile(rootSkillMdPath);
+  }
+  if (rootSkillMdContent) {
+    files.push({ name: 'SKILL.md', data: rootSkillMdContent });
+    console.log('  ✓ SKILL.md (root entry point, from proven working source)');
+  } else {
+    console.log('  ⚠ SKILL.md not found, skipping');
+  }
+
   files.push({ name: 'manifest.json', data: JSON.stringify(manifest, null, 2) });
   console.log('  ✓ manifest.json');
 
@@ -501,29 +518,40 @@ function buildPackage() {
     console.log(`  ✓ engine/${dir}/`);
   }
 
-  // 6. Skill files (TRAE / Claude Code format)
+  // 6. Flat sub-skill .md files at skills/<id>.md (referenced by root SKILL.md links)
   for (const skill of skills) {
-    const skContent = readFile(path.join(skill.dir, 'SKILL.md'));
+    var skContent = readFile(path.join(skill.dir, 'SKILL.md'));
     if (skContent) {
-      files.push({ name: `skills/${skill.id}/SKILL.md`, data: skContent });
+      files.push({ name: 'skills/' + skill.id + '.md', data: skContent });
     }
   }
-  console.log(`  ✓ skills/ (${skills.length} skills for TRAE/Claude Code)`);
+  console.log('  ✓ skills/<id>.md (' + skills.length + ' flat sub-skill refs for root SKILL.md)');
 
-  // 7. hos-sec-engine master skill
-  const engineSkillDir = path.join(ROOT, 'skills', 'hos-sec-engine');
+  // 7. Per-skill directories at .trae/skills/<id>/SKILL.md (TRAE IDE indexing)
+  for (const skill of skills) {
+    var skContent = readFile(path.join(skill.dir, 'SKILL.md'));
+    if (skContent) {
+      files.push({ name: '.trae/skills/' + skill.id + '/SKILL.md', data: skContent });
+    }
+  }
+  console.log('  ✓ .trae/skills/<id>/ (' + skills.length + ' skill dirs for TRAE IDE)');
+
+  // 8. Master skill content at skills/hos-sec-engine/ (for sub-skill detail pages)
+  var engineSkillDir = path.join(ROOT, 'skills', 'hos-sec-engine');
   if (fs.existsSync(engineSkillDir)) {
-    const engineFiles = listFiles(engineSkillDir);
-    for (const file of engineFiles) {
-      const relPath = path.relative(path.join(ROOT, 'skills'), file);
+    var engineFiles = listFiles(engineSkillDir);
+    for (var fi = 0; fi < engineFiles.length; fi++) {
+      var file = engineFiles[fi];
+      var subRelPath = path.relative(path.join(ROOT, 'skills'), file);
       try {
-        const data = readFile(file);
+        var data = readFile(file);
         if (data !== null) {
-          files.push({ name: `skills/${relPath.replace(/\\/g, '/')}`, data });
+          // Place inside .trae/skills/hos-sec-engine/ so TRAE can find it
+          files.push({ name: '.trae/skills/' + subRelPath.replace(/\\/g, '/'), data: data });
         }
       } catch {}
     }
-    console.log('  ✓ skills/hos-sec-engine/ (master engine skill)');
+    console.log('  ✓ .trae/skills/hos-sec-engine/ (master skill with sub-skill details)');
   }
 
   // 8. Cursor .mdc rules
