@@ -2,20 +2,22 @@
  * HOS-Sec-Engine V2 - ProcessEngine 流程引擎核心模块
  *
  * 职责：
- * 1. 加载 YAML 流程模板
- * 2. 按阶段顺序驱动执行
- * 3. 每个阶段后调用决策树
+ * 1. 加载 YAML 流程模板（使用 js-yaml 标准解析器）
+ * 2. 按阶段顺序驱动执行（动态从模板加载）
+ * 3. 每个阶段后调用决策树（支持 AI 动态决策）
  * 4. 集成 CVE 查询对发现进行富化
  * 5. 维护执行上下文和状态追踪
+ * 6. 提供工具调用抽象层，支持动态工具发现
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
+import * as yaml from 'js-yaml';
 import { ProcessTemplate, Phase, PhaseResult, ProcessContext, ProcessResult, ProcessFinding } from '../types/process';
 import { PhaseExecutor } from './phase-executor';
 import { DecisionTree } from './decision-tree';
 import { cveIntegrator } from './cve-integration';
-import { registerBuiltinTools } from './tool-registry';
+import { toolRegistry } from './tool-registry';
 
 const PROJECT_ROOT = path.resolve(__dirname, '..', '..', '..');
 const TEMPLATES_DIR = path.join(PROJECT_ROOT, 'src', 'playbooks', 'process-templates');
@@ -55,7 +57,7 @@ export class ProcessEngine {
 
     // 自动注册内置工具
     if (this.config.autoRegisterTools) {
-      registerBuiltinTools();
+      this.registerBuiltinTools();
       console.log('[ProcessEngine] 内置工具已注册');
     }
   }
@@ -180,6 +182,19 @@ export class ProcessEngine {
         ...processContext.state,
       };
 
+      // 从已完成阶段的发现中提取 detected_waf 供模板变量使用
+      const wafFinding = processContext.findings.find(f => f.type === 'waf-detected');
+      if (wafFinding) {
+        execContext.detected_waf = wafFinding.description.replace('检测到 WAF 保护: ', '').trim();
+      }
+      // 提取已检测到的 WAF 名称数组供决策使用
+      const wafNames = processContext.findings
+        .filter(f => f.type === 'waf-detected')
+        .flatMap(f => f.description.replace('检测到 WAF 保护: ', '').split(',').map(s => s.trim()));
+      if (wafNames.length > 0) {
+        execContext.detected_wafs = wafNames.join(',');
+      }
+
       // 执行阶段
       const phaseResult = await this.phaseExecutor.execute(phase, execContext);
       phaseResults.push(phaseResult);
@@ -250,7 +265,7 @@ export class ProcessEngine {
   }
 
   /**
-   * 从单个文件加载模板
+   * 从单个文件加载模板（使用 js-yaml 标准解析器）
    */
   private loadTemplateFile(filePath: string): void {
     try {
@@ -283,276 +298,83 @@ export class ProcessEngine {
   }
 
   /**
-   * 解析 YAML 模板内容
-   * 使用简单的逐行解析（不引入 YAML 依赖）
+   * 解析 YAML 模板内容（使用 js-yaml 标准解析器）
+   * 移除 300 行自定义解析器，使用标准库
    */
   private parseYamlTemplate(content: string, fileName: string): ProcessTemplate | null {
     try {
-      // 简单的 YAML 解析器，处理嵌套结构
-      const lines = content.split('\n');
-      const result: Record<string, any> = {};
-      let currentSection: string[] = [];
-      let phaseStack: any[] = [];
-      let stepStack: any[] = [];
-      let decisionStack: any[] = [];
-      let conditionStack: any[] = [];
-      let inPhases = false;
-      let inSteps = false;
-      let inDecisionTree = false;
-      let inConditions = false;
-      let inToolCall = false;
-      let currentPhase: any = null;
-      let currentStep: any = null;
-      let currentDecision: any = null;
-      let currentCondition: any = null;
-
-      for (const line of lines) {
-        const trimmed = line.trimEnd();
-        if (!trimmed.trim() || trimmed.trim().startsWith('#')) continue;
-
-        const indent = line.length - line.trimStart().length;
-        const content = trimmed.trim();
-
-        if (content === 'phases:') {
-          inPhases = true;
-          inDecisionTree = false;
-          continue;
-        }
-        if (content === 'decisionTree:') {
-          inDecisionTree = true;
-          inPhases = false;
-          continue;
-        }
-
-        if (inPhases) {
-          // 步骤解析必须在前，因为步骤也以 "- id:" 开头
-          if (inSteps && currentPhase) {
-            // ==========================================
-            // 检测是否离开了 steps 区域进入阶段级属性
-            // 阶段级属性: condition: maxRetries: timeout: successCriteria: 和 - item
-            // ==========================================
-            if (content.startsWith('condition:') || content.startsWith('maxRetries:') ||
-                content.startsWith('timeout:') || content.startsWith('successCriteria:')) {
-              // 结束当前步骤，退出 steps 模式，让阶段级处理接管
-              if (currentStep) {
-                currentPhase.steps.push(currentStep);
-                currentStep = null;
-              }
-              inSteps = false;
-              inToolCall = false;
-              // 不 continue，让外层处理这条线
-            } else if (content.startsWith('- ') && !content.startsWith('- id:')) {
-              // 成功标准条目（- item），退出 steps 模式
-              if (currentStep) {
-                currentPhase.steps.push(currentStep);
-                currentStep = null;
-              }
-              inSteps = false;
-              inToolCall = false;
-              // 不 continue，让外层处理这条线
-            } else {
-              // 正常步骤处理
-              if (content.startsWith('- id:')) {
-                if (currentStep) {
-                  currentPhase.steps.push(currentStep);
-                }
-                currentStep = { id: content.replace('- id:', '').trim(), toolCall: { tool: '', params: {} } };
-                inToolCall = false;
-                continue;
-              }
-              if (currentStep) {
-                if (content.startsWith('name:')) {
-                  currentStep.name = content.replace('name:', '').trim();
-                  continue;
-                }
-                if (content.startsWith('description:')) {
-                  currentStep.description = content.replace('description:', '').trim();
-                  continue;
-                }
-                if (content.startsWith('expectedOutput:')) {
-                  currentStep.expectedOutput = content.replace('expectedOutput:', '').trim();
-                  continue;
-                }
-                if (content === 'toolCall:') {
-                  inToolCall = true;
-                  continue;
-                }
-                if (content.startsWith('tool:') && inToolCall) {
-                  // 在 toolCall 块内处理 tool
-                  continue;
-                }
-                if (content.startsWith('params:') && inToolCall) {
-                  continue;
-                }
-                if (content.startsWith('url:') && inToolCall) {
-                  currentStep.toolCall.params.url = content.replace('url:', '').trim();
-                  continue;
-                }
-                if (content.startsWith('query:') && inToolCall) {
-                  currentStep.toolCall.params.query = content.replace('query:', '').trim();
-                  continue;
-                }
-                if (inToolCall && content.includes(':')) {
-                  const colonIdx = content.indexOf(':');
-                  const key = content.substring(0, colonIdx).trim();
-                  const val = content.substring(colonIdx + 1).trim();
-                  // 跳过 headers:（单独处理）
-                  if (key !== 'headers') {
-                    currentStep.toolCall.params[key] = val;
-                  }
-                  continue;
-                }
-                // 处理 headers 嵌套
-                if (content.startsWith('headers:') && inToolCall) {
-                  currentStep.toolCall.params.headers = {};
-                  continue;
-                }
-                if (inToolCall && content.startsWith('Authorization:')) {
-                  if (!currentStep.toolCall.params.headers) {
-                    currentStep.toolCall.params.headers = {};
-                  }
-                  currentStep.toolCall.params.headers['Authorization'] = content.replace('Authorization:', '').trim();
-                  continue;
-                }
-                // 通用 key: value 处理
-                if (!inToolCall) {
-                  // 处理非 toolCall 的 key: value
-                  const colonIdx = content.indexOf(':');
-                  if (colonIdx > 0 && content.endsWith(':') === false) {
-                    const key = content.substring(0, colonIdx).trim();
-                    const val = content.substring(colonIdx + 1).trim();
-                    if (key === 'validationRule') {
-                      currentStep.validationRule = val;
-                    }
-                  }
-                }
-                // 如果进入 toolCall 块但没有匹配，由外层处理
-                continue;
-              }
-              continue; // 在 inSteps 模式中，跳过外层处理
-            }
-          }
-
-          if (content.startsWith('- id:')) {
-            if (currentPhase) {
-              if (currentStep) {
-                currentPhase.steps.push(currentStep);
-                currentStep = null;
-              }
-              result.phases = result.phases || [];
-              result.phases.push(currentPhase);
-            }
-            currentPhase = { id: content.replace('- id:', '').trim(), steps: [], successCriteria: [], maxRetries: 2, timeout: 120 };
-            inSteps = false;
-            inToolCall = false;
-            continue;
-          }
-          if (currentPhase && content.startsWith('name:')) {
-            currentPhase.name = content.replace('name:', '').trim();
-            continue;
-          }
-          if (currentPhase && content.startsWith('description:')) {
-            currentPhase.description = content.replace('description:', '').trim();
-            continue;
-          }
-          if (currentPhase && content === 'steps:') {
-            inSteps = true;
-            continue;
-          }
-          if (currentPhase && content.startsWith('condition:')) {
-            const val = content.replace('condition:', '').trim();
-            currentPhase.condition = val === 'null' ? null : val;
-            continue;
-          }
-          if (currentPhase && content.startsWith('maxRetries:')) {
-            currentPhase.maxRetries = parseInt(content.replace('maxRetries:', '').trim()) || 2;
-            continue;
-          }
-          if (currentPhase && content.startsWith('timeout:')) {
-            currentPhase.timeout = parseInt(content.replace('timeout:', '').trim()) || 120;
-            continue;
-          }
-          if (currentPhase && content.startsWith('- ')) {
-            currentPhase.successCriteria = currentPhase.successCriteria || [];
-            currentPhase.successCriteria.push(content.replace('- ', '').trim());
-            continue;
-          }
-
-          }
-
-        if (inDecisionTree) {
-          if (content.startsWith('- id:')) {
-            if (currentDecision) {
-              result.decisionTree = result.decisionTree || [];
-              result.decisionTree.push(currentDecision);
-            }
-            currentDecision = { id: content.replace('- id:', '').trim(), conditions: [] };
-            inConditions = false;
-            continue;
-          }
-          if (currentDecision && content.startsWith('sourcePhase:')) {
-            currentDecision.sourcePhase = content.replace('sourcePhase:', '').trim();
-            continue;
-          }
-          if (currentDecision && content.startsWith('defaultNext:')) {
-            const val = content.replace('defaultNext:', '').trim();
-            currentDecision.defaultNext = val === 'null' ? null : val;
-            continue;
-          }
-          if (currentDecision && content.startsWith('conditions:')) {
-            inConditions = true;
-            continue;
-          }
-          if (inConditions && currentDecision && content.startsWith('- rule:')) {
-            if (currentCondition) {
-              currentDecision.conditions.push(currentCondition);
-            }
-            currentCondition = { rule: content.replace('- rule:', '').trim(), nextPhase: '', description: '' };
-            continue;
-          }
-          if (currentCondition) {
-            if (content.startsWith('nextPhase:')) {
-              currentCondition.nextPhase = content.replace('nextPhase:', '').trim();
-              continue;
-            }
-            if (content.startsWith('description:')) {
-              currentCondition.description = content.replace('description:', '').trim();
-              continue;
-            }
-          }
-        }
-      }
-
-      // 收尾
-      if (currentStep && currentPhase) {
-        currentPhase.steps.push(currentStep);
-      }
-      if (currentPhase) {
-        result.phases = result.phases || [];
-        result.phases.push(currentPhase);
-      }
-      if (currentDecision) {
-        result.decisionTree = result.decisionTree || [];
-        result.decisionTree.push(currentDecision);
-      }
-      if (currentCondition) {
-        (currentDecision?.conditions || []).push(currentCondition);
+      // 使用 js-yaml 标准解析器
+      const parsed = yaml.load(content) as any;
+      
+      if (!parsed) {
+        console.error(`[ProcessEngine] 模板解析为空: ${fileName}`);
+        return null;
       }
 
       // 构建 ProcessTemplate
       return {
-        id: result.id || fileName.replace(/\.(yaml|yml)$/, ''),
-        name: result.name || '',
-        description: result.description || '',
-        category: result.category || 'web',
-        version: result.version || '1.0.0',
-        phases: result.phases || [],
-        decisionTree: result.decisionTree || [],
+        id: parsed.id || fileName.replace(/\.(yaml|yml)$/, ''),
+        name: parsed.name || '',
+        description: parsed.description || '',
+        category: parsed.category || 'web',
+        version: parsed.version || '1.0.0',
+        phases: this.normalizePhases(parsed.phases || []),
+        decisionTree: this.normalizeDecisionTree(parsed.decisionTree || []),
       } as ProcessTemplate;
     } catch (error) {
       console.error(`[ProcessEngine] 解析模板失败 ${fileName}: ${error}`);
       return null;
     }
+  }
+
+  /**
+   * 规范化阶段数据（确保类型安全）
+   */
+  private normalizePhases(phases: any[]): Phase[] {
+    return phases.map((phase: any) => ({
+      id: phase.id || '',
+      name: phase.name || '',
+      description: phase.description || '',
+      steps: this.normalizeSteps(phase.steps || []),
+      condition: phase.condition,
+      successCriteria: Array.isArray(phase.successCriteria) ? phase.successCriteria : [],
+      maxRetries: phase.maxRetries || 2,
+      timeout: phase.timeout || 120,
+    }));
+  }
+
+  /**
+   * 规范化步骤数据
+   */
+  private normalizeSteps(steps: any[]): any[] {
+    return steps.map((step: any) => ({
+      id: step.id || '',
+      name: step.name || '',
+      description: step.description || '',
+      toolCall: {
+        tool: step.toolCall?.tool || '',
+        params: step.toolCall?.params || {},
+        transform: step.toolCall?.transform,
+      },
+      expectedOutput: step.expectedOutput || '',
+      validationRule: step.validationRule,
+    }));
+  }
+
+  /**
+   * 规范化决策树数据
+   */
+  private normalizeDecisionTree(decisionTree: any[]): any[] {
+    return decisionTree.map((node: any) => ({
+      id: node.id || '',
+      sourcePhase: node.sourcePhase || '',
+      conditions: Array.isArray(node.conditions) ? node.conditions.map((cond: any) => ({
+        rule: cond.rule || '',
+        nextPhase: cond.nextPhase || '',
+        description: cond.description || '',
+      })) : [],
+      defaultNext: node.defaultNext || null,
+    }));
   }
 
   /**
@@ -574,8 +396,89 @@ export class ProcessEngine {
         return phaseResults.some(r => r.status === 'success');
       case 'ssrfAccessible':
         return context.findings.some(f => f.type === 'ssrf');
+      case 'wafDetected':
+        return context.findings.some(f => f.type === 'waf-detected');
       default:
         return true;
     }
+  }
+
+  /**
+   * 注册内置工具（工具调用抽象层）
+   */
+  private registerBuiltinTools(): void {
+    // Web Fetch 工具
+    toolRegistry.register({
+      name: 'web_fetch',
+      description: '获取网页内容',
+      handler: async (params) => {
+        try {
+          const url = params.url as string;
+          const headers: Record<string, string> = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+          };
+          const response = await fetch(url, { headers });
+          const respHeaders: Record<string, string> = {};
+          response.headers.forEach((v: string, k: string) => { respHeaders[k] = v; });
+          const text = await response.text();
+          const output = JSON.stringify({
+            status: response.status,
+            statusText: response.statusText,
+            headers: respHeaders,
+            body: text.substring(0, 5000),
+          });
+          return {
+            tool: 'web_fetch',
+            params,
+            output,
+            success: true,
+            duration: 0,
+          };
+        } catch (error) {
+          return {
+            tool: 'web_fetch',
+            params,
+            output: '',
+            success: false,
+            duration: 0,
+            error: `web_fetch 失败: ${error}`,
+          };
+        }
+      },
+      timeout: 30000,
+    });
+
+    // 搜索工具
+    toolRegistry.register({
+      name: 'search_google',
+      description: 'Google 搜索',
+      handler: async (params) => {
+        return {
+          tool: 'search_google',
+          params,
+          output: JSON.stringify({ message: '搜索由 MCP 层执行', query: params.query }),
+          success: true,
+          duration: 0,
+        };
+      },
+    });
+
+    // CVE 查询工具
+    toolRegistry.register({
+      name: 'cve_query',
+      description: '查询 CVE 漏洞信息',
+      handler: async (params) => {
+        return {
+          tool: 'cve_query',
+          params,
+          output: '',
+          success: false,
+          duration: 0,
+          error: '请使用 CVEIntegrator 执行 CVE 查询',
+        };
+      },
+    });
   }
 }

@@ -386,7 +386,7 @@ ${findingsSection}`;
 `).join('\n')}`
       : '';
 
-    const recommendationsSection = result.recommendations.length > 0
+    const recommendationsSection = result.recommendations && result.recommendations.length > 0
       ? `\n## 修复建议\n${result.recommendations.map((rec, i) => `${i + 1}. ${rec}`).join('\n')}\n`
       : '';
 

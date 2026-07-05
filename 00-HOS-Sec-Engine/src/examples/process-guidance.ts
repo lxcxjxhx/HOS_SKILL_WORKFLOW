@@ -14,6 +14,7 @@
 import { HosSecEngine } from '../core/engine';
 import { ReportGenerator } from '../core/report';
 import { ProcessResult } from '../types/process';
+import { adaptProcessResultToOrchestration } from '../core/report-adapter';
 
 // ANSI 颜色常量
 const COLORS = {
@@ -115,7 +116,7 @@ async function main(): Promise<void> {
   printSection('STEP 4: 执行完整业务指导流程');
 
   const target = 'https://example.com';
-  const processType = 'web-pentest-full';
+  const processType = 'web-pentest';
 
   console.log(`${COLORS.yellow}目标:${COLORS.reset} ${target}`);
   console.log(`${COLORS.yellow}流程类型:${COLORS.reset} ${processType}`);
@@ -180,13 +181,16 @@ async function main(): Promise<void> {
   // ==================== 生成报告 ====================
   printSection('STEP 6: 生成报告');
 
+  // 将 ProcessResult 转换为 OrchestrationResult 以兼容报告生成器
+  const orchestrationResult = adaptProcessResultToOrchestration(result);
+
   // 生成 Markdown 报告
-  const markdownReport = ReportGenerator.generateMarkdown(result as any);
+  const markdownReport = ReportGenerator.generateMarkdown(orchestrationResult);
   console.log(`${COLORS.green}✓${COLORS.reset} Markdown 报告已生成`);
   console.log(`\n${COLORS.dim}${markdownReport.slice(0, 500)}...${COLORS.reset}`);
 
   // 生成 HTML 报告
-  const htmlReport = ReportGenerator.generateHTML(result as any);
+  const htmlReport = ReportGenerator.generateHTML(orchestrationResult);
   console.log(`\n${COLORS.green}✓${COLORS.reset} HTML 报告已生成 (${htmlReport.length} 字符)`);
 
   // ==================== 完整业务指导流程总结 ====================

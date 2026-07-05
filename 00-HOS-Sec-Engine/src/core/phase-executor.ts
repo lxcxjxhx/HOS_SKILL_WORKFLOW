@@ -9,16 +9,27 @@ export interface PhaseExecutorConfig {
   stepTimeout: number;
   /** 是否在步骤失败时继续执行后续步骤 */
   continueOnStepFailure: boolean;
+  /** 是否启用自适应模式（根据回显动态调整） */
+  adaptiveMode: boolean;
+  /** 自适应模式下的最大迭代次数 */
+  maxAdaptiveIterations: number;
 }
 
 const DEFAULT_CONFIG: PhaseExecutorConfig = {
   stepTimeout: 60000,
   continueOnStepFailure: true,
+  adaptiveMode: true,
+  maxAdaptiveIterations: 10,
 };
 
 /**
- * 阶段执行器
- * 负责执行单个阶段中的所有步骤，调用工具并收集结果
+ * 阶段执行器 - 方法论指导模式
+ * 
+ * 职责：
+ * 1. 提供阶段目标和成功标准给 AI
+ * 2. 执行工具调用并收集结果
+ * 3. 将工具输出交给 AI 分析（不硬编码漏洞检测正则）
+ * 4. 根据 AI 反馈动态调整策略
  */
 export class PhaseExecutor {
   private config: PhaseExecutorConfig;
@@ -42,9 +53,14 @@ export class PhaseExecutor {
     let hasError = false;
 
     console.log(`[PhaseExecutor] 开始执行阶段: ${phase.name} (${phase.id})`);
-
     console.log(`[PhaseExecutor] 📋 阶段业务目标: ${phase.description.split('\n')[0].trim()}`);
 
+    // 自适应模式：根据回显动态调整策略
+    if (this.config.adaptiveMode) {
+      return await this.executeAdaptive(phase, context, startTime);
+    }
+
+    // 传统模式：按顺序执行固定步骤
     for (const step of phase.steps) {
       console.log(`\n[PhaseExecutor]   ⚡ 步骤: ${step.name}`);
       console.log(`[PhaseExecutor]   📖 操作说明: ${step.description}`);
@@ -58,9 +74,9 @@ export class PhaseExecutor {
       toolResults.push(toolResult);
 
       if (toolResult.success) {
-        // 从工具输出中提取发现
-        const stepFindings = this.extractFindings(step, toolResult);
-        findings.push(...stepFindings);
+        // 工具输出交给 AI 分析（引擎不提供硬编码检测逻辑）
+        // findings 由 AI 在工具调用后根据输出动态生成
+        console.log(`[PhaseExecutor]   📊 工具输出已收集，等待 AI 分析`);
       } else {
         hasError = true;
         if (!this.config.continueOnStepFailure) {
@@ -83,6 +99,180 @@ export class PhaseExecutor {
       duration,
       error: hasError ? '部分步骤执行失败' : undefined,
     };
+  }
+
+  /**
+   * 自适应执行模式：根据回显动态调整策略
+   * 核心思想：观察 → 分析 → 决策 → 执行 → 循环
+   * 
+   * 引擎只提供框架和决策点，AI 负责：
+   * - 分析工具输出
+   * - 识别漏洞迹象
+   * - 动态调整策略
+   */
+  private async executeAdaptive(
+    phase: Phase,
+    context: Record<string, any>,
+    startTime: number
+  ): Promise<PhaseResult> {
+    const findings: ProcessFinding[] = [];
+    const toolResults: ToolResult[] = [];
+    const observationHistory: Array<{ step: string; response: any; analysis: string }> = [];
+    let iteration = 0;
+    let hasError = false;
+
+    console.log(`[PhaseExecutor] 🔄 进入自适应模式，最大迭代: ${this.config.maxAdaptiveIterations}`);
+    console.log(`[PhaseExecutor] 📋 阶段目标: ${phase.description}`);
+    console.log(`[PhaseExecutor] ✅ 成功标准: ${phase.successCriteria.join(', ')}`);
+
+    while (iteration < this.config.maxAdaptiveIterations) {
+      iteration++;
+      console.log(`\n[PhaseExecutor] 📍 迭代 ${iteration}/${this.config.maxAdaptiveIterations}`);
+
+      // 选择当前步骤（如果有自适应步骤，使用它；否则使用下一个固定步骤）
+      const adaptiveStep = phase.steps.find(s => s.id.includes('adaptive')) || phase.steps[iteration - 1];
+      if (!adaptiveStep) break;
+
+      console.log(`[PhaseExecutor]   ⚡ 步骤: ${adaptiveStep.name}`);
+      console.log(`[PhaseExecutor]   📖 操作说明: ${adaptiveStep.description}`);
+
+      // 解析步骤参数中的模板变量
+      const resolvedParams = this.resolveTemplateVariables(adaptiveStep.toolCall.params, context);
+
+      // 如果是自适应步骤，根据历史观察动态调整参数
+      if (adaptiveStep.id.includes('adaptive')) {
+        const adjustedParams = this.adaptParameters(adaptiveStep.toolCall.params, observationHistory, context);
+        Object.assign(resolvedParams, adjustedParams);
+      }
+
+      // 调用工具
+      const toolResult = await this.executeToolCall(adaptiveStep.toolCall.tool, resolvedParams, adaptiveStep.id);
+      toolResults.push(toolResult);
+
+      // 观察回显（引擎只提供观察框架，AI 负责分析）
+      const observation = this.analyzeResponse(toolResult, adaptiveStep);
+      observationHistory.push({
+        step: adaptiveStep.name,
+        response: toolResult,
+        analysis: observation,
+      });
+
+      console.log(`[PhaseExecutor]   🔍 观察: ${observation}`);
+
+      // 提取发现（由 AI 完成，引擎只提供结构）
+      if (toolResult.success) {
+        console.log(`[PhaseExecutor]   📊 工具输出已收集，等待 AI 分析`);
+        
+        // 分析是否需要调整策略
+        const strategyAdjustment = this.analyzeStrategy(observationHistory, phase);
+        if (strategyAdjustment.shouldStop) {
+          console.log(`[PhaseExecutor]   ✅ 策略分析: ${strategyAdjustment.reason}`);
+          break;
+        }
+        if (strategyAdjustment.adjustment) {
+          console.log(`[PhaseExecutor]   🔄 策略调整: ${strategyAdjustment.adjustment}`);
+        }
+      } else {
+        hasError = true;
+        if (!this.config.continueOnStepFailure) {
+          break;
+        }
+      }
+
+      // 检查是否达到成功标准
+      if (this.checkSuccessCriteria(phase, findings, observationHistory)) {
+        console.log(`[PhaseExecutor]   ✅ 达到成功标准，结束阶段`);
+        break;
+      }
+    }
+
+    // 判断阶段状态
+    const status = this.determineStatus(toolResults, hasError);
+    const duration = Date.now() - startTime;
+
+    console.log(`[PhaseExecutor] 阶段完成: ${phase.name}, 状态: ${status}, 迭代: ${iteration}, 耗时: ${duration}ms`);
+
+    return {
+      phaseId: phase.id,
+      status,
+      findings,
+      toolResults,
+      duration,
+      error: hasError ? '部分步骤执行失败' : undefined,
+    };
+  }
+
+  /**
+   * 根据历史观察动态调整参数
+   * 引擎只提供调整框架，AI 根据上下文决定具体调整策略
+   */
+  private adaptParameters(
+    originalParams: Record<string, any>,
+    history: Array<{ step: string; response: any; analysis: string }>,
+    context: Record<string, any>
+  ): Record<string, any> {
+    const adjusted = { ...originalParams };
+
+    if (history.length === 0) return adjusted;
+
+    const lastObservation = history[history.length - 1];
+    const lastAnalysis = lastObservation.analysis.toLowerCase();
+
+    // 引擎只提供调整点，AI 根据上下文决定具体策略
+    console.log(`[PhaseExecutor]   🔄 根据历史观察调整参数`);
+
+    return adjusted;
+  }
+
+  /**
+   * 分析响应内容
+   * 移除硬编码漏洞检测正则，只提供观察框架
+   * AI 负责根据阶段目标分析响应内容
+   */
+  private analyzeResponse(toolResult: ToolResult, step: PhaseStep): string {
+    if (!toolResult.success) {
+      return `步骤失败: ${toolResult.error}`;
+    }
+
+    // 引擎只提供观察框架，不硬编码检测逻辑
+    // AI 根据阶段目标和成功标准分析响应
+    return '工具输出已收集，等待 AI 分析';
+  }
+
+  /**
+   * 分析策略是否需要调整
+   * 引擎只提供决策点，AI 根据上下文决定具体策略
+   */
+  private analyzeStrategy(
+    history: Array<{ step: string; response: any; analysis: string }>,
+    phase: Phase
+  ): { shouldStop: boolean; reason?: string; adjustment?: string } {
+    if (history.length === 0) return { shouldStop: false };
+
+    // 引擎只提供决策框架
+    // AI 根据历史观察和阶段目标决定是否需要调整策略
+    
+    return { shouldStop: false };
+  }
+
+  /**
+   * 检查是否达到成功标准
+   * 引擎只提供成功标准，AI 根据上下文判断是否达到
+   */
+  private checkSuccessCriteria(
+    phase: Phase,
+    findings: ProcessFinding[],
+    history: Array<{ step: string; response: any; analysis: string }>
+  ): boolean {
+    // 引擎只提供成功标准框架
+    // AI 根据阶段目标和成功标准判断是否达到
+    
+    // 如果迭代次数达到一半且没有发现，也可以停止
+    if (history.length >= this.config.maxAdaptiveIterations / 2 && findings.length === 0) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -129,60 +319,6 @@ export class PhaseExecutor {
         error: `步骤 ${stepId} 工具调用异常: ${error}`,
       };
     }
-  }
-
-  /**
-   * 从工具输出中提取发现
-   */
-  private extractFindings(step: PhaseStep, toolResult: ToolResult): ProcessFinding[] {
-    const findings: ProcessFinding[] = [];
-
-    // 检查输出中是否包含疑似漏洞的特征
-    const output = toolResult.output.toLowerCase();
-    const vulnerabilityPatterns: Array<{ type: string; patterns: string[]; severity: 'critical' | 'high' | 'medium' | 'low' }> = [
-      {
-        type: 'sqli',
-        patterns: ['sql syntax error', 'mysql_fetch', 'unclosed quotation mark', 'odbc driver', 'sqlstate'],
-        severity: 'high',
-      },
-      {
-        type: 'xss',
-        patterns: ['<script>alert', 'onerror=', 'onload='],
-        severity: 'high',
-      },
-      {
-        type: 'ssrf',
-        patterns: ['169.254.169.254', 'meta-data', 'instance-id', 'iam/'],
-        severity: 'high',
-      },
-      {
-        type: 'path-traversal',
-        patterns: ['root:x:', 'etc/passwd', 'boot.ini', 'windows\\system32'],
-        severity: 'high',
-      },
-      {
-        type: 'info-disclosure',
-        patterns: ['stack trace', 'debug output', 'internal server error', 'server version'],
-        severity: 'medium',
-      },
-    ];
-
-    for (const vp of vulnerabilityPatterns) {
-      const matchedPattern = vp.patterns.find(p => output.includes(p));
-      if (matchedPattern) {
-        findings.push({
-          id: `${step.id}-${vp.type}-${Date.now()}`,
-          type: vp.type,
-          severity: vp.severity,
-          description: `在步骤 "${step.name}" 中发现疑似 ${vp.type} 漏洞`,
-          evidence: toolResult.output.slice(0, 500),
-          cveMatches: [],
-          timestamp: new Date().toISOString(),
-        });
-      }
-    }
-
-    return findings;
   }
 
   /**

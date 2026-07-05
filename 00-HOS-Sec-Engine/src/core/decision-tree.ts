@@ -171,6 +171,42 @@ export class DecisionTree {
         };
       }
 
+      // WAF 相关规则
+      if (rule.includes('result.hasWaf()')) {
+        const matched = result.findings.some(f => f.type === 'waf-detected');
+        return {
+          condition,
+          matched,
+          reason: matched
+            ? '检测到 WAF 保护'
+            : '未检测到 WAF',
+        };
+      }
+
+      if (rule.includes('result.isCloudflare()')) {
+        const matched = result.findings.some(f =>
+          f.type === 'waf-detected' && f.description.includes('Cloudflare')
+        );
+        return {
+          condition,
+          matched,
+          reason: matched
+            ? '检测到 Cloudflare WAF'
+            : '非 Cloudflare 保护',
+        };
+      }
+
+      if (rule.includes('result.hasWafBypassTool()')) {
+        const matched = result.findings.some(f => f.type === 'waf-bypass-recommendation');
+        return {
+          condition,
+          matched,
+          reason: matched
+            ? '有可用的 WAF 绕过建议'
+            : '无 WAF 绕过建议',
+        };
+      }
+
       // 未知规则，回退到检查是否有 findings
       const matched = result.findings.length > 0;
       return {

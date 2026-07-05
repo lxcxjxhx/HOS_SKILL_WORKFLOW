@@ -1,253 +1,223 @@
-# API 安全审计完整业务指导流程
-# 专注于 API 安全的各个维度，从认证到授权再到速率限制
-# 每个阶段提供具体的测试方法和预期结果说明
+# API 安全审计方法论框架
+# 本模板提供方法论指导，而非固定操作步骤
+# AI 根据模板的阶段目标、思路指导和决策规则，动态决定执行策略
 id: api-security-audit
-name: API 安全审计完整业务指导流程
-description: 对 API 服务进行全面的安全审计业务指导流程。覆盖认证机制（JWT/OAuth）、授权控制（IDOR/越权）、速率限制、输入验证和敏感信息泄露五个核心业务维度。每个阶段提供具体的测试方法、payload 构造指导和预期结果说明。
+name: API 安全审计方法论
+description: |
+  指导 AI 如何进行 API 安全审计的方法论框架。
+  覆盖认证机制、授权控制、速率限制、输入验证和敏感信息泄露五个核心维度。
+  每个阶段提供目标、思路指导和成功标准，AI 根据实际回显动态调整执行策略。
 category: api
-version: 2.0.0
+version: 3.0.0
 
+# ============================================================
+# 阶段定义 — 方法论指导
+# ============================================================
 phases:
-  # ==================== Phase 1: JWT 认证安全测试 ====================
-  - id: jwt-auth-testing
-    name: JWT 认证安全深度测试
-    description: 【业务目标】全面测试 API 的 JWT 认证机制安全性。包括 none 算法攻击、算法混淆、密钥爆破、kid 注入、jku 头注入等常见 JWT 攻击手法。JWT 认证漏洞可导致未授权访问和身份伪造。
-    steps:
-      - id: step-jwt-header
-        name: JWT 认证端点探测
-        description: 探测 JWT 认证端点，获取认证机制信息
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/auth/validate"
-        expectedOutput: 认证端点的响应信息
-
-      - id: step-jwt-none-attack
-        name: JWT None 算法攻击
-        description: 修改 JWT 的 alg 为 'none'，尝试绕过签名验证
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/auth/validate"
-            headers:
-              Authorization: "Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJ1c2VyIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4ifQ."
-        expectedOutput: 如果返回 200 则存在 none 算法漏洞
-
-      - id: step-jwt-algorithm-confusion
-        name: JWT 算法混淆攻击
-        description: 将 RS256 算法的公钥作为 HS256 的密钥，测试算法混淆
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/auth/validate"
-        expectedOutput: 算法混淆攻击结果
-
-      - id: step-jwt-kid-injection
-        name: JWT kid 头注入测试
-        description: 在 JWT header 的 kid 字段注入 SQL 或命令，测试 kid 注入
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/auth/validate"
-        expectedOutput: kid 注入测试结果
-
-    condition: null
+  # ==================== Phase 1: 认证机制安全评估 ====================
+  - id: auth-mechanism-testing
+    name: 认证机制安全评估
+    description: |
+      方法论指导：
+      1. 识别目标使用的认证机制类型（JWT/OAuth/Session/自定义）
+      2. 分析认证令牌的生成、验证和存储机制
+      3. 测试认证机制的常见弱点（算法混淆、密钥强度、令牌泄露）
+      4. 评估认证绕过和身份伪造的可能性
+      5. 检查认证流程中的逻辑缺陷和配置错误
+    objectives:
+      - 识别认证机制类型和实现方式
+      - 评估令牌生成和验证的安全性
+      - 测试认证绕过和身份伪造可能性
+      - 发现认证流程中的逻辑缺陷
+    approach: |
+      AI 应该：
+      - 分析认证请求和响应，识别令牌格式和结构
+      - 如果是 JWT，测试算法混淆、none 算法、密钥爆破等攻击
+      - 如果是 OAuth，测试 CSRF、redirect_uri 绕过、scope 越权
+      - 如果是 Session，测试会话固定、会话劫持、会话预测
+      - 检查令牌存储机制（Cookie 属性、LocalStorage、SessionStorage）
+      - 测试认证绕过（参数污染、HTTP 方法变异、路径遍历）
+      - 根据实际回显动态调整测试策略
     successCriteria:
-      - 完成 JWT none 算法测试
-      - 完成算法混淆测试
-      - 确认 JWT 认证机制的安全性
+      - 已识别认证机制类型
+      - 已评估令牌安全性
+      - 已测试认证绕过可能性
+      - 已发现认证流程缺陷（如果存在）
     maxRetries: 2
-    timeout: 300
+    timeout: 600
 
-  # ==================== Phase 2: OAuth 授权流程测试 ====================
-  - id: oauth-testing
-    name: OAuth 授权流程安全测试
-    description: 【业务目标】测试 OAuth 2.0 授权流程的安全性。包括 CSRF 攻击、redirect_uri 绕过、token 泄露、scope 越权等 OAuth 特有安全问题。
-    steps:
-      - id: step-oauth-endpoint
-        name: OAuth 端点发现
-        description: 发现 OAuth 授权端点、token 端点和回调端点
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/auth/oauth/token"
-        expectedOutput: OAuth 端点信息
-
-      - id: step-oauth-csrf
-        name: OAuth CSRF 测试
-        description: 测试 OAuth 授权流程中是否存在 CSRF 漏洞
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/auth/oauth/authorize"
-        expectedOutput: 授权页面信息
-
-      - id: step-oauth-redirect
-        name: OAuth redirect_uri 绕过测试
-        description: 测试是否可以绕过 redirect_uri 白名单
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/auth/oauth/callback"
-        expectedOutput: 回调处理结果
-
-    condition: null
+  # ==================== Phase 2: 授权控制有效性评估 ====================
+  - id: authorization-testing
+    name: 授权控制有效性评估
+    description: |
+      方法论指导：
+      1. 识别 API 的授权模型（RBAC/ABAC/ACL/自定义）
+      2. 测试水平越权（相同角色用户间的未授权访问）
+      3. 测试垂直越权（低权限用户访问高权限功能）
+      4. 测试 IDOR（不安全的直接对象引用）漏洞
+      5. 评估授权控制的完整性和一致性
+    objectives:
+      - 识别授权模型和权限控制机制
+      - 测试水平越权和垂直越权漏洞
+      - 测试 IDOR 漏洞
+      - 评估授权控制的完整性
+    approach: |
+      AI 应该：
+      - 分析 API 端点的权限要求和访问控制逻辑
+      - 使用不同权限级别的账户测试越权访问
+      - 修改资源 ID 参数测试 IDOR（数字 ID、UUID、用户名）
+      - 测试 HTTP 方法变异绕过（GET/POST/PUT/DELETE）
+      - 测试参数污染绕过授权检查
+      - 评估批量操作和枚举攻击的风险
+      - 根据实际回显动态调整测试方向
     successCriteria:
-      - 完成 OAuth 端点发现
-      - 完成 CSRF 和 redirect_uri 测试
-      - 确认 OAuth 流程安全性
+      - 已识别授权模型
+      - 已测试水平和垂直越权
+      - 已测试 IDOR 漏洞
+      - 已评估授权控制完整性
     maxRetries: 2
-    timeout: 300
+    timeout: 600
 
-  # ==================== Phase 3: IDOR 越权测试 ====================
-  - id: idor-testing
-    name: IDOR 越权漏洞深度测试
-    description: 【业务目标】系统化测试 API 的 IDOR（不安全的直接对象引用）漏洞。通过修改资源 ID、用户 ID、订单 ID 等参数，测试能否越权访问其他用户的数据。IDOR 是 API 安全中最常见的高危漏洞之一。
-    steps:
-      - id: step-idor-user
-        name: 用户 IDOR 测试
-        description: 尝试修改用户 ID 参数，访问其他用户的数据
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/users/1/profile"
-        expectedOutput: 用户 1 的个人信息
-
-      - id: step-idor-order
-        name: 订单 IDOR 测试
-        description: 尝试修改订单 ID 参数，访问其他用户的订单
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/orders/1001"
-        expectedOutput: 订单详情
-
-      - id: step-idor-uuid
-        name: UUID/GUID IDOR 测试
-        description: 测试 UUID 类型的 ID 是否可预测或枚举
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/documents/00000000-0000-0000-0000-000000000001"
-        expectedOutput: 文档内容
-
-    condition: null
+  # ==================== Phase 3: 速率限制强度测试 ====================
+  - id: rate-limit-testing
+    name: 速率限制强度测试
+    description: |
+      方法论指导：
+      1. 识别 API 的速率限制机制（基于 IP/用户/令牌）
+      2. 测试速率限制的绕过可能性（请求头伪造、IP 轮换）
+      3. 评估暴力破解防护强度（登录、密码重置、验证码）
+      4. 测试分布式请求和并发请求的防护效果
+      5. 评估速率限制策略的合理性和有效性
+    objectives:
+      - 识别速率限制机制和策略
+      - 测试速率限制绕过可能性
+      - 评估暴力破解防护强度
+      - 评估速率限制策略合理性
+    approach: |
+      AI 应该：
+      - 分析响应头中的速率限制信息（X-RateLimit-*、Retry-After）
+      - 测试请求头伪造绕过（X-Forwarded-For、X-Real-IP、X-Original-IP）
+      - 测试分布式请求和并发请求的防护效果
+      - 评估登录、密码重置、验证码等敏感接口的防护强度
+      - 测试时间窗口和限制阈值的合理性
+      - 根据实际回显动态调整测试策略
     successCriteria:
-      - 完成用户 IDOR 测试
-      - 完成订单 IDOR 测试
-      - 确认 API 的授权控制是否有效
+      - 已识别速率限制机制
+      - 已测试绕过可能性
+      - 已评估暴力破解防护
+      - 已评估策略合理性
     maxRetries: 2
-    timeout: 300
+    timeout: 600
 
-  # ==================== Phase 4: 角色权限测试 ====================
-  - id: role-privilege-testing
-    name: 角色权限与水平越权测试
-    description: 【业务目标】测试 API 的角色权限控制机制。低权限用户是否能访问高权限接口？普通用户是否能执行管理员操作？水平越权：相同角色的用户能否互相访问数据？
-    steps:
-      - id: step-role-admin
-        name: 管理接口越权测试
-        description: 测试低权限用户能否访问管理员接口
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/admin/users"
-        expectedOutput: 管理接口访问控制结果
-
-      - id: step-role-super-admin
-        name: 超级管理员接口测试
-        description: 测试普通管理员能否访问超级管理员接口
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/admin/super/config"
-        expectedOutput: 超级管理员配置接口
-
-      - id: step-role-method-bypass
-        name: HTTP 方法越权测试
-        description: 测试通过修改 HTTP 方法（GET/POST/PUT/DELETE）能否绕过权限控制
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/admin/users/1"
-        expectedOutput: 不同 HTTP 方法的权限差异
-
-    condition: null
+  # ==================== Phase 4: 输入验证强度评估 ====================
+  - id: input-validation-testing
+    name: 输入验证强度评估
+    description: |
+      方法论指导：
+      1. 识别 API 的所有输入参数和数据结构
+      2. 测试参数类型验证（整数溢出、数组注入、对象注入）
+      3. 测试参数值验证（长度限制、格式校验、白名单/黑名单）
+      4. 测试特殊字符和注入攻击（SQL/NoSQL/LDAP/XPath）
+      5. 评估输入验证的完整性和有效性
+    objectives:
+      - 识别所有输入参数和数据结构
+      - 测试参数类型和值验证
+      - 测试注入攻击防护
+      - 评估输入验证完整性
+    approach: |
+      AI 应该：
+      - 分析 API 文档和请求结构，识别所有输入参数
+      - 测试参数类型验证（字符串/整数/数组/对象）
+      - 测试参数值验证（长度、格式、范围）
+      - 测试特殊字符处理（空字节、Unicode、控制字符）
+      - 测试注入攻击（SQL、NoSQL、LDAP、XPath、命令注入）
+      - 测试 Content-Type 绕过和参数污染
+      - 根据实际回显动态调整测试策略
     successCriteria:
-      - 完成角色越权测试
-      - 完成 HTTP 方法绕过测试
-      - 确认 API 权限控制的有效性
+      - 已识别所有输入参数
+      - 已测试类型和值验证
+      - 已测试注入攻击防护
+      - 已评估输入验证完整性
     maxRetries: 2
-    timeout: 300
+    timeout: 600
 
-  # ==================== Phase 5: 速率限制与输入验证 ====================
-  - id: rate-limit-input-testing
-    name: 速率限制与输入验证测试
-    description: 【业务目标】测试 API 的速率限制机制和输入验证强度。包括暴力破解防护、请求频率限制、参数注入防护、Content-Type 验证等安全机制。
-    steps:
-      - id: step-rate-limit
-        name: 速率限制绕过测试
-        description: 测试通过修改请求头（X-Forwarded-For、X-Real-IP 等）绕过速率限制
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/login"
-        expectedOutput: 多次请求后的响应状态变化
-
-      - id: step-input-validation
-        name: 参数注入测试
-        description: 测试 API 参数是否包含 NoSQL 注入、LDAP 注入等
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/search?q[$ne]=admin"
-        expectedOutput: NoSQL 注入测试结果
-
-      - id: step-content-type
-        name: Content-Type 绕过测试
-        description: 测试通过修改 Content-Type 绕过输入验证
-        toolCall:
-          tool: web_fetch
-          params:
-            url: "{{target}}/api/data"
-        expectedOutput: Content-Type 验证结果
-
-    condition: null
+  # ==================== Phase 5: 敏感信息泄露检测 ====================
+  - id: sensitive-data-testing
+    name: 敏感信息泄露检测
+    description: |
+      方法论指导：
+      1. 识别 API 响应中的敏感信息（凭证、PII、业务数据）
+      2. 测试错误处理和调试信息泄露
+      3. 测试日志和监控信息泄露
+      4. 测试版本信息和配置信息泄露
+      5. 评估数据加密和传输安全性
+    objectives:
+      - 识别响应中的敏感信息
+      - 测试错误处理和调试信息泄露
+      - 测试版本和配置信息泄露
+      - 评估数据加密和传输安全
+    approach: |
+      AI 应该：
+      - 分析 API 响应，识别敏感信息（密码、令牌、PII）
+      - 测试错误响应中的信息泄露（堆栈跟踪、SQL 错误、系统路径）
+      - 测试响应头中的信息泄露（Server、X-Powered-By、版本号）
+      - 测试日志和监控信息泄露（访问日志、错误日志）
+      - 评估数据传输加密（HTTPS、证书配置、加密算法）
+      - 评估数据存储加密（数据库、文件系统、备份）
+      - 根据实际回显动态调整测试方向
     successCriteria:
-      - 完成速率限制测试
-      - 完成参数注入测试
-      - 确认输入验证机制的有效性
-    maxRetries: 1
-    timeout: 300
+      - 已识别响应中的敏感信息
+      - 已测试错误处理信息泄露
+      - 已测试版本和配置信息泄露
+      - 已评估数据加密安全
+    maxRetries: 2
+    timeout: 600
 
+# ============================================================
+# 自适应决策树
+# 根据每个阶段的执行结果动态决定下一步
+# ============================================================
 decisionTree:
-  - id: decide-after-jwt
-    sourcePhase: jwt-auth-testing
+  - id: decide-after-auth
+    sourcePhase: auth-mechanism-testing
     conditions:
-      - rule: "result.hasCriticalVulnerability()"
-        nextPhase: oauth-testing
-        description: "JWT 测试完成（发现高危漏洞），进入 OAuth 测试"
-    defaultNext: oauth-testing
+      - rule: "发现认证机制缺陷"
+        nextPhase: authorization-testing
+        description: "发现认证缺陷，继续评估授权控制"
+      - rule: "认证机制安全"
+        nextPhase: authorization-testing
+        description: "认证机制安全，继续评估授权控制"
+    defaultNext: authorization-testing
 
-  - id: decide-after-oauth
-    sourcePhase: oauth-testing
+  - id: decide-after-authorization
+    sourcePhase: authorization-testing
     conditions:
-      - rule: "result.hasFindings()"
-        nextPhase: idor-testing
-        description: "OAuth 测试完成，进入 IDOR 越权测试"
-    defaultNext: idor-testing
+      - rule: "发现 IDOR 或越权漏洞"
+        nextPhase: rate-limit-testing
+        description: "发现授权漏洞，深入测试速率限制"
+      - rule: "授权控制安全"
+        nextPhase: rate-limit-testing
+        description: "授权控制安全，继续测试速率限制"
+    defaultNext: rate-limit-testing
 
-  - id: decide-after-idor
-    sourcePhase: idor-testing
+  - id: decide-after-rate-limit
+    sourcePhase: rate-limit-testing
     conditions:
-      - rule: "result.hasCriticalVulnerability()"
-        nextPhase: role-privilege-testing
-        description: "IDOR 测试完成（发现高危漏洞），进入角色权限测试"
-    defaultNext: role-privilege-testing
+      - rule: "发现速率限制绕过"
+        nextPhase: input-validation-testing
+        description: "发现速率限制问题，继续测试输入验证"
+      - rule: "速率限制有效"
+        nextPhase: input-validation-testing
+        description: "速率限制有效，继续测试输入验证"
+    defaultNext: input-validation-testing
 
-  - id: decide-after-role
-    sourcePhase: role-privilege-testing
+  - id: decide-after-input-validation
+    sourcePhase: input-validation-testing
     conditions:
-      - rule: "result.hasFindings()"
-        nextPhase: rate-limit-input-testing
-        description: "角色权限测试完成，进入速率限制测试"
-    defaultNext: rate-limit-input-testing
+      - rule: "发现输入验证缺陷"
+        nextPhase: sensitive-data-testing
+        description: "发现输入验证问题，继续检测敏感信息泄露"
+      - rule: "输入验证有效"
+        nextPhase: sensitive-data-testing
+        description: "输入验证有效，继续检测敏感信息泄露"
+    defaultNext: sensitive-data-testing

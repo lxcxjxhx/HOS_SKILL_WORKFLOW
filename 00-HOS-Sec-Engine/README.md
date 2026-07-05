@@ -1,18 +1,18 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-0.5.1-blue?style=for-the-badge" alt="Version 0.5.1"/>
-  <img src="https://img.shields.io/badge/Process%20Engine-Enabled-brightgreen?style=for-the-badge" alt="Process Engine"/>
+  <img src="https://img.shields.io/badge/Version-3.0.0-blue?style=for-the-badge" alt="Version 3.0.0"/>
+  <img src="https://img.shields.io/badge/Methodology-Engine-brightgreen?style=for-the-badge" alt="Methodology Engine"/>
   <img src="https://img.shields.io/badge/MCP-Enabled-purple?style=for-the-badge" alt="MCP Enabled"/>
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT License"/>
 </p>
 
 <h1 align="center">🔥 HOS-Sec-Engine</h1>
-<p align="center"><b>流程驱动的 AI 原生安全测试引擎</b></p>
+<p align="center"><b>方法论驱动的 AI 原生安全测试引擎</b></p>
 <p align="center">
-  3 个流程模板 · 决策树驱动 · CVE 实时集成 · MCP 管理层
+  流程模板 · 决策树驱动 · CVE 实时集成 · MCP 管理层
 </p>
 
 <p align="center">
-  <i>将攻防专家经验转化为可编排的流程模板 — 适应性强，开箱即用</i>
+  <i>方法论驱动的安全测试引擎 — 引导怎么做，而非告诉你做什么</i>
 </p>
 
 ---
@@ -64,7 +64,7 @@ node dist/src/examples/process-guidance.js
 | **CVE 实时集成** | 通过公开 API 实时查询 CVE 漏洞数据，替代静态漏洞库 |
 | **工具注册中心** | 统一管理和路由 MCP 工具调用 |
 | **报告生成器** | 自动汇总测试结果、发现和建议，输出结构化报告 |
-| **循环保护** | 内置 MAX_PHASE_ITERATIONS = 200 等安全阈值，防止无限循环 |
+| **循环保护** | 可配置的安全阈值，防止无限循环 |
 
 ### 流程模板
 
@@ -78,9 +78,11 @@ API 安全审计     ──  src/playbooks/process-templates/api-security-audit.
 
 ### 引擎设计原则
 
+- **框架而非数据**：引擎提供可扩展的流程框架，而非硬编码的固定能力
 - **无硬编码技能**：所有测试逻辑由流程模板 + 决策树驱动，无需预定义技能包
 - **失败容忍**：`continueOnPhaseFailure` 和 `continueOnStepFailure` 默认为 true，单步失败不影响整体流程
 - **实时数据**：通过 CVE API 获取最新漏洞情报，而非依赖静态数据库
+- **配置驱动**：安全阈值、流程模板均可配置，无需修改代码
 
 ---
 
@@ -145,7 +147,7 @@ node dist/src/examples/process-guidance.js
 
 ## 📋 流程模板
 
-系统内置 3 个 YAML 流程模板，存放于 `src/playbooks/process-templates/`：
+系统内置 YAML 流程模板，存放于 `src/playbooks/process-templates/`，支持动态加载和扩展：
 
 ### Web 渗透测试
 
@@ -231,24 +233,26 @@ npm run clean                  # 清理 dist 目录
 
 ## 📊 测试结果
 
-| 测试套件 | 测试数 | 通过率 | 状态 |
-|---------|:------:|:------:|:----:|
-| 核心引擎测试 | 17 | 100% | ✅ |
-| MCP 管理测试 | 81 | 100% | ✅ |
-| 循环保护测试 | ALL | 100% | ✅ |
-| 全量集成验证 | ALL | 100% | ✅ |
+| 测试套件 | 验证方式 | 状态 |
+|---------|---------|:----:|
+| 核心引擎测试 | 持续集成 | ✅ |
+| MCP 管理测试 | 自动化验证 | ✅ |
+| 循环保护测试 | 持续集成 | ✅ |
+| 全量集成验证 | 自动化验证 | ✅ |
 
 ---
 
 ## 🔄 循环安全保护
 
-| 常量 | 值 | 用途 |
-|------|:--:|------|
-| MAX_PHASE_ITERATIONS | 200 | 防止流程无限循环 |
-| MAX_FINDINGS | 1000 | 防止发现项溢出 |
-| MAX_RECOMMENDATIONS | 200 | 防止建议溢出 |
-| MAX_SCAN_DEPTH | 20 | 防止目录递归溢出 |
-| GLOBAL_MAX_RECOVERY_LIFETIME | 50 | MCP 全局恢复上限 |
+| 配置项 | 用途 |
+|--------|------|
+| MAX_PHASE_ITERATIONS | 防止流程无限循环 |
+| MAX_FINDINGS | 防止发现项溢出 |
+| MAX_RECOMMENDATIONS | 防止建议溢出 |
+| MAX_SCAN_DEPTH | 防止目录递归溢出 |
+| GLOBAL_MAX_RECOVERY_LIFETIME | MCP 全局恢复上限 |
+
+> 所有阈值均可配置，无需修改代码。
 
 引擎支持以下失败容忍配置：
 

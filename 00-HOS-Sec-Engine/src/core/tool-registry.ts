@@ -141,13 +141,39 @@ export function registerBuiltinTools(): void {
     handler: async (params) => {
       try {
         const url = params.url as string;
-        // 使用 fetch API
-        const response = await fetch(url);
+        // 模拟浏览器 HTTP 头以绕过基础 WAF 检测
+        const headers: Record<string, string> = {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+          'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+          'Accept-Encoding': 'gzip, deflate',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Sec-Ch-Ua': '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
+          'Sec-Ch-Ua-Mobile': '?0',
+          'Sec-Ch-Ua-Platform': '"Windows"',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Sec-Fetch-User': '?1',
+          'Upgrade-Insecure-Requests': '1',
+        };
+        const response = await fetch(url, { headers });
+        // 收集响应头信息（用于 WAF 指纹识别）
+        const respHeaders: Record<string, string> = {};
+        response.headers.forEach((v: string, k: string) => { respHeaders[k] = v; });
         const text = await response.text();
+        // 输出中附加响应头信息，便于分析 WAF 类型
+        const output = JSON.stringify({
+          status: response.status,
+          statusText: response.statusText,
+          headers: respHeaders,
+          body: text.substring(0, 5000),
+        });
         return {
           tool: 'web_fetch',
           params,
-          output: text,
+          output,
           success: true,
           duration: 0,
         };

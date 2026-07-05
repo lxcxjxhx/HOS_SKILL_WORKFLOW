@@ -1,0 +1,14 @@
+{
+  "package": "hos-sec-engine-v0.5.1",
+  "version": "0.5.1",
+  "files": {
+    "npm": "hos-sec-engine-0.5.1.tgz",
+    "zip": "hos-sec-engine-v0.5.1.zip"
+  },
+  "commands": {
+    "global": "hos-sec-engine <command>",
+    "local": "npx hos-sec-engine <command>",
+    "bat": "hos-sec-engine.bat <command>"
+  },
+  "buildTime": "2026-07-05T01:36:49.795Z"
+}

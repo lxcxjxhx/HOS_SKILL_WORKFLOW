@@ -21,7 +21,16 @@
     "pack:quick": "node scripts/package.js --quick",
     "install:global": "scripts/install-global.bat"
   },
-  "keywords": ["security", "offense-defense", "rule-engine", "waf-bypass", "vulnerability", "skill", "claude-code", "penetration-testing"],
+  "keywords": [
+    "security",
+    "offense-defense",
+    "rule-engine",
+    "waf-bypass",
+    "vulnerability",
+    "skill",
+    "claude-code",
+    "penetration-testing"
+  ],
   "author": "HOS-Sec",
   "license": "MIT",
   "files": [
@@ -31,16 +40,18 @@
     "tsconfig.json"
   ],
   "dependencies": {
-    "chalk": "^4.1.2",
-    "@inquirer/prompts": "^5.0.0",
     "@inquirer/checkbox": "^2.3.0",
-    "@inquirer/select": "^2.3.0",
     "@inquirer/confirm": "^3.1.0",
-    "@inquirer/input": "^2.1.0"
+    "@inquirer/input": "^2.1.0",
+    "@inquirer/prompts": "^5.0.0",
+    "@inquirer/select": "^2.3.0",
+    "chalk": "^4.1.2",
+    "js-yaml": "^5.2.1"
   },
   "devDependencies": {
-    "typescript": "^5.3.0",
-    "@types/node": "^20.0.0"
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
   },
   "engines": {
     "node": ">=18.0.0"
