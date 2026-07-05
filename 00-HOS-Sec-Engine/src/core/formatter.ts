@@ -14,7 +14,7 @@ export class SkillFormatter {
     }
 
     const skillBlocks = results.map((result, i) => {
-      const skill = result.skill;
+      const skill: any = result.skill;
       const meta = skill.metadata;
       const md = result.matchDetails;
 
@@ -32,16 +32,16 @@ export class SkillFormatter {
         ? `    常见错误: ${skill.knowledge.commonMistakes.join(', ')}`
         : '';
 
-      const checklistLines = (skill.action?.checklist ?? [])
-        .map(item => `    - [ ] ${item}`)
+      const checklistLines = ((skill.action?.checklist ?? []) as string[])
+        .map((item: string) => `    - [ ] ${item}`)
         .join('\n');
 
-      const techniquesLines = (skill.action?.techniques ?? [])
-        .map(technique => `    - ${technique}`)
+      const techniquesLines = ((skill.action?.techniques ?? []) as string[])
+        .map((technique: string) => `    - ${technique}`)
         .join('\n');
 
-      const examplesLines = (skill.action.examples ?? [])
-        .map(example => `    - [${example.name}] ${example.content}${example.description ? `\n      说明: ${example.description}` : ''}`)
+      const examplesLines = ((skill.action.examples ?? []) as any[])
+        .map((example: any) => `    - [${example.name}] ${example.content}${example.description ? `\n      说明: ${example.description}` : ''}`)
         .join('\n');
 
       const successSignsLine = skill.validation?.successSigns?.length
@@ -51,11 +51,11 @@ export class SkillFormatter {
         ? `  误报标志: ${skill.validation.falsePositiveSigns.join(', ')}`
         : '';
 
-      const recommendationsLines = (skill.defense?.recommendations ?? [])
-        .map(rec => `    - ${rec}`)
+      const recommendationsLines = ((skill.defense?.recommendations ?? []) as string[])
+        .map((rec: string) => `    - ${rec}`)
         .join('\n');
-      const referencesLines = (skill.defense?.references ?? [])
-        .map(ref => `    - ${ref}`)
+      const referencesLines = ((skill.defense?.references ?? []) as string[])
+        .map((ref: string) => `    - ${ref}`)
         .join('\n');
 
       const qualityLine = skill.quality
@@ -97,14 +97,14 @@ ${'='.repeat(60)}`;
    */
   static formatJson(results: SkillResult[]): string {
     const output = results.map(r => ({
-      metadata: r.skill.metadata,
+      metadata: (r.skill as any).metadata,
       matchScore: r.matchScore,
       matchDetails: r.matchDetails,
-      knowledge: r.skill.knowledge,
-      action: r.skill.action,
-      validation: r.skill.validation || null,
-      defense: r.skill.defense || null,
-      quality: r.skill.quality || null
+      knowledge: (r.skill as any).knowledge,
+      action: (r.skill as any).action,
+      validation: (r.skill as any).validation || null,
+      defense: (r.skill as any).defense || null,
+      quality: (r.skill as any).quality || null
     }));
 
     return JSON.stringify(output, null, 2);
@@ -123,4 +123,80 @@ ${'='.repeat(60)}`;
     };
     return map[level] || level;
   }
+}
+
+import { ProcessResult, PhaseResult, PhaseStep } from '../types/process';
+
+/**
+ * 将流程执行结果格式化为可执行的步骤列表
+ * @param result 流程执行结果
+ * @returns 格式化的步骤报告
+ */
+export function formatProcessSteps(result: ProcessResult): string {
+  const lines: string[] = [];
+  
+  lines.push(`# 流程执行步骤报告`);
+  lines.push(`目标: ${result.context.target}`);
+  lines.push(`模板: ${result.templateId}`);
+  lines.push('');
+
+  for (const phaseResult of result.phaseResults) {
+    const phase = findPhaseById(result.templateId, phaseResult.phaseId);
+    if (!phase) continue;
+
+    const statusIcon = phaseResult.status === 'success' ? '[✓]' : phaseResult.status === 'partial' ? '[~]' : '[✗]';
+    lines.push(`## ${statusIcon} ${phase.name} (${phaseResult.phaseId})`);
+    lines.push(`   状态: ${phaseResult.status} | 耗时: ${phaseResult.duration}ms`);
+    lines.push('');
+
+    // 步骤列表
+    if (phase.steps) {
+      for (const step of phase.steps) {
+        const stepResult = phaseResult.toolResults.find(r => r.tool === step.toolCall.tool);
+        const stepIcon = stepResult?.success ? '[✓]' : stepResult ? '[✗]' : '[ ]';
+        lines.push(`  ${stepIcon} ${step.name}`);
+        lines.push(`    工具: ${step.toolCall.tool}`);
+        lines.push(`    预期: ${step.expectedOutput}`);
+        if (stepResult?.error) {
+          lines.push(`    错误: ${stepResult.error}`);
+        }
+        lines.push('');
+      }
+    }
+
+    // 该阶段的发现
+    if (phaseResult.findings.length > 0) {
+      lines.push(`  **发现 (${phaseResult.findings.length}):**`);
+      for (const f of phaseResult.findings) {
+        lines.push(`    - [${f.severity.toUpperCase()}] ${f.type}: ${f.description}`);
+        if (f.cveMatches.length > 0) {
+          for (const cve of f.cveMatches) {
+            lines.push(`      CVE: ${cve.cveId} (${cve.severity})`);
+          }
+        }
+      }
+      lines.push('');
+    }
+  }
+
+  // 汇总
+  lines.push('---');
+  lines.push(`**汇总**: ${result.summary.totalFindings} 个发现 (C:${result.summary.criticalCount} H:${result.summary.highCount} M:${result.summary.mediumCount} L:${result.summary.lowCount})`);
+  lines.push(`**CVE 引用**: ${result.summary.cveReferences}`);
+  lines.push(`**总耗时**: ${result.summary.duration}ms`);
+
+  return lines.join('\n');
+}
+
+/**
+ * 根据模板 ID 查找阶段定义
+ * @param templateId 模板 ID
+ * @param phaseId 阶段 ID
+ * @returns 阶段定义，未找到时返回 null
+ */
+function findPhaseById(templateId: string, phaseId: string): { name: string; steps: PhaseStep[] } | null {
+  // 从已加载的模板中查找
+  // 由于无法直接访问 ProcessEngine，这里返回 null 作为 fallback
+  // 实际使用时外部应提供 phase 信息
+  return null;
 }

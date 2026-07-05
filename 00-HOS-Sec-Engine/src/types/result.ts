@@ -1,9 +1,9 @@
-import { AttackDefenseSkill, RiskLevel } from './skill';
+import { RiskLevel } from './skill';
 
 /** Skill 匹配结果 */
 export interface SkillResult {
   /** 匹配的 Skill */
-  skill: AttackDefenseSkill;
+  skill: any;
   /** 匹配分数 (0-1) */
   matchScore: number;
   /** 匹配的维度详情 */

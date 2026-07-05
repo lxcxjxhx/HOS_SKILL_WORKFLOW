@@ -1,18 +1,11 @@
-import { AttackDefenseSkill } from '../types/skill';
-import { SkillResult, ExecuteQuery, EngineConfig } from '../types/result';
+import { EngineConfig } from '../types/result';
 import { Playbook, FlowContext, OrchestrationResult, Finding } from '../types/playbook';
-import { SkillValidator } from './validator';
-import { SkillMatcher } from './matcher';
-import { SkillFormatter } from './formatter';
-import { SkillLoader } from './loader';
 import { FlowOrchestrator } from './orchestrator';
 import { RuntimeConfig, DEFAULT_RUNTIME_CONFIG } from '../config/types';
 import { ProviderManager } from '../config/provider-manager';
-import { AgentResult } from '../agents/types';
 import { AgentCoordinator } from '../agents/coordinator';
 import { ExecutionContextManager } from '../runtime/execution-context';
 import type { ExecutionContext } from '../runtime/execution-context';
-import { Sandbox } from '../runtime/sandbox';
 import { AgentServer } from '../runtime/server';
 import * as path from 'path';
 
@@ -37,6 +30,10 @@ import type {
   MCPDiscoveryResult,
 } from '../mcp/types';
 
+// Process Engine
+import { ProcessEngine } from './process-engine';
+import { ProcessResult, ProcessTemplate } from '../types/process';
+
 /**
  * 默认配置
  */
@@ -49,24 +46,13 @@ const DEFAULT_CONFIG: Required<EngineConfig> = {
   mcpEnabled: true
 };
 
-/** 最大注册 Skill 数量，防止异常数据导致内存耗尽 */
-const MAX_REGISTER_SKILLS = 1000;
-
-/** 最大 playbook 阶段 Skill 关联数量 */
-const MAX_PLAYBOOK_SKILL_LINKS = 500;
-
 /**
  * HOS-Sec-Engine V2 - Skill Engine
  * 攻防专项 Skill 引擎
  */
 export class HosSecEngine {
   private config: Required<EngineConfig>;
-  private skills: Map<string, AttackDefenseSkill>;
-  private cachedSkillsList: AttackDefenseSkill[] | null = null;
-  /** 分类索引: category -> skillId[]，lazy 构建 */
-  private categoryIndex: Map<string, string[]> | null = null;
-  private cachedPlaybookSkills: Map<string, AttackDefenseSkill[]> = new Map();
-  private matcher: SkillMatcher;
+  private processEngine: ProcessEngine;
   private orchestrator: FlowOrchestrator;
   private playbooks: Map<string, Playbook>;
 
@@ -91,10 +77,10 @@ export class HosSecEngine {
 
   constructor(config: EngineConfig = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
-    this.skills = new Map();
     this.playbooks = new Map();
-    this.matcher = new SkillMatcher(this.config);
-    this.orchestrator = new FlowOrchestrator(this);
+    this.processEngine = new ProcessEngine();
+    this.processEngine.loadTemplates();
+    this.orchestrator = new FlowOrchestrator(this.processEngine);
 
     // V4 Runtime initialization
     this.runtimeConfig = DEFAULT_RUNTIME_CONFIG;
@@ -114,246 +100,32 @@ export class HosSecEngine {
     this.mcpHealthMonitor = mcpHealthMonitor;
     this.mcpEnabled = config.mcpEnabled ?? true;
 
-    if (this.config.loadPresetSkills) {
-      this.loadPresetSkills();
-    }
-
-    if (this.config.customSkillsDir) {
-      this.loadCustomSkills();
-    }
-
     // V6: 不再在构造函数中自动初始化 MCP
     // initMCP() 改为懒加载，在首次需要时或显式调用时初始化
     // 避免自动启动 MCP 服务器导致测试死循环
   }
 
+  // ==================== Process Engine ====================
+
   /**
-   * 加载预设 Skill
-   * 从 skills/ 目录递归加载所有 Skill 文件
-   * 尝试多个可能的路径以兼容不同运行环境（源码、编译后、npm 包）
-   * AI 维护：新增 Skill 只需在 skills/ 子目录下创建文件，无需修改此文件
+   * 执行流程（替代旧的 execute/executeRaw）
    */
-  private loadPresetSkills(): void {
-    try {
-      // 尝试多个可能路径：编译后 dist/src/skills/、源码 src/skills/、项目根 skills/
-      const possibleDirs = [
-        path.resolve(__dirname, '..', 'skills'),           // dist/src/skills/ (compiled)
-        path.resolve(__dirname, '..', '..', '..', 'src', 'skills'), // project root src/skills/
-      ];
-
-      let loaded = false;
-      for (const skillsDir of possibleDirs) {
-        if (this._tryLoadSkills(skillsDir)) {
-          loaded = true;
-          break;
-        }
-      }
-
-      if (!loaded) {
-        // 在非严格模式下静默跳过
-      }
-    } catch (error) {
-      // 预设 Skill 目录不存在时不报错
-    }
+  async executeProcess(target: string, processType: string, context?: Record<string, any>): Promise<ProcessResult> {
+    return this.processEngine.execute(target, processType, context);
   }
 
   /**
-   * 尝试从指定目录加载技能
-   * @returns 是否成功加载到至少一个技能
+   * 获取流程引擎实例
    */
-  private _tryLoadSkills(dirPath: string): boolean {
-    try {
-      const fs = require('fs');
-      if (fs.existsSync(dirPath)) {
-        const skills = SkillLoader.loadFromDirectory(dirPath);
-        if (skills.length > 0) {
-          this.registerSkills(skills);
-          return true;
-        }
-      }
-    } catch {
-      // 目录不可读时静默跳过
-    }
-    return false;
+  getProcessEngine(): ProcessEngine {
+    return this.processEngine;
   }
 
   /**
-   * 加载自定义 Skill
+   * 获取已加载的流程模板列表
    */
-  private loadCustomSkills(): void {
-    const skills = SkillLoader.loadFromDirectory(this.config.customSkillsDir);
-    this.registerSkills(skills);
-  }
-
-  /**
-   * 注册单个 Skill
-   * @param skipValidation 当从 registerSkills 调用时跳过重复验证
-   */
-  registerSkill(skill: AttackDefenseSkill, skipValidation = false): void {
-    if (!skipValidation) {
-      const errors = SkillValidator.validate(skill);
-      if (errors.length > 0) {
-        if (this.config.strictMode) {
-          throw new Error(`Skill 验证失败 [${skill.metadata.id}]: ${errors.join(', ')}`);
-        }
-        return;
-      }
-    }
-
-    if (this.skills.has(skill.metadata.id)) {
-      if (this.config.strictMode) {
-        throw new Error(`Skill ID 重复: ${skill.metadata.id}`);
-      }
-    }
-
-    if (skill.enabled === undefined) {
-      skill.enabled = true;
-    }
-
-    this.skills.set(skill.metadata.id, skill);
-    this.invalidateCaches();
-  }
-
-  /**
-   * 批量注册 Skill
-   */
-  registerSkills(skills: AttackDefenseSkill[]): void {
-    if (skills.length > MAX_REGISTER_SKILLS) {
-      console.warn(`[HosSecEngine] 注册 Skill 数量超出上限 (${MAX_REGISTER_SKILLS})，仅处理前 ${MAX_REGISTER_SKILLS} 个`);
-    }
-    const limitedSkills = skills.slice(0, MAX_REGISTER_SKILLS);
-    const validationResults = SkillValidator.validateBatch(limitedSkills);
-    if (validationResults.size > 0) {
-      const errorMessages: string[] = [];
-      for (const [id, errors] of validationResults) {
-        errorMessages.push(`[${id}]: ${errors.join(', ')}`);
-      }
-      if (this.config.strictMode) {
-        throw new Error(`Skill 验证失败:\n${errorMessages.join('\n')}`);
-      }
-    }
-
-    for (const skill of limitedSkills) {
-      if (validationResults.has(skill.metadata.id)) {
-        continue;
-      }
-      if (this.skills.has(skill.metadata.id)) {
-        if (this.config.strictMode) {
-          throw new Error(`Skill ID 重复: ${skill.metadata.id}`);
-        }
-        continue;
-      }
-      if (skill.enabled === undefined) {
-        skill.enabled = true;
-      }
-      this.skills.set(skill.metadata.id, skill);
-    }
-    this.invalidateCaches();
-  }
-
-  /**
-   * 执行查询
-   */
-  execute(query: ExecuteQuery, format: 'text' | 'json' = 'text'): string {
-    const allSkills = this.getSkillsList();
-    const results = this.matcher.match(query, allSkills);
-
-    if (format === 'json') {
-      return SkillFormatter.formatJson(results);
-    }
-    return SkillFormatter.formatText(results);
-  }
-
-  /**
-   * 获取原始匹配结果
-   */
-  executeRaw(query: ExecuteQuery): SkillResult[] {
-    const allSkills = this.getSkillsList();
-    return this.matcher.match(query, allSkills);
-  }
-
-  /**
-   * 获取所有已加载的 Skill
-   */
-  getSkills(): AttackDefenseSkill[] {
-    return this.getSkillsList();
-  }
-
-  /**
-   * 根据 ID 获取 Skill
-   */
-  getSkillById(id: string): AttackDefenseSkill | undefined {
-    return this.skills.get(id);
-  }
-
-  /**
-   * 获取 Skill 数量
-   */
-  getSkillCount(): number {
-    return this.skills.size;
-  }
-
-  /**
-   * 启用/禁用 Skill
-   */
-  enableSkill(id: string): boolean {
-    const skill = this.skills.get(id);
-    if (skill) {
-      skill.enabled = true;
-      this.invalidateCaches();
-      return true;
-    }
-    return false;
-  }
-
-  disableSkill(id: string): boolean {
-    const skill = this.skills.get(id);
-    if (skill) {
-      skill.enabled = false;
-      this.invalidateCaches();
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * 移除 Skill
-   */
-  removeSkill(id: string): boolean {
-    const deleted = this.skills.delete(id);
-    if (deleted) {
-      this.invalidateCaches();
-    }
-    return deleted;
-  }
-
-  /**
-   * 清空所有 Skill
-   */
-  clearSkills(): void {
-    this.skills.clear();
-    this.invalidateCaches();
-  }
-
-  /**
-   * 统一失效所有缓存（skills list、category index、playbook skills、matcher）
-   * 在 register/remove/clear/enable/disable 后调用
-   */
-  private invalidateCaches(): void {
-    this.cachedSkillsList = null;
-    this.categoryIndex = null;
-    this.cachedPlaybookSkills.clear();
-    this.matcher.clearCache();
-  }
-
-  /**
-   * 获取已加载的 Skill 列表（带缓存）
-   */
-  private getSkillsList(): AttackDefenseSkill[] {
-    if (!this.cachedSkillsList) {
-      this.cachedSkillsList = Array.from(this.skills.values());
-    }
-    return this.cachedSkillsList;
+  getProcessTemplates(): string[] {
+    return this.processEngine.getLoadedTemplates();
   }
 
   // ==================== 流程编排能力 ====================
@@ -382,48 +154,6 @@ export class HosSecEngine {
    */
   getPlaybookById(id: string): Playbook | undefined {
     return this.playbooks.get(id);
-  }
-
-  /**
-   * 获取流程关联的 Skill 列表（单次遍历合并版）
-   * @param playbookId 流程 ID
-   * @returns 关联的 Skill 列表
-   */
-  getSkillsByPlaybook(playbookId: string): AttackDefenseSkill[] {
-    const cached = this.cachedPlaybookSkills.get(playbookId);
-    if (cached) {
-      return cached;
-    }
-
-    const playbook = this.playbooks.get(playbookId);
-    if (!playbook) {
-      return [];
-    }
-
-    // 单次遍历：收集 ID 的同时查找到 Skill 对象
-    const result: AttackDefenseSkill[] = [];
-    const seenIds = new Set<string>();
-    let linkCount = 0;
-
-    for (const phase of playbook.phases) {
-      for (const skillId of phase.skills) {
-        if (++linkCount > MAX_PLAYBOOK_SKILL_LINKS) {
-          console.warn(`[HosSecEngine] Playbook Skill 关联数量超出上限 (${MAX_PLAYBOOK_SKILL_LINKS})，终止收集`);
-          break;
-        }
-        if (!seenIds.has(skillId)) {
-          seenIds.add(skillId);
-          const skill = this.skills.get(skillId);
-          if (skill) {
-            result.push(skill);
-          }
-        }
-      }
-      if (linkCount > MAX_PLAYBOOK_SKILL_LINKS) break;
-    }
-
-    this.cachedPlaybookSkills.set(playbookId, result);
-    return result;
   }
 
   /**
@@ -480,62 +210,6 @@ export class HosSecEngine {
   }
 
   /**
-   * 在沙箱中执行 Skill
-   */
-  async executeSkillInSandbox(
-    skill: AttackDefenseSkill,
-    context: ExecutionContext
-  ): Promise<AgentResult> {
-    const startTime = Date.now();
-    const runtime = skill.runtime;
-    const sandboxConfig = {
-      ...this.runtimeConfig.sandbox,
-      enabled: runtime?.requiresSandbox ?? this.runtimeConfig.sandbox.enabled,
-    };
-
-    const sandbox = new Sandbox(sandboxConfig);
-
-    try {
-      const result = await sandbox.execute(async () => {
-        // 模拟 Skill 执行
-        context.logs.push({
-          timestamp: new Date().toISOString(),
-          level: 'info',
-          message: `执行 Skill: ${skill.metadata.id}`,
-          source: 'engine',
-        });
-
-        // 检查网络访问需求
-        if (runtime?.requiresNetwork && sandboxConfig.networkAccess === 'none') {
-          throw new Error(`Skill ${skill.metadata.id} 需要网络访问，但沙箱已禁用网络`);
-        }
-
-        // 返回模拟结果
-        return {
-          taskId: context.runId,
-          status: 'success' as const,
-          output: `Skill ${skill.metadata.id} 执行完成`,
-          findings: [],
-          evidence: [],
-          duration: Date.now() - startTime,
-        };
-      });
-
-      return result;
-    } catch (error) {
-      return {
-        taskId: context.runId,
-        status: 'failed',
-        output: '',
-        findings: [],
-        evidence: [],
-        duration: Date.now() - startTime,
-        error: error instanceof Error ? error.message : String(error),
-      };
-    }
-  }
-
-  /**
    * 启动 Agent 通信服务器
    */
   async startServer(port: number): Promise<void> {
@@ -577,51 +251,6 @@ export class HosSecEngine {
    */
   createExecutionContext(target: string): ExecutionContext {
     return ExecutionContextManager.create(target, this.runtimeConfig);
-  }
-
-  /**
-   * 获取按分类统计的 Skill 数量（使用索引，O(1)）
-   */
-  getSkillCountByCategory(): Map<string, number> {
-    const index = this.buildCategoryIndex();
-    const counts = new Map<string, number>();
-    for (const [cat, ids] of index) {
-      counts.set(cat, ids.length);
-    }
-    return counts;
-  }
-
-  /**
-   * 获取指定分类的 Skill 列表（使用索引，O(1)）
-   */
-  getSkillsByCategory(category: string): AttackDefenseSkill[] {
-    const index = this.buildCategoryIndex();
-    const ids = index.get(category);
-    if (!ids) return [];
-    const result: AttackDefenseSkill[] = [];
-    for (const id of ids) {
-      const skill = this.skills.get(id);
-      if (skill) result.push(skill);
-    }
-    return result;
-  }
-
-  /**
-   * Lazy 构建分类索引，返回索引引用
-   */
-  private buildCategoryIndex(): Map<string, string[]> {
-    if (this.categoryIndex) return this.categoryIndex;
-    this.categoryIndex = new Map();
-    for (const [id, skill] of this.skills) {
-      const cat = skill.metadata.category;
-      let ids = this.categoryIndex.get(cat);
-      if (!ids) {
-        ids = [];
-        this.categoryIndex.set(cat, ids);
-      }
-      ids.push(id);
-    }
-    return this.categoryIndex;
   }
 
   // ==================== V5: SEC-bench Pro 集成方法 ====================
@@ -806,9 +435,6 @@ export class HosSecEngine {
       if (healthSummary.healthyCount > 0) {
         console.log(`[HosSecEngine] ✅ MCP 初始化完成: ${healthSummary.healthyCount}/${healthSummary.totalServers} 个服务器在线`);
       }
-
-      // 4. 更新 Skill-MCP 映射
-      this.buildSkillMCPMappings();
     } catch (err) {
       console.warn('[HosSecEngine] MCP 初始化异常（非致命）:', err instanceof Error ? err.message : String(err));
     }
@@ -856,105 +482,6 @@ export class HosSecEngine {
     } catch (err) {
       console.warn(`[HosSecEngine] 读取 MCP 配置文件失败:`, err);
     }
-  }
-
-  /**
-   * V6: 构建 Skill-MCP 映射
-   * 将已注册的 Skill 与可用的 MCP 工具关联
-   */
-  private buildSkillMCPMappings(): void {
-    const skills = this.getSkills();
-    let mappedCount = 0;
-
-    for (const skill of skills) {
-      const existingMapping = this.mcpRouter.getMapping(skill.metadata.id);
-      if (!existingMapping) {
-        // 根据 Skill 分类自动推断 MCP 需求
-        const mapping = this.inferMCPMapping(skill);
-        if (mapping) {
-          this.mcpRouter.registerMapping(mapping);
-          mappedCount++;
-        }
-      }
-    }
-
-    if (mappedCount > 0) {
-      console.log(`[HosSecEngine] 🔗 自动映射 ${mappedCount} 个 Skill 到 MCP 工具`);
-    }
-  }
-
-  /**
-   * V6: 根据 Skill 元数据推断 MCP 映射
-   */
-  private inferMCPMapping(skill: AttackDefenseSkill): SkillMCPMapping | null {
-    const category = skill.metadata.category;
-    const subCategory = skill.metadata.subCategory;
-
-    // 基于分类的默认映射
-    const categoryMappings: Record<string, { required: string[]; recommended: string[] }> = {
-      'web': {
-        required: ['http-fetch'],
-        recommended: ['playwright', 'sequential-thinking', 'memory', 'code-executor'],
-      },
-      'api': {
-        required: ['http-fetch'],
-        recommended: ['sequential-thinking', 'code-executor'],
-      },
-      'cloud': {
-        required: ['http-fetch'],
-        recommended: ['filesystem', 'memory'],
-      },
-      'ai-security': {
-        required: ['http-fetch', 'sequential-thinking'],
-        recommended: ['memory'],
-      },
-      'code-review': {
-        required: ['filesystem'],
-        recommended: ['sequential-thinking'],
-      },
-      'ad': {
-        required: ['http-fetch'],
-        recommended: ['filesystem'],
-      },
-      'linux': {
-        required: ['filesystem'],
-        recommended: ['code-executor'],
-      },
-      'windows': {
-        required: ['filesystem'],
-        recommended: ['code-executor'],
-      },
-      'mobile': {
-        required: ['filesystem'],
-        recommended: ['code-executor'],
-      },
-      'container': {
-        required: ['code-executor'],
-        recommended: ['filesystem'],
-      },
-      'kubernetes': {
-        required: ['http-fetch'],
-        recommended: ['code-executor', 'filesystem'],
-      },
-    };
-
-    const catMap = categoryMappings[category];
-    if (!catMap) return null;
-
-    // 只映射实际存在的服务器
-    const requiredMCPServers = catMap.required.filter(name => this.mcpRegistry.getServer(name));
-    const recommendedMCPServers = catMap.recommended.filter(
-      name => !requiredMCPServers.includes(name) && this.mcpRegistry.getServer(name)
-    );
-
-    if (requiredMCPServers.length === 0 && recommendedMCPServers.length === 0) return null;
-
-    return {
-      skillId: skill.metadata.id,
-      requiredMCPServers,
-      recommendedMCPServers,
-      toolMappings: [],
-    };
   }
 
   // ==================== MCP 服务器管理 ====================

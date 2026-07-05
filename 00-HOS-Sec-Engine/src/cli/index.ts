@@ -12,9 +12,6 @@ switch (command) {
   case 'run':
     require('./run-command');
     break;
-  case 'deploy':
-    require('../scripts/deploy-skills');
-    break;
   default:
     console.log(`
 HOS-Sec-Engine V4 CLI
@@ -25,7 +22,6 @@ Usage:
 Commands:
   server    Start Agent communication server
   run       Execute Skills independently
-  deploy    Deploy Skills to IDE
 
 Run "npx hos-sec-engine <command> --help" for more information.
     `);

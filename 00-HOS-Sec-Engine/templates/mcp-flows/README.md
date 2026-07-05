@@ -37,7 +37,7 @@ templates/mcp-flows/
 │   ├── sql-injection.md
 │   ├── waf-recon.md
 │   └── auth-bypass.md
-└── payloads/           ← 与技能关联的 payload 集
+└── payloads/           ← 与流程关联的 payload 集
     ├── xss/
     ├── sqli/
     └── rce/

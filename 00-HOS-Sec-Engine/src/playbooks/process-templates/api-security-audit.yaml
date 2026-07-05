@@ -1,0 +1,253 @@
+# API 安全审计完整业务指导流程
+# 专注于 API 安全的各个维度，从认证到授权再到速率限制
+# 每个阶段提供具体的测试方法和预期结果说明
+id: api-security-audit
+name: API 安全审计完整业务指导流程
+description: 对 API 服务进行全面的安全审计业务指导流程。覆盖认证机制（JWT/OAuth）、授权控制（IDOR/越权）、速率限制、输入验证和敏感信息泄露五个核心业务维度。每个阶段提供具体的测试方法、payload 构造指导和预期结果说明。
+category: api
+version: 2.0.0
+
+phases:
+  # ==================== Phase 1: JWT 认证安全测试 ====================
+  - id: jwt-auth-testing
+    name: JWT 认证安全深度测试
+    description: 【业务目标】全面测试 API 的 JWT 认证机制安全性。包括 none 算法攻击、算法混淆、密钥爆破、kid 注入、jku 头注入等常见 JWT 攻击手法。JWT 认证漏洞可导致未授权访问和身份伪造。
+    steps:
+      - id: step-jwt-header
+        name: JWT 认证端点探测
+        description: 探测 JWT 认证端点，获取认证机制信息
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/auth/validate"
+        expectedOutput: 认证端点的响应信息
+
+      - id: step-jwt-none-attack
+        name: JWT None 算法攻击
+        description: 修改 JWT 的 alg 为 'none'，尝试绕过签名验证
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/auth/validate"
+            headers:
+              Authorization: "Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJ1c2VyIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4ifQ."
+        expectedOutput: 如果返回 200 则存在 none 算法漏洞
+
+      - id: step-jwt-algorithm-confusion
+        name: JWT 算法混淆攻击
+        description: 将 RS256 算法的公钥作为 HS256 的密钥，测试算法混淆
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/auth/validate"
+        expectedOutput: 算法混淆攻击结果
+
+      - id: step-jwt-kid-injection
+        name: JWT kid 头注入测试
+        description: 在 JWT header 的 kid 字段注入 SQL 或命令，测试 kid 注入
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/auth/validate"
+        expectedOutput: kid 注入测试结果
+
+    condition: null
+    successCriteria:
+      - 完成 JWT none 算法测试
+      - 完成算法混淆测试
+      - 确认 JWT 认证机制的安全性
+    maxRetries: 2
+    timeout: 300
+
+  # ==================== Phase 2: OAuth 授权流程测试 ====================
+  - id: oauth-testing
+    name: OAuth 授权流程安全测试
+    description: 【业务目标】测试 OAuth 2.0 授权流程的安全性。包括 CSRF 攻击、redirect_uri 绕过、token 泄露、scope 越权等 OAuth 特有安全问题。
+    steps:
+      - id: step-oauth-endpoint
+        name: OAuth 端点发现
+        description: 发现 OAuth 授权端点、token 端点和回调端点
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/auth/oauth/token"
+        expectedOutput: OAuth 端点信息
+
+      - id: step-oauth-csrf
+        name: OAuth CSRF 测试
+        description: 测试 OAuth 授权流程中是否存在 CSRF 漏洞
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/auth/oauth/authorize"
+        expectedOutput: 授权页面信息
+
+      - id: step-oauth-redirect
+        name: OAuth redirect_uri 绕过测试
+        description: 测试是否可以绕过 redirect_uri 白名单
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/auth/oauth/callback"
+        expectedOutput: 回调处理结果
+
+    condition: null
+    successCriteria:
+      - 完成 OAuth 端点发现
+      - 完成 CSRF 和 redirect_uri 测试
+      - 确认 OAuth 流程安全性
+    maxRetries: 2
+    timeout: 300
+
+  # ==================== Phase 3: IDOR 越权测试 ====================
+  - id: idor-testing
+    name: IDOR 越权漏洞深度测试
+    description: 【业务目标】系统化测试 API 的 IDOR（不安全的直接对象引用）漏洞。通过修改资源 ID、用户 ID、订单 ID 等参数，测试能否越权访问其他用户的数据。IDOR 是 API 安全中最常见的高危漏洞之一。
+    steps:
+      - id: step-idor-user
+        name: 用户 IDOR 测试
+        description: 尝试修改用户 ID 参数，访问其他用户的数据
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/users/1/profile"
+        expectedOutput: 用户 1 的个人信息
+
+      - id: step-idor-order
+        name: 订单 IDOR 测试
+        description: 尝试修改订单 ID 参数，访问其他用户的订单
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/orders/1001"
+        expectedOutput: 订单详情
+
+      - id: step-idor-uuid
+        name: UUID/GUID IDOR 测试
+        description: 测试 UUID 类型的 ID 是否可预测或枚举
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/documents/00000000-0000-0000-0000-000000000001"
+        expectedOutput: 文档内容
+
+    condition: null
+    successCriteria:
+      - 完成用户 IDOR 测试
+      - 完成订单 IDOR 测试
+      - 确认 API 的授权控制是否有效
+    maxRetries: 2
+    timeout: 300
+
+  # ==================== Phase 4: 角色权限测试 ====================
+  - id: role-privilege-testing
+    name: 角色权限与水平越权测试
+    description: 【业务目标】测试 API 的角色权限控制机制。低权限用户是否能访问高权限接口？普通用户是否能执行管理员操作？水平越权：相同角色的用户能否互相访问数据？
+    steps:
+      - id: step-role-admin
+        name: 管理接口越权测试
+        description: 测试低权限用户能否访问管理员接口
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/admin/users"
+        expectedOutput: 管理接口访问控制结果
+
+      - id: step-role-super-admin
+        name: 超级管理员接口测试
+        description: 测试普通管理员能否访问超级管理员接口
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/admin/super/config"
+        expectedOutput: 超级管理员配置接口
+
+      - id: step-role-method-bypass
+        name: HTTP 方法越权测试
+        description: 测试通过修改 HTTP 方法（GET/POST/PUT/DELETE）能否绕过权限控制
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/admin/users/1"
+        expectedOutput: 不同 HTTP 方法的权限差异
+
+    condition: null
+    successCriteria:
+      - 完成角色越权测试
+      - 完成 HTTP 方法绕过测试
+      - 确认 API 权限控制的有效性
+    maxRetries: 2
+    timeout: 300
+
+  # ==================== Phase 5: 速率限制与输入验证 ====================
+  - id: rate-limit-input-testing
+    name: 速率限制与输入验证测试
+    description: 【业务目标】测试 API 的速率限制机制和输入验证强度。包括暴力破解防护、请求频率限制、参数注入防护、Content-Type 验证等安全机制。
+    steps:
+      - id: step-rate-limit
+        name: 速率限制绕过测试
+        description: 测试通过修改请求头（X-Forwarded-For、X-Real-IP 等）绕过速率限制
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/login"
+        expectedOutput: 多次请求后的响应状态变化
+
+      - id: step-input-validation
+        name: 参数注入测试
+        description: 测试 API 参数是否包含 NoSQL 注入、LDAP 注入等
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/search?q[$ne]=admin"
+        expectedOutput: NoSQL 注入测试结果
+
+      - id: step-content-type
+        name: Content-Type 绕过测试
+        description: 测试通过修改 Content-Type 绕过输入验证
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/data"
+        expectedOutput: Content-Type 验证结果
+
+    condition: null
+    successCriteria:
+      - 完成速率限制测试
+      - 完成参数注入测试
+      - 确认输入验证机制的有效性
+    maxRetries: 1
+    timeout: 300
+
+decisionTree:
+  - id: decide-after-jwt
+    sourcePhase: jwt-auth-testing
+    conditions:
+      - rule: "result.hasCriticalVulnerability()"
+        nextPhase: oauth-testing
+        description: "JWT 测试完成（发现高危漏洞），进入 OAuth 测试"
+    defaultNext: oauth-testing
+
+  - id: decide-after-oauth
+    sourcePhase: oauth-testing
+    conditions:
+      - rule: "result.hasFindings()"
+        nextPhase: idor-testing
+        description: "OAuth 测试完成，进入 IDOR 越权测试"
+    defaultNext: idor-testing
+
+  - id: decide-after-idor
+    sourcePhase: idor-testing
+    conditions:
+      - rule: "result.hasCriticalVulnerability()"
+        nextPhase: role-privilege-testing
+        description: "IDOR 测试完成（发现高危漏洞），进入角色权限测试"
+    defaultNext: role-privilege-testing
+
+  - id: decide-after-role
+    sourcePhase: role-privilege-testing
+    conditions:
+      - rule: "result.hasFindings()"
+        nextPhase: rate-limit-input-testing
+        description: "角色权限测试完成，进入速率限制测试"
+    defaultNext: rate-limit-input-testing

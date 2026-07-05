@@ -1,4 +1,3 @@
-import type { AttackDefenseSkill } from '../types/skill';
 import {
   Playbook,
   PlaybookPhase,
@@ -10,21 +9,12 @@ import {
   FlowSummary,
   PlaybookConfig
 } from '../types/playbook';
-import type { SkillResult, ExecuteQuery } from '../types/result';
-import { SkillDeriver, skillDeriver } from './skill-deriver';
+import { ProcessEngine } from './process-engine';
+import { CVEIntegrator, cveIntegrator } from './cve-integration';
+import { ProcessFinding } from '../types/process';
 
 // V5: SEC-bench Pro LLM Judge 集成
 import { LLMJudge, ExecutionEvidence, ThreeStateEvidence, llmJudge as defaultJudge } from './judge';
-
-/**
- * Minimal facade interface used by FlowOrchestrator.
- * Breaks the circular dependency between engine.ts and orchestrator.ts
- * by only importing the type that orchestrator actually needs.
- */
-export interface EngineFacade {
-  getSkillById(id: string): AttackDefenseSkill | undefined;
-  executeRaw(query: ExecuteQuery): SkillResult[];
-}
 
 /**
  * HOS-Sec-Engine V3 - 流程执行引擎
@@ -41,7 +31,6 @@ export const MAX_FINDINGS = 1000;
 export const MAX_RECOMMENDATIONS = 200;
 
 export class FlowOrchestrator {
-  private engine: EngineFacade;
   private playbook: Playbook | null = null;
   private playbookConfig: PlaybookConfig | null = null;
   private originalContextTarget: string = '';
@@ -61,9 +50,12 @@ export class FlowOrchestrator {
   private cachedSortedPhases: PlaybookPhase[] | null = null;
   // V5: LLM Judge 实例（可选，未设置时使用默认单例）
   private _judge: LLMJudge | null = null;
+  private processEngine?: ProcessEngine;
+  private cveIntegrator: CVEIntegrator;
 
-  constructor(engine: EngineFacade) {
-    this.engine = engine;
+  constructor(processEngine?: ProcessEngine) {
+    this.processEngine = processEngine;
+    this.cveIntegrator = cveIntegrator;
   }
 
   /**
@@ -332,87 +324,52 @@ export class FlowOrchestrator {
    */
   private async executePhaseInternal(phase: PlaybookPhase, context: FlowContext): Promise<PhaseResult> {
     const phaseStart = Date.now();
+    let findings: Finding[] = [];
 
-    // 调用 engine.executeRaw 匹配相关 Skill
-    const query = {
-      scenario: `${context.target} ${phase.description} ${phase.name}`,
-      categories: [],
-      subCategories: [],
-      riskLevels: [],
-      tags: []
-    };
-
-    // 如果有指定的 skill IDs，按 ID 匹配；否则按场景匹配
-    let skillResults: SkillResult[];
-    if (phase.skills && phase.skills.length > 0) {
-      skillResults = [];
-      for (const skillId of phase.skills) {
-        const skill = this.engine.getSkillById(skillId);
-        if (skill) {
-          skillResults.push({
-            skill,
-            matchScore: 1.0,
-            matchDetails: {
-              scenarioScore: 1.0,
-              keywordScore: 1.0,
-              aliasScore: 0,
-              indicatorScore: 0,
-              matchedKeywords: [],
-              matchedAliases: [],
-              matchedIndicators: []
-            }
-          });
+    // 使用 processEngine 执行（如果可用）
+    if (this.processEngine) {
+      try {
+        const processResult = await this.processEngine.execute(
+          context.target,
+          phase.name,
+          { phaseId: phase.id, phaseDescription: phase.description, ...context.customData }
+        );
+        // 将 ProcessFinding 转换为 Finding
+        for (const pr of processResult.phaseResults) {
+          for (const pf of pr.findings) {
+            if (findings.length >= MAX_FINDINGS) break;
+            findings.push({
+              skillId: pf.id,
+              severity: pf.severity,
+              description: pf.description,
+              evidence: pf.evidence,
+              timestamp: pf.timestamp
+            });
+          }
+          if (findings.length >= MAX_FINDINGS) break;
         }
+      } catch (err) {
+        console.warn(`[FlowOrchestrator] processEngine 执行阶段 ${phase.id} 失败:`, err);
       }
-    } else {
-      skillResults = this.engine.executeRaw(query);
     }
 
-    // 将 SkillResult 转换为 Finding
-    const rawFindings = this.convertToFindings(skillResults);
-
     // V5: LLM Judge 验证（过滤疑似误报）
-    const findings = this.validateFindingsWithJudge(rawFindings);
+    findings = this.validateFindingsWithJudge(findings);
+
+    // CVE 富化：为 findings 关联 CVE 信息
+    if (findings.length > 0) {
+      findings = await this.enrichFindingsWithCVE(findings);
+    }
 
     const duration = `${Date.now() - phaseStart}ms`;
 
     return {
       phaseId: phase.id,
       phaseName: phase.name,
-      skillsExecuted: skillResults,
       findings,
       duration,
       status: 'completed'
     };
-  }
-
-  /**
-   * 将 SkillResult 转换为 Finding
-   * 仅当 matchScore > 0.5 且 riskLevel 为 high/critical 时创建
-   */
-  private convertToFindings(results: SkillResult[]): Finding[] {
-    const findings: Finding[] = [];
-
-    for (const result of results) {
-      if (findings.length >= MAX_FINDINGS) {
-        console.warn(`[FlowOrchestrator] Findings 数量超出上限 (${MAX_FINDINGS})，终止转换`);
-        break;
-      }
-      const { skill, matchScore } = result;
-      if (matchScore > 0.5 && (skill.metadata.riskLevel === 'high' || skill.metadata.riskLevel === 'critical')) {
-        const description = skill.knowledge?.description || '无描述';
-        const observations = skill.knowledge?.observations;
-        findings.push({
-          skillId: skill.metadata.id,
-          severity: skill.metadata.riskLevel,
-          description,
-          evidence: (observations && observations.length > 0) ? observations.join('; ') : description,
-          timestamp: new Date().toISOString()
-        });
-      }
-    }
-
-    return findings;
   }
 
   /** 抽象条件词：检查是否有 findings 即可 */
@@ -668,9 +625,6 @@ export class FlowOrchestrator {
     const report = this.buildReport(phaseResults, summary);
     const recommendations = this.buildRecommendations(phaseResults);
 
-    // ========== 自动技能衍生 (Finding → Skill) ==========
-    this._tryAutoDeriveSkills(context.findings);
-
     return {
       playbookId: this.playbook.id,
       playbookName: this.playbook.name,
@@ -686,30 +640,37 @@ export class FlowOrchestrator {
   }
 
   /**
-   * 尝试自动技能衍生（非致命，失败不应阻塞主流程）
+   * CVE 富化：为 findings 关联 CVE 信息
+   * 将 Finding 转换为 ProcessFinding 调用 CVEIntegrator，再将 CVE 结果写回 Finding
    */
-  private _tryAutoDeriveSkills(findings: Finding[]): void {
-    try {
-      if (findings.length >= 2) {
-        const deriveResults = skillDeriver.analyzeAndDerive(findings);
-        if (deriveResults.length > 0) {
-          const successCount = deriveResults.filter(r => r.success).length;
-          if (successCount > 0) {
-            console.log(`[FlowOrchestrator] 🧬 自动衍生了 ${successCount}/${deriveResults.length} 个新技能`);
-            skillDeriver.persist();
-          }
-        }
+  private async enrichFindingsWithCVE(findings: Finding[]): Promise<Finding[]> {
+    const enriched: Finding[] = [];
+    for (const finding of findings) {
+      const processFinding: ProcessFinding = {
+        id: finding.skillId,
+        type: 'unknown',
+        severity: finding.severity as ProcessFinding['severity'],
+        description: finding.description,
+        evidence: finding.evidence,
+        cveMatches: [],
+        timestamp: finding.timestamp,
+      };
+      const result = await this.cveIntegrator.enrichFindingWithCVE(processFinding);
+      if (result.cveMatches.length > 0) {
+        const cveList = result.cveMatches.map(m => `${m.cveId} (${m.severity})`).join('; ');
+        finding.evidence = `${finding.evidence}\n[CVE] ${cveList}`;
+        finding.severity = result.severity;
+        console.log(`[FlowOrchestrator] CVE 富化: ${finding.skillId} -> ${cveList}`);
       }
-    } catch (err) {
-      console.warn('[FlowOrchestrator] 技能衍生失败（非致命）:', err);
+      enriched.push(finding);
     }
+    return enriched;
   }
 
   /**
    * 构建流程摘要
    */
   private buildSummary(phaseResults: PhaseResult[], context: FlowContext): FlowSummary {
-    let totalSkills = 0;
     let critical = 0;
     let high = 0;
     let medium = 0;
@@ -717,7 +678,6 @@ export class FlowOrchestrator {
     const exploited: string[] = [];
 
     for (const result of phaseResults) {
-      totalSkills += result.skillsExecuted.length;
       for (const finding of result.findings) {
         if (exploited.length >= MAX_FINDINGS) break;
         switch (finding.severity) {
@@ -741,7 +701,7 @@ export class FlowOrchestrator {
     }
 
     return {
-      totalSkillsExecuted: totalSkills,
+      totalSkillsExecuted: 0,
       criticalFindings: critical,
       highFindings: high,
       mediumFindings: medium,
@@ -764,8 +724,7 @@ export class FlowOrchestrator {
         : '';
 
       return `[${result.status.toUpperCase()}] ${result.phaseName} (${result.phaseId})
-  持续时间: ${result.duration}
-  执行 Skill 数: ${result.skillsExecuted.length}${findingsSection ? '\n' + findingsSection : ''}`;
+  持续时间: ${result.duration}${findingsSection ? '\n' + findingsSection : ''}`;
     }).join('\n');
 
     return `=== HOS-Sec-Engine 审计报告 ===
@@ -794,13 +753,9 @@ ${phaseSections}`;
 
     for (const result of phaseResults) {
       if (recSet.size >= MAX_RECOMMENDATIONS) break;
-      for (const skillResult of result.skillsExecuted) {
+      for (const finding of result.findings) {
         if (recSet.size >= MAX_RECOMMENDATIONS) break;
-        const recs = skillResult.skill.defense?.recommendations ?? [];
-        for (const rec of recs) {
-          recSet.add(rec);
-          if (recSet.size >= MAX_RECOMMENDATIONS) break;
-        }
+        recSet.add(`[${finding.severity.toUpperCase()}] ${finding.skillId}: ${finding.description}`);
       }
     }
 

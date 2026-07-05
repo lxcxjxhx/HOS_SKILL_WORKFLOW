@@ -1,0 +1,242 @@
+# 云配置审计完整业务指导流程
+# 专注于云服务安全配置的各个维度
+# 每个阶段指导用户发现和测试云服务的安全问题
+id: cloud-config-audit
+name: 云配置审计完整业务指导流程
+description: 对云服务配置进行全面的安全审计业务指导流程。覆盖资产发现、S3 存储桶权限、IAM 权限配置、元数据服务访问控制和云安全最佳实践五个核心维度。帮助用户发现云服务配置中的安全风险和合规问题。
+category: cloud
+version: 2.0.0
+
+phases:
+  # ==================== Phase 1: 云资产发现 ====================
+  - id: cloud-asset-discovery
+    name: 云资产发现与枚举
+    description: 【业务目标】发现目标使用的云服务资产。包括 S3 存储桶、CloudFront CDN、ELB 负载均衡器、RDS 数据库实例、EC2 实例等。资产发现是云安全审计的第一步，决定了后续测试的范围。
+    steps:
+      - id: step-s3-discovery
+        name: S3 存储桶发现
+        description: 通过搜索引擎和 DNS 记录发现目标可能使用的 S3 存储桶
+        toolCall:
+          tool: search_google
+          params:
+            query: "site:s3.amazonaws.com {{target_domain}}"
+        expectedOutput: 相关的 S3 存储桶 URL
+
+      - id: step-cdn-discovery
+        name: CDN/云服务发现
+        description: 从目标页面响应头中发现使用的云服务提供商
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}"
+        expectedOutput: 页面中引用的云资源 URL
+
+      - id: step-dns-discovery
+        name: DNS 云资产发现
+        description: 通过 DNS 记录发现云服务资产
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/cloud/assets"
+        expectedOutput: 云资产列表
+
+    condition: null
+    successCriteria:
+      - 发现至少 1 个云服务资产
+      - 确认云服务提供商类型
+      - 记录发现的云资源 URL
+    maxRetries: 2
+    timeout: 300
+
+  # ==================== Phase 2: S3 存储桶权限测试 ====================
+  - id: s3-permission-testing
+    name: S3 存储桶权限深度测试
+    description: 【业务目标】测试 S3 存储桶的访问权限配置。包括公开读取、公开写入、列出权限、ACL 配置、存储桶策略等。不正确的 S3 配置是云安全中最常见的数据泄露原因。
+    steps:
+      - id: step-s3-list
+        name: S3 存储桶列表读取测试
+        description: 测试 S3 存储桶是否允许公开列出对象
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{s3_bucket_url}}"
+        expectedOutput: 存储桶对象列表
+
+      - id: step-s3-read
+        name: S3 存储桶文件读取测试
+        description: 测试 S3 存储桶中的文件是否可公开访问
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{s3_bucket_url}}/config.json"
+        expectedOutput: 配置文件内容
+
+      - id: step-s3-write
+        name: S3 存储桶写入权限测试
+        description: 测试存储桶是否允许匿名写入
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{s3_bucket_url}}/test.txt"
+        expectedOutput: 写入权限测试结果
+
+    condition: null
+    successCriteria:
+      - 完成 S3 存储桶列表权限测试
+      - 完成 S3 存储桶文件读取测试
+      - 确认 S3 存储桶的访问控制配置
+    maxRetries: 2
+    timeout: 300
+
+  # ==================== Phase 3: IAM 权限配置审计 ====================
+  - id: iam-permission-audit
+    name: IAM 权限配置深度审计
+    description: 【业务目标】审计云 IAM 权限配置是否存在过度授权风险。包括 PassRole 权限、权限提升路径、Service Role 配置、托管策略和内联策略的权限范围等。IAM 配置错误是云权限提升的主要入口。
+    steps:
+      - id: step-iam-passrole
+        name: IAM PassRole 权限测试
+        description: 测试是否存在 iam:PassRole 权限可被利用
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/iam/check"
+        expectedOutput: IAM 配置信息
+
+      - id: step-iam-privesc
+        name: IAM 权限提升路径测试
+        description: 测试是否存在 IAM 权限提升的可能路径
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/iam/policies"
+        expectedOutput: IAM 策略列表
+
+      - id: step-iam-service-role
+        name: 服务角色权限测试
+        description: 测试云服务角色是否分配了过多权限
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/iam/roles"
+        expectedOutput: 服务角色配置
+
+    condition: null
+    successCriteria:
+      - 完成 IAM PassRole 检查
+      - 完成权限提升路径分析
+      - 确认 IAM 配置的安全性
+    maxRetries: 2
+    timeout: 300
+
+  # ==================== Phase 4: 元数据服务访问测试 ====================
+  - id: metadata-service-testing
+    name: 云元数据服务访问测试
+    description: 【业务目标】测试云实例元数据服务的访问控制。包括 IMDSv1/v2 的配置、SSRF 到元数据的攻击路径、IAM 凭证泄露、用户数据和实例配置信息泄露等。元数据服务访问是云环境中最严重的风险之一。
+    steps:
+      - id: step-meta-imdsv1
+        name: IMDSv1 元数据访问测试
+        description: 测试是否可以通过 SSRF 访问 IMDSv1 元数据
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/fetch?url=http://169.254.169.254/latest/meta-data/"
+        expectedOutput: 元数据服务响应
+
+      - id: step-meta-iam-creds
+        name: IAM 凭证提取测试
+        description: 测试能否从元数据服务中提取 IAM 临时凭证
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/fetch?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/"
+        expectedOutput: IAM 凭证信息
+
+      - id: step-meta-userdata
+        name: 用户数据泄露测试
+        description: 测试能否从元数据服务中读取用户数据
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/fetch?url=http://169.254.169.254/latest/user-data/"
+        expectedOutput: 用户数据内容
+
+    condition: null
+    successCriteria:
+      - 完成 IMDSv1/v2 访问测试
+      - 确认 IAM 凭证是否可获取
+      - 确认用户数据是否泄露
+    maxRetries: 1
+    timeout: 300
+
+  # ==================== Phase 5: 云安全最佳实践检查 ====================
+  - id: cloud-security-best-practices
+    name: 云安全最佳实践检查
+    description: 【业务目标】对照云安全最佳实践进行全面检查。包括存储加密、传输加密、日志记录、监控告警、网络隔离、备份策略等安全配置的合规性检查。
+    steps:
+      - id: step-encryption
+        name: 存储加密配置检查
+        description: 检查云存储服务是否启用了服务端加密
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/cloud/encryption"
+        expectedOutput: 加密配置信息
+
+      - id: step-logging
+        name: 日志与监控配置检查
+        description: 检查云日志服务和监控告警的配置情况
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/cloud/logging"
+        expectedOutput: 日志配置信息
+
+      - id: step-network
+        name: 网络隔离配置检查
+        description: 检查 VPC、安全组、网络 ACL 的配置
+        toolCall:
+          tool: web_fetch
+          params:
+            url: "{{target}}/api/cloud/network"
+        expectedOutput: 网络配置信息
+
+    condition: null
+    successCriteria:
+      - 完成存储加密检查
+      - 完成日志监控检查
+      - 完成网络隔离检查
+    maxRetries: 1
+    timeout: 300
+
+decisionTree:
+  - id: decide-after-assets
+    sourcePhase: cloud-asset-discovery
+    conditions:
+      - rule: "result.hasS3Bucket()"
+        nextPhase: s3-permission-testing
+        description: "发现 S3 存储桶，进入 S3 权限测试"
+    defaultNext: s3-permission-testing
+
+  - id: decide-after-s3
+    sourcePhase: s3-permission-testing
+    conditions:
+      - rule: "result.hasFindings()"
+        nextPhase: iam-permission-audit
+        description: "S3 测试完成，进入 IAM 权限审计"
+    defaultNext: iam-permission-audit
+
+  - id: decide-after-iam
+    sourcePhase: iam-permission-audit
+    conditions:
+      - rule: "result.hasCriticalVulnerability()"
+        nextPhase: metadata-service-testing
+        description: "IAM 审计完成（发现高危配置），进入元数据服务测试"
+    defaultNext: metadata-service-testing
+
+  - id: decide-after-meta
+    sourcePhase: metadata-service-testing
+    conditions:
+      - rule: "result.hasFindings()"
+        nextPhase: cloud-security-best-practices
+        description: "元数据测试完成，进入最佳实践检查"
+    defaultNext: cloud-security-best-practices

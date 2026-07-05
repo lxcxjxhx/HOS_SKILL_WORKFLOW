@@ -1,6 +1,5 @@
 # SQL Injection WAF Bypass — MCP 攻防流程
 
-> 关联技能: `web-sqli-001`
 > 所需 MCP: Sequential Thinking, HTTP Fetch, Playwright, Memory, Filesystem
 
 ---

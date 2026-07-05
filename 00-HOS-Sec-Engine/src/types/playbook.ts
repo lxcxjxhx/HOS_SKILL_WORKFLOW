@@ -94,7 +94,7 @@ export interface PhaseResult {
   /** 阶段名称 */
   phaseName: string;
   /** 已执行的 Skill 结果 */
-  skillsExecuted: SkillResult[];
+  skillsExecuted?: SkillResult[];
   /** 发现结果 */
   findings: Finding[];
   /** 持续时间 */

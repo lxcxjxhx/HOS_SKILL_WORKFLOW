@@ -77,65 +77,52 @@ if (buildResult.success) {
   ];
   const mcpAllExist = mcpFiles.every(f => fs.existsSync(f));
 
-  const skillMdCount = countFiles(SKILLS_DIR, 'SKILL.md');
-  const playbookMdCount = countFiles(path.join(DIST_DIR, 'playbooks'), 'PLAYBOOK.md');
-  const skillsIndexExists = fs.existsSync(path.join(PROJECT_DIR, 'skills-index.json'));
-  const bundledSkillExists = fs.existsSync(path.join(SKILLS_DIR, 'hos-sec-engine', 'SKILL.md'));
+  // 新架构核心模块文件检查
+  const coreModules = [
+    path.join(DIST_DIR, 'src', 'core', 'process-engine.js'),
+    path.join(DIST_DIR, 'src', 'core', 'phase-executor.js'),
+    path.join(DIST_DIR, 'src', 'core', 'decision-tree.js'),
+    path.join(DIST_DIR, 'src', 'core', 'tool-registry.js'),
+    path.join(DIST_DIR, 'src', 'core', 'cve-integration.js'),
+  ];
+  const coreModulesAllExist = coreModules.every(f => fs.existsSync(f));
 
   const buildDetails = {
     zeroErrors: true,
-    skillMdGenerated: skillMdCount,
-    playbookMdGenerated: playbookMdCount,
-    skillsIndexGenerated: skillsIndexExists,
-    bundledSkillGenerated: bundledSkillExists,
     mcpLayerBuilt: mcpAllExist,
+    coreModulesBuilt: coreModulesAllExist,
     mcpFiles: mcpFiles.map(f => path.relative(DIST_DIR, f)),
+    coreModules: coreModules.map(f => path.relative(DIST_DIR, f)),
   };
 
-  results.build.passed = skillMdCount >= 27 && playbookMdCount >= 5 && skillsIndexExists && bundledSkillExists && mcpAllExist;
+  results.build.passed = mcpAllExist && coreModulesAllExist;
   results.build.details = buildDetails;
   console.log(`  ✅ MCP 管理层: ${mcpAllExist ? '✅ 全部构建成功' : '❌ 部分缺失'}`);
-  console.log(`  ✅ SKILL.md: ${skillMdCount} 个`);
-  console.log(`  ✅ PLAYBOOK.md: ${playbookMdCount} 个`);
-  console.log(`  ✅ skills-index.json: ${skillsIndexExists ? '已生成' : '缺失'}`);
-  console.log(`  ✅ Bundled skill: ${bundledSkillExists ? '已生成' : '缺失'}`);
+  console.log(`  ✅ 核心模块: ${coreModulesAllExist ? '✅ 全部构建成功' : '❌ 部分缺失'}`);
 } else {
   results.build.passed = false;
   results.build.details = buildResult.error;
   console.log(`  ❌ 构建失败: ${buildResult.error}`);
 }
 
-// ========== STEP 2: INSTALL VERIFICATION ==========
-log('STEP 2: 安装验证', '执行 npx hos-sec-engine deploy --trae...');
+// ========== STEP 2: Process Templates Verification ==========
+log('STEP 2: 流程模板验证', '验证 YAML 流程模板文件存在性...');
 
 if (results.build.passed) {
-  const targetDir = path.join(PROJECT_DIR, '.trae', 'skills');
-  if (fs.existsSync(targetDir)) {
-    try { fs.rmSync(targetDir, { recursive: true, force: true }); } catch {}
-  }
-  fs.mkdirSync(targetDir, { recursive: true });
+  const templateDir = path.join(PROJECT_DIR, 'src', 'playbooks', 'process-templates');
+  const templateFiles = ['web-pentest.yaml', 'api-security-audit.yaml', 'cloud-config-audit.yaml'];
+  const allTemplatesExist = templateFiles.every(f => fs.existsSync(path.join(templateDir, f)));
 
-  const deployResult = runCommand('node dist/src/scripts/deploy-skills.js --trae');
-  if (deployResult.success) {
-    let installedCount = 0;
-    try {
-      const entries = fs.readdirSync(targetDir);
-      installedCount = entries.filter(e => {
-        const skillPath = path.join(targetDir, e);
-        return fs.statSync(skillPath).isDirectory() && fs.existsSync(path.join(skillPath, 'SKILL.md'));
-      }).length;
-    } catch {}
-
-    results.install.passed = installedCount >= 28;
-    results.install.details = { installedCount, output: deployResult.output.slice(-500) };
-    console.log(`  ✅ 安装成功: ${installedCount} 个 skills 已部署`);
-  } else {
-    results.install.passed = false;
-    results.install.details = deployResult.error;
-    console.log(`  ❌ 安装失败: ${deployResult.error}`);
+  results.install.passed = allTemplatesExist;
+  results.install.details = { templateFiles: templateFiles.filter(f => fs.existsSync(path.join(templateDir, f))) };
+  console.log(`  ✅ 流程模板: ${allTemplatesExist ? '✅ 全部存在' : '❌ 部分缺失'}`);
+  console.log(`  📋 模板文件: ${templateDir}`);
+  for (const f of templateFiles) {
+    const exists = fs.existsSync(path.join(templateDir, f));
+    console.log(`     ${exists ? '✅' : '❌'} ${f}`);
   }
 } else {
-  console.log('  ⏭️ 跳过安装（构建未通过）');
+  console.log('  ⏭️ 跳过模板验证（构建未通过）');
 }
 
 // ========== STEP 3: RUNTIME VERIFICATION ==========
@@ -258,7 +245,8 @@ fs.writeFileSync(REPORT_FILE, JSON.stringify(results, null, 2));
 log('验证结果', `
   构建: ${results.build.passed ? '✅ 通过' : '❌ 失败'}
   ${results.build.passed ? `    - MCP 管理层: ${results.build.details.mcpLayerBuilt ? '✅ 构建' : '❌ 缺失'}` : ''}
-  安装: ${results.install.passed ? '✅ 通过' : '❌ 失败'}
+  ${results.build.passed ? `    - 核心模块: ${results.build.details.coreModulesBuilt ? '✅ 构建' : '❌ 缺失'}` : ''}
+  模板: ${results.install.passed ? '✅ 通过' : '❌ 失败'}
   运行: ${results.runtime.passed ? '✅ 通过' : '❌ 失败'}
   MCP: ${results.mcp.passed ? '✅ 通过' : '❌ 失败'}
   总体: ${results.overall ? '✅ 全部通过' : '❌ 存在失败'}

@@ -1,6 +1,5 @@
 # XSS Filter Bypass — MCP 攻防流程
 
-> 关联技能: `web-xss-001`
 > 所需 MCP: Sequential Thinking, HTTP Fetch, Playwright, Memory, Filesystem
 
 ---
@@ -50,7 +49,7 @@ Step 3: 是否存在 WAF / CSP？具体规则是什么？
 **Sequential Thinking 决策:**
 ```
 If WAF detected:
-  → 选择对应的绕过策略集 (web-xss-001 knowledge)
+  → 选择对应的绕过策略集 (XSS 绕过知识)
 Else:
   → 直接注入
 ```
@@ -120,7 +119,7 @@ Else:
 ]
 ```
 
-**验证指标 (来自 web-xss-001 SKILL.md):**
+**验证指标:**
 - alert/confirm/prompt 是否弹窗
 - 攻击者服务器是否收到外带数据
 - 控制台是否有 CSP 违规错误
@@ -162,16 +161,13 @@ Else:
 
 ## 完整执行命令 (Claude Desktop)
 
-在 Claude Desktop 中，先加载技能知识，然后依次执行：
+在 Claude Desktop 中，直接按以下流程执行：
 
 ```
-/load skill web-xss-001
-
 → Sequential Thinking: 分析目标并规划攻击步骤
 → HTTP Fetch: 发送探测 payload
 → Playwright: 浏览器验证
 → Memory: 记录结果
 ```
 
-该流程对应 `skills/web-xss-001/SKILL.md` 中的操作检查清单第 1-9 步，
-将技能知识转化为实际的 MCP 工具调用。
+该流程将安全知识转化为实际的 MCP 工具调用。

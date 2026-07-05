@@ -1,6 +1,5 @@
 # WAF 指纹识别与绕过 — MCP 攻防流程
 
-> 关联技能: `web-waf-bypass-0day`, `web-sqli-001`, `web-xss-001`
 > 所需 MCP: Sequential Thinking, HTTP Fetch, Playwright, Memory, Filesystem
 
 ---
@@ -145,7 +144,7 @@ Thought 6: 分析哪种绕过生效 → 选择最佳策略
 
 ## MCP 工具调用对应表
 
-| 技能中的"技术手段" | 对应的 MCP 工具调用 |
+| 攻防技术手段 | 对应的 MCP 工具调用 |
 |-------------------|-------------------|
 | 检测 WAF 类型 | HTTP Fetch GET + 分析响应 headers |
 | 测试 SVG 绕过 | Playwright navigate + screenshot |

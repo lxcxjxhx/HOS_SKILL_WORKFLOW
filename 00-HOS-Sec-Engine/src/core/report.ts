@@ -371,7 +371,7 @@ export class ReportGenerator {
         : '';
 
       return `### Phase ${phase.phaseId}: ${phase.phaseName} [${statusIcon}]
-- **执行 Skill 数**: ${phase.skillsExecuted.length}
+- **执行 Skill 数**: ${phase.skillsExecuted?.length ?? 0}
 - **持续时间**: ${phase.duration}
 ${findingsSection}`;
     }).join('\n');
@@ -490,7 +490,7 @@ ${phaseSections}${findingsSection}${recommendationsSection}`;
       return `<div class="debug-line">
         <span class="debug-prefix">[${statusIcon}]</span>
         <span class="debug-level">${p.phaseId}</span>
-        <span>${p.phaseName} (${p.duration}, ${p.skillsExecuted.length} skills)</span>
+        <span>${p.phaseName} (${p.duration}, ${p.skillsExecuted?.length ?? 0} skills)</span>
       </div>`;
     }).join('\n');
 
@@ -552,10 +552,12 @@ ${phaseSections}${findingsSection}${recommendationsSection}`;
    */
   private static findRecommendation(result: OrchestrationResult, skillId: string): string {
     for (const phase of result.phaseResults) {
-      for (const sr of phase.skillsExecuted) {
-        if (sr.skill.metadata.id === skillId) {
-          const recs = sr.skill.defense?.recommendations;
-          if (recs && recs.length > 0) return recs[0];
+      if (phase.skillsExecuted) {
+        for (const sr of phase.skillsExecuted) {
+          if (sr.skill.metadata.id === skillId) {
+            const recs = sr.skill.defense?.recommendations;
+            if (recs && recs.length > 0) return recs[0];
+          }
         }
       }
     }
@@ -650,4 +652,71 @@ ${phaseSections}${findingsSection}${recommendationsSection}`;
     return statusMap[status] || status;
   }
 
+}
+
+import { ProcessResult, PhaseResult, ProcessFinding, CveMatch } from '../types/process';
+
+/**
+ * 将流程执行结果生成为 Markdown 格式报告
+ * @param result 流程执行结果
+ * @returns Markdown 格式报告
+ */
+export function generateProcessReport(result: ProcessResult): string {
+  const { templateId, context, phaseResults, summary } = result;
+  
+  let report = '';
+
+  // 标题
+  report += `# HOS-Sec-Engine 流程执行报告\n\n`;
+  report += `**模板**: ${templateId}\n`;
+  report += `**目标**: ${context.target}\n`;
+  report += `**状态**: ${result.status}\n`;
+  report += `**耗时**: ${summary.duration}ms\n`;
+  report += `**执行时间**: ${context.startTime}\n\n`;
+
+  // 发现统计
+  report += `## 发现统计\n\n`;
+  report += `| 严重程度 | 数量 |\n`;
+  report += `|---------|------|\n`;
+  report += `| 🔴 Critical | ${summary.criticalCount} |\n`;
+  report += `| 🟠 High | ${summary.highCount} |\n`;
+  report += `| 🟡 Medium | ${summary.mediumCount} |\n`;
+  report += `| 🟢 Low | ${summary.lowCount} |\n`;
+  report += `| **总计** | **${summary.totalFindings}** |\n`;
+  report += `| CVE 引用 | ${summary.cveReferences} |\n\n`;
+
+  // 阶段执行路径
+  report += `## 阶段执行路径\n\n`;
+  for (const pr of phaseResults) {
+    const statusIcon = pr.status === 'success' ? '✅' : pr.status === 'partial' ? '⚠️' : pr.status === 'skipped' ? '⏭️' : '❌';
+    report += `- ${statusIcon} **${pr.phaseId}**: ${pr.status} (${pr.duration}ms)\n`;
+  }
+  report += '\n';
+
+  // 发现详情
+  if (context.findings.length > 0) {
+    report += `## 发现详情\n\n`;
+    for (const finding of context.findings) {
+      const sevIcon = finding.severity === 'critical' ? '🔴' : finding.severity === 'high' ? '🟠' : finding.severity === 'medium' ? '🟡' : '🟢';
+      report += `### ${sevIcon} [${finding.severity.toUpperCase()}] ${finding.type}\n\n`;
+      report += `- **描述**: ${finding.description}\n`;
+      report += `- **证据**: \`\`\`\n${finding.evidence.slice(0, 300)}\n\`\`\`\n`;
+
+      // CVE 引用
+      if (finding.cveMatches.length > 0) {
+        report += `- **关联 CVE**:\n`;
+        for (const cve of finding.cveMatches) {
+          report += `  - [${cve.cveId}](https://nvd.nist.gov/vuln/detail/${cve.cveId}): ${cve.severity} - ${cve.description.slice(0, 200)}\n`;
+        }
+      }
+      report += '\n';
+    }
+  }
+
+  // 无发现
+  if (context.findings.length === 0) {
+    report += `## 发现详情\n\n未发现安全问题。\n\n`;
+  }
+
+  return report;
 }

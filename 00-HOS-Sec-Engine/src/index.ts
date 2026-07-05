@@ -63,11 +63,7 @@ export type {
 
 // 核心类导出
 export { HosSecEngine } from './core/engine';
-export { SkillValidator } from './core/validator';
-export { SkillMatcher } from './core/matcher';
-export { SkillScorer } from './core/scorer';
 export { SkillFormatter } from './core/formatter';
-export { SkillLoader } from './core/loader';
 export { FlowOrchestrator } from './core/orchestrator';
 export { ReportGenerator } from './core/report';
 
@@ -81,35 +77,7 @@ export { ExecutionContextManager } from './runtime/execution-context';
 export { Sandbox, TimeoutError, SecurityError } from './runtime/sandbox';
 export { AgentServer } from './runtime/server';
 
-// 预设 Skill 导出（自动发现）
-export {
-  allSkills,
-  webSkills,
-  apiSkills,
-  cloudSkills,
-  windowsSkills,
-  linuxSkills,
-  aiSecuritySkills,
-  adSkills,
-  mobileSkills,
-  containerSkills,
-  kubernetesSkills,
-  codeReviewSkills,
-} from './skills';
-
 // V4 自维护能力导出
-export { SkillLifecycleManager, skillLifecycle } from './core/skill-lifecycle';
-export type { SkillStatus, SkillLifecycleMeta, SkillChangeLog } from './core/skill-lifecycle';
-export { SkillDeriver, skillDeriver } from './core/skill-deriver';
-export type { Finding as DeriverFinding, DerivationCandidate, DerivationResult } from './core/skill-deriver';
-export {
-  CWE_SKILL_MAPPING,
-  getCWEMappingByCategory,
-  getCWEMappingById,
-  generateDefaultDescription,
-  createSkillFromCWEMapping,
-} from './config/skill-categories';
-export type { CWEMappingEntry } from './config/skill-categories';
 
 // 预定义流程导出
 export {

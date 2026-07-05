@@ -7,7 +7,6 @@
 
 import { HosSecEngine } from '../core/engine';
 import { ConfigLoader } from '../config/config-loader';
-import * as fs from 'fs';
 
 interface RunArgs {
   skill?: string;
@@ -111,43 +110,25 @@ async function main() {
 
   // Execute skills
   if (args.parallel) {
-    const coordinator = engine.getAgentCoordinator();
-    const tasks = skillIds.map(id => ({
-      id: `task-${id}`,
-      type: 'skill_execution' as const,
-      skillId: id,
-      context: { target: args.target },
-      parameters: {},
-      timeout: runtimeConfig.agentTimeout,
-    }));
-
-    const results = await coordinator.executeParallel(tasks);
-
+    const promises = skillIds.map(id => engine.executeProcess(args.target, id));
+    const results = await Promise.allSettled(promises);
     for (const result of results) {
-      console.log(`[${result.status}] ${result.taskId}: ${result.output}`);
-      if (result.error) {
-        console.error(`  Error: ${result.error}`);
+      if (result.status === 'fulfilled') {
+        console.log(`[OK] ${result.value.templateId}: ${result.value.summary.totalFindings} 个发现`);
+      } else {
+        console.log(`[FAIL] ${result.reason}`);
       }
-    }
-
-    if (args.output) {
-      fs.writeFileSync(args.output, JSON.stringify(results, null, 2));
-      console.log(`\nResults saved to ${args.output}`);
     }
   } else {
     for (const skillId of skillIds) {
-      const skill = engine.getSkillById(skillId);
-      if (!skill) {
-        console.error(`Skill not found: ${skillId}`);
-        continue;
-      }
-
-      const context = engine.createExecutionContext(args.target);
-      const result = await engine.executeSkillInSandbox(skill, context);
-
-      console.log(`[${result.status}] ${skill.metadata.name}: ${result.output}`);
-      if (result.error) {
-        console.error(`  Error: ${result.error}`);
+      try {
+        const result = await engine.executeProcess(args.target, skillId);
+        console.log(`[${result.status}] ${result.templateId}: ${result.summary.totalFindings} 个发现`);
+        if (result.summary.totalFindings > 0) {
+          console.log(`  Critical: ${result.summary.criticalCount}, High: ${result.summary.highCount}, Medium: ${result.summary.mediumCount}, Low: ${result.summary.lowCount}`);
+        }
+      } catch (err) {
+        console.error(`Error executing ${skillId}:`, err instanceof Error ? err.message : String(err));
       }
     }
   }
