@@ -10,5 +10,5 @@
     "local": "npx hos-sec-engine <command>",
     "bat": "hos-sec-engine.bat <command>"
   },
-  "buildTime": "2026-07-05T01:36:49.795Z"
+  "buildTime": "2026-07-06T00:50:46.994Z"
 }

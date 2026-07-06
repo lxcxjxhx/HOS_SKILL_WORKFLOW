@@ -307,19 +307,21 @@ function main() {
     console.log(`  ${COLORS.green('✓')} references/ (${count} files)`);
   }
 
-  // 3. 复制子技能文件
+  // 3. 复制子技能文件（如果存在）
   console.log(COLORS.bold('Step 3: 复制子技能文件...'));
   const skillsSrc = path.join(SOURCE_SKILL_DIR, 'skills');
   const skillsDest = path.join(TARGET_SKILL_DIR, 'skills');
-  const count = copyDir(skillsSrc, skillsDest);
-  console.log(`  ${COLORS.green('✓')} skills/ (${count} files)`);
+  if (fs.existsSync(skillsSrc)) {
+    const count = copyDir(skillsSrc, skillsDest);
+    console.log(`  ${COLORS.green('✓')} skills/ (${count} files)`);
+  } else {
+    console.log(`  ${COLORS.gray('⊘')} skills/ (不存在，流程引擎模式无需子技能文件)`);
+  }
 
   // 4. 验证安装
   console.log(COLORS.bold('Step 4: 验证安装...'));
   const verifyFiles = [
     path.join(TARGET_SKILL_DIR, 'SKILL.md'),
-    path.join(TARGET_SKILL_DIR, 'skills', 'web-sqli-001.md'),
-    path.join(TARGET_SKILL_DIR, 'references', 'REFERENCE.md'),
   ];
 
   let allOk = true;
