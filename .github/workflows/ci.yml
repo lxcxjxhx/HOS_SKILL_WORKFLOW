@@ -1,0 +1,73 @@
+name: CI - HOS Skill Workflow
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; elif [ -f package.json ]; then npm install; fi
+
+      - name: Lint with ESLint
+        run: |
+          if [ -f .eslintrc* ] || grep -q "eslint" package.json; then
+            npm run lint || npx eslint . --ext .js,.jsx,.ts,.tsx
+          else
+            echo "No ESLint configuration found, skipping lint"
+          fi
+        continue-on-error: true
+
+      - name: Type check with TypeScript
+        run: |
+          if [ -f tsconfig.json ]; then
+            npx tsc --noEmit
+          else
+            echo "No TypeScript configuration found, skipping type check"
+          fi
+        continue-on-error: true
+
+      - name: Run tests
+        run: |
+          if grep -q "test" package.json; then
+            npm test
+          else
+            echo "No test script found in package.json"
+          fi
+        continue-on-error: true
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Build
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          if grep -q "build" package.json; then
+            npm run build
+          else
+            echo "No build script found"
+          fi
