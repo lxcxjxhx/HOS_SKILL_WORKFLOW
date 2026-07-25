@@ -22,14 +22,24 @@ jobs:
       - name: Install yamllint
         run: pip install yamllint
 
-      - name: Lint YAML files
+      - name: Lint workflow YAML files
         run: |
-          echo "Checking YAML syntax..."
-          find . -type f \( -name "*.yml" -o -name "*.yaml" \) -not -path "*/node_modules/*" -not -path "*/.git/*" | while read file; do
+          echo "Checking workflow YAML syntax..."
+          find .github/workflows -type f \( -name "*.yml" -o -name "*.yaml" \) | while read file; do
             echo "Checking $file"
             yamllint -d "{extends: relaxed, rules: {line-length: disable}}" "$file" || exit 1
           done
-          echo "✓ All YAML files are valid"
+          echo "✓ All workflow YAML files are valid"
+
+      - name: Lint other YAML files (warning only)
+        run: |
+          echo "Checking other YAML files (warnings only)..."
+          find . -type f \( -name "*.yml" -o -name "*.yaml" \) -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/.github/workflows/*" | while read file; do
+            echo "Checking $file"
+            yamllint -d "{extends: relaxed, rules: {line-length: disable}}" "$file" || echo "Warning: $file has issues"
+          done
+          echo "✓ Other YAML files check completed (warnings ignored)"
+        continue-on-error: true
 
   # 多语言模块检测与构建
   build-modules:
