@@ -37,11 +37,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        module: 
+        module:
           - 00-HOS-Sec-Engine
           - 04-HOS-Silly-Mock
       fail-fast: false
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -114,7 +114,7 @@ jobs:
         module:
           - 101-HOS-AI Guardrail
       fail-fast: false
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
