@@ -1,0 +1,265 @@
+# HOS-QuizMaster Skill Manifest
+# 定义 skill 元数据、接口规范和调度配置
+
+name: HOS-QuizMaster
+version: 2.0.0
+author: HOS Team
+description: 智能化刷题工具，支持多格式题库导入、AI 辅助学习、多模式刷题和知识点掌握度分析
+homepage: https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/tree/main/02-HOS-LIFE-OKR
+repository: https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW
+
+# 技术栈
+tech_stack:
+  language: Python 3.8+
+  gui_framework: PyQt6
+  database: SQLite3
+  ai_providers:
+    - OpenAI API
+    - Ollama (local)
+
+# 依赖项
+dependencies:
+  system:
+    - python3
+    - pip
+  python_packages:
+    - PyQt6>=6.6.0
+    - click>=8.0.0
+    - pillow>=9.0.0
+    - opencv-python>=4.5.0
+    - openai>=1.0.0
+    - requests>=2.28.0
+
+# CLI 命令定义
+commands:
+  - name: start
+    description: 启动交互式刷题
+    usage: python cli/main.py start [--mode MODE] [--file FILE] [--json]
+    parameters:
+      - name: mode
+        type: string
+        required: false
+        default: sequential
+        description: 刷题模式 (sequential/random/memorize/test/wrong)
+      - name: count
+        type: integer
+        required: false
+        default: 0
+        description: 题目数量，0 表示全部
+    output_format:
+      success:
+        status: success
+        data:
+          total_questions: integer
+          current_mode: string
+          message: string
+      error:
+        status: error
+        data: null
+        message: string
+
+  - name: quiz
+    description: 命令行刷题
+    usage: python cli/main.py quiz [--mode MODE] [--type TYPE] [--count N] [--json]
+    parameters:
+      - name: mode
+        type: string
+        required: false
+        default: sequential
+        description: 刷题模式 (sequential/random/memorize/test/wrong)
+      - name: type
+        type: string
+        required: false
+        default: all
+        description: 题型筛选 (all/单选题/多选题/判断题)
+      - name: count
+        type: integer
+        required: false
+        default: 0
+        description: 答题数量限制，0 表示全部
+    output_format:
+      success:
+        status: success
+        data:
+          question_id: integer
+          is_correct: boolean
+          correct_answer: string
+          explanation: string
+        message: string
+      error:
+        status: error
+        data: null
+        message: string
+
+  - name: generate
+    description: 生成模拟卷
+    usage: python cli/main.py generate [--type TYPE] [--difficulty DIFF] [--output PATH] [--json]
+    parameters:
+      - name: type
+        type: string
+        required: false
+        description: "题型分布，如: single:20,multi:10,judge:20"
+      - name: difficulty
+        type: string
+        required: false
+        description: "难度分布，如: easy:30,medium:50,hard:20"
+      - name: knowledge
+        type: string
+        required: false
+        description: 知识点范围，逗号分隔
+      - name: output
+        type: string
+        required: false
+        description: 输出文件路径
+      - name: format
+        type: string
+        required: false
+        default: markdown
+        description: 输出格式 (markdown/json)
+    output_format:
+      success:
+        status: success
+        data:
+          questions: array
+          count: integer
+          topic: string
+        message: string
+      error:
+        status: error
+        data: null
+        message: string
+
+  - name: stats
+    description: 统计分析
+    usage: python cli/main.py stats [--type TYPE] [--format FORMAT] [--json]
+    parameters:
+      - name: type
+        type: string
+        required: false
+        default: summary
+        description: 统计类型 (summary/trend/knowledge/all)
+      - name: format
+        type: string
+        required: false
+        default: text
+        description: 输出格式 (text/json)
+    output_format:
+      success:
+        status: success
+        data:
+          total_questions: integer
+          accuracy_rate: float
+          study_time: string
+          weak_points: array
+        message: string
+      error:
+        status: error
+        data: null
+        message: string
+
+  - name: export
+    description: 导出进度
+    usage: python cli/main.py export OUTPUT [--format FORMAT] [--json]
+    parameters:
+      - name: output
+        type: string
+        required: true
+        description: 输出文件路径
+      - name: format
+        type: string
+        required: false
+        default: json
+        description: 导出格式 (json/markdown)
+    output_format:
+      success:
+        status: success
+        data:
+          file_path: string
+          format: string
+          size: string
+        message: string
+      error:
+        status: error
+        data: null
+        message: string
+
+# 调度配置示例
+scheduling:
+  cron_examples:
+    - name: 每日刷题
+      schedule: "0 9 * * *"
+      command: "python cli/main.py start --mode random --count 10"
+      description: 每天 9 点随机刷 10 题
+    
+    - name: 每周复习
+      schedule: "0 20 * * 5"
+      command: "python cli/main.py generate --topic '网络安全' --count 5"
+      description: 每周五晚 8 点生成 5 道网络安全题目
+
+  trigger_examples:
+    - name: 知识点复习
+      trigger: "on_weak_point_detected"
+      command: "python cli/main.py start --mode wrong --count 5"
+      description: 检测到薄弱知识点时自动复习错题
+    
+    - name: 模拟考试
+      trigger: "weekly"
+      command: "python cli/main.py start --mode test --count 50"
+      description: 每周进行一次模拟考试
+
+# 工作流集成示例
+workflow_integration:
+  action_name: quizmaster
+  examples:
+    - name: 每日学习
+      action: quizmaster
+      command: "python cli/main.py start --mode sequential --count 20"
+      schedule: "0 9 * * *"
+      
+    - name: 智能推荐
+      action: quizmaster
+      command: "python cli/main.py stats --days 7 --type weak_points"
+      trigger: "daily"
+      
+    - name: 知识点强化
+      action: quizmaster
+      command: "python cli/main.py generate --topic '{detected_weak_point}' --count 3"
+      trigger: "on_stats_analysis"
+
+# 错误处理
+error_handling:
+  exit_codes:
+    success: 0
+    general_error: 1
+    config_error: 2
+    dependency_error: 3
+  
+  error_format:
+    status: error
+    data: null
+    message: string
+    error_code: integer (optional)
+
+# 测试验证
+testing:
+  test_commands:
+    - name: 基础功能测试
+      command: "python cli/main.py stats"
+      expected: "status: success"
+    
+    - name: 答题测试
+      command: "python cli/main.py quiz --question-id 1 --answer A"
+      expected: "status: success or error (depending on question existence)"
+    
+    - name: 错误处理测试
+      command: "python cli/main.py quiz --question-id 99999 --answer A"
+      expected: "status: error, exit_code: 1"
+
+# 兼容性
+compatibility:
+  hos_skill_workflow: ">=0.5"
+  python: ">=3.8"
+  operating_systems:
+    - Windows 10+
+    - macOS 10.15+
+    - Linux (Ubuntu 18.04+)
