@@ -1,13 +1,20 @@
 ---
 name: HOS-IP-Writing
 description: "知识产权写作技能体系 — 覆盖论文、专利、软著、书籍、博客、润色六大场景的统一路由与跨技能编排"
-license: MIT
-metadata:
-  author: HOS Team
-  version: "2.0.0"
-  tags: [ip-writing, paper, patent, copyright, book, blog, review, orchestration]
-  category: writing-system
-  risk-level: low
+version: "2.0.0"
+author: "HOS"
+tags:
+  - ip-writing
+  - paper
+  - patent
+  - copyright
+  - book
+  - blog
+  - review
+  - orchestration
+category: "writing-system"
+risk-level: low
+confidence: 0.90
 ---
 
 # HOS-IP-Writing：知识产权写作技能体系
