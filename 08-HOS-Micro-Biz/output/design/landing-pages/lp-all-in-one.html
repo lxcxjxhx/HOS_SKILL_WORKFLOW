@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F0A1F">
+<title>HOS 技术服务一站式 · 全四类综合</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hos-violet-deep:#5B2C91; --hos-violet:#7C3AED; --hos-violet-light:#A78BFA; --hos-violet-glow:#C4B5FD;
+  --hos-burgundy:#8B1A3C; --hos-burgundy-soft:#B91C5C;
+  --hos-bronze-green:#3D5A4C; --hos-bronze-light:#6B8E7A;
+  --hos-forge:#2563EB; --hos-ls:#7C3AED; --hos-workflow:#059669;
+  --bg-darkest:#0F0A1F; --bg-dark:#1A1129; --bg-card:#241638; --bg-elevated:#2E1F47;
+  --ink-primary:#F5F0FF; --ink-secondary:#C4B5E0; --ink-muted:#8B7DAA;
+  --price-anchor:#FFB347;
+  --font-display:'Noto Serif SC',serif; --font-body:'Noto Sans SC',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --brand-band-gradient:linear-gradient(90deg,#7C3AED 0%,#7C3AED 33%,#8B1A3C 33%,#8B1A3C 66%,#3D5A4C 66%,#3D5A4C 100%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-body);
+  background:var(--bg-darkest);
+  color:var(--ink-primary);
+  font-size:15px;
+  line-height:1.6;
+  max-width:480px;
+  margin:0 auto;
+  position:relative;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:15px}
+.section{padding:28px 16px}
+.section-title{font-family:var(--font-display);font-weight:700;font-size:20px;letter-spacing:.02em;margin-bottom:4px}
+.section-sub{color:var(--ink-muted);font-size:13px;margin-bottom:18px}
+.mono{font-family:var(--font-mono)}
+.gold{color:var(--price-anchor)}
+/* Brand band */
+.brand-band{height:4px;width:100%;background:var(--brand-band-gradient);background-size:100% 100%}
+.top-band{position:sticky;top:0;z-index:50}
+.bottom-band{margin-top:0}
+/* Header */
+.header{background:var(--bg-dark);padding:12px 16px}
+.header-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-mark{width:28px;height:28px;border-radius:6px;background:var(--brand-band-gradient);display:grid;place-items:center;font-family:var(--font-display);font-weight:900;font-size:13px;color:#fff}
+.logo-text{font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:.04em}
+.tagline{font-size:11px;color:var(--ink-muted);margin-top:2px}
+.nav{display:flex;gap:6px;font-size:12px;flex-wrap:wrap;justify-content:flex-end;max-width:55%}
+.nav a{color:var(--ink-secondary);padding:4px 6px;border-radius:4px}
+.nav a:active{background:var(--bg-card)}
+/* Hero */
+.hero{padding:18px 16px 24px;background:linear-gradient(180deg,var(--bg-dark) 0%,var(--bg-darkest) 100%)}
+.hero-img{width:100%;border-radius:12px;margin-bottom:14px;aspect-ratio:16/9;object-fit:cover;background:var(--bg-card)}
+.hero h1{font-family:var(--font-display);font-weight:900;font-size:26px;line-height:1.25;letter-spacing:.02em;margin-bottom:8px}
+.hero h1 .accent{background:linear-gradient(90deg,var(--hos-violet-light),var(--hos-burgundy-soft));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-value{color:var(--ink-secondary);font-size:14px;margin-bottom:12px}
+.hero-value span{color:var(--ink-primary);font-weight:500}
+.red-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(139,26,60,.18);border:1px solid var(--hos-burgundy-soft);color:#FFC4D6;font-size:12px;font-weight:500;padding:5px 10px;border-radius:20px;margin-bottom:14px}
+.red-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--hos-burgundy-soft);box-shadow:0 0 8px var(--hos-burgundy-soft)}
+.cta{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 22px;border-radius:24px;background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);color:#fff;font-weight:700;font-size:15px;width:100%;box-shadow:0 6px 20px rgba(124,58,237,.35);transition:transform .15s}
+.cta:active{transform:translateY(1px)}
+/* Pain points */
+.pain-grid{display:flex;flex-direction:column;gap:10px}
+.pain-card{background:var(--bg-card);border:1px solid rgba(124,58,237,.25);border-radius:10px;padding:14px 14px 14px 16px;position:relative;overflow:hidden}
+.pain-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--hos-violet)}
+.pain-q{font-family:var(--font-display);font-weight:700;font-size:15px;color:var(--ink-primary);margin-bottom:4px}
+.pain-a{font-size:13px;color:var(--ink-secondary)}
+.pain-a .em{color:var(--price-anchor)}
+/* Tabs */
+.tabs-wrap{background:var(--bg-dark);border-radius:12px 12px 0 0;padding:14px 14px 0}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:2px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;min-height:40px;padding:9px 14px;border-radius:8px 8px 0 0;background:var(--bg-card);color:var(--ink-secondary);font-size:13px;font-weight:500;white-space:nowrap;border:1px solid transparent;border-bottom:none;transition:all .15s}
+.tab.active{background:var(--hos-violet);color:#fff;font-weight:700;box-shadow:0 -2px 12px rgba(124,58,237,.4)}
+.tab-panels{background:var(--bg-card);border:1px solid rgba(124,58,237,.2);border-top:none;border-radius:0 0 12px 12px;padding:14px}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.price-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px dashed rgba(139,125,170,.2)}
+.price-row:last-child{border-bottom:none}
+.price-name{font-size:14px;color:var(--ink-primary)}
+.price-name .sub{display:block;font-size:11px;color:var(--ink-muted);margin-top:2px}
+.price-val{font-family:var(--font-mono);font-weight:700;font-size:15px;color:var(--price-anchor)}
+.panel-note{margin-top:10px;font-size:11px;color:var(--ink-muted);text-align:right}
+/* Carousel */
+.carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;padding:4px 16px 8px;margin:0 -16px;-webkit-overflow-scrolling:touch}
+.carousel::-webkit-scrollbar{display:none}
+.case-card{flex:0 0 78%;scroll-snap-align:start;background:var(--bg-card);border-radius:10px;padding:14px;min-height:140px;display:flex;flex-direction:column;gap:6px}
+.case-card.violet{border-left:4px solid var(--hos-violet)}
+.case-card.violet-light{border-left:4px solid var(--hos-violet-light)}
+.case-card.burgundy{border-left:4px solid var(--hos-burgundy-soft)}
+.case-card.bronze{border-left:4px solid var(--hos-bronze-light)}
+.case-tag{font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;align-self:flex-start}
+.case-tag.violet{background:rgba(124,58,237,.2);color:var(--hos-violet-glow)}
+.case-tag.violet-light{background:rgba(167,139,250,.2);color:var(--hos-violet-glow)}
+.case-tag.burgundy{background:rgba(185,28,92,.2);color:#FFC4D6}
+.case-tag.bronze{background:rgba(107,142,122,.2);color:var(--hos-bronze-light)}
+.case-title{font-family:var(--font-display);font-weight:700;font-size:15px;line-height:1.35}
+.case-desc{font-size:12px;color:var(--ink-secondary);margin-top:auto}
+.case-result{font-family:var(--font-mono);font-size:12px;color:var(--price-anchor);font-weight:600}
+/* Process */
+.steps{display:flex;flex-direction:column;gap:0;position:relative}
+.step{display:flex;gap:12px;padding:10px 0;position:relative}
+.step-num{flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:var(--bg-elevated);border:2px solid var(--hos-violet);display:grid;place-items:center;font-family:var(--font-mono);font-weight:700;font-size:13px;color:var(--hos-violet-glow);z-index:2}
+.step:not(:last-child)::before{content:"";position:absolute;left:15px;top:42px;bottom:-10px;width:2px;background:linear-gradient(180deg,var(--hos-violet) 0%,rgba(124,58,237,.2) 100%);z-index:1}
+.step-body{flex:1;padding-bottom:6px}
+.step-title{font-weight:700;font-size:14px;margin-bottom:2px}
+.step-desc{font-size:12px;color:var(--ink-muted)}
+/* Pricing anchor */
+.tier-grid{display:flex;flex-direction:column;gap:10px}
+.tier{background:var(--bg-card);border-radius:10px;padding:12px 14px;border:1px solid rgba(124,58,237,.18);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tier-label{font-size:11px;font-weight:600;color:var(--ink-muted);padding:2px 7px;border-radius:4px;background:var(--bg-elevated)}
+.tier-name{font-family:var(--font-display);font-weight:700;font-size:14px;margin:4px 0 2px}
+.tier-price{font-family:var(--font-mono);font-weight:700;font-size:14px;color:var(--price-anchor)}
+.tier-note-block{margin-top:12px;padding:10px 12px;background:rgba(255,179,71,.08);border-left:3px solid var(--price-anchor);border-radius:6px;font-size:12px;color:var(--ink-secondary)}
+.tier-note-block .em{color:var(--price-anchor);font-weight:600}
+/* Trust */
+.trust-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.trust-item{background:var(--bg-card);border-radius:8px;padding:10px 6px;text-align:center;border:1px solid rgba(124,58,237,.18)}
+.trust-item .ic{font-family:var(--font-display);font-size:18px;color:var(--hos-violet-glow);margin-bottom:4px}
+.trust-item .t{font-size:11px;color:var(--ink-secondary);line-height:1.3}
+.red-line{background:rgba(139,26,60,.12);border:1px solid rgba(185,28,92,.4);border-radius:8px;padding:10px 12px;margin-bottom:14px}
+.red-line .ttl{color:#FFC4D6;font-weight:700;font-size:13px;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.red-line .ttl::before{content:"";width:6px;height:6px;background:var(--hos-burgundy-soft);border-radius:50%}
+.red-line .body{font-size:12px;color:var(--ink-secondary)}
+.screenshots{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.shot{aspect-ratio:9/16;background:linear-gradient(135deg,var(--bg-card) 0%,var(--bg-elevated) 100%);border-radius:8px;border:1px dashed rgba(139,125,170,.3);display:grid;place-items:center;font-size:10px;color:var(--ink-muted);text-align:center;padding:6px}
+/* FAQ */
+details{background:var(--bg-card);border-radius:8px;margin-bottom:8px;border:1px solid rgba(124,58,237,.15);overflow:hidden}
+summary{padding:12px 14px;font-weight:600;font-size:14px;list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:18px;color:var(--hos-violet-light);transition:transform .2s;font-weight:400}
+details[open] summary::after{transform:rotate(45deg)}
+.faq-body{padding:0 14px 12px;font-size:13px;color:var(--ink-secondary)}
+/* Form */
+.form-wrap{background:var(--bg-dark);border-radius:12px;padding:16px;border:1px solid rgba(124,58,237,.25)}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--ink-secondary);margin-bottom:5px;font-weight:500}
+.field label .req{color:var(--hos-burgundy-soft)}
+.field input,.field select,.field textarea{width:100%;min-height:44px;padding:10px 12px;background:var(--bg-card);border:1px solid rgba(124,58,237,.25);border-radius:8px;color:var(--ink-primary);font-size:14px;outline:none;transition:border-color .15s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--hos-violet)}
+.field input::placeholder,.field textarea::placeholder{color:var(--ink-muted)}
+.field.err input,.field.err select{border-color:var(--hos-burgundy-soft)}
+.err-msg{font-size:11px;color:#FFC4D6;margin-top:4px;display:none}
+.field.err .err-msg{display:block}
+.submit-btn{width:100%;min-height:48px;padding:12px;border-radius:24px;background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);color:#fff;font-weight:700;font-size:15px;box-shadow:0 6px 20px rgba(124,58,237,.35);margin-top:4px}
+.submit-btn:active{transform:translateY(1px)}
+.form-success{display:none;background:rgba(5,150,105,.12);border:1px solid var(--hos-workflow);border-radius:8px;padding:12px 14px;margin-top:12px;text-align:center}
+.form-success.show{display:block;animation:fadeIn .3s}
+.form-success .t{color:#6EE7B7;font-weight:700;font-size:14px;margin-bottom:2px}
+.form-success .d{font-size:12px;color:var(--ink-secondary)}
+/* Footer */
+.footer{background:var(--bg-dark);padding:24px 16px 0}
+.footer-brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.footer-brand .logo-mark{width:32px;height:32px;font-size:14px}
+.footer-brand .name{font-family:var(--font-display);font-weight:700;font-size:16px}
+.footer-brand .desc{font-size:11px;color:var(--ink-muted);margin-top:2px}
+.repo-list{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.repo-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg-card);border-radius:6px;font-size:12px}
+.repo-item .rn{color:var(--ink-primary)}
+.repo-item .rt{font-family:var(--font-mono);font-size:10px;color:var(--hos-violet-light)}
+.qr-wrap{text-align:center;margin-bottom:14px}
+.qr-box{width:96px;height:96px;margin:0 auto 6px;background:linear-gradient(135deg,#fff 0%,#E5DCFF 100%);border-radius:8px;display:grid;place-items:center;font-size:10px;color:var(--hos-violet-deep);font-weight:600}
+.qr-tip{font-size:11px;color:var(--ink-muted)}
+.disclaimer{font-size:11px;color:var(--ink-muted);text-align:center;padding:14px 8px;border-top:1px solid rgba(139,125,170,.15);line-height:1.5}
+.disclaimer .ttl{color:#FFC4D6;font-weight:600;display:block;margin-bottom:3px}
+.quadrant{display:grid;grid-template-columns:1fr 1fr;gap:4px;width:36px;height:36px;border-radius:6px;overflow:hidden}
+.quadrant span{display:block}
+.quadrant span:nth-child(1){background:var(--hos-violet)}
+.quadrant span:nth-child(2){background:var(--hos-violet-light)}
+.quadrant span:nth-child(3){background:var(--hos-burgundy-soft)}
+.quadrant span:nth-child(4){background:var(--hos-bronze-light)}
+@media (max-width:360px){
+  body{font-size:14px}
+  .section-title{font-size:18px}
+  .hero h1{font-size:23px}
+  .case-card{flex-basis:82%}
+}
+</style>
+</head>
+<body>
+
+<!-- Top brand band -->
+<div class="brand-band top-band"></div>
+
+<!-- 1. 页头 -->
+<header class="header">
+  <div class="header-row">
+    <div class="logo">
+      <div class="quadrant" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <div>
+        <div class="logo-text">HOS 技术服务</div>
+        <div class="tagline">一站式 · 全四类综合</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#pain">卖点</a>
+      <a href="#cases">案例</a>
+      <a href="#price">价格</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<!-- 2. Hero -->
+<section class="hero" id="hero">
+  <img class="hero-img" src="../pdp/kv-all-in-one.jpg" alt="全四类综合服务">
+  <h1>技术服务<span class="accent">一站式</span></h1>
+  <p class="hero-value"><span>程序设计</span> · <span>AI应用</span> · <span>信息安全</span> · <span>计算机基础</span></p>
+  <div class="red-tag"><span class="dot"></span>HOS生态支撑</div>
+  <button class="cta" data-scroll="#form">免费咨询5分钟</button>
+</section>
+
+<!-- 3. 痛点 -->
+<section class="section" id="pain">
+  <h2 class="section-title">你是不是也遇到这些</h2>
+  <p class="section-sub">跨域需求，一站解决</p>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-q">需求跨多个技术领域？</div>
+      <div class="pain-a"><span class="em">一站式覆盖四类</span>，无需多方对接</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-q">找多个服务商太累？</div>
+      <div class="pain-a"><span class="em">统一对接统一售后</span>，一个窗口搞定</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-q">担心技术深度不够？</div>
+      <div class="pain-a"><span class="em">HOS生态三仓库背书</span>，工程级落地</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 解决方案 (tabbed) -->
+<section class="section" id="solution">
+  <h2 class="section-title">解决方案 · 四类服务</h2>
+  <p class="section-sub">点击切换价格表</p>
+  <div class="tabs-wrap">
+    <div class="tabs" role="tablist" id="serviceTabs">
+      <button class="tab active" data-tab="0" role="tab">程序设计</button>
+      <button class="tab" data-tab="1" role="tab">AI应用</button>
+      <button class="tab" data-tab="2" role="tab">信息安全</button>
+      <button class="tab" data-tab="3" role="tab">计算机基础</button>
+    </div>
+    <div class="tab-panels">
+      <div class="tab-panel active" data-panel="0">
+        <div class="price-row"><div class="price-name">代码调试<span class="sub">单文件/单模块</span></div><div class="price-val">¥30起</div></div>
+        <div class="price-row"><div class="price-name">课设<span class="sub">课程项目</span></div><div class="price-val">¥200起</div></div>
+        <div class="price-row"><div class="price-name">毕设<span class="sub">毕业设计</span></div><div class="price-val">¥800起</div></div>
+        <div class="panel-note">含代码注释与答辩说明</div>
+      </div>
+      <div class="tab-panel" data-panel="1">
+        <div class="price-row"><div class="price-name">模型部署<span class="sub">本地/云端</span></div><div class="price-val">¥200起</div></div>
+        <div class="price-row"><div class="price-name">RAG<span class="sub">检索增强</span></div><div class="price-val">¥500起</div></div>
+        <div class="price-row"><div class="price-name">AI应用<span class="sub">定制开发</span></div><div class="price-val">¥1000起</div></div>
+        <div class="panel-note">含数据接入与调优</div>
+      </div>
+      <div class="tab-panel" data-panel="2">
+        <div class="price-row"><div class="price-name">CTF<span class="sub">单题</span></div><div class="price-val">¥50/题</div></div>
+        <div class="price-row"><div class="price-name">渗透<span class="sub">授权测试</span></div><div class="price-val">¥500起</div></div>
+        <div class="price-row"><div class="price-name">加固<span class="sub">安全防护</span></div><div class="price-val">¥300起</div></div>
+        <div class="panel-note">仅限合法授权场景</div>
+      </div>
+      <div class="tab-panel" data-panel="3">
+        <div class="price-row"><div class="price-name">算法<span class="sub">讲解/辅导</span></div><div class="price-val">¥50/h</div></div>
+        <div class="price-row"><div class="price-name">实验<span class="sub">课程实验</span></div><div class="price-val">¥80起</div></div>
+        <div class="price-row"><div class="price-name">考研<span class="sub">专业课辅导</span></div><div class="price-val">¥100/h</div></div>
+        <div class="panel-note">可按章/按周套餐</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 案例轮播 -->
+<section class="section" id="cases">
+  <h2 class="section-title">案例 · 四类各一</h2>
+  <p class="section-sub">左右滑动查看</p>
+  <div class="carousel" id="caseCarousel">
+    <div class="case-card violet">
+      <span class="case-tag violet">程序设计</span>
+      <div class="case-title">Python课设答辩通过</div>
+      <div class="case-desc">数据可视化课设，含完整代码与文档</div>
+      <div class="case-result">答辩评分 A</div>
+    </div>
+    <div class="case-card violet-light">
+      <span class="case-tag violet-light">AI应用</span>
+      <div class="case-title">企业RAG知识库</div>
+      <div class="case-desc">企业知识库检索增强，文档接入</div>
+      <div class="case-result">支持多文档源接入</div>
+    </div>
+    <div class="case-card burgundy">
+      <span class="case-tag burgundy">信息安全</span>
+      <div class="case-title">Web渗透3中高危已修复</div>
+      <div class="case-desc">授权渗透测试，含修复建议</div>
+      <div class="case-result">3中高危已闭环</div>
+    </div>
+    <div class="case-card bronze">
+      <span class="case-tag bronze">计算机基础</span>
+      <div class="case-title">OS实验4个打包通过</div>
+      <div class="case-desc">操作系统课程实验全套</div>
+      <div class="case-result">4个全部通过</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 服务流程 -->
+<section class="section" id="process">
+  <h2 class="section-title">服务流程 · 五步</h2>
+  <p class="section-sub">统一对接，统一售后</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><div class="step-title">咨询</div><div class="step-desc">免费5分钟沟通需求</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body"><div class="step-title">需求匹配专家</div><div class="step-desc">按四类领域分派对应专家</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><div class="step-title">定金50%</div><div class="step-desc">确认方案后支付定金</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body"><div class="step-title">交付</div><div class="step-desc">按节点交付，过程可见</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body"><div class="step-title">统一售后7天</div><div class="step-desc">交付后7天内免费调整</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. 价格锚定 -->
+<section class="section" id="price">
+  <h2 class="section-title">价格锚定 · 跨域通用</h2>
+  <p class="section-sub">先咨询后报价</p>
+  <div class="tier-grid">
+    <div class="tier">
+      <div><div class="tier-label">引流品</div><div class="tier-name">9.9 通用</div></div>
+      <div class="tier-price">¥9.9</div>
+    </div>
+    <div class="tier">
+      <div><div class="tier-label">标品</div><div class="tier-name">常见需求</div></div>
+      <div class="tier-price">¥50-500</div>
+    </div>
+    <div class="tier">
+      <div><div class="tier-label">利润品</div><div class="tier-name">定制开发</div></div>
+      <div class="tier-price">¥500-1000</div>
+    </div>
+    <div class="tier">
+      <div><div class="tier-label">形象品</div><div class="tier-name">大型项目</div></div>
+      <div class="tier-price">面议</div>
+    </div>
+  </div>
+  <div class="tier-note-block">
+    <span class="em">先咨询后报价</span>；长期合作有套餐；<span class="em">急单1.5-2倍</span>。
+  </div>
+</section>
+
+<!-- 8. 信任构建 -->
+<section class="section" id="trust">
+  <h2 class="section-title">信任构建</h2>
+  <p class="section-sub">生态背书 · 红线清晰</p>
+  <div class="trust-grid">
+    <div class="trust-item"><div class="ic">7天</div><div class="t">统一售后</div></div>
+    <div class="trust-item"><div class="ic">50%</div><div class="t">定金保障</div></div>
+    <div class="trust-item"><div class="ic">三仓</div><div class="t">HOS生态背书</div></div>
+  </div>
+  <div class="red-line">
+    <div class="ttl">服务红线</div>
+    <div class="body">不代考 / 不代写论文 / 不非法攻击 / 不接违法违规</div>
+  </div>
+  <div class="screenshots">
+    <div class="shot">好评截图<br>占位</div>
+    <div class="shot">好评截图<br>占位</div>
+    <div class="shot">好评截图<br>占位</div>
+  </div>
+</section>
+
+<!-- 9. FAQ -->
+<section class="section" id="faq">
+  <h2 class="section-title">FAQ</h2>
+  <p class="section-sub">常见问题</p>
+  <details>
+    <summary>四类都能做？</summary>
+    <div class="faq-body">是的，程序设计 / AI应用 / 信息安全 / 计算机基础四类全覆盖，按领域分派对应专家。</div>
+  </details>
+  <details>
+    <summary>开发票？</summary>
+    <div class="faq-body">可协商，具体以沟通为准。</div>
+  </details>
+  <details>
+    <summary>长期合作？</summary>
+    <div class="faq-body">有套餐方案；老客介绍各减50元。</div>
+  </details>
+  <details>
+    <summary>如何开始？</summary>
+    <div class="faq-body">免费5分钟咨询，确认需求与报价后启动。</div>
+  </details>
+  <details>
+    <summary>售后统一？</summary>
+    <div class="faq-body">统一7天售后，一个窗口对接，无需多头沟通。</div>
+  </details>
+</section>
+
+<!-- 10. 表单 -->
+<section class="section" id="form">
+  <h2 class="section-title">提交需求</h2>
+  <p class="section-sub">24h内联系你</p>
+  <form class="form-wrap" id="leadForm" novalidate>
+    <div class="field" data-field="domain">
+      <label>服务领域</label>
+      <select name="domain" required>
+        <option value="">请选择</option>
+        <option value="程序设计">程序设计</option>
+        <option value="AI应用">AI应用</option>
+        <option value="信息安全">信息安全</option>
+        <option value="计算机基础">计算机基础</option>
+        <option value="多个领域">多个领域</option>
+      </select>
+      <div class="err-msg">请选择服务领域</div>
+    </div>
+    <div class="field" data-field="need">
+      <label>具体需求</label>
+      <input type="text" name="need" placeholder="如：Python课设 + RAG部署">
+      <div class="err-msg">请填写具体需求</div>
+    </div>
+    <div class="field" data-field="budget">
+      <label>预算</label>
+      <select name="budget" required>
+        <option value="">请选择</option>
+        <option value="100内">100内</option>
+        <option value="100-500">100-500</option>
+        <option value="500-2000">500-2000</option>
+        <option value="2000+">2000+</option>
+      </select>
+      <div class="err-msg">请选择预算区间</div>
+    </div>
+    <div class="field" data-field="contact">
+      <label>联系方式 <span class="req">*</span></label>
+      <input type="text" name="contact" placeholder="微信/QQ/邮箱" required>
+      <div class="err-msg">请填写联系方式</div>
+    </div>
+    <button type="submit" class="submit-btn">提交需求，24h内联系</button>
+    <div class="form-success" id="formSuccess">
+      <div class="t">提交成功</div>
+      <div class="d">已收到你的需求，24h内会有专人联系。</div>
+    </div>
+  </form>
+</section>
+
+<!-- 11. 页脚 -->
+<footer class="footer">
+  <div class="footer-brand">
+    <div class="quadrant" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <div>
+      <div class="name">HOS 技术服务</div>
+      <div class="desc">一站式 · 全四类综合</div>
+    </div>
+  </div>
+  <div class="repo-list">
+    <div class="repo-item"><span class="rn">HOS-Forge</span><span class="rt">forge</span></div>
+    <div class="repo-item"><span class="rn">HOS-LS</span><span class="rt">ls</span></div>
+    <div class="repo-item"><span class="rn">HOS-Workflow</span><span class="rt">workflow</span></div>
+  </div>
+  <div class="qr-wrap">
+    <div class="qr-box">微信<br>二维码</div>
+    <div class="qr-tip">扫码添加客服</div>
+  </div>
+  <div class="disclaimer">
+    <span class="ttl">免责声明</span>
+    不代考 / 不代写论文 / 不非法攻击 / 不接违法违规
+  </div>
+</footer>
+
+<!-- Bottom brand band -->
+<div class="brand-band bottom-band"></div>
+
+<script>
+(function(){
+  'use strict';
+  // Smooth scroll for CTA & nav anchors
+  function smoothTo(target){
+    var el = document.querySelector(target);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  document.querySelectorAll('[data-scroll]').forEach(function(btn){
+    btn.addEventListener('click', function(){ smoothTo(btn.getAttribute('data-scroll')); });
+  });
+  document.querySelectorAll('.nav a').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      smoothTo(a.getAttribute('href'));
+    });
+  });
+
+  // Section 4: service category tab switching
+  var tabs = document.querySelectorAll('#serviceTabs .tab');
+  var panels = document.querySelectorAll('.tab-panels .tab-panel');
+  function activateTab(idx){
+    tabs.forEach(function(t,i){
+      t.classList.toggle('active', i===idx);
+      t.setAttribute('aria-selected', i===idx ? 'true' : 'false');
+    });
+    panels.forEach(function(p,i){
+      p.classList.toggle('active', i===idx);
+    });
+  }
+  tabs.forEach(function(tab, idx){
+    tab.addEventListener('click', function(){ activateTab(idx); });
+    tab.setAttribute('role','tab');
+    tab.setAttribute('aria-selected', idx===0 ? 'true' : 'false');
+  });
+
+  // Form validation + success
+  var form = document.getElementById('leadForm');
+  var success = document.getElementById('formSuccess');
+  function setErr(field, isErr){
+    var f = form.querySelector('[data-field="'+field+'"]');
+    if (f) f.classList.toggle('err', isErr);
+  }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var ok = true;
+    var domain = form.elements['domain'].value.trim();
+    var need = form.elements['need'].value.trim();
+    var budget = form.elements['budget'].value.trim();
+    var contact = form.elements['contact'].value.trim();
+    if (!domain) { setErr('domain', true); ok = false; } else setErr('domain', false);
+    if (!need) { setErr('need', true); ok = false; } else setErr('need', false);
+    if (!budget) { setErr('budget', true); ok = false; } else setErr('budget', false);
+    if (!contact) { setErr('contact', true); ok = false; } else setErr('contact', false);
+    if (!ok) return;
+    success.classList.add('show');
+    form.querySelectorAll('input,select').forEach(function(el){ el.value=''; });
+    setTimeout(function(){ success.classList.remove('show'); }, 5000);
+  });
+  // Clear error on input
+  form.querySelectorAll('input,select').forEach(function(el){
+    el.addEventListener('input', function(){
+      var f = el.closest('.field');
+      if (f) f.classList.remove('err');
+    });
+  });
+
+  // Prevent horizontal scroll globally except carousel + tabs
+  // (handled via CSS overflow-x:hidden on body; carousel/tabs use their own overflow)
+})();
+</script>
+</body>
+</html>

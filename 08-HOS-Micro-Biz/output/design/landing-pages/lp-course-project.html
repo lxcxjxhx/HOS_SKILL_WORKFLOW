@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#0F0A1F">
+<title>课设毕设代做 | HOS 技术服务 · 计算机硕士背景</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;700;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hos-violet-deep:#5B2C91; --hos-violet:#7C3AED; --hos-violet-light:#A78BFA; --hos-violet-glow:#C4B5FD;
+  --hos-burgundy:#8B1A3C; --hos-burgundy-soft:#B91C5C;
+  --hos-bronze-green:#3D5A4C; --hos-bronze-light:#6B8E7A;
+  --hos-forge:#2563EB; --hos-ls:#7C3AED; --hos-workflow:#059669;
+  --bg-darkest:#0F0A1F; --bg-dark:#1A1129; --bg-card:#241638; --bg-elevated:#2E1F47;
+  --ink-primary:#F5F0FF; --ink-secondary:#C4B5E0; --ink-muted:#8B7DAA;
+  --price-anchor:#FFB347;
+  --font-display:'Noto Serif SC',serif; --font-body:'Noto Sans SC',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --brand-band-gradient:linear-gradient(90deg,#7C3AED 0%,#7C3AED 33%,#8B1A3C 33%,#8B1A3C 66%,#3D5A4C 66%,#3D5A4C 100%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-body);
+  background:var(--bg-darkest);
+  color:var(--ink-primary);
+  line-height:1.6;
+  font-size:15px;
+  overflow-x:hidden;
+  max-width:480px;
+  margin:0 auto;
+  position:relative;
+  min-height:100vh;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:16px}
+
+/* Brand band */
+.brand-band{height:4px;width:100%;background:var(--brand-band-gradient);flex-shrink:0}
+.brand-band--top{position:sticky;top:0;z-index:50}
+
+/* Layout */
+.wrap{padding:0 20px}
+.section{padding:36px 20px}
+.section__title{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--ink-primary);margin-bottom:6px;letter-spacing:.5px}
+.section__sub{font-size:13px;color:var(--ink-muted);margin-bottom:22px}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;padding:0 24px;border-radius:999px;
+  font-size:15px;font-weight:700;font-family:var(--font-body);
+  transition:transform .15s ease,box-shadow .15s ease,opacity .15s ease;
+  width:100%;
+}
+.btn--primary{background:var(--hos-violet);color:#fff;box-shadow:0 6px 20px rgba(124,58,237,.4)}
+.btn--primary:active{transform:translateY(1px);box-shadow:0 3px 12px rgba(124,58,237,.4)}
+.btn--ghost{background:var(--bg-elevated);color:var(--ink-primary);border:1px solid rgba(167,139,250,.3)}
+
+/* === Section 1: 页头 === */
+.site-header{background:var(--bg-dark);border-bottom:1px solid rgba(167,139,250,.12)}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+.header__logo{font-family:var(--font-display);font-size:28px;font-weight:900;color:var(--ink-primary);letter-spacing:1px}
+.header__logo span{color:var(--hos-violet-light)}
+.header__tagline{font-size:11px;color:var(--ink-muted);letter-spacing:2px}
+.header-nav{display:flex;gap:18px;padding:0 20px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.header-nav::-webkit-scrollbar{display:none}
+.header-nav a{font-size:13px;color:var(--ink-secondary);white-space:nowrap;flex-shrink:0;padding:2px 0}
+.header-nav a:active{color:var(--hos-violet-light)}
+
+/* === Section 2: Hero === */
+.hero{padding:0 0 28px}
+.hero__kv{width:100%;aspect-ratio:16/10;object-fit:cover;background:var(--bg-card)}
+.hero__body{padding:24px 20px 0}
+.hero__h1{font-family:var(--font-display);font-size:40px;font-weight:900;line-height:1.15;letter-spacing:1px;margin-bottom:14px;background:linear-gradient(120deg,#F5F0FF 0%,#C4B5FD 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero__prop{font-size:14px;color:var(--ink-secondary);margin-bottom:24px;line-height:1.7}
+.hero__prop strong{color:var(--hos-violet-glow);font-weight:700}
+.hero__cta{margin-bottom:10px}
+.hero__hint{font-size:12px;color:var(--ink-muted);text-align:center}
+
+/* === Cards === */
+.card{background:var(--bg-card);border-radius:16px;padding:24px}
+.card--elevated{background:var(--bg-elevated)}
+
+/* === Section 3: 痛点 === */
+.pain-list{display:flex;flex-direction:column;gap:14px}
+.pain-card{background:var(--bg-card);border-radius:16px;padding:22px;border-left:3px solid var(--hos-violet)}
+.pain-card__q{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--ink-primary);margin-bottom:8px}
+.pain-card__a{font-size:14px;color:var(--ink-secondary);line-height:1.6}
+.pain-card__a strong{color:var(--hos-violet-glow)}
+
+/* === Section 4: 解决方案 === */
+.price-table{background:var(--bg-card);border-radius:16px;overflow:hidden}
+.price-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid rgba(167,139,250,.1)}
+.price-row:last-child{border-bottom:none}
+.price-row__name{font-size:15px;color:var(--ink-primary)}
+.price-row__price{font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--price-anchor)}
+
+/* === Section 5: 案例轮播 === */
+.carousel{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:4px 20px 8px;margin:0 -20px;scrollbar-width:none}
+.carousel::-webkit-scrollbar{display:none}
+.case-card{scroll-snap-align:start;flex:0 0 260px;background:var(--bg-elevated);border-radius:16px;padding:22px;border-left:3px solid var(--hos-violet);min-width:260px}
+.case-card__tag{display:inline-block;font-size:11px;font-family:var(--font-mono);color:var(--hos-bronze-light);background:rgba(107,142,122,.15);padding:3px 10px;border-radius:999px;margin-bottom:12px}
+.case-card__title{font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--ink-primary);margin-bottom:10px;line-height:1.4}
+.case-card__desc{font-size:13px;color:var(--ink-secondary);line-height:1.6}
+.case-card__result{margin-top:12px;font-size:13px;color:var(--hos-violet-glow);font-weight:700}
+.carousel-hint{text-align:center;font-size:12px;color:var(--ink-muted);margin-top:12px}
+
+/* === Section 6: 服务流程 === */
+.timeline{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:8px 0 12px;scrollbar-width:none}
+.timeline::-webkit-scrollbar{display:none}
+.step{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;min-width:96px;position:relative;padding:0 6px}
+.step__circle{width:48px;height:48px;border-radius:50%;background:var(--hos-bronze-green);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--ink-primary);border:2px solid var(--hos-bronze-light);flex-shrink:0;z-index:2;position:relative}
+.step__label{font-size:13px;color:var(--ink-primary);margin-top:10px;text-align:center;white-space:nowrap;font-weight:500}
+.step__sub{font-size:11px;color:var(--ink-muted);margin-top:2px;text-align:center;white-space:nowrap}
+.step:not(:last-child)::after{content:"";position:absolute;top:24px;left:calc(50% + 28px);width:calc(100% - 56px);height:2px;background:var(--hos-violet);z-index:1}
+.timeline-hint{text-align:center;font-size:12px;color:var(--ink-muted);margin-top:8px}
+
+/* === Section 7: 价格锚定 + 计算器 === */
+.tier-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:26px}
+.tier{background:var(--bg-card);border-radius:16px;padding:18px 16px;border:1px solid rgba(167,139,250,.12)}
+.tier--hot{border:1px solid var(--hos-violet);box-shadow:0 0 0 1px rgba(124,58,237,.3)}
+.tier__label{font-size:11px;color:var(--ink-muted);margin-bottom:6px;letter-spacing:1px}
+.tier__price{font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--price-anchor);margin-bottom:4px}
+.tier__name{font-size:13px;color:var(--ink-secondary)}
+.tier__badge{display:inline-block;font-size:10px;font-family:var(--font-mono);color:var(--hos-violet-glow);margin-bottom:6px}
+
+.calc{background:var(--bg-elevated);border-radius:16px;padding:24px;border:1px solid rgba(167,139,250,.2)}
+.calc__title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--ink-primary);margin-bottom:18px}
+.calc__field{margin-bottom:16px}
+.calc__label{display:block;font-size:13px;color:var(--ink-secondary);margin-bottom:8px}
+.calc__select{width:100%;min-height:44px;padding:0 14px;background:var(--bg-dark);border:1px solid rgba(167,139,250,.25);border-radius:10px;color:var(--ink-primary);font-size:15px;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3e%3cpath fill='%23A78BFA' d='M6 8L0 0h12z'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 14px center}
+.calc__select:focus{outline:none;border-color:var(--hos-violet-light)}
+.calc__result{margin-top:22px;padding:18px;background:var(--bg-darkest);border-radius:12px;text-align:center;border:1px solid rgba(255,179,71,.25)}
+.calc__result-label{font-size:12px;color:var(--ink-muted);margin-bottom:8px}
+.calc__result-value{font-family:var(--font-mono);font-size:28px;font-weight:700;color:var(--price-anchor);line-height:1.2}
+.calc__note{font-size:11px;color:var(--ink-muted);margin-top:10px;line-height:1.5}
+
+/* === Section 8: 信任构建 === */
+.trust-guarantee{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.guarantee-item{display:flex;align-items:center;gap:12px;background:var(--bg-card);border-radius:12px;padding:14px 18px}
+.guarantee-item__icon{width:36px;height:36px;border-radius:50%;background:var(--hos-bronze-green);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.guarantee-item__text{font-size:14px;color:var(--ink-primary)}
+.guarantee-item__text strong{color:var(--hos-violet-glow)}
+.redline{background:rgba(139,26,60,.18);border:1px solid var(--hos-burgundy);border-radius:12px;padding:16px 18px;margin-bottom:24px}
+.redline__title{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--hos-burgundy-soft);margin-bottom:8px}
+.redline__text{font-size:13px;color:var(--ink-secondary);line-height:1.6}
+.review-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.review-box{height:80px;background:var(--bg-elevated);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink-muted);text-align:center;border:1px dashed rgba(167,139,250,.2)}
+
+/* === Section 9: FAQ === */
+.faq-list{display:flex;flex-direction:column;gap:12px}
+.faq-item{background:var(--bg-card);border-radius:14px;overflow:hidden;border:1px solid rgba(167,139,250,.1)}
+.faq-item summary{list-style:none;cursor:pointer;padding:18px 20px;font-size:15px;color:var(--ink-primary);font-weight:500;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";font-size:20px;color:var(--hos-violet-light);flex-shrink:0;transition:transform .2s;font-family:var(--font-mono)}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item__answer{padding:0 20px 18px;font-size:14px;color:var(--ink-secondary);line-height:1.7}
+
+/* === Section 10: 表单 === */
+.form{background:var(--bg-card);border-radius:16px;padding:24px;border:1px solid rgba(167,139,250,.15)}
+.form__field{margin-bottom:16px}
+.form__label{display:block;font-size:13px;color:var(--ink-secondary);margin-bottom:8px}
+.form__label .req{color:var(--hos-burgundy-soft)}
+.form__input,.form__select{
+  width:100%;min-height:44px;padding:0 14px;
+  background:var(--bg-dark);border:1px solid rgba(167,139,250,.25);
+  border-radius:10px;color:var(--ink-primary);font-size:15px;
+}
+.form__input:focus,.form__select:focus{outline:none;border-color:var(--hos-violet-light)}
+.form__select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3e%3cpath fill='%23A78BFA' d='M6 8L0 0h12z'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 14px center}
+.form__error{font-size:12px;color:var(--hos-burgundy-soft);margin-top:6px;display:none}
+.form__field--error .form__input,.form__field--error .form__select{border-color:var(--hos-burgundy-soft)}
+.form__field--error .form__error{display:block}
+.form__submit{margin-top:8px}
+.form__success{display:none;background:var(--hos-bronze-green);border-radius:14px;padding:24px;text-align:center}
+.form__success-icon{font-size:32px;margin-bottom:10px}
+.form__success-title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--ink-primary);margin-bottom:6px}
+.form__success-text{font-size:14px;color:var(--ink-secondary)}
+.form__success--show{display:block}
+.form--hidden{display:none}
+
+/* === Section 11: 页脚 === */
+.site-footer{background:var(--bg-dark);padding:36px 20px 0}
+.footer__brand{font-family:var(--font-display);font-size:22px;font-weight:900;margin-bottom:6px}
+.footer__brand span{color:var(--hos-violet-light)}
+.footer__desc{font-size:13px;color:var(--ink-muted);line-height:1.6;margin-bottom:20px}
+.footer__repos{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.footer__repo{font-family:var(--font-mono);font-size:12px;color:var(--ink-secondary);background:var(--bg-card);padding:6px 12px;border-radius:8px;border:1px solid rgba(167,139,250,.15)}
+.footer__qr{width:120px;height:120px;border:2px solid var(--hos-violet);border-radius:12px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--ink-muted);text-align:center;background:var(--bg-card)}
+.footer__disclaimer{font-size:11px;color:var(--ink-muted);line-height:1.6;padding-bottom:20px;border-top:1px solid rgba(167,139,250,.1);padding-top:16px}
+</style>
+</head>
+<body>
+
+<!-- Brand Band Top -->
+<div class="brand-band brand-band--top"></div>
+
+<!-- ===== Section 1: 页头 ===== -->
+<header class="site-header">
+  <div class="header-top">
+    <div class="header__logo">HOS<span>·</span></div>
+    <div class="header__tagline">技术深度 · 微商可信</div>
+  </div>
+  <nav class="header-nav">
+    <a href="#pain">卖点</a>
+    <a href="#cases">案例</a>
+    <a href="#price">价格</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</header>
+
+<!-- ===== Section 2: Hero ===== -->
+<section class="hero">
+  <img class="hero__kv" src="../pdp/kv-course-project.jpg" alt="课设毕设代做">
+  <div class="hero__body">
+    <h1 class="hero__h1">课设毕设代做</h1>
+    <p class="hero__prop"><strong>计算机硕士背景</strong> · 修改到满意 · <strong>7天售后</strong></p>
+    <button class="btn btn--primary hero__cta" onclick="document.getElementById('form-section').scrollIntoView({behavior:'smooth'})">免费咨询5分钟</button>
+    <p class="hero__hint">无套路 · 50%定金制度 · 不满意可退</p>
+  </div>
+</section>
+
+<!-- ===== Section 3: 痛点 ===== -->
+<section class="section" id="pain">
+  <h2 class="section__title">这些困扰，我懂</h2>
+  <p class="section__sub">课设毕设路上的三座大山</p>
+  <div class="pain-list">
+    <div class="pain-card">
+      <div class="pain-card__q">课设 deadline 紧？</div>
+      <div class="pain-card__a">几天出成品，<strong>含讲解</strong>，按时交付不拖稿。</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-card__q">代码看不懂？</div>
+      <div class="pain-card__a">逐行讲解 <strong>1小时</strong>，答辩不慌，问得明明白白。</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-card__q">找人怕忽悠？</div>
+      <div class="pain-card__a"><strong>硕士背景</strong>，50%定金制度，交付验收再付尾款。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 4: 解决方案 ===== -->
+<section class="section">
+  <h2 class="section__title">服务与起步价</h2>
+  <p class="section__sub">明码标价，按需选择</p>
+  <div class="price-table">
+    <div class="price-row"><span class="price-row__name">代码调试</span><span class="price-row__price">¥30 起</span></div>
+    <div class="price-row"><span class="price-row__name">课设辅导</span><span class="price-row__price">¥200 起</span></div>
+    <div class="price-row"><span class="price-row__name">毕设全程</span><span class="price-row__price">¥800 起</span></div>
+    <div class="price-row"><span class="price-row__name">脚本工具</span><span class="price-row__price">¥100 起</span></div>
+    <div class="price-row"><span class="price-row__name">网站开发</span><span class="price-row__price">¥500 起</span></div>
+  </div>
+</section>
+
+<!-- ===== Section 5: 案例轮播 ===== -->
+<section class="section" id="cases">
+  <h2 class="section__title">真实案例</h2>
+  <p class="section__sub">左右滑动查看 · 已脱敏处理</p>
+  <div class="carousel">
+    <div class="case-card">
+      <span class="case-card__tag">课设</span>
+      <div class="case-card__title">Python 数据可视化课设</div>
+      <div class="case-card__desc">基于 Matplotlib + Pandas 完成数据清洗与多图表可视化，含需求文档与答辩 PPT。</div>
+      <div class="case-card__result">✓ 答辩通过</div>
+    </div>
+    <div class="case-card">
+      <span class="case-card__tag">毕设</span>
+      <div class="case-card__title">Java SpringBoot 毕设</div>
+      <div class="case-card__desc">后台管理系统 + REST API，含数据库设计、部署文档与 1 小时逐行讲解。</div>
+      <div class="case-card__result">✓ 全程辅导 2 周交付</div>
+    </div>
+    <div class="case-card">
+      <span class="case-card__tag">实验</span>
+      <div class="case-card__title">操作系统实验合集</div>
+      <div class="case-card__desc">进程调度 / 内存管理 / 文件系统 4 个实验打包，含实验报告与代码注释。</div>
+      <div class="case-card__result">✓ 4 实验打包</div>
+    </div>
+  </div>
+  <p class="carousel-hint">← 左右滑动 →</p>
+</section>
+
+<!-- ===== Section 6: 服务流程 ===== -->
+<section class="section">
+  <h2 class="section__title">服务流程</h2>
+  <p class="section__sub">五步走，清晰透明</p>
+  <div class="timeline">
+    <div class="step">
+      <div class="step__circle">1</div>
+      <div class="step__label">咨询</div>
+      <div class="step__sub">免费5分钟</div>
+    </div>
+    <div class="step">
+      <div class="step__circle">2</div>
+      <div class="step__label">报价</div>
+      <div class="step__sub">明确需求</div>
+    </div>
+    <div class="step">
+      <div class="step__circle">3</div>
+      <div class="step__label">定金50%</div>
+      <div class="step__sub">开始制作</div>
+    </div>
+    <div class="step">
+      <div class="step__circle">4</div>
+      <div class="step__label">交付</div>
+      <div class="step__sub">含讲解</div>
+    </div>
+    <div class="step">
+      <div class="step__circle">5</div>
+      <div class="step__label">售后7天</div>
+      <div class="step__sub">免费修改</div>
+    </div>
+  </div>
+  <p class="timeline-hint">← 左右滑动查看完整流程 →</p>
+</section>
+
+<!-- ===== Section 7: 价格锚定 + 计算器 ===== -->
+<section class="section" id="price">
+  <h2 class="section__title">价格锚定</h2>
+  <p class="section__sub">四档产品分层，透明可比</p>
+  <div class="tier-grid">
+    <div class="tier">
+      <div class="tier__label">引流品</div>
+      <div class="tier__price">¥9.9</div>
+      <div class="tier__name">代码调试单点</div>
+    </div>
+    <div class="tier tier--hot">
+      <div class="tier__badge">主推</div>
+      <div class="tier__label">标品</div>
+      <div class="tier__price">¥200</div>
+      <div class="tier__name">课设辅导</div>
+    </div>
+    <div class="tier">
+      <div class="tier__label">利润品</div>
+      <div class="tier__price">¥800</div>
+      <div class="tier__name">毕设全程</div>
+    </div>
+    <div class="tier">
+      <div class="tier__label">形象品</div>
+      <div class="tier__price">面议</div>
+      <div class="tier__name">定制网站开发</div>
+    </div>
+  </div>
+
+  <div class="calc">
+    <div class="calc__title">快速估价计算器</div>
+    <div class="calc__field">
+      <label class="calc__label" for="calc-type">项目类型</label>
+      <select class="calc__select" id="calc-type">
+        <option value="course">课设（基准 ¥200）</option>
+        <option value="thesis">毕设（基准 ¥800）</option>
+        <option value="tool">工具（基准 ¥100）</option>
+        <option value="web">网站（基准 ¥500）</option>
+      </select>
+    </div>
+    <div class="calc__field">
+      <label class="calc__label" for="calc-urgency">紧急程度</label>
+      <select class="calc__select" id="calc-urgency">
+        <option value="1.0">正常（1.0 倍）</option>
+        <option value="1.5">加急（1.5 倍）</option>
+        <option value="2.0">特急（2.0 倍）</option>
+      </select>
+    </div>
+    <div class="calc__result">
+      <div class="calc__result-label">预估价格区间</div>
+      <div class="calc__result-value" id="calc-output">¥200 — ¥400</div>
+      <div class="calc__note">仅供参考，最终以沟通报价为准</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 8: 信任构建 ===== -->
+<section class="section">
+  <h2 class="section__title">为什么选 HOS</h2>
+  <p class="section__sub">保障、底线、口碑，一个不少</p>
+  <div class="trust-guarantee">
+    <div class="guarantee-item">
+      <div class="guarantee-item__icon">✓</div>
+      <div class="guarantee-item__text"><strong>7天修改</strong> · 交付后免费调整</div>
+    </div>
+    <div class="guarantee-item">
+      <div class="guarantee-item__icon">✓</div>
+      <div class="guarantee-item__text"><strong>50%定金</strong> · 验收后再付尾款</div>
+    </div>
+    <div class="guarantee-item">
+      <div class="guarantee-item__icon">✓</div>
+      <div class="guarantee-item__text"><strong>1小时讲解</strong> · 逐行讲清，答辩不慌</div>
+    </div>
+  </div>
+  <div class="redline">
+    <div class="redline__title">⚠ 服务红线</div>
+    <div class="redline__text">不代写论文 / 不代考 / 不接违法违规项目。仅提供技术辅导与代码实现咨询。</div>
+  </div>
+  <div class="review-grid">
+    <div class="review-box">好评截图</div>
+    <div class="review-box">好评截图</div>
+    <div class="review-box">好评截图</div>
+  </div>
+</section>
+
+<!-- ===== Section 9: FAQ ===== -->
+<section class="section" id="faq">
+  <h2 class="section__title">常见问题</h2>
+  <p class="section__sub">点开展开，先问清楚再下单</p>
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary>是否代写论文？</summary>
+      <div class="faq-item__answer">否。本服务仅提供代码辅导与技术实现咨询，不代写论文、不代写实验报告正文。</div>
+    </details>
+    <details class="faq-item">
+      <summary>能讲解吗？</summary>
+      <div class="faq-item__answer">含 1 小时逐行讲解，确保你理解每一行代码逻辑，答辩问到哪讲到哪。</div>
+    </details>
+    <details class="faq-item">
+      <summary>售后多久？</summary>
+      <div class="faq-item__answer">交付后 7 天内免费修改，超出范围或新增需求另议。</div>
+    </details>
+    <details class="faq-item">
+      <summary>急单怎么算？</summary>
+      <div class="faq-item__answer">加急 1.5 倍系数，特急 2.0 倍系数，需提前沟通确认档期。</div>
+    </details>
+    <details class="faq-item">
+      <summary>付款方式？</summary>
+      <div class="faq-item__answer">50% 定金启动 + 50% 尾款验收，支持微信/支付宝，开具收据。</div>
+    </details>
+  </div>
+</section>
+
+<!-- ===== Section 10: 表单 ===== -->
+<section class="section" id="form-section">
+  <h2 class="section__title">提交需求</h2>
+  <p class="section__sub">填写后 24h 内微信联系您</p>
+  <form class="form" id="lead-form" novalidate>
+    <div class="form__field">
+      <label class="form__label" for="f-type">项目类型</label>
+      <select class="form__select" id="f-type" name="type">
+        <option value="">请选择</option>
+        <option value="course">课设</option>
+        <option value="thesis">毕设</option>
+        <option value="tool">工具</option>
+        <option value="web">网站</option>
+        <option value="other">其他</option>
+      </select>
+      <div class="form__error">请选择项目类型</div>
+    </div>
+    <div class="form__field">
+      <label class="form__label" for="f-stack">技术栈</label>
+      <input class="form__input" type="text" id="f-stack" name="stack" placeholder="如 Python / Java / Vue">
+      <div class="form__error">请填写技术栈</div>
+    </div>
+    <div class="form__field">
+      <label class="form__label" for="f-deadline">截止时间</label>
+      <input class="form__input" type="date" id="f-deadline" name="deadline">
+      <div class="form__error">请选择截止时间</div>
+    </div>
+    <div class="form__field">
+      <label class="form__label" for="f-budget">预算</label>
+      <input class="form__input" type="text" id="f-budget" name="budget" placeholder="如 300-500 元">
+    </div>
+    <div class="form__field" id="f-contact-field">
+      <label class="form__label" for="f-contact">联系方式 <span class="req">*</span></label>
+      <input class="form__input" type="text" id="f-contact" name="contact" placeholder="微信号 / 手机号">
+      <div class="form__error">请填写联系方式</div>
+    </div>
+    <button type="submit" class="btn btn--primary form__submit">提交需求，24h内联系</button>
+  </form>
+  <div class="form__success" id="form-success">
+    <div class="form__success-icon">✓</div>
+    <div class="form__success-title">需求已收到</div>
+    <div class="form__success-text">24h 内微信联系您，请保持通讯畅通。</div>
+  </div>
+</section>
+
+<!-- ===== Section 11: 页脚 ===== -->
+<footer class="site-footer">
+  <div class="footer__brand">HOS<span>·</span></div>
+  <p class="footer__desc">HOS 技术服务 · 计算机硕士背景<br>技术深度 · 微商可信 · 修改到满意</p>
+  <div class="footer__repos">
+    <span class="footer__repo">HOS-Forge</span>
+    <span class="footer__repo">HOS-LS</span>
+    <span class="footer__repo">HOS-Workflow</span>
+  </div>
+  <div class="footer__qr">微信二维码<br>120×120</div>
+  <p class="footer__disclaimer">免责声明：本服务为技术辅导咨询，不代写论文、不代考、不接违法违规项目。最终解释权归 HOS 所有。</p>
+</footer>
+
+<!-- Brand Band Bottom -->
+<div class="brand-band"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  // ===== 价格计算器 =====
+  var basePrices = {
+    course: { base: 200, low: 150, high: 400 },
+    thesis: { base: 800, low: 600, high: 1600 },
+    tool:   { base: 100, low: 80,  high: 200 },
+    web:    { base: 500, low: 400, high: 1000 }
+  };
+
+  var calcType = document.getElementById('calc-type');
+  var calcUrgency = document.getElementById('calc-urgency');
+  var calcOutput = document.getElementById('calc-output');
+
+  function formatYuan(n){
+    return '¥' + Math.round(n);
+  }
+
+  function updateCalc(){
+    var typeKey = calcType.value;
+    var urgency = parseFloat(calcUrgency.value);
+    var data = basePrices[typeKey];
+    if(!data) return;
+    var low = data.low * urgency;
+    var high = data.high * urgency;
+    calcOutput.textContent = formatYuan(low) + ' — ' + formatYuan(high);
+  }
+
+  calcType.addEventListener('change', updateCalc);
+  calcUrgency.addEventListener('change', updateCalc);
+  updateCalc();
+
+  // ===== 表单验证 + 提交 =====
+  var form = document.getElementById('lead-form');
+  var successBox = document.getElementById('form-success');
+  var contactField = document.getElementById('f-contact-field');
+
+  function showError(field, show){
+    if(show){
+      field.classList.add('form__field--error');
+    }else{
+      field.classList.remove('form__field--error');
+    }
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var valid = true;
+
+    var type = document.getElementById('f-type');
+    var stack = document.getElementById('f-stack');
+    var deadline = document.getElementById('f-deadline');
+    var contact = document.getElementById('f-contact');
+
+    // 项目类型
+    var typeField = type.closest('.form__field');
+    if(!type.value){
+      showError(typeField, true);
+      valid = false;
+    }else{
+      showError(typeField, false);
+    }
+
+    // 技术栈
+    var stackField = stack.closest('.form__field');
+    if(!stack.value.trim()){
+      showError(stackField, true);
+      valid = false;
+    }else{
+      showError(stackField, false);
+    }
+
+    // 截止时间
+    var deadlineField = deadline.closest('.form__field');
+    if(!deadline.value){
+      showError(deadlineField, true);
+      valid = false;
+    }else{
+      showError(deadlineField, false);
+    }
+
+    // 联系方式 (required)
+    if(!contact.value.trim()){
+      showError(contactField, true);
+      valid = false;
+      contact.focus();
+    }else{
+      showError(contactField, false);
+    }
+
+    if(valid){
+      form.classList.add('form--hidden');
+      successBox.classList.add('form__success--show');
+      successBox.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+  });
+
+  // 输入时清除错误状态
+  form.querySelectorAll('.form__input, .form__select').forEach(function(el){
+    el.addEventListener('input', function(){
+      var field = el.closest('.form__field');
+      if(field) showError(field, false);
+    });
+    el.addEventListener('change', function(){
+      var field = el.closest('.form__field');
+      if(field) showError(field, false);
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

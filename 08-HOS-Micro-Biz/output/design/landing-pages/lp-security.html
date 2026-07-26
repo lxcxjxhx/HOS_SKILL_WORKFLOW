@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>信息安全服务 | HOS 技术服务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hos-violet-deep:#5B2C91; --hos-violet:#7C3AED; --hos-violet-light:#A78BFA; --hos-violet-glow:#C4B5FD;
+  --hos-burgundy:#8B1A3C; --hos-burgundy-soft:#B91C5C;
+  --hos-bronze-green:#3D5A4C; --hos-bronze-light:#6B8E7A;
+  --hos-forge:#2563EB; --hos-ls:#7C3AED; --hos-workflow:#059669;
+  --bg-darkest:#0F0A1F; --bg-dark:#1A1129; --bg-card:#241638; --bg-elevated:#2E1F47;
+  --ink-primary:#F5F0FF; --ink-secondary:#C4B5E0; --ink-muted:#8B7DAA;
+  --price-anchor:#FFB347;
+  --font-display:'Noto Serif SC',serif; --font-body:'Noto Sans SC',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --brand-band-gradient:linear-gradient(90deg,#7C3AED 0%,#7C3AED 33%,#8B1A3C 33%,#8B1A3C 66%,#3D5A4C 66%,#3D5A4C 100%);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html { scroll-behavior:smooth; }
+
+html, body {
+  max-width:480px;
+  margin:0 auto;
+  background:var(--bg-darkest);
+  color:var(--ink-primary);
+  font-family:var(--font-body);
+  font-size:14px;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+a { color:inherit; text-decoration:none; }
+
+.brand-band-top, .brand-band-bottom {
+  height:4px;
+  width:100%;
+  background:var(--brand-band-gradient);
+  position:relative;
+  z-index:2;
+}
+.brand-band-top { position:sticky; top:0; }
+
+section { padding:28px 20px; position:relative; }
+
+/* ===== 1. 页头 ===== */
+.header {
+  padding:18px 20px 14px;
+  background:var(--bg-dark);
+  border-bottom:1px solid rgba(124,58,237,0.15);
+  position:sticky;
+  top:4px;
+  z-index:10;
+}
+.header-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.logo { font-family:var(--font-display); font-weight:700; font-size:20px; letter-spacing:1px; color:var(--ink-primary); }
+.logo .dot { color:var(--hos-violet); }
+.tagline { font-size:11px; color:var(--ink-muted); letter-spacing:2px; }
+.anchor-nav { display:flex; gap:14px; margin-top:10px; font-size:12px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.anchor-nav::-webkit-scrollbar { display:none; }
+.anchor-nav a { color:var(--ink-secondary); white-space:nowrap; padding:4px 0; }
+.anchor-nav a:active { color:var(--hos-violet-light); }
+
+/* ===== 2. Hero ===== */
+.hero { padding:0; }
+.hero-img { width:100%; height:auto; display:block; aspect-ratio:4/3; object-fit:cover; background:var(--bg-card); }
+.hero-body { padding:24px 20px 28px; }
+.hero h1 { font-family:var(--font-display); font-size:30px; font-weight:700; line-height:1.25; color:var(--ink-primary); }
+.hero .value-prop { margin-top:10px; font-size:14px; color:var(--ink-secondary); line-height:1.7; }
+.hero .value-prop .sep { color:var(--hos-violet-light); margin:0 4px; }
+.red-tag {
+  display:inline-block;
+  background:rgba(139,26,60,0.2);
+  border:1px solid var(--hos-burgundy-soft);
+  color:#FF8FA8;
+  font-size:12px; font-weight:500;
+  padding:5px 12px; border-radius:6px;
+  font-family:var(--font-mono); letter-spacing:0.3px;
+  margin-top:14px;
+}
+.cta-primary {
+  display:block; width:100%; min-height:48px;
+  margin-top:20px; padding:0 20px;
+  background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);
+  color:var(--ink-primary); font-family:var(--font-body); font-size:15px; font-weight:500;
+  border:none; border-radius:10px;
+  cursor:pointer; transition:transform .15s ease;
+}
+.cta-primary:active { transform:scale(0.98); }
+
+/* ===== 通用标题 ===== */
+.sec-title { font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--ink-primary); margin-bottom:6px; }
+.sec-sub { font-size:12px; color:var(--ink-muted); margin-bottom:18px; letter-spacing:1px; }
+
+/* ===== 3. 痛点 ===== */
+.pain-cards { display:flex; flex-direction:column; gap:12px; }
+.pain-card {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.18);
+  border-left:3px solid var(--hos-burgundy-soft);
+  border-radius:10px;
+  padding:16px;
+}
+.pain-card .q { font-size:14px; font-weight:500; color:var(--ink-primary); }
+.pain-card .q em { font-style:normal; color:var(--hos-burgundy-soft); font-weight:600; }
+.pain-card .a { margin-top:8px; font-size:13px; color:var(--ink-secondary); }
+.pain-card .a::before { content:"→ "; color:var(--hos-bronze-light); font-weight:600; }
+
+/* ===== 4. 解决方案 价格表 ===== */
+.price-table { display:flex; flex-direction:column; gap:10px; }
+.price-row {
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.15);
+  border-radius:10px;
+  padding:14px 16px;
+}
+.price-row .name { font-size:14px; color:var(--ink-primary); }
+.price-row .price {
+  font-family:var(--font-mono);
+  font-size:16px; font-weight:600;
+  color:var(--price-anchor);
+}
+.price-row .price small { font-size:11px; opacity:0.8; }
+
+/* ===== 5. 案例轮播 ===== */
+.carousel-wrap { position:relative; margin:0 -20px; }
+.carousel {
+  display:flex; gap:14px;
+  overflow-x:auto; scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding:0 20px 4px;
+}
+.carousel::-webkit-scrollbar { display:none; }
+.case-card {
+  flex:0 0 260px;
+  scroll-snap-align:start;
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.2);
+  border-radius:12px;
+  overflow:hidden;
+}
+.case-card .tag {
+  display:inline-block;
+  font-family:var(--font-mono); font-size:10px;
+  color:var(--hos-violet-light);
+  background:rgba(124,58,237,0.15);
+  padding:3px 8px; border-radius:4px;
+  margin:14px 0 0 14px;
+}
+.case-card h4 { font-family:var(--font-display); font-size:16px; font-weight:600; color:var(--ink-primary); padding:10px 14px 6px; }
+.case-card p { font-size:12px; color:var(--ink-secondary); padding:0 14px 14px; line-height:1.6; }
+.case-card .metric { font-family:var(--font-mono); color:var(--price-anchor); font-weight:600; }
+.carousel-hint { text-align:center; font-size:11px; color:var(--ink-muted); margin-top:10px; letter-spacing:1px; }
+
+/* ===== 6. 服务流程 ===== */
+.steps { display:flex; flex-direction:column; gap:0; position:relative; }
+.step {
+  display:flex; align-items:flex-start; gap:14px;
+  position:relative; padding-bottom:18px;
+}
+.step:last-child { padding-bottom:0; }
+.step::before {
+  content:""; position:absolute; left:14px; top:30px; bottom:0;
+  width:1px; background:linear-gradient(var(--hos-violet) 0%, var(--bg-card) 100%);
+}
+.step:last-child::before { display:none; }
+.step-num {
+  flex:0 0 28px; height:28px; border-radius:50%;
+  background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);
+  color:var(--ink-primary); font-family:var(--font-mono); font-size:12px; font-weight:600;
+  display:flex; align-items:center; justify-content:center;
+  z-index:1;
+}
+/* Step 2 授权确认 - burgundy border emphasized */
+.step.auth-highlight .step-num {
+  background:linear-gradient(135deg,var(--hos-burgundy-soft) 0%,var(--hos-burgundy) 100%);
+  border:2px solid var(--hos-burgundy-soft);
+  box-shadow:0 0 0 3px rgba(139,26,60,0.2);
+}
+.step.auth-highlight::before {
+  background:linear-gradient(var(--hos-burgundy-soft) 0%, var(--bg-card) 100%);
+}
+.step-body { padding-top:2px; }
+.step-body .t { font-size:14px; font-weight:500; color:var(--ink-primary); display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.step-body .d { font-size:12px; color:var(--ink-muted); margin-top:2px; }
+.auth-flag {
+  display:inline-block;
+  background:var(--hos-burgundy);
+  color:#FFD6E0;
+  font-size:10px; font-weight:700;
+  padding:2px 6px; border-radius:4px;
+  font-family:var(--font-mono); letter-spacing:0.3px;
+}
+.step.auth-highlight .step-body .t { color:#FFB3C7; }
+.auth-keyword { color:var(--hos-burgundy-soft); font-weight:700; }
+
+/* ===== 7. 价格锚定 + 授权范围确认 ===== */
+.tiers { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:24px; }
+.tier {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.15);
+  border-radius:10px;
+  padding:14px;
+}
+.tier .tier-label { font-size:11px; color:var(--ink-muted); letter-spacing:1px; }
+.tier .tier-price { font-family:var(--font-mono); font-size:17px; font-weight:600; color:var(--price-anchor); margin-top:4px; }
+.tier.featured { border-color:var(--hos-violet); background:var(--bg-elevated); }
+.tier.featured .tier-label { color:var(--hos-violet-light); }
+
+.auth-checklist {
+  background:var(--bg-card);
+  border:1px solid var(--hos-burgundy);
+  border-radius:12px;
+  padding:18px 16px;
+}
+.auth-checklist h4 { font-family:var(--font-display); font-size:15px; color:var(--ink-primary); margin-bottom:4px; display:flex; align-items:center; gap:6px; }
+.auth-checklist h4 .lock { color:var(--hos-burgundy-soft); font-size:14px; }
+.auth-checklist .auth-sub { font-size:11px; color:var(--ink-muted); margin-bottom:16px; }
+.auth-item {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid rgba(139,26,60,0.15);
+  font-size:13px; color:var(--ink-secondary);
+  line-height:1.5;
+}
+.auth-item:last-of-type { border-bottom:none; margin-bottom:14px; }
+.auth-item input[type="checkbox"] {
+  flex:0 0 18px; height:18px; margin-top:1px;
+  accent-color:var(--hos-burgundy-soft);
+  cursor:pointer;
+}
+.auth-item label { cursor:pointer; flex:1; }
+.auth-item label .em { color:var(--hos-burgundy-soft); font-weight:600; }
+.auth-confirm-btn {
+  display:block; width:100%; min-height:44px;
+  background:var(--bg-elevated);
+  color:var(--ink-muted); font-size:14px; font-weight:500;
+  border:1px solid rgba(139,26,60,0.3);
+  border-radius:8px;
+  cursor:not-allowed;
+  transition:all .2s ease;
+  font-family:var(--font-body);
+}
+.auth-confirm-btn.enabled {
+  background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);
+  color:var(--ink-primary);
+  border:none;
+  cursor:pointer;
+}
+.auth-confirm-btn.confirmed {
+  background:rgba(5,150,105,0.2);
+  border:1px solid var(--hos-workflow);
+  color:var(--hos-workflow);
+  cursor:default;
+}
+.auth-status {
+  margin-top:10px; font-size:11px; text-align:center;
+  color:var(--ink-muted); font-family:var(--font-mono);
+}
+.auth-status.warn { color:var(--hos-burgundy-soft); }
+.auth-status.ok { color:var(--hos-workflow); }
+
+/* ===== 8. 信任构建 ===== */
+.trust-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+.trust-item {
+  display:flex; align-items:center; gap:10px;
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.15);
+  border-radius:10px;
+  padding:12px 14px;
+}
+.trust-icon {
+  flex:0 0 28px; height:28px; border-radius:6px;
+  background:rgba(124,58,237,0.15);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:13px; color:var(--hos-violet-light); font-weight:600;
+}
+.trust-text { font-size:13px; color:var(--ink-secondary); }
+.trust-text strong { color:var(--ink-primary); }
+.redline {
+  margin-top:12px;
+  background:rgba(139,26,60,0.15);
+  border:1px solid var(--hos-burgundy);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:12px; color:var(--ink-secondary);
+  line-height:1.7;
+}
+.redline strong { color:var(--hos-burgundy-soft); }
+.redline .rl-item { display:block; margin-top:4px; }
+.redline .rl-item::before { content:"✗ "; color:var(--hos-burgundy-soft); font-weight:700; }
+.reviews { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:14px; }
+.review-box {
+  aspect-ratio:3/4;
+  background:var(--bg-card);
+  border:1px dashed rgba(124,58,237,0.3);
+  border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:var(--ink-muted);
+  text-align:center; padding:8px;
+}
+
+/* ===== 9. FAQ ===== */
+.faq-list { display:flex; flex-direction:column; gap:8px; }
+details {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.15);
+  border-radius:10px;
+  overflow:hidden;
+}
+summary {
+  list-style:none; cursor:pointer;
+  padding:14px 16px;
+  font-size:14px; color:var(--ink-primary); font-weight:500;
+  display:flex; align-items:center; justify-content:space-between;
+  min-height:44px;
+}
+summary::-webkit-details-marker { display:none; }
+summary::after {
+  content:"+"; font-family:var(--font-mono); font-size:16px; color:var(--hos-violet-light); transition:transform .2s;
+}
+details[open] summary::after { content:"−"; }
+details .answer { padding:0 16px 14px; font-size:13px; color:var(--ink-secondary); line-height:1.7; }
+details .answer .auth-keyword { color:var(--hos-burgundy-soft); font-weight:700; }
+
+/* ===== 10. 表单 ===== */
+.form-wrap {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.25);
+  border-radius:12px;
+  padding:20px 16px;
+}
+.auth-gate-notice {
+  background:rgba(139,26,60,0.12);
+  border:1px dashed var(--hos-burgundy);
+  border-radius:8px;
+  padding:10px 12px;
+  font-size:12px; color:var(--ink-secondary);
+  margin-bottom:14px;
+  display:flex; align-items:center; gap:8px;
+}
+.auth-gate-notice .gate-icon { color:var(--hos-burgundy-soft); font-family:var(--font-mono); font-weight:700; }
+.auth-gate-notice.unlocked {
+  background:rgba(5,150,105,0.12);
+  border-color:var(--hos-workflow);
+  color:var(--ink-secondary);
+}
+.auth-gate-notice.unlocked .gate-icon { color:var(--hos-workflow); }
+.field { margin-bottom:14px; }
+.field label { display:block; font-size:13px; color:var(--ink-primary); margin-bottom:6px; font-weight:500; }
+.field label .req { color:var(--hos-burgundy-soft); }
+.field input, .field select, .field textarea {
+  width:100%; min-height:44px;
+  background:var(--bg-dark);
+  border:1px solid rgba(124,58,237,0.2);
+  border-radius:8px;
+  padding:10px 12px;
+  font-family:var(--font-body); font-size:14px;
+  color:var(--ink-primary);
+  -webkit-appearance:none; appearance:none;
+}
+.field textarea { min-height:88px; resize:vertical; line-height:1.5; }
+.field input::placeholder, .field textarea::placeholder { color:var(--ink-muted); }
+.field input:focus, .field select:focus, .field textarea:focus { outline:none; border-color:var(--hos-violet); }
+.field select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23A78BFA' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
+.field.err input, .field.err select, .field.err textarea { border-color:var(--hos-burgundy-soft); }
+.field .err-msg { font-size:11px; color:var(--hos-burgundy-soft); margin-top:4px; display:none; }
+.field.err .err-msg { display:block; }
+.form-submit {
+  display:block; width:100%; min-height:48px;
+  background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);
+  color:var(--ink-primary); font-size:15px; font-weight:500;
+  border:none; border-radius:10px; cursor:pointer;
+  transition:transform .15s;
+}
+.form-submit:active { transform:scale(0.98); }
+.form-success {
+  margin-top:14px; padding:16px;
+  background:rgba(5,150,105,0.15);
+  border:1px solid var(--hos-workflow);
+  border-radius:10px;
+  text-align:center;
+  display:none;
+}
+.form-success.show { display:block; }
+.form-success .icon { font-size:22px; color:var(--hos-workflow); }
+.form-success .msg { font-size:14px; color:var(--ink-primary); margin-top:6px; font-weight:500; }
+.form-success .sub { font-size:12px; color:var(--ink-secondary); margin-top:4px; }
+
+/* ===== 11. 页脚 ===== */
+.footer {
+  background:var(--bg-dark);
+  padding:24px 20px;
+}
+.footer-brand { font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--ink-primary); }
+.footer-brand .dot { color:var(--hos-violet); }
+.footer-links { display:flex; gap:16px; margin-top:12px; }
+.footer-links a { font-family:var(--font-mono); font-size:12px; color:var(--ink-secondary); }
+.footer-qr {
+  margin-top:16px;
+  width:100px; height:100px;
+  background:var(--bg-card);
+  border:1px dashed rgba(124,58,237,0.4);
+  border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:var(--ink-muted); text-align:center;
+}
+.footer-disclaimer {
+  margin-top:16px; padding-top:14px;
+  border-top:1px solid rgba(124,58,237,0.15);
+  font-size:11px; color:var(--ink-muted); line-height:1.6;
+}
+.footer-disclaimer strong { color:var(--hos-burgundy-soft); }
+
+/* toast prompt for auth gate */
+.toast {
+  position:fixed; left:50%; bottom:32px;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--hos-burgundy);
+  color:#FFD6E0;
+  font-size:13px; font-weight:500;
+  padding:12px 20px;
+  border-radius:10px;
+  border:1px solid var(--hos-burgundy-soft);
+  box-shadow:0 8px 24px rgba(139,26,60,0.4);
+  z-index:100;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  max-width:320px; text-align:center;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ===== 1. 页头 ===== -->
+<div class="brand-band-top"></div>
+<header class="header">
+  <div class="header-row">
+    <div>
+      <div class="logo">HOS<span class="dot">·</span></div>
+      <div class="tagline">TECHNICAL SERVICE</div>
+    </div>
+  </div>
+  <nav class="anchor-nav">
+    <a href="#selling">卖点</a>
+    <a href="#cases">案例</a>
+    <a href="#pricing">价格</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</header>
+
+<!-- ===== 2. Hero ===== -->
+<section class="hero" id="top">
+  <img class="hero-img" src="../pdp/kv-security.jpg" alt="信息安全服务">
+  <div class="hero-body">
+    <h1>信息安全服务</h1>
+    <p class="value-prop">授权渗透<span class="sep">·</span>安全加固<span class="sep">·</span>CTF辅导<span class="sep">·</span>等保咨询</p>
+    <span class="red-tag">仅限授权范围内测试</span>
+    <button class="cta-primary" onclick="document.getElementById('form').scrollIntoView({behavior:'smooth'})">免费咨询5分钟</button>
+  </div>
+</section>
+
+<!-- ===== 3. 痛点 ===== -->
+<section id="selling">
+  <h2 class="sec-title">遇到这些问题？</h2>
+  <p class="sec-sub">PAIN POINTS</p>
+  <div class="pain-cards">
+    <div class="pain-card">
+      <div class="q">担心系统<em>漏洞被利用</em>？</div>
+      <div class="a">授权渗透评估，出具报告</div>
+    </div>
+    <div class="pain-card">
+      <div class="q">被要求过<em>等保不知从何下手</em>？</div>
+      <div class="a">等保2.0合规咨询</div>
+    </div>
+    <div class="pain-card">
+      <div class="q">CTF比赛<em>没思路</em>？</div>
+      <div class="a">一对一思路训练</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. 解决方案 价格表 ===== -->
+<section>
+  <h2 class="sec-title">解决方案</h2>
+  <p class="sec-sub">SOLUTIONS · 价格透明</p>
+  <div class="price-table">
+    <div class="price-row"><span class="name">CTF辅导</span><span class="price">¥50<small>/题</small></span></div>
+    <div class="price-row"><span class="name">渗透测试</span><span class="price">¥500<small>起</small></span></div>
+    <div class="price-row"><span class="name">安全加固</span><span class="price">¥300<small>起</small></span></div>
+    <div class="price-row"><span class="name">等保咨询</span><span class="price">¥1000<small>起</small></span></div>
+  </div>
+</section>
+
+<!-- ===== 5. 案例轮播 ===== -->
+<section id="cases">
+  <h2 class="sec-title">实战案例</h2>
+  <p class="sec-sub">CASES · 左右滑动</p>
+  <div class="carousel-wrap">
+    <div class="carousel">
+      <div class="case-card">
+        <span class="tag">WEB</span>
+        <h4>Web应用渗透</h4>
+        <p>发现<span class="metric">3个</span>中高危漏洞，已指导加固并复测通过。</p>
+      </div>
+      <div class="case-card">
+        <span class="tag">SERVER</span>
+        <h4>服务器加固</h4>
+        <p>SSH + 防火墙 + 入侵检测，三重防护落地验收。</p>
+      </div>
+      <div class="case-card">
+        <span class="tag">CTF</span>
+        <h4>CTF思路训练</h4>
+        <p><span class="metric">5题</span>Web方向，从信息收集到漏洞利用，掌握解题框架。</p>
+      </div>
+    </div>
+  </div>
+  <p class="carousel-hint">← 滑动查看更多 →</p>
+</section>
+
+<!-- ===== 6. 服务流程 ===== -->
+<section>
+  <h2 class="sec-title">服务流程</h2>
+  <p class="sec-sub">PROCESS · 5 STEPS · 授权先行</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><div class="t">咨询</div><div class="d">沟通需求，明确测试范围</div></div>
+    </div>
+    <div class="step auth-highlight">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="t">授权确认 <span class="auth-flag">必须授权</span></div>
+        <div class="d">签署授权书，<span class="auth-keyword">无授权不测试</span></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><div class="t">定金50%</div><div class="d">授权确认后支付定金</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body"><div class="t">测试/加固</div><div class="d">按授权范围执行，全程留痕</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body"><div class="t">报告交付+售后</div><div class="d">PDF报告交付，尾款结清，提供复测</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. 价格锚定 + 授权范围确认 ===== -->
+<section id="pricing">
+  <h2 class="sec-title">价格锚定 & 授权确认</h2>
+  <p class="sec-sub">PRICING · AUTHORIZATION SCOPE</p>
+  <div class="tiers">
+    <div class="tier"><div class="tier-label">引流品</div><div class="tier-price">¥50/题</div></div>
+    <div class="tier featured"><div class="tier-label">标品</div><div class="tier-price">¥300</div></div>
+    <div class="tier"><div class="tier-label">利润品</div><div class="tier-price">¥500</div></div>
+    <div class="tier"><div class="tier-label">形象品</div><div class="tier-price">¥1000</div></div>
+  </div>
+
+  <div class="auth-checklist" id="authChecklist">
+    <h4><span class="lock">🔒</span>授权范围确认</h4>
+    <p class="auth-sub">请逐项确认后方可提交需求，授权是底线</p>
+
+    <div class="auth-item">
+      <input type="checkbox" id="auth1" class="auth-cb">
+      <label for="auth1">我拥有该系统的<span class="em">所有权</span>或已获得<span class="em">书面授权</span></label>
+    </div>
+    <div class="auth-item">
+      <input type="checkbox" id="auth2" class="auth-cb">
+      <label for="auth2">我理解测试仅在<span class="em">授权范围内</span>进行</label>
+    </div>
+    <div class="auth-item">
+      <input type="checkbox" id="auth3" class="auth-cb">
+      <label for="auth3">我同意不将结果用于<span class="em">非法用途</span></label>
+    </div>
+    <div class="auth-item">
+      <input type="checkbox" id="auth4" class="auth-cb">
+      <label for="auth4">我将提供必要的<span class="em">系统信息</span>和测试范围</label>
+    </div>
+
+    <button type="button" class="auth-confirm-btn" id="authConfirmBtn" disabled>确认授权范围</button>
+    <div class="auth-status warn" id="authStatus">请勾选全部4项后确认</div>
+  </div>
+</section>
+
+<!-- ===== 8. 信任构建 ===== -->
+<section>
+  <h2 class="sec-title">为什么选择 HOS</h2>
+  <p class="sec-sub">TRUST · 合规底线</p>
+  <div class="trust-grid">
+    <div class="trust-item">
+      <div class="trust-icon">§</div>
+      <div class="trust-text"><strong>授权范围声明</strong>仅在授权内测试</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">PDF</div>
+      <div class="trust-text"><strong>报告可交付</strong>含漏洞+修复+复测</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">50%</div>
+      <div class="trust-text"><strong>50%定金</strong>授权确认后支付</div>
+    </div>
+  </div>
+  <div class="redline">
+    <strong>红线声明：</strong>
+    <span class="rl-item">不接非法攻击</span>
+    <span class="rl-item">不接未授权测试</span>
+    <span class="rl-item">不提供攻击payload</span>
+  </div>
+  <div class="reviews">
+    <div class="review-box">好评截图<br>01</div>
+    <div class="review-box">好评截图<br>02</div>
+    <div class="review-box">好评截图<br>03</div>
+  </div>
+</section>
+
+<!-- ===== 9. FAQ ===== -->
+<section id="faq">
+  <h2 class="sec-title">常见问题</h2>
+  <p class="sec-sub">FAQ · 授权相关疑问</p>
+  <div class="faq-list">
+    <details>
+      <summary>是否非法攻击？</summary>
+      <div class="answer">否。仅限客户<span class="auth-keyword">授权范围</span>内的安全评估，全程合规，签署授权书后方可执行。</div>
+    </details>
+    <details>
+      <summary>需要提供什么？</summary>
+      <div class="answer">授权书 + 系统信息 + 测试范围。三项齐全方可启动，缺一不可。</div>
+    </details>
+    <details>
+      <summary>报告格式？</summary>
+      <div class="answer">PDF格式，含漏洞详情 + 修复建议 + 复测结果，可直接交付存档。</div>
+    </details>
+    <details>
+      <summary>等保是什么？</summary>
+      <div class="answer">等保2.0合规咨询，协助企业完成定级备案、整改加固、过审验收全流程。</div>
+    </details>
+    <details>
+      <summary>CTF是代打吗？</summary>
+      <div class="answer">否。思路训练 + 讲解，教你解题框架，授人以渔而非代打。</div>
+    </details>
+  </div>
+</section>
+
+<!-- ===== 10. 表单 ===== -->
+<section id="form">
+  <h2 class="sec-title">提交需求</h2>
+  <p class="sec-sub">CONTACT · 24h内联系</p>
+  <div class="form-wrap">
+    <div class="auth-gate-notice" id="authGateNotice">
+      <span class="gate-icon">🔒</span>
+      <span id="gateText">提交前请先完成上方"授权范围确认"</span>
+    </div>
+    <form id="leadForm" novalidate>
+      <div class="field">
+        <label>服务类型</label>
+        <select name="type" id="fType">
+          <option value="">请选择</option>
+          <option value="渗透测试">渗透测试</option>
+          <option value="安全加固">安全加固</option>
+          <option value="CTF辅导">CTF辅导</option>
+          <option value="等保咨询">等保咨询</option>
+          <option value="其他">其他</option>
+        </select>
+        <div class="err-msg">请选择服务类型</div>
+      </div>
+      <div class="field">
+        <label>系统类型</label>
+        <input type="text" name="system" id="fSystem" placeholder="如 Web / APP / 服务器">
+      </div>
+      <div class="field">
+        <label>测试范围</label>
+        <textarea name="scope" id="fScope" placeholder="请描述需要测试/加固的范围与目标"></textarea>
+      </div>
+      <div class="field">
+        <label>联系方式 <span class="req">*</span></label>
+        <input type="text" name="contact" id="fContact" placeholder="微信 / 手机号 / 邮箱" required>
+        <div class="err-msg">请填写联系方式</div>
+      </div>
+      <button type="submit" class="form-submit">提交需求，24h内联系</button>
+    </form>
+    <div class="form-success" id="formSuccess">
+      <div class="icon">✓</div>
+      <div class="msg">提交成功！</div>
+      <div class="sub">我们将在24小时内与您联系，请保持通讯畅通。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 11. 页脚 ===== -->
+<footer class="footer">
+  <div class="footer-brand">HOS<span class="dot">·</span></div>
+  <div class="footer-links">
+    <a href="#">forge</a>
+    <a href="#">ls</a>
+    <a href="#">workflow</a>
+  </div>
+  <div class="footer-qr">微信<br>二维码</div>
+  <div class="footer-disclaimer">
+    <strong>免责声明：</strong>仅限授权范围内安全评估，不接非法攻击与未授权测试。
+  </div>
+</footer>
+<div class="brand-band-bottom"></div>
+
+<div class="toast" id="toast">请先确认授权范围</div>
+
+<script>
+/* ===== 授权范围确认 checklist JS ===== */
+(function(){
+  var checkboxes = document.querySelectorAll('.auth-cb');
+  var confirmBtn = document.getElementById('authConfirmBtn');
+  var authStatus = document.getElementById('authStatus');
+  var gateNotice = document.getElementById('authGateNotice');
+  var gateText = document.getElementById('gateText');
+  var authConfirmed = false; // state: has user confirmed authorization?
+
+  function updateState(){
+    var allChecked = true;
+    for(var i=0;i<checkboxes.length;i++){
+      if(!checkboxes[i].checked){ allChecked = false; break; }
+    }
+
+    if(authConfirmed){
+      // already confirmed, keep locked-in state
+      confirmBtn.classList.remove('enabled');
+      confirmBtn.classList.add('confirmed');
+      confirmBtn.textContent = '✓ 授权范围已确认';
+      confirmBtn.disabled = true;
+      authStatus.className = 'auth-status ok';
+      authStatus.textContent = '授权已确认，可提交需求';
+      gateNotice.classList.add('unlocked');
+      gateText.textContent = '✓ 授权范围已确认，可提交需求';
+      return;
+    }
+
+    if(allChecked){
+      confirmBtn.classList.add('enabled');
+      confirmBtn.classList.remove('confirmed');
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = '确认授权范围';
+      authStatus.className = 'auth-status';
+      authStatus.textContent = '点击按钮确认授权';
+    } else {
+      confirmBtn.classList.remove('enabled');
+      confirmBtn.classList.remove('confirmed');
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = '确认授权范围';
+      authStatus.className = 'auth-status warn';
+      var checked = 0;
+      for(var j=0;j<checkboxes.length;j++){ if(checkboxes[j].checked) checked++; }
+      authStatus.textContent = '已勾选 ' + checked + '/4，请全部确认';
+    }
+  }
+
+  for(var k=0;k<checkboxes.length;k++){
+    checkboxes[k].addEventListener('change', updateState);
+  }
+
+  confirmBtn.addEventListener('click', function(){
+    var allChecked = true;
+    for(var i=0;i<checkboxes.length;i++){
+      if(!checkboxes[i].checked){ allChecked = false; break; }
+    }
+    if(allChecked && !authConfirmed){
+      authConfirmed = true;
+      updateState();
+    }
+  });
+
+  // expose auth state for form gating
+  window.__authConfirmed = function(){ return authConfirmed; };
+})();
+
+/* ===== 表单 JS (gated by authorization checklist) ===== */
+(function(){
+  var form = document.getElementById('leadForm');
+  var success = document.getElementById('formSuccess');
+  var toast = document.getElementById('toast');
+  var toastTimer = null;
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 2600);
+  }
+
+  function setError(field, hasErr){
+    var f = document.getElementById(field).closest('.field');
+    if(f){ f.classList.toggle('err', hasErr); }
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    // GATE: authorization checklist must be confirmed first
+    if(!window.__authConfirmed()){
+      showToast('请先确认授权范围');
+      // scroll up to auth checklist for visibility
+      document.getElementById('authChecklist').scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+
+    var valid = true;
+    var type = document.getElementById('fType');
+    var contact = document.getElementById('fContact');
+
+    if(!type.value){ setError('fType', true); valid = false; } else { setError('fType', false); }
+    if(!contact.value.trim()){ setError('fContact', true); valid = false; } else { setError('fContact', false); }
+
+    if(valid){
+      form.style.display = 'none';
+      success.classList.add('show');
+      success.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+  });
+})();
+</script>
+</body>
+</html>
