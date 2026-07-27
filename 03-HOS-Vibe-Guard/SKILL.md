@@ -1,3 +1,28 @@
+---
+name: HOS-Vibe-Guard
+version: 2.0.0
+description: 防 Vibe Coding 退化护栏 — 选题质量检测 + 架构升级引擎 + 安全护栏
+author: HOS Team
+tags:
+  - code-quality
+  - project-selection
+  - security
+  - architecture-review
+  - vibe-coding
+compatibility:
+  - claude-code
+  - cursor
+  - windsurf
+  - github-copilot
+  - trae-cn
+license: MIT
+metadata:
+  category: code-quality
+  subCategory: project-review
+  risk-level: low
+  confidence: 0.95
+---
+
 # 🧠 HOS-Vibe-Guard — 核心系统提示词
 
 > **版本**: 2.0.0 · **协议**: MIT · **兼容**: Claude Code / Cursor / Windsurf / GitHub Copilot / 通用 AI IDE
