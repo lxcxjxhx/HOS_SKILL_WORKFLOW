@@ -36,6 +36,8 @@ HOS Skill Workflow 是一个面向 AI Agent、AI IDE、Claude Code、Codex、Cur
 | 06 | [HOS-Fuck-Demo](06-HOS-Fuck-Demo/) | Markdown | AI 内容工业流水线：全自动输出内容包+PPT+音频+视频+项目注册 | [README](06-HOS-Fuck-Demo/README.md) |
 | 07 | [HOS-IP-Writing](07-HOS-IP-Writing/) | Markdown | 知识产权写作系统：论文、专利、软著、书籍、博客、润色六大场景 | [README](07-HOS-IP-Writing/README.md) |
 | 08 | [HOS-Micro-Biz](08-HOS-Micro-Biz/) | Markdown | 微商技术服务运营：服务设计 + 定价策略 + 获客文案 + 客户沟通 SOP + 订单管理 + 风控合规 | [README](08-HOS-Micro-Biz/README.md) |
+| 09 | [HOS-Content-Engine](09-HOS-Content-Engine/) | Markdown | AI 安全实验室内容引擎：4D 内容模型（Discover→Dissect→Develop→Document）+ 六大内容支柱 + B站视频脚本生成 | [README](09-HOS-Content-Engine/README.md) |
+| 09b | [HOS-Ops-Skills](09-HOS-Ops-Skills/) | Markdown | HOS 生态运营工具集：周报/日志/Release Notes/多平台适配/社区运营/品牌守护/微商运营 | [README](09-HOS-Ops-Skills/README.md) |
 | 100 | [HOS-AUTO-WORKFLOW](100-HOS-AUTO-WORKFLOW/) | YAML | 自动化工作流配置：报告撰写工具 + 配置手册 | - |
 | 101 | [HOS-AI Guardrail](101-HOS-AI%20Guardrail/) | Python | AI 安全检测插件：文本/文件/图片输入输出检测，FastAPI 实现 | - |
 | 200 | [JSON结构化提示词](200-JSON%E7%BB%93%E6%9E%84%E5%8C%96%E6%8F%90%E7%A4%BA%E8%AF%8D/) | JSON | 开发模板集合：项目、安全、测试、运营、模型、考试等场景 | - |
@@ -105,6 +107,8 @@ HOS_SKILL_WORKFLOW/
 ├── 06-HOS-Fuck-Demo/           # AI 内容工业流水线
 ├── 07-HOS-IP-Writing/          # 知识产权写作系统
 ├── 08-HOS-Micro-Biz/           # 微商技术服务运营
+├── 09-HOS-Content-Engine/      # AI 安全实验室内容引擎 (4D 内容模型)
+├── 09-HOS-Ops-Skills/          # HOS 生态运营工具集
 ├── 100-HOS-AUTO-WORKFLOW/      # 自动化工作流配置 (YAML)
 ├── 101-HOS-AI Guardrail/       # AI 安全检测插件 (Python)
 ├── 200-JSON结构化提示词/        # JSON 开发模板
