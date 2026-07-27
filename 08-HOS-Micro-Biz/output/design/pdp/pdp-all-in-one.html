@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全四类综合服务 - HOS技术服务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hos-violet-deep:#5B2C91; --hos-violet:#7C3AED; --hos-violet-light:#A78BFA; --hos-violet-glow:#C4B5FD;
+  --hos-burgundy:#8B1A3C; --hos-burgundy-soft:#B91C5C;
+  --hos-bronze-green:#3D5A4C; --hos-bronze-light:#6B8E7A;
+  --hos-forge:#2563EB; --hos-ls:#7C3AED; --hos-workflow:#059669;
+  --bg-darkest:#0F0A1F; --bg-dark:#1A1129; --bg-card:#241638; --bg-elevated:#2E1F47;
+  --ink-primary:#F5F0FF; --ink-secondary:#C4B5E0; --ink-muted:#8B7DAA;
+  --price-anchor:#FFB347;
+  --font-display:'Noto Serif SC',serif; --font-body:'Noto Sans SC',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --brand-band-gradient:linear-gradient(90deg,#7C3AED 0%,#7C3AED 33%,#8B1A3C 33%,#8B1A3C 66%,#3D5A4C 66%,#3D5A4C 100%);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:var(--font-body);
+  background:var(--bg-darkest);
+  color:var(--ink-primary);
+  font-size:15px;
+  line-height:1.65;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+.page {
+  max-width:480px;
+  margin:0 auto;
+  background:var(--bg-dark);
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+  padding-bottom:0;
+}
+
+/* Brand band strips */
+.brand-band {
+  height:4px;
+  background:var(--brand-band-gradient);
+  width:100%;
+  flex-shrink:0;
+}
+
+/* Section base */
+.section { padding:28px 20px 8px; }
+.section + .section { padding-top:8px; }
+.section-title {
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:22px;
+  color:var(--ink-primary);
+  margin-bottom:6px;
+  letter-spacing:0.5px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.section-title::before {
+  content:"";
+  display:inline-block;
+  width:4px;
+  height:20px;
+  background:var(--hos-violet);
+  border-radius:2px;
+}
+.section-sub {
+  font-size:13px;
+  color:var(--ink-muted);
+  margin-bottom:18px;
+}
+
+/* ===== Module 1: KV Hero ===== */
+.hero {
+  padding:0 0 24px;
+}
+.hero-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 20px 10px;
+}
+.hero-logo {
+  font-family:var(--font-display);
+  font-weight:900;
+  font-size:28px;
+  color:var(--ink-primary);
+  letter-spacing:1px;
+}
+.hero-logo span { color:var(--hos-violet-light); }
+.hero-tagline {
+  font-size:12px;
+  color:var(--ink-muted);
+  font-weight:500;
+}
+.hero-kv {
+  display:block;
+  width:100%;
+  height:auto;
+  aspect-ratio:1/1;
+  object-fit:cover;
+  background:var(--bg-card);
+}
+.hero-body {
+  padding:22px 20px 0;
+}
+.hero-h1 {
+  font-family:var(--font-display);
+  font-weight:900;
+  font-size:30px;
+  line-height:1.25;
+  color:var(--ink-primary);
+  margin-bottom:8px;
+  letter-spacing:1px;
+}
+.hero-subline {
+  font-size:15px;
+  color:var(--ink-secondary);
+  margin-bottom:14px;
+  font-weight:500;
+}
+.hero-red-tag {
+  display:inline-block;
+  background:var(--hos-burgundy);
+  color:#FFE8EE;
+  font-size:12px;
+  font-weight:700;
+  padding:5px 12px;
+  border-radius:20px;
+  letter-spacing:0.5px;
+}
+.hero-quadrant {
+  margin-top:16px;
+  height:6px;
+  border-radius:3px;
+  background:var(--brand-band-gradient);
+  opacity:0.85;
+}
+
+/* ===== Module 2: 卖点提炼 2x2 ===== */
+.sell-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.sell-card {
+  background:var(--bg-card);
+  border-radius:16px;
+  padding:24px 16px;
+  border-top:3px solid var(--hos-violet);
+  position:relative;
+  overflow:hidden;
+}
+.sell-card.c1 { border-top-color:var(--hos-violet); }
+.sell-card.c2 { border-top-color:var(--hos-violet-light); }
+.sell-card.c3 { border-top-color:var(--hos-burgundy); }
+.sell-card.c4 { border-top-color:var(--hos-bronze-green); }
+.sell-icon {
+  font-size:26px;
+  line-height:1;
+  margin-bottom:10px;
+}
+.sell-card .name {
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:17px;
+  color:var(--ink-primary);
+  margin-bottom:6px;
+}
+.sell-card .desc {
+  font-size:13px;
+  color:var(--ink-secondary);
+  line-height:1.55;
+}
+.sell-card.c1 .name { color:var(--hos-violet-glow); }
+.sell-card.c2 .name { color:var(--hos-violet-light); }
+.sell-card.c3 .name { color:#F0B6CB; }
+.sell-card.c4 .name { color:var(--hos-bronze-light); }
+
+/* ===== Module 3: 服务清单 price table ===== */
+.price-group { margin-bottom:18px; }
+.price-group:last-child { margin-bottom:0; }
+.group-head {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:15px;
+  padding:8px 12px;
+  border-radius:10px;
+  margin-bottom:8px;
+  background:var(--bg-card);
+}
+.group-head.g1 { border-left:3px solid var(--hos-violet); color:var(--hos-violet-glow); }
+.group-head.g2 { border-left:3px solid var(--hos-violet-light); color:var(--hos-violet-light); }
+.group-head.g3 { border-left:3px solid var(--hos-burgundy); color:#F0B6CB; }
+.group-head.g4 { border-left:3px solid var(--hos-bronze-green); color:var(--hos-bronze-light); }
+.price-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:11px 14px;
+  background:var(--bg-card);
+  border-radius:10px;
+  margin-bottom:6px;
+}
+.price-row:last-child { margin-bottom:0; }
+.price-row .item {
+  font-size:14px;
+  color:var(--ink-primary);
+  font-weight:500;
+}
+.price-row .price {
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:15px;
+  color:var(--price-anchor);
+  white-space:nowrap;
+}
+
+/* ===== Module 4: 案例展示 ===== */
+.case-list { display:flex; flex-direction:column; gap:12px; }
+.case-card {
+  background:var(--bg-elevated);
+  border-left:3px solid var(--hos-violet);
+  border-radius:12px;
+  padding:16px 16px;
+}
+.case-card.d1 { border-left-color:var(--hos-violet); }
+.case-card.d2 { border-left-color:var(--hos-violet-light); }
+.case-card.d3 { border-left-color:var(--hos-burgundy); }
+.case-card.d4 { border-left-color:var(--hos-bronze-green); }
+.case-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+  gap:8px;
+}
+.case-title {
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:15px;
+  color:var(--ink-primary);
+}
+.case-tag {
+  font-size:11px;
+  font-weight:700;
+  padding:3px 8px;
+  border-radius:10px;
+  white-space:nowrap;
+}
+.case-tag.t1 { background:rgba(124,58,237,0.18); color:var(--hos-violet-glow); }
+.case-tag.t2 { background:rgba(167,139,250,0.18); color:var(--hos-violet-light); }
+.case-tag.t3 { background:rgba(139,26,60,0.30); color:#F0B6CB; }
+.case-tag.t4 { background:rgba(61,90,76,0.35); color:var(--hos-bronze-light); }
+.case-result {
+  font-size:13px;
+  color:var(--ink-secondary);
+  line-height:1.55;
+}
+.case-anon {
+  font-size:11px;
+  color:var(--ink-muted);
+  margin-top:6px;
+  font-family:var(--font-mono);
+}
+
+/* ===== Module 5: 服务流程 ===== */
+.flow-list {
+  position:relative;
+  padding-left:8px;
+}
+.flow-step {
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  position:relative;
+  padding-bottom:22px;
+}
+.flow-step:last-child { padding-bottom:0; }
+.flow-step:not(:last-child)::after {
+  content:"";
+  position:absolute;
+  left:17px;
+  top:38px;
+  bottom:0;
+  width:2px;
+  background:linear-gradient(180deg,var(--hos-violet) 0%,var(--hos-violet-light) 100%);
+  opacity:0.6;
+}
+.flow-circle {
+  flex-shrink:0;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:var(--hos-bronze-green);
+  color:#E8F5EC;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-display);
+  font-weight:900;
+  font-size:15px;
+  border:2px solid var(--hos-bronze-light);
+  z-index:1;
+}
+.flow-text { padding-top:6px; }
+.flow-text .t {
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:15px;
+  color:var(--ink-primary);
+  margin-bottom:2px;
+}
+.flow-text .d {
+  font-size:13px;
+  color:var(--ink-muted);
+}
+
+/* ===== Module 6: 价格锚定 ===== */
+.anchor-list { display:flex; flex-direction:column; gap:12px; }
+.anchor-card {
+  background:var(--bg-card);
+  border-radius:14px;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  border-left:3px solid var(--hos-violet);
+}
+.anchor-card.a1 { border-left-color:var(--hos-burgundy); }
+.anchor-card.a2 { border-left-color:var(--hos-violet); }
+.anchor-card.a3 { border-left-color:var(--hos-violet-light); }
+.anchor-card.a4 { border-left-color:var(--hos-bronze-green); }
+.anchor-badge {
+  flex-shrink:0;
+  width:64px;
+  text-align:center;
+  font-size:12px;
+  font-weight:700;
+  padding:6px 0;
+  border-radius:8px;
+  letter-spacing:0.5px;
+}
+.anchor-badge.b1 { background:var(--hos-burgundy); color:#FFE8EE; }
+.anchor-badge.b2 { background:var(--hos-violet); color:#F0E6FF; }
+.anchor-badge.b3 { background:var(--hos-violet-light); color:#2A1850; }
+.anchor-badge.b4 { background:var(--hos-bronze-green); color:#E8F5EC; }
+.anchor-main { flex:1; min-width:0; }
+.anchor-main .name {
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:15px;
+  color:var(--ink-primary);
+  margin-bottom:2px;
+}
+.anchor-main .desc {
+  font-size:12px;
+  color:var(--ink-muted);
+}
+.anchor-price {
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:15px;
+  color:var(--price-anchor);
+  white-space:nowrap;
+  text-align:right;
+}
+.anchor-note {
+  margin-top:14px;
+  padding:12px 14px;
+  background:rgba(139,26,60,0.12);
+  border:1px solid rgba(139,26,60,0.35);
+  border-radius:10px;
+  font-size:12px;
+  color:var(--ink-secondary);
+  line-height:1.6;
+}
+.anchor-note strong { color:#F0B6CB; }
+
+/* ===== Module 7: 保障承诺 ===== */
+.guarantee-list { display:flex; flex-direction:column; gap:12px; }
+.g-item {
+  background:var(--bg-card);
+  border-radius:12px;
+  padding:14px 16px;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+}
+.g-icon {
+  flex-shrink:0;
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  background:var(--hos-violet-deep);
+  color:var(--hos-violet-glow);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+  font-weight:700;
+}
+.g-body .t {
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:14px;
+  color:var(--ink-primary);
+  margin-bottom:3px;
+}
+.g-body .d {
+  font-size:13px;
+  color:var(--ink-secondary);
+  line-height:1.55;
+}
+.redline {
+  margin-top:14px;
+  background:rgba(139,26,60,0.15);
+  border:1px solid rgba(139,26,60,0.45);
+  border-radius:12px;
+  padding:14px 16px;
+}
+.redline-title {
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:14px;
+  color:#F0B6CB;
+  margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.redline-text {
+  font-size:13px;
+  color:#E8A8BC;
+  line-height:1.65;
+}
+.redline-text strong { color:#F0B6CB; }
+
+/* ===== Module 8: FAQ + 引流 ===== */
+.faq-list { display:flex; flex-direction:column; gap:10px; }
+details.faq {
+  background:var(--bg-card);
+  border-radius:12px;
+  padding:0 16px;
+  border:1px solid rgba(124,58,237,0.18);
+}
+details.faq[open] { border-color:rgba(124,58,237,0.5); }
+details.faq summary {
+  list-style:none;
+  cursor:pointer;
+  padding:14px 0;
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:14px;
+  color:var(--ink-primary);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+details.faq summary::-webkit-details-marker { display:none; }
+details.faq summary::after {
+  content:"+";
+  font-family:var(--font-mono);
+  font-weight:700;
+  font-size:18px;
+  color:var(--hos-violet-light);
+  transition:transform 0.2s;
+}
+details.faq[open] summary::after { content:"−"; }
+.faq-ans {
+  padding:0 0 14px;
+  font-size:13px;
+  color:var(--ink-secondary);
+  line-height:1.65;
+}
+
+.cta-block {
+  margin-top:22px;
+  text-align:center;
+  padding:20px 16px;
+  background:linear-gradient(135deg,rgba(124,58,237,0.18) 0%,rgba(91,44,145,0.12) 100%);
+  border-radius:16px;
+  border:1px solid rgba(124,58,237,0.35);
+}
+.cta-title {
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:16px;
+  color:var(--ink-primary);
+  margin-bottom:6px;
+}
+.cta-sub {
+  font-size:12px;
+  color:var(--ink-muted);
+  margin-bottom:16px;
+}
+.cta-btn {
+  display:inline-block;
+  min-height:44px;
+  padding:12px 32px;
+  background:var(--hos-violet);
+  color:#FFFFFF;
+  font-family:var(--font-body);
+  font-weight:700;
+  font-size:15px;
+  border:none;
+  border-radius:24px;
+  letter-spacing:0.5px;
+  box-shadow:0 6px 20px rgba(124,58,237,0.45);
+  text-decoration:none;
+  line-height:1.2;
+}
+.qr-block {
+  margin-top:20px;
+  text-align:center;
+  padding:18px;
+  background:var(--bg-card);
+  border-radius:14px;
+}
+.qr-placeholder {
+  width:120px;
+  height:120px;
+  border:2px solid var(--hos-violet);
+  border-radius:10px;
+  margin:0 auto 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  color:var(--ink-muted);
+  text-align:center;
+  padding:8px;
+  line-height:1.4;
+  background:var(--bg-dark);
+}
+.qr-tip {
+  font-size:12px;
+  color:var(--ink-secondary);
+}
+.qr-tip strong { color:var(--hos-violet-light); }
+
+/* Footer band */
+.footer-band {
+  margin-top:8px;
+}
+
+@media (max-width:360px) {
+  .hero-h1 { font-size:26px; }
+  .section-title { font-size:20px; }
+  .sell-grid { gap:10px; }
+  .sell-card { padding:20px 14px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ===== Module 1: KV Hero ===== -->
+  <div class="brand-band"></div>
+  <section class="hero">
+    <div class="hero-head">
+      <div class="hero-logo">H<span>O</span>S</div>
+      <div class="hero-tagline">技术深度 · 微商可信</div>
+    </div>
+    <img class="hero-kv" src="kv-all-in-one.jpg" alt="全四类综合服务">
+    <div class="hero-body">
+      <h1 class="hero-h1">技术服务一站式</h1>
+      <p class="hero-subline">程序设计 · AI应用 · 信息安全 · 计算机基础</p>
+      <span class="hero-red-tag">HOS生态支撑</span>
+      <div class="hero-quadrant" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- ===== Module 2: 卖点提炼 ===== -->
+  <section class="section">
+    <h2 class="section-title">四域覆盖 · 一站交付</h2>
+    <p class="section-sub">从课设到企业级，四类技术需求统一承接</p>
+    <div class="sell-grid">
+      <div class="sell-card c1">
+        <div class="sell-icon">💻</div>
+        <div class="name">程序设计</div>
+        <div class="desc">课设毕设 / 工具开发 / 网站小程序</div>
+      </div>
+      <div class="sell-card c2">
+        <div class="sell-icon">🤖</div>
+        <div class="name">AI应用</div>
+        <div class="desc">大模型部署 / RAG / Agent / 数据分析</div>
+      </div>
+      <div class="sell-card c3">
+        <div class="sell-icon">🛡️</div>
+        <div class="name">信息安全</div>
+        <div class="desc">授权渗透 / 加固 / CTF / 等保</div>
+      </div>
+      <div class="sell-card c4">
+        <div class="sell-icon">📚</div>
+        <div class="name">计算机基础</div>
+        <div class="desc">算法 / OS / 网络 / 数据库实验</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Module 3: 服务清单 ===== -->
+  <section class="section">
+    <h2 class="section-title">服务清单 · 统一报价</h2>
+    <p class="section-sub">四类服务一表汇总，明码标价先咨询后报价</p>
+
+    <div class="price-group">
+      <div class="group-head g1">💻 程序设计</div>
+      <div class="price-row"><span class="item">代码调试</span><span class="price">¥30起</span></div>
+      <div class="price-row"><span class="item">课设</span><span class="price">¥200起</span></div>
+      <div class="price-row"><span class="item">毕设</span><span class="price">¥800起</span></div>
+    </div>
+
+    <div class="price-group">
+      <div class="group-head g2">🤖 AI应用</div>
+      <div class="price-row"><span class="item">模型部署</span><span class="price">¥200起</span></div>
+      <div class="price-row"><span class="item">RAG</span><span class="price">¥500起</span></div>
+      <div class="price-row"><span class="item">AI应用</span><span class="price">¥1000起</span></div>
+    </div>
+
+    <div class="price-group">
+      <div class="group-head g3">🛡️ 信息安全</div>
+      <div class="price-row"><span class="item">CTF</span><span class="price">¥50/题</span></div>
+      <div class="price-row"><span class="item">渗透</span><span class="price">¥500起</span></div>
+      <div class="price-row"><span class="item">加固</span><span class="price">¥300起</span></div>
+    </div>
+
+    <div class="price-group">
+      <div class="group-head g4">📚 计算机基础</div>
+      <div class="price-row"><span class="item">算法辅导</span><span class="price">¥50/h</span></div>
+      <div class="price-row"><span class="item">实验</span><span class="price">¥80起</span></div>
+      <div class="price-row"><span class="item">考研</span><span class="price">¥100/h</span></div>
+    </div>
+  </section>
+
+  <!-- ===== Module 4: 案例展示 ===== -->
+  <section class="section">
+    <h2 class="section-title">脱敏案例 · 四域实证</h2>
+    <p class="section-sub">已交付项目节选，关键信息已脱敏处理</p>
+    <div class="case-list">
+      <div class="case-card d1">
+        <div class="case-top">
+          <div class="case-title">Python课设</div>
+          <span class="case-tag t1">程序设计</span>
+        </div>
+        <div class="case-result">答辩通过，功能完整运行正常</div>
+        <div class="case-anon">* 客户信息已脱敏</div>
+      </div>
+      <div class="case-card d2">
+        <div class="case-top">
+          <div class="case-title">企业RAG知识库</div>
+          <span class="case-tag t2">AI应用</span>
+        </div>
+        <div class="case-result">支持多文档源接入，已上线内网</div>
+        <div class="case-anon">* 客户信息已脱敏</div>
+      </div>
+      <div class="case-card d3">
+        <div class="case-top">
+          <div class="case-title">Web渗透测试</div>
+          <span class="case-tag t3">信息安全</span>
+        </div>
+        <div class="case-result">发现 3 个中高危漏洞，已全部修复</div>
+        <div class="case-anon">* 客户信息已脱敏</div>
+      </div>
+      <div class="case-card d4">
+        <div class="case-top">
+          <div class="case-title">OS实验合集</div>
+          <span class="case-tag t4">计算机基础</span>
+        </div>
+        <div class="case-result">4 个实验打包通过，附实验报告</div>
+        <div class="case-anon">* 客户信息已脱敏</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Module 5: 服务流程 ===== -->
+  <section class="section">
+    <h2 class="section-title">服务流程 · 五步交付</h2>
+    <p class="section-sub">四类服务统一流程，透明可控</p>
+    <div class="flow-list">
+      <div class="flow-step">
+        <div class="flow-circle">1</div>
+        <div class="flow-text">
+          <div class="t">咨询</div>
+          <div class="d">免费 5 分钟沟通，明确需求方向</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-circle">2</div>
+        <div class="flow-text">
+          <div class="t">需求匹配专家</div>
+          <div class="d">按四类域分派对应技术专家</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-circle">3</div>
+        <div class="flow-text">
+          <div class="t">定金 50%</div>
+          <div class="d">确认报价后支付定金启动</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-circle">4</div>
+        <div class="flow-text">
+          <div class="t">交付</div>
+          <div class="d">按节点交付，验收确认</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-circle">5</div>
+        <div class="flow-text">
+          <div class="t">统一售后 7 天</div>
+          <div class="d">四类服务统一 7 天免费修改</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Module 6: 价格锚定 ===== -->
+  <section class="section">
+    <h2 class="section-title">价格锚定 · 四层产品</h2>
+    <p class="section-sub">引流 / 标品 / 利润 / 形象，分层匹配</p>
+    <div class="anchor-list">
+      <div class="anchor-card a1">
+        <div class="anchor-badge b1">引流</div>
+        <div class="anchor-main">
+          <div class="name">通用环境配置</div>
+          <div class="desc">低门槛体验，建立信任</div>
+        </div>
+        <div class="anchor-price">9.9元</div>
+      </div>
+      <div class="anchor-card a2">
+        <div class="anchor-badge b2">标品</div>
+        <div class="anchor-main">
+          <div class="name">各类标品服务</div>
+          <div class="desc">明码标价，快速交付</div>
+        </div>
+        <div class="anchor-price">50-500元</div>
+      </div>
+      <div class="anchor-card a3">
+        <div class="anchor-badge b3">利润品</div>
+        <div class="anchor-main">
+          <div class="name">定制项目</div>
+          <div class="desc">按需定制，跨域整合</div>
+        </div>
+        <div class="anchor-price">500-1000元</div>
+      </div>
+      <div class="anchor-card a4">
+        <div class="anchor-badge b4">形象品</div>
+        <div class="anchor-main">
+          <div class="name">企业顾问</div>
+          <div class="desc">长期技术顾问合作</div>
+        </div>
+        <div class="anchor-price">面议</div>
+      </div>
+    </div>
+    <div class="anchor-note">
+      <strong>报价说明：</strong>先咨询后报价；长期合作有套餐；急单 1.5-2 倍。
+    </div>
+  </section>
+
+  <!-- ===== Module 7: 保障承诺 ===== -->
+  <section class="section">
+    <h2 class="section-title">保障承诺 · 四域统一</h2>
+    <p class="section-sub">流程统一，红线明确</p>
+    <div class="guarantee-list">
+      <div class="g-item">
+        <div class="g-icon">7</div>
+        <div class="g-body">
+          <div class="t">统一 7 天售后</div>
+          <div class="d">四类服务统一 7 天免费修改，无后顾之忧</div>
+        </div>
+      </div>
+      <div class="g-item">
+        <div class="g-icon">¥</div>
+        <div class="g-body">
+          <div class="t">50% 定金制度</div>
+          <div class="d">统一定金流程，双方权益保障</div>
+        </div>
+      </div>
+      <div class="g-item">
+        <div class="g-icon">H</div>
+        <div class="g-body">
+          <div class="t">HOS 生态背书</div>
+          <div class="d">三仓库开源支撑：HOS-Forge / HOS-LS / HOS-Workflow</div>
+        </div>
+      </div>
+    </div>
+    <div class="redline">
+      <div class="redline-title">⛔ 红线拒绝</div>
+      <div class="redline-text">
+        <strong>不代考</strong> / <strong>不代写论文</strong> / <strong>不非法攻击</strong> / <strong>不接违法违规</strong>项目。四类服务均坚守合规底线。
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Module 8: FAQ + 引流 ===== -->
+  <section class="section">
+    <h2 class="section-title">常见问题</h2>
+    <p class="section-sub">先答疑，再合作</p>
+    <div class="faq-list">
+      <details class="faq">
+        <summary>四类都能做？</summary>
+        <div class="faq-ans">是，程序设计 / AI / 安全 / 计算机基础全覆盖，每类均有对应专家承接。</div>
+      </details>
+      <details class="faq">
+        <summary>能否开发票？</summary>
+        <div class="faq-ans">可协商，长期合作支持开票。</div>
+      </details>
+      <details class="faq">
+        <summary>长期合作？</summary>
+        <div class="faq-ans">有套餐优惠，老客介绍双方各减 50 元。</div>
+      </details>
+      <details class="faq">
+        <summary>如何开始？</summary>
+        <div class="faq-ans">免费 5 分钟咨询，确认需求后报价。</div>
+      </details>
+      <details class="faq">
+        <summary>售后统一？</summary>
+        <div class="faq-ans">统一 7 天免费修改，四类服务一视同仁。</div>
+      </details>
+    </div>
+
+    <div class="cta-block">
+      <div class="cta-title">不确定属于哪一类？</div>
+      <div class="cta-sub">免费咨询 5 分钟，帮您匹配专家</div>
+      <a class="cta-btn" href="#qr">免费咨询5分钟</a>
+    </div>
+
+    <div class="qr-block" id="qr">
+      <div class="qr-placeholder">微信咨询<br>二维码</div>
+      <div class="qr-tip">扫码添加 <strong>微信咨询</strong>，备注「HOS综合」</div>
+    </div>
+  </section>
+
+  <div class="brand-band footer-band"></div>
+
+</div>
+</body>
+</html>

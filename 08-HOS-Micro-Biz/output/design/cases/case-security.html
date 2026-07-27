@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>信息安全服务案例展示 | HOS 技术服务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hos-violet-deep:#5B2C91; --hos-violet:#7C3AED; --hos-violet-light:#A78BFA; --hos-violet-glow:#C4B5FD;
+  --hos-burgundy:#8B1A3C; --hos-burgundy-soft:#B91C5C;
+  --hos-bronze-green:#3D5A4C; --hos-bronze-light:#6B8E7A;
+  --bg-darkest:#0F0A1F; --bg-dark:#1A1129; --bg-card:#241638; --bg-elevated:#2E1F47;
+  --ink-primary:#F5F0FF; --ink-secondary:#C4B5E0; --ink-muted:#8B7DAA;
+  --ink-on-burgundy:#FFE8EE;
+  --price-anchor:#FFB347;
+  --font-display:'Noto Serif SC','Source Han Serif SC',serif;
+  --font-body:'Noto Sans SC','PingFang SC',sans-serif;
+  --font-mono:'JetBrains Mono','Fira Code',monospace;
+  --brand-band-gradient:linear-gradient(90deg,#7C3AED 0%,#7C3AED 33%,#8B1A3C 33%,#8B1A3C 66%,#3D5A4C 66%,#3D5A4C 100%);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+html, body {
+  max-width:480px;
+  margin:0 auto;
+  min-height:100vh;
+  background:var(--bg-darkest);
+  color:var(--ink-primary);
+  font-family:var(--font-body);
+  font-size:14px;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a { color:inherit; text-decoration:none; }
+
+/* 三色色带 */
+.brand-band { height:4px; width:100%; background:var(--brand-band-gradient); position:sticky; top:0; z-index:20; }
+
+section { padding:28px 20px; position:relative; }
+
+/* ===== 1. 品牌头 ===== */
+.header {
+  padding:16px 20px 14px;
+  background:var(--bg-dark);
+  border-bottom:1px solid rgba(124,58,237,0.15);
+  position:sticky;
+  top:4px;
+  z-index:15;
+}
+.header-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.logo { font-family:var(--font-display); font-weight:700; font-size:20px; letter-spacing:1px; color:var(--ink-primary); }
+.logo .dot { color:var(--hos-violet); }
+.tagline { font-size:11px; color:var(--ink-muted); letter-spacing:2px; margin-top:2px; }
+.back-link {
+  font-size:13px; color:var(--ink-secondary);
+  border:1px solid rgba(124,58,237,0.3); padding:6px 12px; border-radius:999px;
+  background:rgba(124,58,237,0.08);
+}
+.back-link:active { background:rgba(124,58,237,0.2); }
+
+/* ===== 2. Hero ===== */
+.hero { padding:32px 20px 24px; background:linear-gradient(180deg,var(--bg-dark) 0%,var(--bg-darkest) 100%); }
+.hero h1 { font-family:var(--font-display); font-size:30px; font-weight:700; line-height:1.25; color:var(--ink-primary); }
+.hero .subtitle { margin-top:8px; font-size:15px; color:var(--ink-secondary); letter-spacing:1px; }
+.hero .subtitle .sep { color:var(--hos-burgundy-soft); margin:0 6px; }
+
+/* 信任统计 */
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:22px; }
+.stat-card {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.18);
+  border-radius:12px;
+  padding:16px 12px;
+  text-align:center;
+}
+.stat-num {
+  font-family:var(--font-mono); font-weight:700; font-size:26px;
+  color:var(--price-anchor);
+  text-shadow:0 0 12px rgba(255,179,71,0.3);
+  line-height:1.1;
+}
+.stat-label { font-size:12px; color:var(--ink-muted); margin-top:6px; letter-spacing:0.5px; }
+
+/* ===== 3. 授权合规声明（置顶突出） ===== */
+.auth-statement {
+  margin:8px 20px 24px;
+  background:rgba(139,26,60,0.08);
+  border:2px solid var(--hos-burgundy);
+  border-radius:14px;
+  padding:20px 18px;
+  position:relative;
+  box-shadow:0 0 24px rgba(139,26,60,0.15);
+}
+.auth-statement::before {
+  content:"";
+  position:absolute; top:-1px; left:-1px; right:-1px; bottom:-1px;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--hos-burgundy) 0%,transparent 50%);
+  opacity:0.15;
+  pointer-events:none;
+}
+.auth-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.shield-icon {
+  width:34px; height:34px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--hos-burgundy); border-radius:50%;
+  font-size:18px;
+  box-shadow:0 0 16px rgba(139,26,60,0.5);
+}
+.auth-title { font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--ink-on-burgundy); }
+.auth-title-en { font-size:11px; color:var(--hos-burgundy-soft); letter-spacing:1px; margin-top:2px; }
+.auth-list { list-style:none; }
+.auth-list li {
+  font-size:14px; color:var(--ink-secondary); line-height:1.7;
+  padding:6px 0 6px 22px; position:relative;
+  border-bottom:1px dashed rgba(139,26,60,0.25);
+}
+.auth-list li:last-child { border-bottom:none; }
+.auth-list li::before {
+  content:"✓"; position:absolute; left:0; top:6px;
+  color:var(--hos-bronze-light); font-weight:700; font-size:14px;
+}
+.auth-list li strong { color:var(--ink-primary); }
+.law-tag {
+  display:inline-block; margin-top:12px;
+  background:var(--hos-burgundy); color:var(--ink-on-burgundy);
+  font-size:12px; padding:4px 10px; border-radius:4px;
+  font-family:var(--font-mono); letter-spacing:0.5px;
+}
+
+/* ===== 区块标题通用 ===== */
+.section-title {
+  font-family:var(--font-display); font-size:22px; font-weight:700;
+  color:var(--ink-primary); line-height:1.3;
+  display:flex; align-items:center; gap:10px;
+}
+.section-title::before {
+  content:""; width:4px; height:20px; background:var(--hos-violet); border-radius:2px;
+}
+.section-title.red::before { background:var(--hos-burgundy); }
+.section-title.green::before { background:var(--hos-bronze-green); }
+.section-sub { font-size:13px; color:var(--ink-muted); margin-top:6px; margin-left:14px; letter-spacing:0.5px; }
+
+/* ===== 4. 服务能力矩阵 ===== */
+.capability-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px; }
+.cap-card {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.18);
+  border-radius:12px;
+  padding:16px 14px;
+}
+.cap-icon { font-size:22px; margin-bottom:8px; }
+.cap-name { font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--ink-primary); }
+.cap-list { list-style:none; margin-top:10px; }
+.cap-list li {
+  font-size:13px; color:var(--ink-secondary); line-height:1.7;
+  padding-left:14px; position:relative;
+}
+.cap-list li::before {
+  content:"›"; position:absolute; left:0; top:0; color:var(--hos-violet-light); font-weight:700;
+}
+
+/* ===== 5. 案例卡片 ===== */
+.case-card {
+  background:var(--bg-elevated);
+  border-left:4px solid var(--hos-violet);
+  border-radius:10px;
+  padding:18px 16px;
+  margin-top:14px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.35);
+}
+.case-card.cat-pentest { border-left-color:var(--hos-burgundy); }
+.case-card.cat-harden { border-left-color:var(--hos-bronze-green); }
+.case-card.cat-ctf { border-left-color:var(--hos-violet); }
+.case-card.cat-protect { border-left-color:var(--price-anchor); }
+
+.case-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
+.case-num { font-family:var(--font-mono); font-size:13px; color:var(--ink-muted); font-weight:600; }
+.case-tag {
+  font-size:11px; padding:3px 8px; border-radius:4px;
+  font-family:var(--font-mono); letter-spacing:0.5px; font-weight:600;
+}
+.case-tag.t-pentest { background:var(--hos-burgundy); color:var(--ink-on-burgundy); }
+.case-tag.t-harden { background:var(--hos-bronze-green); color:var(--ink-primary); }
+.case-tag.t-ctf { background:var(--hos-violet); color:#fff; }
+.case-tag.t-protect { background:rgba(255,179,71,0.2); color:var(--price-anchor); border:1px solid var(--price-anchor); }
+
+.case-title { font-family:var(--font-display); font-size:16px; font-weight:600; color:var(--ink-primary); line-height:1.4; }
+
+.desensitize-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  background:rgba(139,26,60,0.15);
+  border:1px solid var(--hos-burgundy-soft);
+  color:var(--hos-burgundy-soft);
+  font-size:12px; font-weight:600;
+  padding:3px 8px; border-radius:4px;
+  margin-top:8px;
+  font-family:var(--font-mono);
+}
+.desensitize-badge::before { content:"⚠"; font-size:13px; }
+
+.auth-scope {
+  font-size:13px; color:var(--ink-secondary); margin-top:8px;
+  padding:6px 10px; background:rgba(61,90,76,0.15); border-left:2px solid var(--hos-bronze-green);
+  border-radius:0 4px 4px 0;
+}
+.auth-scope .label { color:var(--hos-bronze-light); font-weight:600; }
+
+.tech-stack { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.tech-chip {
+  font-family:var(--font-mono); font-size:11px;
+  background:rgba(124,58,237,0.15); color:var(--hos-violet-light);
+  padding:2px 8px; border-radius:4px; border:1px solid rgba(124,58,237,0.25);
+}
+
+.case-desc { font-size:14px; color:var(--ink-secondary); line-height:1.7; margin-top:10px; }
+
+/* ===== 界面预览（wireframe 风格） ===== */
+.case-preview {
+  margin-top:12px;
+  background:var(--bg-darkest);
+  border:1px solid rgba(124,58,237,0.35);
+  border-radius:16px;
+  padding:12px;
+  position:relative;
+  overflow:hidden;
+}
+.case-preview::before {
+  content:""; position:absolute; inset:0;
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(139,26,60,0.08) 0%,rgba(124,58,237,0.08) 100%);
+  pointer-events:none;
+}
+.preview-label {
+  font-family:var(--font-mono); font-size:10px;
+  color:var(--ink-muted); letter-spacing:1px;
+  margin-bottom:8px; position:relative;
+  display:flex; align-items:center; gap:6px;
+}
+.preview-label::before {
+  content:""; width:6px; height:6px; border-radius:50%;
+  background:var(--hos-violet); box-shadow:0 0 6px var(--hos-violet);
+}
+.preview-stage {
+  position:relative;
+  border-radius:12px;
+  background:#0A0716;
+  border:1px solid rgba(139,26,60,0.4);
+  padding:10px;
+  min-height:120px;
+}
+
+/* 通用 wireframe 元素 */
+.wf-bar {
+  height:8px; border-radius:3px;
+  background:linear-gradient(90deg,rgba(124,58,237,0.25) 0%,rgba(124,58,237,0.05) 100%);
+  margin-bottom:6px;
+}
+.wf-bar.short { width:40%; }
+.wf-bar.mid { width:65%; }
+.wf-bar.long { width:90%; }
+.wf-bar.burgundy {
+  background:linear-gradient(90deg,rgba(139,26,60,0.4) 0%,rgba(139,26,60,0.08) 100%);
+}
+.wf-bar.violet-glow {
+  background:linear-gradient(90deg,rgba(167,139,250,0.5) 0%,rgba(167,139,250,0.1) 100%);
+  box-shadow:0 0 8px rgba(167,139,250,0.2);
+}
+
+.wf-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.wf-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.wf-dot.violet { background:var(--hos-violet); box-shadow:0 0 6px var(--hos-violet); }
+.wf-dot.burgundy { background:var(--hos-burgundy); }
+.wf-dot.green { background:var(--hos-bronze-light); }
+.wf-dot.amber { background:var(--price-anchor); }
+.wf-text {
+  font-family:var(--font-mono); font-size:9px;
+  color:var(--ink-muted); letter-spacing:0.5px;
+  flex:1;
+}
+
+.wf-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:6px; }
+.wf-cell {
+  background:rgba(124,58,237,0.1);
+  border:1px solid rgba(124,58,237,0.2);
+  border-radius:6px; padding:6px;
+}
+.wf-cell-num {
+  font-family:var(--font-mono); font-size:10px; font-weight:700;
+  color:var(--hos-violet-light);
+}
+.wf-cell-label { font-size:8px; color:var(--ink-muted); margin-top:2px; }
+
+/* 渗透报告封面 */
+.wf-report-cover {
+  text-align:center; padding:14px 8px;
+  border:1px dashed rgba(139,26,60,0.5);
+  border-radius:8px;
+  background:rgba(139,26,60,0.05);
+}
+.wf-report-title {
+  font-family:var(--font-display); font-size:11px; font-weight:700;
+  color:var(--ink-on-burgundy); letter-spacing:1px;
+  margin-bottom:6px;
+}
+.wf-report-sub { font-size:8px; color:var(--ink-muted); margin-bottom:8px; }
+.wf-seal {
+  display:inline-block; padding:2px 8px;
+  border:1px solid var(--hos-burgundy);
+  border-radius:3px;
+  font-family:var(--font-mono); font-size:8px;
+  color:var(--hos-burgundy-soft);
+}
+
+/* 漏洞列表行 */
+.wf-vuln-list { display:flex; flex-direction:column; gap:4px; }
+.wf-vuln-row {
+  display:flex; align-items:center; gap:6px;
+  padding:5px 6px; border-radius:4px;
+  background:rgba(36,22,56,0.6);
+  border-left:2px solid var(--hos-violet);
+}
+.wf-vuln-row.high { border-left-color:var(--hos-burgundy); }
+.wf-vuln-row.mid { border-left-color:var(--price-anchor); }
+.wf-vuln-row.low { border-left-color:var(--hos-bronze-light); }
+.wf-severity {
+  font-family:var(--font-mono); font-size:8px; font-weight:700;
+  padding:1px 4px; border-radius:2px;
+}
+.wf-severity.high { background:var(--hos-burgundy); color:var(--ink-on-burgundy); }
+.wf-severity.mid { background:rgba(255,179,71,0.2); color:var(--price-anchor); }
+.wf-severity.low { background:rgba(61,90,76,0.3); color:var(--hos-bronze-light); }
+.wf-vuln-name { font-size:9px; color:var(--ink-secondary); flex:1; }
+
+/* 加固配置面板 */
+.wf-config-panel { display:flex; flex-direction:column; gap:5px; }
+.wf-config-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:5px 7px; border-radius:4px;
+  background:rgba(46,31,71,0.5);
+  border:1px solid rgba(124,58,237,0.15);
+}
+.wf-config-key {
+  font-family:var(--font-mono); font-size:9px;
+  color:var(--ink-secondary);
+}
+.wf-toggle {
+  width:22px; height:11px; border-radius:6px;
+  background:var(--hos-violet); position:relative;
+  box-shadow:0 0 6px rgba(124,58,237,0.4);
+}
+.wf-toggle::after {
+  content:""; position:absolute; right:1px; top:1px;
+  width:9px; height:9px; border-radius:50%; background:#fff;
+}
+.wf-toggle.off { background:rgba(139,125,170,0.3); }
+.wf-toggle.off::after { left:1px; right:auto; background:var(--ink-muted); }
+
+/* CTF 流程图 */
+.wf-flow { display:flex; flex-direction:column; gap:0; }
+.wf-flow-step {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 0; position:relative;
+}
+.wf-flow-step:not(:last-child)::after {
+  content:""; position:absolute; left:7px; top:18px; bottom:-6px;
+  width:2px; background:linear-gradient(180deg,var(--hos-violet) 0%,var(--hos-burgundy) 100%);
+}
+.wf-flow-node {
+  width:15px; height:15px; flex-shrink:0; z-index:1;
+  border-radius:50%;
+  background:var(--bg-elevated);
+  border:2px solid var(--hos-violet);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:7px; font-weight:700;
+  color:var(--hos-violet-light);
+}
+.wf-flow-node.burgundy { border-color:var(--hos-burgundy); color:var(--hos-burgundy-soft); }
+.wf-flow-node.green { border-color:var(--hos-bronze-light); color:var(--hos-bronze-light); }
+.wf-flow-text { font-size:9px; color:var(--ink-secondary); }
+.wf-flow-text strong { color:var(--ink-primary); font-weight:600; }
+
+/* 等保差距矩阵 */
+.wf-matrix { display:flex; flex-direction:column; gap:3px; }
+.wf-matrix-row {
+  display:grid; grid-template-columns:1fr 60px 12px;
+  gap:6px; align-items:center;
+  padding:4px 6px; border-radius:3px;
+  background:rgba(36,22,56,0.5);
+}
+.wf-matrix-item { font-size:9px; color:var(--ink-secondary); }
+.wf-matrix-bar {
+  height:5px; border-radius:2px;
+  background:linear-gradient(90deg,var(--hos-bronze-light) 0%,var(--hos-violet) 100%);
+}
+.wf-matrix-status {
+  font-family:var(--font-mono); font-size:8px; font-weight:700;
+}
+.wf-matrix-status.ok { color:var(--hos-bronze-light); }
+.wf-matrix-status.gap { color:var(--price-anchor); }
+
+.metrics-row {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:6px;
+  margin-top:12px; padding:10px 8px;
+  background:var(--bg-dark); border-radius:8px;
+}
+.metric { text-align:center; }
+.metric-num { font-family:var(--font-mono); font-size:13px; font-weight:700; color:var(--price-anchor); }
+.metric-label { font-size:10px; color:var(--ink-muted); margin-top:2px; line-height:1.3; }
+
+.case-quote {
+  margin-top:12px; padding:10px 12px;
+  background:rgba(124,58,237,0.08); border-radius:8px;
+  border-left:2px solid var(--hos-violet-light);
+  font-size:13px; color:var(--ink-secondary); line-height:1.6; font-style:italic;
+}
+.case-quote::before { content:"\""; color:var(--hos-violet-light); font-size:18px; margin-right:2px; }
+.case-quote::after { content:"\""; color:var(--hos-violet-light); font-size:18px; margin-left:2px; }
+
+/* ===== 6. 交付物清单 ===== */
+.deliver-list { display:grid; grid-template-columns:1fr; gap:10px; margin-top:18px; }
+.deliver-item {
+  display:flex; align-items:flex-start; gap:12px;
+  background:var(--bg-card); border-radius:10px; padding:14px 14px;
+  border:1px solid rgba(124,58,237,0.15);
+}
+.deliver-icon {
+  width:32px; height:32px; flex-shrink:0;
+  background:var(--hos-bronze-green); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px;
+}
+.deliver-name { font-size:14px; font-weight:600; color:var(--ink-primary); }
+.deliver-desc { font-size:12px; color:var(--ink-muted); margin-top:2px; line-height:1.5; }
+
+/* ===== 7. 服务流程 ===== */
+.flow-steps { margin-top:18px; position:relative; }
+.flow-steps::before {
+  content:""; position:absolute; left:15px; top:24px; bottom:24px;
+  width:2px; background:linear-gradient(180deg,var(--hos-violet) 0%,var(--hos-burgundy) 100%);
+}
+.flow-step { display:flex; gap:14px; padding:10px 0; position:relative; }
+.flow-dot {
+  width:32px; height:32px; flex-shrink:0; z-index:2;
+  border-radius:50%;
+  background:var(--bg-elevated); border:2px solid var(--hos-violet);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:13px; font-weight:700; color:var(--hos-violet-light);
+}
+.flow-step.step-1 .flow-dot { border-color:var(--hos-burgundy); color:var(--hos-burgundy-soft); background:rgba(139,26,60,0.15); }
+.flow-body { flex:1; padding-top:4px; }
+.flow-name { font-size:15px; font-weight:600; color:var(--ink-primary); }
+.flow-desc { font-size:12px; color:var(--ink-muted); margin-top:3px; line-height:1.5; }
+
+/* ===== 8. 红线声明（强化版） ===== */
+.redline-card {
+  margin-top:18px;
+  background:linear-gradient(135deg,rgba(139,26,60,0.15) 0%,rgba(15,10,31,0.6) 100%);
+  border:2px solid var(--hos-burgundy);
+  border-radius:14px;
+  padding:22px 18px;
+  position:relative;
+}
+.redline-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.redline-icon {
+  width:32px; height:32px; flex-shrink:0;
+  background:var(--hos-burgundy); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px;
+}
+.redline-title { font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--hos-burgundy-soft); }
+.redline-list { list-style:none; }
+.redline-list li {
+  font-size:14px; color:var(--ink-secondary); line-height:1.7;
+  padding:7px 0 7px 24px; position:relative;
+  border-bottom:1px dashed rgba(139,26,60,0.3);
+}
+.redline-list li:last-child { border-bottom:none; }
+.redline-list li::before {
+  content:"✕"; position:absolute; left:0; top:7px;
+  color:var(--hos-burgundy); font-weight:700; font-size:13px;
+}
+.redline-list li.allow::before { content:"✓"; color:var(--hos-bronze-light); }
+.redline-list li strong { color:var(--ink-primary); }
+.redline-footer {
+  margin-top:14px; padding-top:12px;
+  border-top:1px solid rgba(139,26,60,0.3);
+  font-size:12px; color:var(--ink-muted); font-family:var(--font-mono); text-align:center;
+}
+
+/* ===== 9. CTA ===== */
+.cta {
+  margin-top:8px;
+  background:linear-gradient(135deg,var(--bg-card) 0%,var(--bg-elevated) 100%);
+  border-radius:16px; padding:28px 20px; text-align:center;
+  border:1px solid rgba(124,58,237,0.3);
+  box-shadow:0 0 32px rgba(124,58,237,0.2);
+}
+.cta h2 { font-family:var(--font-display); font-size:24px; font-weight:700; color:var(--ink-primary); }
+.cta-sub { font-size:14px; color:var(--ink-secondary); margin-top:8px; }
+.qr-placeholder {
+  width:160px; height:160px; margin:20px auto 14px;
+  background:
+    linear-gradient(45deg,var(--bg-darkest) 25%,transparent 25%) 0 0/16px 16px,
+    linear-gradient(-45deg,var(--bg-darkest) 25%,transparent 25%) 0 0/16px 16px,
+    var(--bg-elevated);
+  border:2px solid var(--hos-violet); border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.qr-placeholder::after {
+  content:"二维码"; font-size:12px; color:var(--ink-muted);
+  background:var(--bg-elevated); padding:4px 10px; border-radius:4px;
+}
+.cta-btn {
+  display:block; width:100%;
+  background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);
+  color:#fff; font-size:16px; font-weight:700; font-family:var(--font-display);
+  padding:14px; border-radius:999px; border:none;
+  box-shadow:0 0 20px rgba(124,58,237,0.5);
+  margin-top:6px;
+}
+.cta-btn:active { transform:scale(0.98); }
+.cta-hint { font-size:12px; color:var(--ink-muted); margin-top:10px; }
+
+/* 页脚 */
+.footer {
+  padding:20px; text-align:center;
+  background:var(--bg-dark); border-top:1px solid rgba(124,58,237,0.15);
+}
+.footer .brand-band { position:static; margin-bottom:14px; }
+.footer p { font-size:12px; color:var(--ink-muted); line-height:1.7; }
+.footer .law { font-family:var(--font-mono); font-size:11px; color:var(--hos-burgundy-soft); margin-top:8px; }
+
+@media (max-width:414px) {
+  html, body { font-size:14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 三色色带 -->
+<div class="brand-band"></div>
+
+<!-- 1. 品牌头 -->
+<header class="header">
+  <div class="header-row">
+    <div>
+      <div class="logo">HOS<span class="dot">.</span></div>
+      <div class="tagline">技术深度 · 微商可信</div>
+    </div>
+    <a href="../index.html" class="back-link">← 返回</a>
+  </div>
+</header>
+
+<!-- 2. Hero -->
+<section class="hero">
+  <h1>信息安全服务<br>案例展示</h1>
+  <div class="subtitle">授权合规<span class="sep">·</span>专业交付</div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num">授权</div>
+      <div class="stat-label">仅限合规</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">报告</div>
+      <div class="stat-label">可交付</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">等保</div>
+      <div class="stat-label">2.0 咨询</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">CTF</div>
+      <div class="stat-label">思路训练</div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 授权合规声明（置顶突出） -->
+<div class="auth-statement">
+  <div class="auth-header">
+    <div class="shield-icon">🛡</div>
+    <div>
+      <div class="auth-title">授权合规声明</div>
+      <div class="auth-title-en">AUTHORIZED · COMPLIANT · DESENSITIZED</div>
+    </div>
+  </div>
+  <ul class="auth-list">
+    <li>所有测试均在客户<strong>书面授权范围内</strong>进行</li>
+    <li>不接受任何<strong>非法攻击</strong>请求</li>
+    <li>不提供可复用<strong>攻击 payload</strong></li>
+    <li>所有案例截图均已<strong>脱敏处理</strong></li>
+    <li>严格遵守<strong>《网络安全法》《数据安全法》</strong></li>
+  </ul>
+  <span class="law-tag">合规底线 · 不可逾越</span>
+</div>
+
+<!-- 4. 服务能力矩阵 -->
+<section>
+  <div class="section-title green">服务能力矩阵</div>
+  <div class="section-sub">四类核心服务 · 覆盖主流安全需求</div>
+  <div class="capability-grid">
+    <div class="cap-card">
+      <div class="cap-icon">🎯</div>
+      <div class="cap-name">渗透测试</div>
+      <ul class="cap-list">
+        <li>Web 应用渗透</li>
+        <li>API 安全评估</li>
+        <li>外网资产扫描</li>
+        <li>漏洞复现验证</li>
+      </ul>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">🔧</div>
+      <div class="cap-name">安全加固</div>
+      <ul class="cap-list">
+        <li>服务器基线加固</li>
+        <li>CIS Benchmark</li>
+        <li>SSH / 防火墙</li>
+        <li>入侵检测配置</li>
+      </ul>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">🏆</div>
+      <div class="cap-name">CTF 辅导</div>
+      <ul class="cap-list">
+        <li>Web / Pwn / Crypto</li>
+        <li>Reverse 逆向</li>
+        <li>赛题思路讲解</li>
+        <li>战队战术指导</li>
+      </ul>
+    </div>
+    <div class="cap-card">
+      <div class="cap-icon">📋</div>
+      <div class="cap-name">等保咨询</div>
+      <ul class="cap-list">
+        <li>等保 2.0 测评</li>
+        <li>差距分析</li>
+        <li>整改方案</li>
+        <li>测评机构对接</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 案例卡片列表 -->
+<section>
+  <div class="section-title">脱敏案例展示</div>
+  <div class="section-sub">5 个代表性项目 · 信息均已脱敏</div>
+
+  <!-- 案例 1 -->
+  <div class="case-card cat-pentest">
+    <div class="case-head">
+      <span class="case-num">CASE 01</span>
+      <span class="case-tag t-pentest">渗透测试</span>
+    </div>
+    <div class="case-title">某互联网公司 Web 应用渗透测试</div>
+    <div class="desensitize-badge">信息已脱敏</div>
+    <div class="auth-scope"><span class="label">授权范围：</span>外网资产 / 2024 Q2</div>
+    <div class="tech-stack">
+      <span class="tech-chip">Burp Suite</span>
+      <span class="tech-chip">Nmap</span>
+      <span class="tech-chip">SQLMap</span>
+      <span class="tech-chip">授权外网资产</span>
+    </div>
+    <div class="case-desc">针对客户对外暴露的 Web 应用进行黑盒渗透，覆盖 OWASP Top 10 风险面，重点验证注入与越权类问题，提供完整复现路径与修复建议。</div>
+    <div class="case-preview">
+      <div class="preview-label">界面预览 · 渗透报告封面 + 漏洞清单</div>
+      <div class="preview-stage">
+        <div class="wf-report-cover">
+          <div class="wf-report-title">渗透测试报告</div>
+          <div class="wf-report-sub">PENETRATION TEST REPORT · 脱敏</div>
+          <div class="wf-seal">已脱敏 · 授权交付</div>
+        </div>
+        <div style="height:8px;"></div>
+        <div class="wf-vuln-list">
+          <div class="wf-vuln-row high">
+            <span class="wf-severity high">高危</span>
+            <span class="wf-vuln-name">SQL 注入 · 登录接口</span>
+          </div>
+          <div class="wf-vuln-row high">
+            <span class="wf-severity high">高危</span>
+            <span class="wf-vuln-name">越权访问 · 用户数据</span>
+          </div>
+          <div class="wf-vuln-row mid">
+            <span class="wf-severity mid">中危</span>
+            <span class="wf-vuln-name">XSS · 评论区</span>
+          </div>
+          <div class="wf-vuln-row low">
+            <span class="wf-severity low">低危</span>
+            <span class="wf-vuln-name">CSRF · 配置项</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="metrics-row">
+      <div class="metric"><div class="metric-num">5 天</div><div class="metric-label">交付周期</div></div>
+      <div class="metric"><div class="metric-num">含</div><div class="metric-label">复现步骤</div></div>
+      <div class="metric"><div class="metric-num">PDF</div><div class="metric-label">修复建议</div></div>
+    </div>
+    <div class="case-quote">发现的注入漏洞我们自己完全没意识到，修复建议也很详细</div>
+  </div>
+
+  <!-- 案例 2 -->
+  <div class="case-card cat-harden">
+    <div class="case-head">
+      <span class="case-num">CASE 02</span>
+      <span class="case-tag t-harden">安全加固</span>
+    </div>
+    <div class="case-title">某创业团队服务器安全加固</div>
+    <div class="desensitize-badge">信息已脱敏</div>
+    <div class="auth-scope"><span class="label">授权范围：</span>自有服务器 / 2024 Q1</div>
+    <div class="tech-stack">
+      <span class="tech-chip">CIS Benchmark</span>
+      <span class="tech-chip">Iptables</span>
+      <span class="tech-chip">Fail2ban</span>
+      <span class="tech-chip">SSH 加固</span>
+    </div>
+    <div class="case-desc">基于 CIS Benchmark 对 Linux 服务器进行基线核查与加固，配置防火墙规则与暴力破解防护，关闭无用服务，硬化远程登录通道。</div>
+    <div class="case-preview">
+      <div class="preview-label">界面预览 · 加固配置面板</div>
+      <div class="preview-stage">
+        <div class="wf-config-panel">
+          <div class="wf-config-row">
+            <span class="wf-config-key">SSH 禁止 root 登录</span>
+            <span class="wf-toggle"></span>
+          </div>
+          <div class="wf-config-row">
+            <span class="wf-config-key">密码登录关闭 · 仅密钥</span>
+            <span class="wf-toggle"></span>
+          </div>
+          <div class="wf-config-row">
+            <span class="wf-config-key">Iptables 仅放行 22/443</span>
+            <span class="wf-toggle"></span>
+          </div>
+          <div class="wf-config-row">
+            <span class="wf-config-key">Fail2ban 暴力破解防护</span>
+            <span class="wf-toggle"></span>
+          </div>
+          <div class="wf-config-row">
+            <span class="wf-config-key">关闭 Telnet/RSH 等旧服务</span>
+            <span class="wf-toggle"></span>
+          </div>
+          <div class="wf-config-row">
+            <span class="wf-config-key">默认端口 22 → 自定义</span>
+            <span class="wf-toggle off"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="metrics-row">
+      <div class="metric"><div class="metric-num">3 天</div><div class="metric-label">交付周期</div></div>
+      <div class="metric"><div class="metric-num">CIS</div><div class="metric-label">基线对照</div></div>
+      <div class="metric"><div class="metric-num">脚本</div><div class="metric-label">加固可复用</div></div>
+    </div>
+    <div class="case-quote">加固后半个月攻击日志少了九成</div>
+  </div>
+
+  <!-- 案例 3 -->
+  <div class="case-card cat-ctf">
+    <div class="case-head">
+      <span class="case-num">CASE 03</span>
+      <span class="case-tag t-ctf">CTF 辅导</span>
+    </div>
+    <div class="case-title">某高校战队 CTF 赛题辅导</div>
+    <div class="desensitize-badge">信息已脱敏</div>
+    <div class="auth-scope"><span class="label">授权范围：</span>教学辅导 / 2024 Q3</div>
+    <div class="tech-stack">
+      <span class="tech-chip">Web</span>
+      <span class="tech-chip">Pwn</span>
+      <span class="tech-chip">Crypto</span>
+      <span class="tech-chip">Reverse</span>
+    </div>
+    <div class="case-desc">为高校战队提供四大方向赛题系统讲解，从基础知识点到实战思路层层递进，配合文档与录播复盘，帮助队员建立完整解题框架。</div>
+    <div class="case-preview">
+      <div class="preview-label">界面预览 · CTF 解题思路流程</div>
+      <div class="preview-stage">
+        <div class="wf-flow">
+          <div class="wf-flow-step">
+            <div class="wf-flow-node">1</div>
+            <div class="wf-flow-text"><strong>信息收集</strong> · 端口/目录/指纹</div>
+          </div>
+          <div class="wf-flow-step">
+            <div class="wf-flow-node">2</div>
+            <div class="wf-flow-text"><strong>漏洞定位</strong> · 注入/文件/反序列化</div>
+          </div>
+          <div class="wf-flow-step">
+            <div class="wf-flow-node burgundy">3</div>
+            <div class="wf-flow-text"><strong>利用构造</strong> · payload 与绕过</div>
+          </div>
+          <div class="wf-flow-step">
+            <div class="wf-flow-node burgundy">4</div>
+            <div class="wf-flow-text"><strong>权限提升</strong> · webshell → 主机</div>
+          </div>
+          <div class="wf-flow-step">
+            <div class="wf-flow-node green">5</div>
+            <div class="wf-flow-text"><strong>flag 提交</strong> · 复盘文档归档</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="metrics-row">
+      <div class="metric"><div class="metric-num">8 天</div><div class="metric-label">交付周期</div></div>
+      <div class="metric"><div class="metric-num">4 类</div><div class="metric-label">方向覆盖</div></div>
+      <div class="metric"><div class="metric-num">录播</div><div class="metric-label">复盘可回看</div></div>
+    </div>
+    <div class="case-quote">从 web 入门到能打 pwn，思路讲得特别清楚</div>
+  </div>
+
+  <!-- 案例 4 -->
+  <div class="case-card cat-protect">
+    <div class="case-head">
+      <span class="case-num">CASE 04</span>
+      <span class="case-tag t-protect">等保咨询</span>
+    </div>
+    <div class="case-title">某中小企业等保 2.0 咨询</div>
+    <div class="desensitize-badge">信息已脱敏</div>
+    <div class="auth-scope"><span class="label">授权范围：</span>3 个业务系统 / 2024 Q2</div>
+    <div class="tech-stack">
+      <span class="tech-chip">等保测评</span>
+      <span class="tech-chip">差距分析</span>
+      <span class="tech-chip">整改方案</span>
+    </div>
+    <div class="case-desc">协助企业完成等保 2.0 定级备案准备，开展差距分析并输出整改方案，梳理 3 个业务系统的安全管理制度与技术防护项。</div>
+    <div class="case-preview">
+      <div class="preview-label">界面预览 · 等保差距分析矩阵</div>
+      <div class="preview-stage">
+        <div class="wf-matrix">
+          <div class="wf-matrix-row">
+            <span class="wf-matrix-item">物理与网络安全</span>
+            <span class="wf-matrix-bar"></span>
+            <span class="wf-matrix-status ok">达标</span>
+          </div>
+          <div class="wf-matrix-row">
+            <span class="wf-matrix-item">主机与应用安全</span>
+            <span class="wf-matrix-bar"></span>
+            <span class="wf-matrix-status gap">差距</span>
+          </div>
+          <div class="wf-matrix-row">
+            <span class="wf-matrix-item">数据保密性</span>
+            <span class="wf-matrix-bar"></span>
+            <span class="wf-matrix-status gap">差距</span>
+          </div>
+          <div class="wf-matrix-row">
+            <span class="wf-matrix-item">身份鉴别与访问控制</span>
+            <span class="wf-matrix-bar"></span>
+            <span class="wf-matrix-status ok">达标</span>
+          </div>
+          <div class="wf-matrix-row">
+            <span class="wf-matrix-item">安全管理制度</span>
+            <span class="wf-matrix-bar"></span>
+            <span class="wf-matrix-status gap">差距</span>
+          </div>
+          <div class="wf-matrix-row">
+            <span class="wf-matrix-item">应急响应与备份</span>
+            <span class="wf-matrix-bar"></span>
+            <span class="wf-matrix-status ok">达标</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="metrics-row">
+      <div class="metric"><div class="metric-num">10 天</div><div class="metric-label">交付周期</div></div>
+      <div class="metric"><div class="metric-num">3 系统</div><div class="metric-label">差距分析</div></div>
+      <div class="metric"><div class="metric-num">整改</div><div class="metric-label">方案输出</div></div>
+    </div>
+    <div class="case-quote">等保流程理顺了，测评机构都说我们准备得规范</div>
+  </div>
+
+  <!-- 案例 5 -->
+  <div class="case-card cat-pentest">
+    <div class="case-head">
+      <span class="case-num">CASE 05</span>
+      <span class="case-tag t-pentest">渗透测试</span>
+    </div>
+    <div class="case-title">某 SaaS 公司 API 安全评估</div>
+    <div class="desensitize-badge">信息已脱敏</div>
+    <div class="auth-scope"><span class="label">授权范围：</span>对外 API / 2024 Q3</div>
+    <div class="tech-stack">
+      <span class="tech-chip">OWASP API Top10</span>
+      <span class="tech-chip">Postman</span>
+      <span class="tech-chip">JWT 分析</span>
+    </div>
+    <div class="case-desc">基于 OWASP API Security Top 10 对 SaaS 平台对外 API 进行安全评估，重点验证认证、授权与数据暴露类风险，提前规避上线后数据泄露隐患。</div>
+    <div class="case-preview">
+      <div class="preview-label">界面预览 · API 漏洞扫描结果</div>
+      <div class="preview-stage">
+        <div class="wf-row">
+          <span class="wf-dot violet"></span>
+          <span class="wf-text">扫描目标 · https://api.example.com/v1/*</span>
+        </div>
+        <div class="wf-bar long"></div>
+        <div style="height:4px;"></div>
+        <div class="wf-vuln-list">
+          <div class="wf-vuln-row high">
+            <span class="wf-severity high">高危</span>
+            <span class="wf-vuln-name">BOLA · 越权访问用户数据</span>
+          </div>
+          <div class="wf-vuln-row high">
+            <span class="wf-severity high">高危</span>
+            <span class="wf-vuln-name">JWT 弱签名 · 可伪造</span>
+          </div>
+          <div class="wf-vuln-row mid">
+            <span class="wf-severity mid">中危</span>
+            <span class="wf-vuln-name">过度数据暴露 · 列表接口</span>
+          </div>
+          <div class="wf-vuln-row mid">
+            <span class="wf-severity mid">中危</span>
+            <span class="wf-vuln-name">限流缺失 · 爆破可利用</span>
+          </div>
+          <div class="wf-vuln-row low">
+            <span class="wf-severity low">低危</span>
+            <span class="wf-vuln-name">错误信息泄露堆栈</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="metrics-row">
+      <div class="metric"><div class="metric-num">6 天</div><div class="metric-label">交付周期</div></div>
+      <div class="metric"><div class="metric-num">Top10</div><div class="metric-label">风险覆盖</div></div>
+      <div class="metric"><div class="metric-num">含</div><div class="metric-label">复现证据</div></div>
+    </div>
+    <div class="case-quote">API 越权问题找得很准，避免了上线后的数据泄露风险</div>
+  </div>
+</section>
+
+<!-- 6. 交付物清单 -->
+<section>
+  <div class="section-title green">标准交付物</div>
+  <div class="section-sub">每个项目均提供完整文档交付</div>
+  <div class="deliver-list">
+    <div class="deliver-item">
+      <div class="deliver-icon">📄</div>
+      <div>
+        <div class="deliver-name">渗透测试报告</div>
+        <div class="deliver-desc">漏洞详情 / 风险等级 / 复现步骤 / 影响评估</div>
+      </div>
+    </div>
+    <div class="deliver-item">
+      <div class="deliver-icon">🔬</div>
+      <div>
+        <div class="deliver-name">漏洞复现文档</div>
+        <div class="deliver-desc">脱敏后的复现环境与操作步骤说明</div>
+      </div>
+    </div>
+    <div class="deliver-item">
+      <div class="deliver-icon">🛠</div>
+      <div>
+        <div class="deliver-name">修复建议</div>
+        <div class="deliver-desc">分优先级的修复方案与代码级建议</div>
+      </div>
+    </div>
+    <div class="deliver-item">
+      <div class="deliver-icon">⚙️</div>
+      <div>
+        <div class="deliver-name">加固方案</div>
+        <div class="deliver-desc">配置清单 / 基线对照 / 加固脚本</div>
+      </div>
+    </div>
+    <div class="deliver-item">
+      <div class="deliver-icon">✅</div>
+      <div>
+        <div class="deliver-name">复测报告</div>
+        <div class="deliver-desc">修复后回归验证，确认漏洞闭环</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. 服务流程 -->
+<section>
+  <div class="section-title">服务流程</div>
+  <div class="section-sub">6 步标准流程 · 授权先行</div>
+  <div class="flow-steps">
+    <div class="flow-step step-1">
+      <div class="flow-dot">1</div>
+      <div class="flow-body">
+        <div class="flow-name">授权确认</div>
+        <div class="flow-desc">签署书面授权书，明确测试范围与边界</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-dot">2</div>
+      <div class="flow-body">
+        <div class="flow-name">范围界定</div>
+        <div class="flow-desc">确认目标资产、测试时间窗口与禁用手段</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-dot">3</div>
+      <div class="flow-body">
+        <div class="flow-name">测试执行</div>
+        <div class="flow-desc">在授权范围内开展测试，全程留痕</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-dot">4</div>
+      <div class="flow-body">
+        <div class="flow-name">报告撰写</div>
+        <div class="flow-desc">输出脱敏报告，标注风险等级与影响</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-dot">5</div>
+      <div class="flow-body">
+        <div class="flow-name">修复指导</div>
+        <div class="flow-desc">协助客户理解漏洞并提供修复支持</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-dot">6</div>
+      <div class="flow-body">
+        <div class="flow-name">复测验收</div>
+        <div class="flow-desc">修复后回归测试，确认漏洞闭环</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. 红线声明（强化版） -->
+<section>
+  <div class="section-title red">红线声明</div>
+  <div class="section-sub">不可逾越的合规底线</div>
+  <div class="redline-card">
+    <div class="redline-header">
+      <div class="redline-icon">⛔</div>
+      <div class="redline-title">服务红线</div>
+    </div>
+    <ul class="redline-list">
+      <li>不接<strong>非法攻击</strong>请求</li>
+      <li>不接<strong>未授权测试</strong>委托</li>
+      <li>不提供<strong>攻击 payload</strong>可复用素材</li>
+      <li class="allow">仅限<strong>授权范围内</strong>安全评估</li>
+      <li class="allow">案例截图均已<strong>脱敏处理</strong></li>
+    </ul>
+    <div class="redline-footer">— 合规是信任的前提，授权是服务的基础 —</div>
+  </div>
+</section>
+
+<!-- 9. CTA -->
+<section>
+  <div class="cta">
+    <h2>立即咨询</h2>
+    <div class="cta-sub">授权测试 · 先聊再测</div>
+    <div class="qr-placeholder"></div>
+    <button class="cta-btn">扫码加微信，授权测试先聊</button>
+    <div class="cta-hint">添加微信时请备注「信息安全咨询」</div>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer class="footer">
+  <div class="brand-band"></div>
+  <p>HOS 技术服务 · 信息安全服务线<br>技术深度 · 微商可信 · 授权合规</p>
+  <p class="law">严格遵守《网络安全法》《数据安全法》《个人信息保护法》</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI 应用开发 | HOS 技术服务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hos-violet-deep:#5B2C91; --hos-violet:#7C3AED; --hos-violet-light:#A78BFA; --hos-violet-glow:#C4B5FD;
+  --hos-burgundy:#8B1A3C; --hos-burgundy-soft:#B91C5C;
+  --hos-bronze-green:#3D5A4C; --hos-bronze-light:#6B8E7A;
+  --hos-forge:#2563EB; --hos-ls:#7C3AED; --hos-workflow:#059669;
+  --bg-darkest:#0F0A1F; --bg-dark:#1A1129; --bg-card:#241638; --bg-elevated:#2E1F47;
+  --ink-primary:#F5F0FF; --ink-secondary:#C4B5E0; --ink-muted:#8B7DAA;
+  --price-anchor:#FFB347;
+  --font-display:'Noto Serif SC',serif; --font-body:'Noto Sans SC',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --brand-band-gradient:linear-gradient(90deg,#7C3AED 0%,#7C3AED 33%,#8B1A3C 33%,#8B1A3C 66%,#3D5A4C 66%,#3D5A4C 100%);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  max-width:480px;
+  margin:0 auto;
+  background:var(--bg-darkest);
+  color:var(--ink-primary);
+  font-family:var(--font-body);
+  font-size:14px;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+a { color:inherit; text-decoration:none; }
+
+.brand-band-top, .brand-band-bottom {
+  height:4px;
+  width:100%;
+  background:var(--brand-band-gradient);
+  position:relative;
+  z-index:2;
+}
+.brand-band-top { position:sticky; top:0; }
+
+section { padding:28px 20px; position:relative; }
+
+/* ===== 1. 页头 ===== */
+.header {
+  padding:18px 20px 14px;
+  background:var(--bg-dark);
+  border-bottom:1px solid rgba(124,58,237,0.15);
+  position:sticky;
+  top:4px;
+  z-index:10;
+}
+.header-row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.logo { font-family:var(--font-display); font-weight:700; font-size:20px; letter-spacing:1px; color:var(--ink-primary); }
+.logo .dot { color:var(--hos-violet); }
+.tagline { font-size:11px; color:var(--ink-muted); letter-spacing:2px; }
+.anchor-nav { display:flex; gap:14px; margin-top:10px; font-size:12px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.anchor-nav::-webkit-scrollbar { display:none; }
+.anchor-nav a { color:var(--ink-secondary); white-space:nowrap; padding:4px 0; }
+.anchor-nav a:active { color:var(--hos-violet-light); }
+
+/* ===== 2. Hero ===== */
+.hero { padding:0; }
+.hero-img { width:100%; height:auto; display:block; aspect-ratio:4/3; object-fit:cover; background:var(--bg-card); }
+.hero-body { padding:24px 20px 28px; }
+.hero h1 { font-family:var(--font-display); font-size:30px; font-weight:700; line-height:1.25; color:var(--ink-primary); }
+.hero .value-prop { margin-top:10px; font-size:14px; color:var(--ink-secondary); line-height:1.7; }
+.hero .value-prop .sep { color:var(--hos-violet-light); margin:0 4px; }
+.cta-primary {
+  display:block; width:100%; min-height:48px;
+  margin-top:20px; padding:0 20px;
+  background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);
+  color:var(--ink-primary); font-family:var(--font-body); font-size:15px; font-weight:500;
+  border:none; border-radius:10px;
+  cursor:pointer; transition:transform .15s ease;
+}
+.cta-primary:active { transform:scale(0.98); }
+
+/* ===== 通用标题 ===== */
+.sec-title { font-family:var(--font-display); font-size:20px; font-weight:600; color:var(--ink-primary); margin-bottom:6px; }
+.sec-sub { font-size:12px; color:var(--ink-muted); margin-bottom:18px; letter-spacing:1px; }
+
+/* ===== 3. 痛点 ===== */
+.pain-cards { display:flex; flex-direction:column; gap:12px; }
+.pain-card {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.18);
+  border-left:3px solid var(--hos-burgundy-soft);
+  border-radius:10px;
+  padding:16px;
+}
+.pain-card .q { font-size:14px; font-weight:500; color:var(--ink-primary); }
+.pain-card .q em { font-style:normal; color:var(--hos-burgundy-soft); font-weight:600; }
+.pain-card .a { margin-top:8px; font-size:13px; color:var(--ink-secondary); }
+.pain-card .a::before { content:"→ "; color:var(--hos-bronze-light); font-weight:600; }
+
+/* ===== 4. 解决方案 价格表 ===== */
+.price-table { display:flex; flex-direction:column; gap:10px; }
+.price-row {
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.15);
+  border-radius:10px;
+  padding:14px 16px;
+}
+.price-row .name { font-size:14px; color:var(--ink-primary); }
+.price-row .price {
+  font-family:var(--font-mono);
+  font-size:16px; font-weight:600;
+  color:var(--price-anchor);
+}
+.price-row .price small { font-size:11px; opacity:0.8; }
+
+/* ===== 5. 案例轮播 ===== */
+.carousel-wrap { position:relative; margin:0 -20px; }
+.carousel {
+  display:flex; gap:14px;
+  overflow-x:auto; scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding:0 20px 4px;
+}
+.carousel::-webkit-scrollbar { display:none; }
+.case-card {
+  flex:0 0 260px;
+  scroll-snap-align:start;
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.2);
+  border-radius:12px;
+  overflow:hidden;
+}
+.case-card .tag {
+  display:inline-block;
+  font-family:var(--font-mono); font-size:10px;
+  color:var(--hos-violet-light);
+  background:rgba(124,58,237,0.15);
+  padding:3px 8px; border-radius:4px;
+  margin:14px 0 0 14px;
+}
+.case-card h4 { font-family:var(--font-display); font-size:16px; font-weight:600; color:var(--ink-primary); padding:10px 14px 6px; }
+.case-card p { font-size:12px; color:var(--ink-secondary); padding:0 14px 14px; line-height:1.6; }
+.case-card .metric { font-family:var(--font-mono); color:var(--price-anchor); font-weight:600; }
+.carousel-hint { text-align:center; font-size:11px; color:var(--ink-muted); margin-top:10px; letter-spacing:1px; }
+
+/* ===== 6. 服务流程 ===== */
+.steps { display:flex; flex-direction:column; gap:0; position:relative; }
+.step {
+  display:flex; align-items:flex-start; gap:14px;
+  position:relative; padding-bottom:18px;
+}
+.step:last-child { padding-bottom:0; }
+.step::before {
+  content:""; position:absolute; left:14px; top:30px; bottom:0;
+  width:1px; background:linear-gradient(var(--hos-violet) 0%, var(--bg-card) 100%);
+}
+.step:last-child::before { display:none; }
+.step-num {
+  flex:0 0 28px; height:28px; border-radius:50%;
+  background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);
+  color:var(--ink-primary); font-family:var(--font-mono); font-size:12px; font-weight:600;
+  display:flex; align-items:center; justify-content:center;
+  z-index:1;
+}
+.step-body .t { font-size:14px; font-weight:500; color:var(--ink-primary); }
+.step-body .d { font-size:12px; color:var(--ink-muted); margin-top:2px; }
+
+/* ===== 7. 价格锚定 + 自测问卷 ===== */
+.tiers { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:24px; }
+.tier {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.15);
+  border-radius:10px;
+  padding:14px;
+}
+.tier .tier-label { font-size:11px; color:var(--ink-muted); letter-spacing:1px; }
+.tier .tier-price { font-family:var(--font-mono); font-size:17px; font-weight:600; color:var(--price-anchor); margin-top:4px; }
+.tier.featured { border-color:var(--hos-violet); background:var(--bg-elevated); }
+.tier.featured .tier-label { color:var(--hos-violet-light); }
+
+.quiz {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.25);
+  border-radius:12px;
+  padding:18px 16px;
+}
+.quiz h4 { font-family:var(--font-display); font-size:15px; color:var(--ink-primary); margin-bottom:4px; }
+.quiz .quiz-sub { font-size:11px; color:var(--ink-muted); margin-bottom:16px; }
+.quiz-q { margin-bottom:14px; }
+.quiz-q .qlabel { font-size:13px; font-weight:500; color:var(--ink-primary); margin-bottom:8px; display:block; }
+.quiz-q .qlabel .qn { color:var(--hos-violet-light); font-family:var(--font-mono); margin-right:4px; }
+.quiz-opts { display:flex; flex-wrap:wrap; gap:8px; }
+.quiz-opts label {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:12px; color:var(--ink-secondary);
+  background:var(--bg-dark);
+  border:1px solid rgba(124,58,237,0.2);
+  border-radius:8px;
+  padding:7px 11px;
+  cursor:pointer;
+  transition:border-color .15s;
+}
+.quiz-opts label:active { border-color:var(--hos-violet); }
+.quiz-opts input { accent-color:var(--hos-violet); width:14px; height:14px; }
+.quiz-opts label:has(input:checked) {
+  border-color:var(--hos-violet);
+  background:rgba(124,58,237,0.18);
+  color:var(--ink-primary);
+}
+.quiz-submit {
+  display:block; width:100%; min-height:44px;
+  margin-top:6px;
+  background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);
+  color:var(--ink-primary); font-size:14px; font-weight:500;
+  border:none; border-radius:8px;
+  cursor:pointer;
+}
+.quiz-result {
+  margin-top:14px; padding:14px;
+  background:var(--bg-elevated);
+  border:1px solid var(--hos-violet);
+  border-radius:8px;
+  display:none;
+}
+.quiz-result.show { display:block; }
+.quiz-result .rec { font-size:14px; color:var(--ink-primary); font-weight:500; }
+.quiz-result .rec strong { color:var(--hos-violet-glow); }
+.quiz-result .price-range { font-family:var(--font-mono); font-size:16px; color:var(--price-anchor); font-weight:600; margin-top:6px; }
+.quiz-result .note { font-size:11px; color:var(--ink-muted); margin-top:6px; }
+
+/* ===== 8. 信任构建 ===== */
+.trust-grid { display:grid; grid-template-columns:1fr; gap:10px; }
+.trust-item {
+  display:flex; align-items:center; gap:10px;
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.15);
+  border-radius:10px;
+  padding:12px 14px;
+}
+.trust-icon {
+  flex:0 0 28px; height:28px; border-radius:6px;
+  background:rgba(124,58,237,0.15);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:13px; color:var(--hos-violet-light); font-weight:600;
+}
+.trust-text { font-size:13px; color:var(--ink-secondary); }
+.trust-text strong { color:var(--ink-primary); }
+.redline {
+  margin-top:12px;
+  background:rgba(139,26,60,0.15);
+  border:1px solid var(--hos-burgundy);
+  border-radius:10px;
+  padding:12px 14px;
+  font-size:12px; color:var(--ink-secondary);
+}
+.redline strong { color:var(--hos-burgundy-soft); }
+.reviews { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:14px; }
+.review-box {
+  aspect-ratio:3/4;
+  background:var(--bg-card);
+  border:1px dashed rgba(124,58,237,0.3);
+  border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:var(--ink-muted);
+  text-align:center; padding:8px;
+}
+
+/* ===== 9. FAQ ===== */
+.faq-list { display:flex; flex-direction:column; gap:8px; }
+details {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.15);
+  border-radius:10px;
+  overflow:hidden;
+}
+summary {
+  list-style:none; cursor:pointer;
+  padding:14px 16px;
+  font-size:14px; color:var(--ink-primary); font-weight:500;
+  display:flex; align-items:center; justify-content:space-between;
+  min-height:44px;
+}
+summary::-webkit-details-marker { display:none; }
+summary::after {
+  content:"+"; font-family:var(--font-mono); font-size:16px; color:var(--hos-violet-light); transition:transform .2s;
+}
+details[open] summary::after { content:"−"; }
+details .answer { padding:0 16px 14px; font-size:13px; color:var(--ink-secondary); line-height:1.7; }
+
+/* ===== 10. 表单 ===== */
+.form-wrap {
+  background:var(--bg-card);
+  border:1px solid rgba(124,58,237,0.25);
+  border-radius:12px;
+  padding:20px 16px;
+}
+.field { margin-bottom:14px; }
+.field label { display:block; font-size:13px; color:var(--ink-primary); margin-bottom:6px; font-weight:500; }
+.field label .req { color:var(--hos-burgundy-soft); }
+.field input, .field select, .field textarea {
+  width:100%; min-height:44px;
+  background:var(--bg-dark);
+  border:1px solid rgba(124,58,237,0.2);
+  border-radius:8px;
+  padding:10px 12px;
+  font-family:var(--font-body); font-size:14px;
+  color:var(--ink-primary);
+  -webkit-appearance:none; appearance:none;
+}
+.field input::placeholder { color:var(--ink-muted); }
+.field input:focus, .field select:focus { outline:none; border-color:var(--hos-violet); }
+.field select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23A78BFA' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
+.field.err input, .field.err select { border-color:var(--hos-burgundy-soft); }
+.field .err-msg { font-size:11px; color:var(--hos-burgundy-soft); margin-top:4px; display:none; }
+.field.err .err-msg { display:block; }
+.form-submit {
+  display:block; width:100%; min-height:48px;
+  background:linear-gradient(135deg,var(--hos-violet) 0%,var(--hos-violet-deep) 100%);
+  color:var(--ink-primary); font-size:15px; font-weight:500;
+  border:none; border-radius:10px; cursor:pointer;
+  transition:transform .15s;
+}
+.form-submit:active { transform:scale(0.98); }
+.form-success {
+  margin-top:14px; padding:16px;
+  background:rgba(5,150,105,0.15);
+  border:1px solid var(--hos-workflow);
+  border-radius:10px;
+  text-align:center;
+  display:none;
+}
+.form-success.show { display:block; }
+.form-success .icon { font-size:22px; color:var(--hos-workflow); }
+.form-success .msg { font-size:14px; color:var(--ink-primary); margin-top:6px; font-weight:500; }
+.form-success .sub { font-size:12px; color:var(--ink-secondary); margin-top:4px; }
+
+/* ===== 11. 页脚 ===== */
+.footer {
+  background:var(--bg-dark);
+  padding:24px 20px;
+}
+.footer-brand { font-family:var(--font-display); font-size:18px; font-weight:700; color:var(--ink-primary); }
+.footer-brand .dot { color:var(--hos-violet); }
+.footer-links { display:flex; gap:16px; margin-top:12px; }
+.footer-links a { font-family:var(--font-mono); font-size:12px; color:var(--ink-secondary); }
+.footer-qr {
+  margin-top:16px;
+  width:100px; height:100px;
+  background:var(--bg-card);
+  border:1px dashed rgba(124,58,237,0.4);
+  border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:var(--ink-muted); text-align:center;
+}
+.footer-disclaimer {
+  margin-top:16px; padding-top:14px;
+  border-top:1px solid rgba(124,58,237,0.15);
+  font-size:11px; color:var(--ink-muted); line-height:1.6;
+}
+.footer-disclaimer strong { color:var(--hos-burgundy-soft); }
+</style>
+</head>
+<body>
+
+<!-- ===== 1. 页头 ===== -->
+<div class="brand-band-top"></div>
+<header class="header">
+  <div class="header-row">
+    <div>
+      <div class="logo">HOS<span class="dot">·</span></div>
+      <div class="tagline">TECHNICAL SERVICE</div>
+    </div>
+  </div>
+  <nav class="anchor-nav">
+    <a href="#selling">卖点</a>
+    <a href="#cases">案例</a>
+    <a href="#pricing">价格</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</header>
+
+<!-- ===== 2. Hero ===== -->
+<section class="hero" id="top">
+  <img class="hero-img" src="../pdp/kv-ai-app.jpg" alt="AI应用开发">
+  <div class="hero-body">
+    <h1>AI 应用开发</h1>
+    <p class="value-prop">大模型部署<span class="sep">·</span>RAG知识库<span class="sep">·</span>Agent设计<span class="sep">·</span>不止调API</p>
+    <button class="cta-primary" onclick="document.getElementById('form').scrollIntoView({behavior:'smooth'})">免费咨询5分钟</button>
+  </div>
+</section>
+
+<!-- ===== 3. 痛点 ===== -->
+<section id="selling">
+  <h2 class="sec-title">遇到这些问题？</h2>
+  <p class="sec-sub">PAIN POINTS</p>
+  <div class="pain-cards">
+    <div class="pain-card">
+      <div class="q">想用大模型<em>不会部署</em>？</div>
+      <div class="a">本地/云端实战部署</div>
+    </div>
+    <div class="pain-card">
+      <div class="q">知识库问答<em>不会搭</em>？</div>
+      <div class="a">RAG系统从0到1</div>
+    </div>
+    <div class="pain-card">
+      <div class="q">AI应用<em>不知从何下手</em>？</div>
+      <div class="a">需求评估+方案设计</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 4. 解决方案 价格表 ===== -->
+<section>
+  <h2 class="sec-title">解决方案</h2>
+  <p class="sec-sub">SOLUTIONS · 价格透明</p>
+  <div class="price-table">
+    <div class="price-row"><span class="name">模型部署</span><span class="price">¥200<small>起</small></span></div>
+    <div class="price-row"><span class="name">Prompt工程</span><span class="price">¥100<small>起</small></span></div>
+    <div class="price-row"><span class="name">RAG系统</span><span class="price">¥500<small>起</small></span></div>
+    <div class="price-row"><span class="name">数据分析</span><span class="price">¥300<small>起</small></span></div>
+    <div class="price-row"><span class="name">AI应用开发</span><span class="price">¥1000<small>起</small></span></div>
+  </div>
+</section>
+
+<!-- ===== 5. 案例轮播 ===== -->
+<section id="cases">
+  <h2 class="sec-title">实战案例</h2>
+  <p class="sec-sub">CASES · 左右滑动</p>
+  <div class="carousel-wrap">
+    <div class="carousel">
+      <div class="case-card">
+        <span class="tag">RAG</span>
+        <h4>企业知识库RAG</h4>
+        <p>LangChain + 本地LLM，支持<span class="metric">多文档源接入</span>与答案溯源。</p>
+      </div>
+      <div class="case-card">
+        <span class="tag">DATA</span>
+        <h4>数据分析平台</h4>
+        <p>Python + Streamlit 自动化周报，一键生成可视化看板。</p>
+      </div>
+      <div class="case-card">
+        <span class="tag">BOT</span>
+        <h4>智能客服Bot</h4>
+        <p>接入企业微信 <span class="metric">7×24</span> 应答，降本提效。</p>
+      </div>
+    </div>
+  </div>
+  <p class="carousel-hint">← 滑动查看更多 →</p>
+</section>
+
+<!-- ===== 6. 服务流程 ===== -->
+<section>
+  <h2 class="sec-title">服务流程</h2>
+  <p class="sec-sub">PROCESS · 5 STEPS</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><div class="t">咨询</div><div class="d">沟通需求方向</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body"><div class="t">需求评估</div><div class="d">技术方案与报价</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><div class="t">定金50%</div><div class="d">确认方案后支付</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body"><div class="t">开发交付</div><div class="d">按节点提交成果</div></div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body"><div class="t">售后7天</div><div class="d">免费修改与答疑</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7. 价格锚定 + 自测问卷 ===== -->
+<section id="pricing">
+  <h2 class="sec-title">价格锚定 & 需求自测</h2>
+  <p class="sec-sub">PRICING · SELF-ASSESSMENT</p>
+  <div class="tiers">
+    <div class="tier"><div class="tier-label">引流品</div><div class="tier-price">¥100</div></div>
+    <div class="tier featured"><div class="tier-label">标品</div><div class="tier-price">¥500</div></div>
+    <div class="tier"><div class="tier-label">利润品</div><div class="tier-price">¥1000</div></div>
+    <div class="tier"><div class="tier-label">形象品</div><div class="tier-price">面议</div></div>
+  </div>
+
+  <div class="quiz">
+    <h4>需求自测问卷</h4>
+    <p class="quiz-sub">回答4个问题，获取推荐方案与价格区间</p>
+
+    <div class="quiz-q">
+      <label class="qlabel"><span class="qn">Q1</span>你的场景？</label>
+      <div class="quiz-opts">
+        <label><input type="radio" name="q1" value="客服">客服</label>
+        <label><input type="radio" name="q1" value="知识库">知识库</label>
+        <label><input type="radio" name="q1" value="数据分析">数据分析</label>
+        <label><input type="radio" name="q1" value="其他">其他</label>
+      </div>
+    </div>
+
+    <div class="quiz-q">
+      <label class="qlabel"><span class="qn">Q2</span>数据量？</label>
+      <div class="quiz-opts">
+        <label><input type="radio" name="q2" value="小">小 &lt;1G</label>
+        <label><input type="radio" name="q2" value="中">中 1-10G</label>
+        <label><input type="radio" name="q2" value="大">大 &gt;10G</label>
+      </div>
+    </div>
+
+    <div class="quiz-q">
+      <label class="qlabel"><span class="qn">Q3</span>部署方式？</label>
+      <div class="quiz-opts">
+        <label><input type="radio" name="q3" value="本地">本地</label>
+        <label><input type="radio" name="q3" value="云端">云端</label>
+        <label><input type="radio" name="q3" value="不确定">不确定</label>
+      </div>
+    </div>
+
+    <div class="quiz-q">
+      <label class="qlabel"><span class="qn">Q4</span>预算区间？</label>
+      <div class="quiz-opts">
+        <label><input type="radio" name="q4" value="500内">500内</label>
+        <label><input type="radio" name="q4" value="500-2000">500-2000</label>
+        <label><input type="radio" name="q4" value="2000+">2000+</label>
+      </div>
+    </div>
+
+    <button class="quiz-submit" id="quizSubmit">获取推荐方案</button>
+
+    <div class="quiz-result" id="quizResult">
+      <div class="rec" id="quizRec"></div>
+      <div class="price-range" id="quizPrice"></div>
+      <div class="note">* 价格仅供参考，实际以需求评估为准</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 8. 信任构建 ===== -->
+<section>
+  <h2 class="sec-title">为什么选择 HOS</h2>
+  <p class="sec-sub">TRUST</p>
+  <div class="trust-grid">
+    <div class="trust-item">
+      <div class="trust-icon">7d</div>
+      <div class="trust-text"><strong>7天修改</strong>售后无忧</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">50%</div>
+      <div class="trust-text"><strong>50%定金</strong>交付后付尾</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">{ }</div>
+      <div class="trust-text"><strong>技术栈透明</strong>LLaMA / LangChain / Streamlit</div>
+    </div>
+  </div>
+  <div class="redline">
+    <strong>红线声明：</strong>不接违法违规AI应用，包括但不限于深度伪造、诈骗辅助、违规内容生成等。
+  </div>
+  <div class="reviews">
+    <div class="review-box">好评截图<br>01</div>
+    <div class="review-box">好评截图<br>02</div>
+    <div class="review-box">好评截图<br>03</div>
+  </div>
+</section>
+
+<!-- ===== 9. FAQ ===== -->
+<section id="faq">
+  <h2 class="sec-title">常见问题</h2>
+  <p class="sec-sub">FAQ</p>
+  <div class="faq-list">
+    <details>
+      <summary>需要什么硬件？</summary>
+      <div class="answer">本地部署建议16G显存（如RTX4080/3090），云端可按需租用GPU实例，无需自备硬件。</div>
+    </details>
+    <details>
+      <summary>数据安全？</summary>
+      <div class="answer">支持完全本地部署，数据不出内网。RAG系统可对接私有知识库，不经过第三方API。</div>
+    </details>
+    <details>
+      <summary>能集成现有系统？</summary>
+      <div class="answer">支持API对接，可集成企业微信、钉钉、飞书、自有OA/CRM等系统。</div>
+    </details>
+    <details>
+      <summary>售后多久？</summary>
+      <div class="answer">交付后提供7天免费修改与答疑，超出部分按工时计费。</div>
+    </details>
+    <details>
+      <summary>急单怎么算？</summary>
+      <div class="answer">加急订单按1.5-2倍报价，具体视排期与复杂度协商。</div>
+    </details>
+  </div>
+</section>
+
+<!-- ===== 10. 表单 ===== -->
+<section id="form">
+  <h2 class="sec-title">提交需求</h2>
+  <p class="sec-sub">CONTACT · 24h内联系</p>
+  <div class="form-wrap">
+    <form id="leadForm" novalidate>
+      <div class="field">
+        <label>项目类型</label>
+        <select name="type" id="fType">
+          <option value="">请选择</option>
+          <option value="RAG">RAG知识库</option>
+          <option value="模型部署">模型部署</option>
+          <option value="数据分析">数据分析</option>
+          <option value="AI应用">AI应用开发</option>
+          <option value="其他">其他</option>
+        </select>
+        <div class="err-msg">请选择项目类型</div>
+      </div>
+      <div class="field">
+        <label>技术栈偏好</label>
+        <input type="text" name="stack" id="fStack" placeholder="如 LangChain / LLaMA / Streamlit">
+      </div>
+      <div class="field">
+        <label>预算</label>
+        <select name="budget" id="fBudget">
+          <option value="">请选择</option>
+          <option value="500内">500内</option>
+          <option value="500-2000">500-2000</option>
+          <option value="2000+">2000+</option>
+        </select>
+        <div class="err-msg">请选择预算区间</div>
+      </div>
+      <div class="field">
+        <label>联系方式 <span class="req">*</span></label>
+        <input type="text" name="contact" id="fContact" placeholder="微信 / 手机号 / 邮箱" required>
+        <div class="err-msg">请填写联系方式</div>
+      </div>
+      <button type="submit" class="form-submit">提交需求，24h内联系</button>
+    </form>
+    <div class="form-success" id="formSuccess">
+      <div class="icon">✓</div>
+      <div class="msg">提交成功！</div>
+      <div class="sub">我们将在24小时内与您联系，请保持通讯畅通。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 11. 页脚 ===== -->
+<footer class="footer">
+  <div class="footer-brand">HOS<span class="dot">·</span></div>
+  <div class="footer-links">
+    <a href="#">forge</a>
+    <a href="#">ls</a>
+    <a href="#">workflow</a>
+  </div>
+  <div class="footer-qr">微信<br>二维码</div>
+  <div class="footer-disclaimer">
+    <strong>免责声明：</strong>本服务仅提供技术咨询服务，不接违法违规AI应用。最终交付以双方确认为准。
+  </div>
+</footer>
+<div class="brand-band-bottom"></div>
+
+<script>
+/* ===== 自测问卷 JS ===== */
+(function(){
+  var submit = document.getElementById('quizSubmit');
+  var result = document.getElementById('quizResult');
+  var recEl = document.getElementById('quizRec');
+  var priceEl = document.getElementById('quizPrice');
+
+  submit.addEventListener('click', function(){
+    var q1 = document.querySelector('input[name="q1"]:checked');
+    var q2 = document.querySelector('input[name="q2"]:checked');
+    var q3 = document.querySelector('input[name="q3"]:checked');
+    var q4 = document.querySelector('input[name="q4"]:checked');
+
+    if(!q1 || !q2 || !q3 || !q4){
+      recEl.innerHTML = '请完成所有问题后再提交';
+      priceEl.textContent = '';
+      result.classList.add('show');
+      return;
+    }
+
+    var scene = q1.value, data = q2.value, deploy = q3.value, budget = q4.value;
+    var service, priceRange;
+
+    // 推荐逻辑
+    if(scene === '知识库' || scene === '客服'){
+      service = 'RAG知识库系统';
+      if(data === '大') { priceRange = '¥1500 - ¥3000'; }
+      else if(data === '中') { priceRange = '¥800 - ¥1500'; }
+      else { priceRange = '¥500 - ¥1000'; }
+    } else if(scene === '数据分析'){
+      service = '数据分析平台';
+      if(data === '大') { priceRange = '¥1000 - ¥2500'; }
+      else { priceRange = '¥300 - ¥1000'; }
+    } else {
+      service = 'AI应用开发';
+      if(budget === '2000+') { priceRange = '¥2000 - ¥5000+'; }
+      else if(budget === '500-2000') { priceRange = '¥1000 - ¥2000'; }
+      else { priceRange = '¥500 - ¥1000'; }
+    }
+
+    // 部署方式影响
+    if(deploy === '本地' && service.indexOf('RAG') !== -1){
+      priceRange = priceRange + '（本地部署+¥200起）';
+    }
+
+    recEl.innerHTML = '推荐服务：<strong>' + service + '</strong><br>场景：' + scene + ' / 数据：' + data + ' / 部署：' + deploy + ' / 预算：' + budget;
+    priceEl.textContent = '预估价格区间：' + priceRange;
+    result.classList.add('show');
+    result.scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+})();
+
+/* ===== 表单 JS ===== */
+(function(){
+  var form = document.getElementById('leadForm');
+  var success = document.getElementById('formSuccess');
+
+  function setError(field, hasErr){
+    var f = document.getElementById(field).closest('.field');
+    if(f){ f.classList.toggle('err', hasErr); }
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var valid = true;
+
+    var type = document.getElementById('fType');
+    var budget = document.getElementById('fBudget');
+    var contact = document.getElementById('fContact');
+
+    if(!type.value){ setError('fType', true); valid = false; } else { setError('fType', false); }
+    if(!budget.value){ setError('fBudget', true); valid = false; } else { setError('fBudget', false); }
+    if(!contact.value.trim()){ setError('fContact', true); valid = false; } else { setError('fContact', false); }
+
+    if(valid){
+      form.style.display = 'none';
+      success.classList.add('show');
+      success.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+  });
+})();
+</script>
+</body>
+</html>

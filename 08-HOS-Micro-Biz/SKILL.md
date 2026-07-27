@@ -157,21 +157,29 @@ Completed Order -> Case Study Copy (marketing) -> Multi-platform Distribution (h
 
 ## File Structure
 
-```
+`
 08-HOS-Micro-Biz/
 +-- SKILL.md                       # This file - skill system overview
 +-- README.md                      # Quick start guide
-+-- catalog/                       # Service catalog & pricing
-|   +-- SKILL.md
-+-- marketing/                     # Customer acquisition content
-|   +-- SKILL.md
-+-- templates/                     # Client communication SOP
-|   +-- SKILL.md
-+-- orders/                        # Order & finance management
-|   +-- SKILL.md
-+-- compliance/                    # Risk control & compliance
-    +-- SKILL.md
-```
++-- hos-micro-biz.md               # Unified skill definition (CN)
++-- output/                        # Complete operational document set
+|   +-- micro-biz/
+|       +-- catalog/               # Service catalog & pricing (6 docs)
+|       +-- marketing/             # Customer acquisition content (4 docs)
+|       +-- templates/             # Client communication SOP (4 docs)
+|       +-- orders/                # Order & finance management (4 docs)
+|       +-- compliance/            # Risk control & compliance (4 docs)
+|       +-- design/                # Customer acquisition visual assets (54 files)
+|           +-- design-system/     # Visual baseline (tokens/fonts/prompts)
+|           +-- pdp/               # PDP detail page KV + HTML
+|           +-- main-and-posters/  # Main images/posters/lead images
+|           +-- landing-pages/     # H5 landing pages
+|           +-- cases/             # Case showcase trust pages
+|           +-- packs/             # Full asset packs (private-domain images)
+|           +-- index.html         # One-click asset browser
+|           +-- README.md
+|       +-- README.md              # Module navigation
+`
 
 ---
 

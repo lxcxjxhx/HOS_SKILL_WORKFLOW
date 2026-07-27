@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>课设毕设案例展示 · HOS 技术服务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* 主色：风信子深紫罗兰 */
+  --hos-violet-deep:  #5B2C91;
+  --hos-violet:       #7C3AED;
+  --hos-violet-light: #A78BFA;
+  --hos-violet-glow:  #C4B5FD;
+  /* 辅色：勃艮第红 / 青铜绿 */
+  --hos-burgundy:      #8B1A3C;
+  --hos-burgundy-soft: #B91C5C;
+  --hos-bronze-green:  #3D5A4C;
+  --hos-bronze-light:  #6B8E7A;
+  /* 暗背景高对比体系 */
+  --bg-darkest:   #0F0A1F;
+  --bg-dark:      #1A1129;
+  --bg-card:      #241638;
+  --bg-elevated:  #2E1F47;
+  --bg-overlay:   rgba(15,10,31,0.85);
+  /* 文字色 */
+  --ink-primary:    #F5F0FF;
+  --ink-secondary:  #C4B5E0;
+  --ink-muted:      #8B7DAA;
+  --ink-on-violet:  #FFFFFF;
+  --ink-on-burgundy:#FFE8EE;
+  /* 语义色 */
+  --price-anchor: #FFB347;
+  --price-anchor-glow: rgba(255,179,71,0.25);
+  --trust-badge:  #3D5A4C;
+  --alert:        #8B1A3C;
+  --success:      #059669;
+  /* 间距阶 */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+  --space-2xl: 64px;
+  /* 圆角阶 */
+  --radius-sm:    4px;
+  --radius-md:    8px;
+  --radius-lg:    16px;
+  --radius-xl:    24px;
+  --radius-pill:  999px;
+  /* 阴影阶 */
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,0.5);
+  --shadow-glow-violet: 0 0 24px rgba(124,58,237,0.35);
+  --shadow-glow-gold:   0 0 16px rgba(255,179,71,0.30);
+  /* 字体族 */
+  --font-display: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-body:    'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  /* 字号阶 */
+  --fs-hero:    40px;
+  --fs-h1:      32px;
+  --fs-h2:      24px;
+  --fs-h3:      18px;
+  --fs-body:    15px;
+  --fs-body-sm: 14px;
+  --fs-caption: 12px;
+  /* 三色色带 */
+  --brand-band-gradient: linear-gradient(
+    90deg,
+    var(--hos-violet) 0%,
+    var(--hos-violet) 33%,
+    var(--hos-burgundy) 33%,
+    var(--hos-burgundy) 66%,
+    var(--hos-bronze-green) 66%,
+    var(--hos-bronze-green) 100%
+  );
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-darkest);
+  color: var(--ink-primary);
+  line-height: 1.6;
+  font-size: var(--fs-body);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--bg-dark);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ============ 模块 1：品牌头 ============ */
+.brand-band {
+  height: 4px;
+  background: var(--brand-band-gradient);
+  width: 100%;
+}
+.site-header {
+  background: var(--hos-violet-deep);
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(124,58,237,0.3);
+}
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.brand-logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  color: var(--ink-primary);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.brand-tagline {
+  font-size: var(--fs-caption);
+  color: var(--hos-violet-glow);
+  letter-spacing: 2px;
+}
+.back-link {
+  color: var(--ink-secondary);
+  text-decoration: none;
+  font-size: var(--fs-body-sm);
+  padding: 6px 12px;
+  border: 1px solid rgba(196,181,224,0.3);
+  border-radius: var(--radius-pill);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.back-link:hover {
+  color: var(--ink-primary);
+  border-color: var(--hos-violet-light);
+  background: rgba(124,58,237,0.15);
+}
+
+/* ============ 模块 2：Hero 区 ============ */
+.hero {
+  padding: var(--space-xl) var(--space-lg) var(--space-lg);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+  text-align: center;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-h1);
+  color: var(--ink-primary);
+  line-height: 1.2;
+  margin-bottom: var(--space-sm);
+}
+.hero-subtitle {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  letter-spacing: 1px;
+  margin-bottom: var(--space-xl);
+}
+.hero-subtitle .dot {
+  color: var(--hos-violet-light);
+  margin: 0 6px;
+}
+
+/* 信任统计条 */
+.trust-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  border: 1px solid rgba(124,58,237,0.2);
+}
+.stat-item {
+  text-align: center;
+  padding: var(--space-sm) 0;
+}
+.stat-item:nth-child(1),
+.stat-item:nth-child(2) {
+  border-bottom: 1px solid rgba(124,58,237,0.15);
+}
+.stat-item:nth-child(odd) {
+  border-right: 1px solid rgba(124,58,237,0.15);
+}
+.stat-num {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--price-anchor);
+  text-shadow: 0 0 12px var(--price-anchor-glow);
+  line-height: 1;
+  display: block;
+}
+.stat-label {
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* ============ 模块 3：案例筛选标签 ============ */
+.filter-bar {
+  padding: var(--space-lg) var(--space-lg) var(--space-sm);
+  background: var(--bg-dark);
+}
+.filter-title {
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 1px;
+}
+.filter-scroll {
+  display: flex;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.filter-scroll::-webkit-scrollbar { display: none; }
+.filter-tag {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  background: var(--bg-card);
+  border: 1px solid rgba(124,58,237,0.2);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  user-select: none;
+}
+.filter-tag.active {
+  background: var(--hos-violet);
+  color: var(--ink-on-violet);
+  border-color: var(--hos-violet);
+  box-shadow: var(--shadow-glow-violet);
+}
+
+/* ============ 模块 4：案例卡片列表 ============ */
+.case-list {
+  padding: var(--space-md) var(--space-lg) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.case-card {
+  background: var(--bg-elevated);
+  border-left: 4px solid var(--hos-violet);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s;
+}
+.case-card.is-hidden { display: none; }
+.case-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+  gap: var(--space-sm);
+}
+.case-num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  letter-spacing: 1px;
+}
+.case-cat {
+  font-size: var(--fs-caption);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+.case-cat--violet {
+  background: var(--hos-violet);
+  color: var(--ink-on-violet);
+}
+.case-cat--green {
+  background: var(--hos-bronze-green);
+  color: var(--ink-primary);
+}
+.case-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-h3);
+  color: var(--ink-primary);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.case-mask {
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  margin-bottom: var(--space-sm);
+}
+.case-mask::before {
+  content: "● ";
+  color: var(--hos-bronze-light);
+}
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--space-sm);
+}
+.tech-tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  padding: 2px 8px;
+  background: rgba(124,58,237,0.18);
+  color: var(--hos-violet-light);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(124,58,237,0.25);
+}
+.case-desc {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-md);
+}
+.case-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xs);
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+.metric {
+  text-align: center;
+}
+.metric-num {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--price-anchor);
+  display: block;
+  line-height: 1;
+}
+.metric-label {
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+.case-quote {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  font-style: italic;
+  line-height: 1.6;
+  padding-left: var(--space-sm);
+  border-left: 2px solid var(--hos-violet-light);
+  position: relative;
+}
+.case-quote::before {
+  content: "“";
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--hos-violet-light);
+  position: absolute;
+  left: -2px;
+  top: -6px;
+  line-height: 1;
+}
+
+/* ============ 模块 5：信任墙 ============ */
+.trust-wall {
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--bg-darkest);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-h2);
+  color: var(--ink-primary);
+  text-align: center;
+  margin-bottom: var(--space-sm);
+}
+.section-sub {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-muted);
+  text-align: center;
+  margin-bottom: var(--space-lg);
+  letter-spacing: 1px;
+}
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+}
+.trust-badge {
+  background: var(--bg-card);
+  border: 1px solid rgba(61,90,76,0.4);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-sm);
+  text-align: center;
+  transition: all 0.2s;
+}
+.trust-badge:hover {
+  border-color: var(--hos-bronze-light);
+  transform: translateY(-2px);
+}
+.badge-icon {
+  font-size: 20px;
+  margin-bottom: 6px;
+  display: block;
+  color: var(--hos-bronze-light);
+}
+.badge-text {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-primary);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* ============ 模块 6：服务流程时间线 ============ */
+.process {
+  padding: var(--space-xl) var(--space-lg);
+  background: var(--bg-dark);
+}
+.timeline {
+  position: relative;
+  padding-left: var(--space-lg);
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--hos-violet) 0%, var(--hos-bronze-green) 100%);
+}
+.timeline-step {
+  position: relative;
+  padding-bottom: var(--space-lg);
+}
+.timeline-step:last-child { padding-bottom: 0; }
+.timeline-step::before {
+  content: "";
+  position: absolute;
+  left: -25px;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--hos-violet);
+  border: 2px solid var(--bg-dark);
+  box-shadow: 0 0 0 2px var(--hos-violet);
+}
+.timeline-step:nth-child(4)::before,
+.timeline-step:nth-child(5)::before {
+  background: var(--hos-bronze-green);
+  box-shadow: 0 0 0 2px var(--hos-bronze-green);
+}
+.step-num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  letter-spacing: 1px;
+}
+.step-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-h3);
+  color: var(--ink-primary);
+  margin: 2px 0 4px;
+}
+.step-desc {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  line-height: 1.6;
+}
+
+/* ============ 模块 7：红线声明 ============ */
+.redline {
+  margin: 0 var(--space-lg) var(--space-xl);
+  background: rgba(139,26,60,0.08);
+  border: 1px solid var(--hos-burgundy);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+}
+.redline-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+.redline-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--hos-burgundy);
+  color: var(--ink-on-burgundy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.redline-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--fs-h3);
+  color: var(--hos-burgundy-soft);
+}
+.redline-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.redline-list li {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  padding-left: var(--space-md);
+  position: relative;
+  line-height: 1.6;
+}
+.redline-list li::before {
+  content: "✕";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--hos-burgundy);
+  font-weight: 700;
+}
+.redline-note {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px dashed rgba(139,26,60,0.3);
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
+/* ============ 模块 8：CTA 区 ============ */
+.cta {
+  padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, var(--hos-violet-deep) 100%);
+  text-align: center;
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-h2);
+  color: var(--ink-primary);
+  margin-bottom: var(--space-sm);
+}
+.cta-sub {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  margin-bottom: var(--space-xl);
+}
+.cta-btn {
+  display: inline-block;
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(135deg, var(--hos-violet) 0%, var(--hos-violet-deep) 100%);
+  color: var(--ink-on-violet);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-h3);
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-glow-violet);
+  margin-bottom: var(--space-lg);
+  transition: transform 0.2s;
+}
+.cta-btn:active { transform: scale(0.98); }
+.qr-box {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto var(--space-md);
+  border: 2px dashed var(--hos-violet-light);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+}
+.qr-placeholder {
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  text-align: center;
+  line-height: 1.4;
+}
+.cta-guide {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  letter-spacing: 1px;
+}
+.cta-guide strong {
+  color: var(--price-anchor);
+  font-weight: 500;
+}
+
+/* ============ 页脚 ============ */
+.site-footer {
+  background: var(--bg-darkest);
+  padding: var(--space-lg);
+  text-align: center;
+  border-top: 1px solid rgba(124,58,237,0.15);
+}
+.footer-band {
+  height: 4px;
+  background: var(--brand-band-gradient);
+  width: 100%;
+  margin-bottom: var(--space-lg);
+}
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-body);
+  color: var(--ink-secondary);
+  margin-bottom: 4px;
+}
+.footer-text {
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
+/* ============ 界面预览区（mockup/wireframe） ============ */
+.case-preview {
+  background: var(--bg-darkest);
+  border: 1px solid var(--hos-violet);
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm);
+  margin-bottom: var(--space-md);
+  position: relative;
+  overflow: hidden;
+}
+.case-preview::before {
+  content: "界面预览 · UI MOCKUP";
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--hos-violet-light);
+  letter-spacing: 1px;
+  opacity: 0.7;
+  z-index: 2;
+}
+.preview-title {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--hos-violet-glow);
+  margin-bottom: var(--space-xs);
+  letter-spacing: 0.5px;
+  padding-left: 2px;
+}
+
+/* 通用窗口框（带红黄绿三点） */
+.mock-window {
+  background: var(--bg-dark);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid rgba(124,58,237,0.2);
+}
+.mock-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid rgba(124,58,237,0.15);
+}
+.mock-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.mock-dot--r { background: #FF5F56; }
+.mock-dot--y { background: #FFBD2E; }
+.mock-dot--g { background: #27C93F; }
+.mock-titlebar-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-muted);
+  margin-left: 6px;
+}
+
+/* 代码编辑器示意 */
+.mock-code {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 8px 10px;
+  color: var(--ink-secondary);
+}
+.mock-line { white-space: pre; }
+.mock-ln {
+  display: inline-block;
+  width: 18px;
+  color: var(--ink-muted);
+  opacity: 0.5;
+  user-select: none;
+}
+.tok-kw   { color: var(--hos-violet-light); }
+.tok-fn   { color: #F5F0FF; }
+.tok-str  { color: var(--price-anchor); }
+.tok-num  { color: var(--hos-bronze-light); }
+.tok-com  { color: var(--ink-muted); font-style: italic; }
+.tok-type { color: var(--hos-burgundy-soft); }
+
+/* 运行结果窗口 */
+.mock-output {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 8px 10px;
+  color: var(--ink-secondary);
+}
+.mock-output-line { white-space: pre-wrap; word-break: break-all; }
+.mock-out-ok   { color: var(--success); }
+.mock-out-info { color: var(--hos-violet-glow); }
+.mock-out-warn { color: var(--price-anchor); }
+
+/* PPT 缩略图网格 */
+.mock-ppt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 6px;
+}
+.mock-ppt-slide {
+  aspect-ratio: 16 / 9;
+  background: var(--bg-card);
+  border: 1px solid rgba(124,58,237,0.25);
+  border-radius: 3px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mock-ppt-bar {
+  height: 2px;
+  background: var(--hos-violet-light);
+  border-radius: 1px;
+  opacity: 0.8;
+}
+.mock-ppt-bar--short { width: 60%; }
+.mock-ppt-bar--mid   { width: 80%; }
+.mock-ppt-bar--title { width: 50%; background: var(--price-anchor); height: 3px; }
+.mock-ppt-bar--muted { opacity: 0.4; }
+
+/* 项目结构树 */
+.mock-tree {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.7;
+  padding: 8px 10px;
+  color: var(--ink-secondary);
+}
+.mock-tree-dir   { color: var(--hos-violet-light); }
+.mock-tree-file  { color: var(--ink-secondary); }
+.mock-tree-doc   { color: var(--price-anchor); }
+.mock-tree-branch { color: var(--ink-muted); opacity: 0.6; }
+
+/* 数据库 ER 简图 */
+.mock-er {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+}
+.mock-er-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+.mock-er-entity {
+  background: rgba(124,58,237,0.2);
+  border: 1px solid var(--hos-violet);
+  border-radius: 3px;
+  padding: 2px 6px;
+  color: var(--hos-violet-glow);
+  font-weight: 500;
+}
+.mock-er-line {
+  flex: 1;
+  height: 1px;
+  background: var(--hos-violet-light);
+  opacity: 0.5;
+}
+.mock-er-attr {
+  color: var(--ink-muted);
+  font-size: 9px;
+}
+
+/* 微服务架构示意 */
+.mock-arch {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+}
+.mock-arch-row {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+.mock-arch-box {
+  background: var(--bg-card);
+  border: 1px solid var(--hos-violet);
+  border-radius: 3px;
+  padding: 3px 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--hos-violet-glow);
+  text-align: center;
+  flex: 1;
+}
+.mock-arch-box--gateway {
+  background: rgba(255,179,71,0.12);
+  border-color: var(--price-anchor);
+  color: var(--price-anchor);
+}
+.mock-arch-arrow {
+  text-align: center;
+  color: var(--ink-muted);
+  font-size: 10px;
+  line-height: 1;
+}
+.mock-arch-box--db {
+  background: rgba(61,90,76,0.2);
+  border-color: var(--hos-bronze-light);
+  color: var(--hos-bronze-light);
+}
+
+/* Gantt 图示意 */
+.mock-gantt {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.mock-gantt-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+.mock-gantt-label {
+  width: 36px;
+  color: var(--ink-muted);
+  flex-shrink: 0;
+}
+.mock-gantt-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-card);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.mock-gantt-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px;
+}
+.mock-gantt-bar--v { background: var(--hos-violet); }
+.mock-gantt-bar--b { background: var(--hos-burgundy-soft); }
+.mock-gantt-bar--g { background: var(--hos-bronze-light); }
+
+/* 移动端字号下限保护 */
+@media (max-width: 414px) {
+  :root { --fs-body-sm: 14px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 模块 1：品牌头 -->
+  <div class="brand-band"></div>
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-logo">HOS</div>
+      <div class="brand-tagline">技术深度 · 微商可信</div>
+    </div>
+    <a href="../index.html" class="back-link">← 返回</a>
+  </header>
+
+  <!-- 模块 2：Hero 区 -->
+  <section class="hero">
+    <h1 class="hero-title">课设毕设案例展示</h1>
+    <div class="hero-subtitle">硕士背景<span class="dot">·</span>真实交付记录</div>
+    <div class="trust-stats">
+      <div class="stat-item">
+        <span class="stat-num">硕士</span>
+        <div class="stat-label">技术背景</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">4类</span>
+        <div class="stat-label">服务方向</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">7天</span>
+        <div class="stat-label">售后修改</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">50%</span>
+        <div class="stat-label">定金起步</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 模块 3：案例筛选标签 -->
+  <section class="filter-bar">
+    <div class="filter-title">按类别筛选</div>
+    <div class="filter-scroll" id="filterScroll">
+      <span class="filter-tag active" data-cat="all">全部</span>
+      <span class="filter-tag" data-cat="program">程序设计</span>
+      <span class="filter-tag" data-cat="datastructure">数据结构</span>
+      <span class="filter-tag" data-cat="os">操作系统</span>
+      <span class="filter-tag" data-cat="database">数据库</span>
+      <span class="filter-tag" data-cat="comprehensive">综合</span>
+    </div>
+  </section>
+
+  <!-- 模块 4：案例卡片列表 -->
+  <section class="case-list">
+
+    <!-- 案例 1 -->
+    <article class="case-card" data-cat="datastructure">
+      <div class="case-card-head">
+        <span class="case-num">CASE / 001</span>
+        <span class="case-cat case-cat--violet">数据结构</span>
+      </div>
+      <h3 class="case-title">某985高校 数据结构课程设计：校园导航系统</h3>
+      <div class="case-mask">客户信息已脱敏 · 2024 Q3</div>
+      <div class="tech-stack">
+        <span class="tech-tag">C++</span>
+        <span class="tech-tag">STL</span>
+        <span class="tech-tag">图算法</span>
+        <span class="tech-tag">Qt可视化</span>
+      </div>
+      <p class="case-desc">完成需求分析与系统设计，基于 Dijkstra 与 Floyd 算法实现校园路径规划，使用 Qt 绘制交互式地图；同步撰写课程设计文档与答辩 PPT，并提供算法复杂度答辩辅导。</p>
+      <div class="case-preview">
+        <div class="preview-title">— 代码编辑器 / Dijkstra 核心实现</div>
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-titlebar-text">dijkstra.cpp — CampusNav</span>
+          </div>
+          <div class="mock-code">
+<div class="mock-line"><span class="mock-ln">1</span><span class="tok-com">// Dijkstra 最短路径，邻接表 + 优先队列</span></div>
+<div class="mock-line"><span class="mock-ln">2</span><span class="tok-kw">vector</span>&lt;<span class="tok-type">int</span>&gt; <span class="tok-fn">dijkstra</span>(<span class="tok-type">int</span> src) {</div>
+<div class="mock-line"><span class="mock-ln">3</span>  <span class="tok-kw">priority_queue</span>&lt;pii,&nbsp;vector&lt;pii&gt;,&nbsp;greater&gt;&nbsp;pq;</div>
+<div class="mock-line"><span class="mock-ln">4</span>  <span class="tok-fn">dist</span>[src] = <span class="tok-num">0</span>; pq.<span class="tok-fn">push</span>({<span class="tok-num">0</span>, src});</div>
+<div class="mock-line"><span class="mock-ln">5</span>  <span class="tok-kw">while</span> (!pq.<span class="tok-fn">empty</span>()) {</div>
+<div class="mock-line"><span class="mock-ln">6</span>    <span class="tok-kw">auto</span> [d, u] = pq.<span class="tok-fn">top</span>(); pq.<span class="tok-fn">pop</span>();</div>
+<div class="mock-line"><span class="mock-ln">7</span>    <span class="tok-com">// 松弛邻接边 ...</span></div>
+<div class="mock-line"><span class="mock-ln">8</span>  }</div>
+<div class="mock-line"><span class="mock-ln">9</span>}</div>
+          </div>
+        </div>
+        <div class="preview-title" style="margin-top:6px">— 运行结果 / 路径输出</div>
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-titlebar-text">运行结果 — CampusNav.exe</span>
+          </div>
+          <div class="mock-output">
+<div class="mock-output-line"><span class="mock-out-info">[输入]</span> 起点=图书馆  终点=第三教学楼</div>
+<div class="mock-output-line"><span class="mock-out-ok">[结果]</span> 最短距离 = 480 米</div>
+<div class="mock-output-line"><span class="mock-out-ok">[路径]</span> 图书馆 → 中心广场 → 三教</div>
+<div class="mock-output-line"><span class="mock-out-warn">[耗时]</span> 0.3 ms · Floyd 校验一致</div>
+          </div>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <span class="metric-num">3天</span>
+          <div class="metric-label">交付周期</div>
+        </div>
+        <div class="metric">
+          <span class="metric-num">含注释</span>
+          <div class="metric-label">交付特征</div>
+        </div>
+        <div class="metric">
+          <span class="metric-num">附文档</span>
+          <div class="metric-label">交付特征</div>
+        </div>
+      </div>
+      <p class="case-quote">代码能跑而且讲得清楚，答辩老师问的算法复杂度都能答上来。</p>
+    </article>
+
+    <!-- 案例 2 -->
+    <article class="case-card" data-cat="os">
+      <div class="case-card-head">
+        <span class="case-num">CASE / 002</span>
+        <span class="case-cat case-cat--green">操作系统</span>
+      </div>
+      <h3 class="case-title">某双一流院校 操作系统课设：进程调度模拟器</h3>
+      <div class="case-mask">客户信息已脱敏 · 2024 Q2</div>
+      <div class="tech-stack">
+        <span class="tech-tag">C</span>
+        <span class="tech-tag">Linux</span>
+        <span class="tech-tag">POSIX</span>
+        <span class="tech-tag">多线程</span>
+      </div>
+      <p class="case-desc">实现时间片轮转、优先级、多级反馈队列三类调度算法，基于 pthread 模拟进程状态迁移；提供 Gantt 图可视化模块，配套实验报告与逐行讲解视频。</p>
+      <div class="case-preview">
+        <div class="preview-title">— Gantt 图 / 进程调度时序</div>
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-titlebar-text">scheduler — Gantt View</span>
+          </div>
+          <div class="mock-gantt">
+            <div class="mock-gantt-row">
+              <span class="mock-gantt-label">P1</span>
+              <div class="mock-gantt-track"><div class="mock-gantt-bar mock-gantt-bar--v" style="left:0%;width:25%"></div></div>
+            </div>
+            <div class="mock-gantt-row">
+              <span class="mock-gantt-label">P2</span>
+              <div class="mock-gantt-track"><div class="mock-gantt-bar mock-gantt-bar--b" style="left:25%;width:30%"></div></div>
+            </div>
+            <div class="mock-gantt-row">
+              <span class="mock-gantt-label">P3</span>
+              <div class="mock-gantt-track"><div class="mock-gantt-bar mock-gantt-bar--g" style="left:55%;width:20%"></div></div>
+            </div>
+            <div class="mock-gantt-row">
+              <span class="mock-gantt-label">P1</span>
+              <div class="mock-gantt-track"><div class="mock-gantt-bar mock-gantt-bar--v" style="left:75%;width:25%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="preview-title" style="margin-top:6px">— 代码 / pthread 状态迁移</div>
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-titlebar-text">scheduler.c — RR Scheduler</span>
+          </div>
+          <div class="mock-code">
+<div class="mock-line"><span class="mock-ln">1</span><span class="tok-com">// 时间片轮转：量子到则切换</span></div>
+<div class="mock-line"><span class="mock-ln">2</span><span class="tok-kw">void</span> <span class="tok-fn">rr_schedule</span>(<span class="tok-type">pcb_t</span> *q) {</div>
+<div class="mock-line"><span class="mock-ln">3</span>  <span class="tok-kw">while</span> (q != <span class="tok-num">NULL</span>) {</div>
+<div class="mock-line"><span class="mock-ln">4</span>    <span class="tok-fn">run_quantum</span>(q, <span class="tok-num">TIME_SLICE</span>);</div>
+<div class="mock-line"><span class="mock-ln">5</span>    <span class="tok-kw">if</span> (!<span class="tok-fn">finished</span>(q)) <span class="tok-fn">rotate</span>(q);</div>
+<div class="mock-line"><span class="mock-ln">6</span>  }</div>
+<div class="mock-line"><span class="mock-ln">7</span>}</div>
+          </div>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <span class="metric-num">4天</span>
+          <div class="metric-label">交付周期</div>
+        </div>
+        <div class="metric">
+          <span class="metric-num">含讲解</span>
+          <div class="metric-label">交付特征</div>
+        </div>
+        <div class="metric">
+          <span class="metric-num">附视频</span>
+          <div class="metric-label">交付特征</div>
+        </div>
+      </div>
+      <p class="case-quote">比我预期快一天，多线程那块讲了快一小时才弄懂。</p>
+    </article>
+
+    <!-- 案例 3 -->
+    <article class="case-card" data-cat="database">
+      <div class="case-card-head">
+        <span class="case-num">CASE / 003</span>
+        <span class="case-cat case-cat--violet">数据库</span>
+      </div>
+      <h3 class="case-title">某普通本科 数据库课程设计：图书管理系统</h3>
+      <div class="case-mask">客户信息已脱敏 · 2024 Q3</div>
+      <div class="tech-stack">
+        <span class="tech-tag">Java</span>
+        <span class="tech-tag">SpringBoot</span>
+        <span class="tech-tag">MySQL</span>
+        <span class="tech-tag">Vue</span>
+      </div>
+      <p class="case-desc">完成 ER 图设计与三范式建模，后端基于 SpringBoot 实现 RESTful 接口，前端使用 Vue 搭建管理界面；含借阅、归还、罚款、统计四大模块，交付需求文档与数据库脚本。</p>
+      <div class="case-preview">
+        <div class="preview-title">— ER 图 / 数据库建模</div>
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-titlebar-text">library_db — ER Diagram</span>
+          </div>
+          <div class="mock-er">
+            <div class="mock-er-row">
+              <span class="mock-er-entity">Reader</span>
+              <span class="mock-er-line"></span>
+              <span class="mock-er-attr">id, name, type</span>
+            </div>
+            <div class="mock-er-row">
+              <span class="mock-er-attr" style="opacity:0.5">借阅 1:N</span>
+              <span class="mock-er-line"></span>
+              <span class="mock-er-entity">Borrow</span>
+            </div>
+            <div class="mock-er-row">
+              <span class="mock-er-entity">Book</span>
+              <span class="mock-er-line"></span>
+              <span class="mock-er-attr">isbn, title, stock</span>
+            </div>
+            <div class="mock-er-row">
+              <span class="mock-er-attr" style="opacity:0.5">触发 1:1</span>
+              <span class="mock-er-line"></span>
+              <span class="mock-er-entity">Fine</span>
+            </div>
+          </div>
+        </div>
+        <div class="preview-title" style="margin-top:6px">— 项目结构 / 前后端分离</div>
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-titlebar-text">project tree — LibrarySys</span>
+          </div>
+          <div class="mock-tree">
+<div><span class="mock-tree-dir">LibrarySys/</span></div>
+<div><span class="mock-tree-branch">├── </span><span class="mock-tree-dir">backend/</span></div>
+<div><span class="mock-tree-branch">│   └── </span><span class="mock-tree-file">BorrowController.java</span></div>
+<div><span class="mock-tree-branch">├── </span><span class="mock-tree-dir">frontend/</span></div>
+<div><span class="mock-tree-branch">│   └── </span><span class="mock-tree-file">views/Borrow.vue</span></div>
+<div><span class="mock-tree-branch">├── </span><span class="mock-tree-doc">需求文档.md</span></div>
+<div><span class="mock-tree-branch">└── </span><span class="mock-tree-doc">init.sql</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <span class="metric-num">5天</span>
+          <div class="metric-label">交付周期</div>
+        </div>
+        <div class="metric">
+          <span class="metric-num">前后端</span>
+          <div class="metric-label">交付特征</div>
+        </div>
+        <div class="metric">
+          <span class="metric-num">附脚本</span>
+          <div class="metric-label">交付特征</div>
+        </div>
+      </div>
+      <p class="case-quote">前后端都做了，文档也很规范，直接一次过。</p>
+    </article>
+
+    <!-- 案例 4 -->
+    <article class="case-card" data-cat="program">
+      <div class="case-card-head">
+        <span class="case-num">CASE / 004</span>
+        <span class="case-cat case-cat--green">程序设计</span>
+      </div>
+      <h3 class="case-title">某211高校 编译原理课设：微型编译器</h3>
+      <div class="case-mask">客户信息已脱敏 · 2024 Q1</div>
+      <div class="tech-stack">
+        <span class="tech-tag">C++</span>
+        <span class="tech-tag">Flex</span>
+        <span class="tech-tag">Bison</span>
+        <span class="tech-tag">LLVM IR</span>
+      </div>
+      <p class="case-desc">实现词法分析、语法分析、语义检查与中间代码生成，输出 LLVM IR；支持基本算术、控制流与函数定义，配套测试用例集与逐行讲解，覆盖答辩常考知识点。</p>
+      <div class="case-preview">
+        <div class="preview-title">— 代码编辑器 / Flex 词法规则</div>
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-titlebar-text">lexer.l — MiniCompiler</span>
+          </div>
+          <div class="mock-code">
+<div class="mock-line"><span class="mock-ln">1</span><span class="tok-com">%% /* 词法规则 */</span></div>
+<div class="mock-line"><span class="mock-ln">2</span><span class="tok-str">"if"</span>|<span class="tok-str">"else"</span> { <span class="tok-kw">return</span> <span class="tok-type">KEYWORD</span>; }</div>
+<div class="mock-line"><span class="mock-ln">3</span>[<span class="tok-num">0</span>-<span class="tok-num">9</span>]+     { yylval = <span class="tok-fn">atoi</span>(yytext); <span class="tok-kw">return</span> <span class="tok-type">NUM</span>; }</div>
+<div class="mock-line"><span class="mock-ln">4</span>[a-zA-Z]+  { <span class="tok-kw">return</span> <span class="tok-type">IDENT</span>; }</div>
+<div class="mock-line"><span class="mock-ln">5</span><span class="tok-com">%% /* 输出 LLVM IR */</span></div>
+          </div>
+        </div>
+        <div class="preview-title" style="margin-top:6px">— 答辩 PPT / 缩略图</div>
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-titlebar-text">答辩.pptx — 9 页</span>
+          </div>
+          <div class="mock-ppt-grid">
+            <div class="mock-ppt-slide">
+              <div class="mock-ppt-bar mock-ppt-bar--title"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--mid"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--short mock-ppt-bar--muted"></div>
+            </div>
+            <div class="mock-ppt-slide">
+              <div class="mock-ppt-bar mock-ppt-bar--mid"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--short"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--mid mock-ppt-bar--muted"></div>
+            </div>
+            <div class="mock-ppt-slide">
+              <div class="mock-ppt-bar mock-ppt-bar--title"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--short"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--mid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <span class="metric-num">6天</span>
+          <div class="metric-label">交付周期</div>
+        </div>
+        <div class="metric">
+          <span class="metric-num">含测试</span>
+          <div class="metric-label">交付特征</div>
+        </div>
+        <div class="metric">
+          <span class="metric-num">附讲解</span>
+          <div class="metric-label">交付特征</div>
+        </div>
+      </div>
+      <p class="case-quote">最难的一次课设，幸亏有逐行讲解，不然答辩悬了。</p>
+    </article>
+
+    <!-- 案例 5 -->
+    <article class="case-card" data-cat="comprehensive">
+      <div class="case-card-head">
+        <span class="case-num">CASE / 005</span>
+        <span class="case-cat case-cat--violet">综合毕设</span>
+      </div>
+      <h3 class="case-title">某高校综合毕设：基于微服务的在线考试系统</h3>
+      <div class="case-mask">客户信息已脱敏 · 2024 Q2</div>
+      <div class="tech-stack">
+        <span class="tech-tag">Java</span>
+        <span class="tech-tag">SpringCloud</span>
+        <span class="tech-tag">Redis</span>
+        <span class="tech-tag">MySQL</span>
+        <span class="tech-tag">Docker</span>
+      </div>
+      <p class="case-desc">拆分用户、考试、题库、判卷四个微服务，使用 Redis 缓存高频题目，Docker Compose 一键部署；含防作弊机制与自动判分，交付完整毕设论文初稿与答辩 PPT。</p>
+      <div class="case-preview">
+        <div class="preview-title">— 微服务架构 / 服务拓扑</div>
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-titlebar-text">architecture — ExamMicroservices</span>
+          </div>
+          <div class="mock-arch">
+            <div class="mock-arch-row">
+              <div class="mock-arch-box mock-arch-box--gateway">Gateway</div>
+            </div>
+            <div class="mock-arch-arrow">▼</div>
+            <div class="mock-arch-row">
+              <div class="mock-arch-box">用户</div>
+              <div class="mock-arch-box">考试</div>
+              <div class="mock-arch-box">题库</div>
+              <div class="mock-arch-box">判卷</div>
+            </div>
+            <div class="mock-arch-arrow">▼</div>
+            <div class="mock-arch-row">
+              <div class="mock-arch-box mock-arch-box--db">MySQL</div>
+              <div class="mock-arch-box mock-arch-box--db">Redis</div>
+            </div>
+          </div>
+        </div>
+        <div class="preview-title" style="margin-top:6px">— 答辩 PPT / 论文章节缩略图</div>
+        <div class="mock-window">
+          <div class="mock-titlebar">
+            <span class="mock-dot mock-dot--r"></span>
+            <span class="mock-dot mock-dot--y"></span>
+            <span class="mock-dot mock-dot--g"></span>
+            <span class="mock-titlebar-text">毕设答辩.pptx — 12 页</span>
+          </div>
+          <div class="mock-ppt-grid">
+            <div class="mock-ppt-slide">
+              <div class="mock-ppt-bar mock-ppt-bar--title"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--mid"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--short mock-ppt-bar--muted"></div>
+            </div>
+            <div class="mock-ppt-slide">
+              <div class="mock-ppt-bar mock-ppt-bar--short"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--mid"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--mid mock-ppt-bar--muted"></div>
+            </div>
+            <div class="mock-ppt-slide">
+              <div class="mock-ppt-bar mock-ppt-bar--title"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--mid"></div>
+              <div class="mock-ppt-bar mock-ppt-bar--short"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <span class="metric-num">12天</span>
+          <div class="metric-label">交付周期</div>
+        </div>
+        <div class="metric">
+          <span class="metric-num">含部署</span>
+          <div class="metric-label">交付特征</div>
+        </div>
+        <div class="metric">
+          <span class="metric-num">附论文</span>
+          <div class="metric-label">交付特征</div>
+        </div>
+      </div>
+      <p class="case-quote">从需求到部署全包了，答辩PPT都是他们帮整理的思路。</p>
+    </article>
+
+  </section>
+
+  <!-- 模块 5：信任墙 -->
+  <section class="trust-wall">
+    <h2 class="section-title">信任徽章</h2>
+    <div class="section-sub">六重承诺 · 可查可证</div>
+    <div class="trust-grid">
+      <div class="trust-badge">
+        <span class="badge-icon">🎓</span>
+        <div class="badge-text">硕士背景</div>
+      </div>
+      <div class="trust-badge">
+        <span class="badge-icon">🛠</span>
+        <div class="badge-text">7天修改</div>
+      </div>
+      <div class="trust-badge">
+        <span class="badge-icon">🎤</span>
+        <div class="badge-text">答辩辅导</div>
+      </div>
+      <div class="trust-badge">
+        <span class="badge-icon">💰</span>
+        <div class="badge-text">定金制</div>
+      </div>
+      <div class="trust-badge">
+        <span class="badge-icon">🚫</span>
+        <div class="badge-text">不代写论文</div>
+      </div>
+      <div class="trust-badge">
+        <span class="badge-icon">🔒</span>
+        <div class="badge-text">案例脱敏</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 模块 6：服务流程时间线 -->
+  <section class="process">
+    <h2 class="section-title">服务流程</h2>
+    <div class="section-sub">五步标准化 · 全程可追踪</div>
+    <div class="timeline">
+      <div class="timeline-step">
+        <div class="step-num">STEP 01</div>
+        <div class="step-title">咨询沟通</div>
+        <div class="step-desc">微信沟通需求，明确课设/毕设题目、技术栈与交付时间，免费评估难度。</div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-num">STEP 02</div>
+        <div class="step-title">需求确认 + 定金</div>
+        <div class="step-desc">确认功能清单与报价，支付 30% 定金后启动开发，签订电子约定。</div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-num">STEP 03</div>
+        <div class="step-title">代码开发</div>
+        <div class="step-desc">按里程碑交付，关键节点同步进度，支持中途需求微调。</div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-num">STEP 04</div>
+        <div class="step-title">交付 + 讲解</div>
+        <div class="step-desc">交付源码、文档、部署说明，提供 1 对 1 逐行讲解与答辩话术辅导。</div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-num">STEP 05</div>
+        <div class="step-title">7天售后</div>
+        <div class="step-desc">交付后 7 天内免费修改 Bug、答疑与答辩应急支持，尾款结清。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 模块 7：红线声明 -->
+  <section class="redline">
+    <div class="redline-head">
+      <div class="redline-icon">!</div>
+      <div class="redline-title">红线声明</div>
+    </div>
+    <ul class="redline-list">
+      <li>不代写论文：仅提供代码实现与技术文档，论文由客户独立撰写。</li>
+      <li>不代考：不参与任何线上/线下考试替考行为。</li>
+      <li>仅辅助学习用途：所有交付物用于学习参考，客户需自行理解后提交。</li>
+    </ul>
+    <div class="redline-note">本服务定位为"技术辅导 + 代码实现"，旨在帮助理解课程知识。如需论文润色或答辩模拟，可单独沟通。</div>
+  </section>
+
+  <!-- 模块 8：CTA 区 -->
+  <section class="cta">
+    <h2 class="cta-title">先聊不收费</h2>
+    <div class="cta-sub">扫码加微信，发送课设题目即可免费评估</div>
+    <a href="#" class="cta-btn">立即咨询</a>
+    <div class="qr-box">
+      <div class="qr-placeholder">微信二维码<br>120 × 120</div>
+    </div>
+    <div class="cta-guide">扫码加微信，<strong>先聊不收费</strong></div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="site-footer">
+    <div class="footer-band"></div>
+    <div class="footer-logo">HOS 技术服务</div>
+    <div class="footer-text">技术深度 · 微商可信<br>© 2024 HOS · 课设毕设代做产品线</div>
+  </footer>
+
+</div>
+
+<script>
+  // 标签筛选交互
+  (function() {
+    var tags = document.querySelectorAll('.filter-tag');
+    var cards = document.querySelectorAll('.case-card');
+    tags.forEach(function(tag) {
+      tag.addEventListener('click', function() {
+        var cat = tag.getAttribute('data-cat');
+        tags.forEach(function(t) { t.classList.remove('active'); });
+        tag.classList.add('active');
+        cards.forEach(function(card) {
+          var cardCat = card.getAttribute('data-cat');
+          if (cat === 'all' || cardCat === cat) {
+            card.classList.remove('is-hidden');
+          } else {
+            card.classList.add('is-hidden');
+          }
+        });
+      });
+    });
+  })();
+</script>
+</body>
+</html>

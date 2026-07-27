@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全四类综合案例展示 · HOS 技术服务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hos-violet-deep:  #5B2C91;
+  --hos-violet:       #7C3AED;
+  --hos-violet-light: #A78BFA;
+  --hos-violet-glow:  #C4B5FD;
+  --hos-burgundy:      #8B1A3C;
+  --hos-burgundy-soft: #B91C5C;
+  --hos-bronze-green:  #3D5A4C;
+  --hos-bronze-light:  #6B8E7A;
+  --hos-forge:    #2563EB;
+  --hos-ls:       #7C3AED;
+  --hos-workflow: #059669;
+  --bg-darkest:   #0F0A1F;
+  --bg-dark:      #1A1129;
+  --bg-card:      #241638;
+  --bg-elevated:  #2E1F47;
+  --bg-overlay:   rgba(15,10,31,0.85);
+  --ink-primary:    #F5F0FF;
+  --ink-secondary:  #C4B5E0;
+  --ink-muted:      #8B7DAA;
+  --ink-on-violet:  #FFFFFF;
+  --ink-on-burgundy:#FFE8EE;
+  --price-anchor: #FFB347;
+  --price-anchor-glow: rgba(255,179,71,0.25);
+  --trust-badge:  #3D5A4C;
+  --alert:        #8B1A3C;
+  --success:      #059669;
+  --info:         #2563EB;
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+  --space-2xl: 64px;
+  --radius-sm:    4px;
+  --radius-md:    8px;
+  --radius-lg:    16px;
+  --radius-xl:    24px;
+  --radius-pill:  999px;
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,0.5);
+  --shadow-glow-violet: 0 0 24px rgba(124,58,237,0.35);
+  --shadow-glow-gold:   0 0 16px rgba(255,179,71,0.30);
+  --font-display: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-body:    'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --brand-band-gradient: linear-gradient(
+    90deg,
+    var(--hos-violet) 0%,
+    var(--hos-violet) 33%,
+    var(--hos-burgundy) 33%,
+    var(--hos-burgundy) 66%,
+    var(--hos-bronze-green) 66%,
+    var(--hos-bronze-green) 100%
+  );
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-darkest);
+  color: var(--ink-primary);
+  line-height: 1.6;
+  font-size: 16px;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--bg-dark);
+  min-height: 100vh;
+  box-shadow: 0 0 60px rgba(0,0,0,0.6);
+  overflow-x: hidden;
+}
+
+/* ========== 通用字号下限保护 ========== */
+.fs-min { font-size: 14px; }
+
+/* ========== 1. 品牌头 ========== */
+.brand-band {
+  height: 4px;
+  background: var(--brand-band-gradient);
+  width: 100%;
+}
+
+.brand-header {
+  background: var(--bg-darkest);
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(124,58,237,0.2);
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--hos-violet) 0%, var(--hos-violet-deep) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 16px;
+  color: var(--ink-on-violet);
+  box-shadow: var(--shadow-glow-violet);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink-primary);
+  letter-spacing: 1px;
+}
+
+.brand-slogan {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  letter-spacing: 0.5px;
+}
+
+.back-link {
+  font-size: 14px;
+  color: var(--ink-secondary);
+  text-decoration: none;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+}
+
+.back-link:hover {
+  color: var(--ink-primary);
+  border-color: var(--hos-violet);
+  background: rgba(124,58,237,0.1);
+}
+
+/* ========== 2. Hero 区 ========== */
+.hero {
+  background: linear-gradient(180deg, var(--bg-darkest) 0%, var(--bg-dark) 100%);
+  padding: var(--space-xl) var(--space-lg) var(--space-lg);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--hos-violet-light);
+  padding: var(--space-xs) var(--space-md);
+  border: 1px solid rgba(124,58,237,0.4);
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-md);
+  letter-spacing: 1px;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 32px;
+  line-height: 1.2;
+  color: var(--ink-primary);
+  margin-bottom: var(--space-sm);
+  letter-spacing: 1px;
+}
+
+.hero-title .accent {
+  background: linear-gradient(135deg, var(--hos-violet-light) 0%, var(--price-anchor) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 16px;
+  color: var(--ink-secondary);
+  margin-bottom: var(--space-xl);
+  line-height: 1.6;
+}
+
+.hero-subtitle .sep {
+  color: var(--hos-violet);
+  margin: 0 var(--space-sm);
+}
+
+/* 信任统计 */
+.trust-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.stat-item {
+  background: var(--bg-card);
+  border: 1px solid rgba(124,58,237,0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  text-align: center;
+}
+
+.stat-number {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--price-anchor);
+  text-shadow: 0 0 12px var(--price-anchor-glow);
+  line-height: 1;
+  margin-bottom: var(--space-xs);
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--ink-secondary);
+}
+
+/* ========== 通用区块标题 ========== */
+.section {
+  padding: var(--space-xl) var(--space-lg);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--ink-primary);
+  margin-bottom: var(--space-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 22px;
+  background: var(--hos-violet);
+  border-radius: var(--radius-sm);
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-bottom: var(--space-lg);
+}
+
+/* ========== 3. HOS 生态背书 ========== */
+.eco-section {
+  background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+}
+
+.eco-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.eco-card {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  border-left: 4px solid var(--hos-violet);
+  position: relative;
+  overflow: hidden;
+}
+
+.eco-card--forge { border-left-color: var(--hos-forge); }
+.eco-card--ls    { border-left-color: var(--hos-ls); }
+.eco-card--flow  { border-left-color: var(--hos-workflow); }
+
+.eco-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, currentColor 0%, transparent 70%);
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.eco-card--forge::after { color: var(--hos-forge); }
+.eco-card--ls::after    { color: var(--hos-ls); }
+.eco-card--flow::after  { color: var(--hos-workflow); }
+
+.eco-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.eco-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  color: var(--ink-on-violet);
+  flex-shrink: 0;
+}
+
+.eco-card--forge .eco-icon { background: var(--hos-forge); box-shadow: 0 0 16px rgba(37,99,235,0.4); }
+.eco-card--ls .eco-icon    { background: var(--hos-ls); box-shadow: 0 0 16px rgba(124,58,237,0.4); }
+.eco-card--flow .eco-icon  { background: var(--hos-workflow); box-shadow: 0 0 16px rgba(5,150,105,0.4); }
+
+.eco-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink-primary);
+}
+
+.eco-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+
+.eco-desc {
+  font-size: 14px;
+  color: var(--ink-secondary);
+  line-height: 1.6;
+}
+
+.eco-footer {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-darkest);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-secondary);
+  border: 1px solid rgba(124,58,237,0.2);
+}
+
+.eco-footer strong {
+  color: var(--price-anchor);
+  font-family: var(--font-mono);
+}
+
+/* 三色协同色带 */
+.eco-band {
+  display: flex;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  margin-top: var(--space-md);
+}
+
+.eco-band span:nth-child(1) { background: var(--hos-forge); flex: 1; }
+.eco-band span:nth-child(2) { background: var(--hos-ls); flex: 1; }
+.eco-band span:nth-child(3) { background: var(--hos-workflow); flex: 1; }
+
+/* ========== 4. 四类能力总览 ========== */
+.cap-section {
+  background: var(--bg-dark);
+}
+
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+}
+
+.cap-col {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  border-top: 3px solid var(--hos-violet);
+}
+
+.cap-col--1 { border-top-color: var(--hos-violet); }
+.cap-col--2 { border-top-color: var(--hos-violet-light); }
+.cap-col--3 { border-top-color: var(--hos-burgundy); }
+.cap-col--4 { border-top-color: var(--hos-workflow); }
+
+.cap-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink-primary);
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.cap-title-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-muted);
+}
+
+.cap-col--1 .cap-title-num { color: var(--hos-violet); }
+.cap-col--2 .cap-title-num { color: var(--hos-violet-light); }
+.cap-col--3 .cap-title-num { color: var(--hos-burgundy-soft); }
+.cap-col--4 .cap-title-num { color: var(--hos-workflow); }
+
+.cap-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cap-list li {
+  font-size: 14px;
+  color: var(--ink-secondary);
+  background: var(--bg-elevated);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* ========== 5. 案例卡片列表 ========== */
+.case-section {
+  background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-darkest) 100%);
+}
+
+.case-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.case-card {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  border-left: 4px solid var(--hos-violet);
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.case-card--cross {
+  border-left: 4px solid transparent;
+  background-image: linear-gradient(var(--bg-elevated), var(--bg-elevated)),
+                    linear-gradient(180deg, var(--hos-violet), var(--hos-workflow));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.case-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+  gap: var(--space-sm);
+}
+
+.case-num {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink-muted);
+  flex-shrink: 0;
+}
+
+.case-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.case-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.case-tag--violet { background: var(--hos-violet); color: var(--ink-on-violet); }
+.case-tag--blue   { background: var(--hos-forge); color: var(--ink-on-violet); }
+.case-tag--green  { background: var(--hos-workflow); color: var(--ink-on-violet); }
+.case-tag--red    { background: var(--hos-burgundy); color: var(--ink-on-burgundy); }
+.case-tag--gold   { background: rgba(255,179,71,0.15); color: var(--price-anchor); border: 1px solid rgba(255,179,71,0.4); }
+
+.case-tag-plus {
+  font-size: 11px;
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  align-self: center;
+}
+
+.case-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--ink-primary);
+  line-height: 1.4;
+  margin-bottom: var(--space-sm);
+}
+
+.case-desens {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--hos-bronze-light);
+  background: rgba(61,90,76,0.2);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-mono);
+}
+
+.case-desens::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--hos-bronze-light);
+  border-radius: 50%;
+}
+
+.case-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--space-md);
+}
+
+.case-stack span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-secondary);
+  background: var(--bg-darkest);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(124,58,237,0.2);
+}
+
+.case-desc {
+  font-size: 14px;
+  color: var(--ink-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-md);
+}
+
+.case-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-top: 1px solid rgba(124,58,237,0.15);
+  border-bottom: 1px solid rgba(124,58,237,0.15);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metric-value {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--price-anchor);
+}
+
+.metric-label {
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+
+.case-quote {
+  font-size: 14px;
+  color: var(--ink-secondary);
+  line-height: 1.6;
+  padding-left: var(--space-md);
+  border-left: 2px solid var(--hos-violet);
+  font-style: italic;
+  position: relative;
+}
+
+.case-quote::before {
+  content: '"';
+  position: absolute;
+  left: 0;
+  top: -8px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--hos-violet);
+  font-style: normal;
+}
+
+/* ========== 案例界面预览（wireframe 风格） ========== */
+.case-preview {
+  margin-bottom: var(--space-md);
+}
+
+.case-preview-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--hos-violet-light);
+  letter-spacing: 1px;
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.case-preview-label::before {
+  content: '◉';
+  color: var(--hos-violet);
+  font-size: 10px;
+}
+
+.wf {
+  background: var(--bg-darkest);
+  border: 1px solid var(--hos-violet);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(124,58,237,0.15);
+}
+
+.wf-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  border-bottom: 1px solid rgba(124,58,237,0.25);
+}
+
+.wf-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.wf-dot:nth-child(1) { background: var(--hos-burgundy-soft); }
+.wf-dot:nth-child(2) { background: var(--price-anchor); }
+.wf-dot:nth-child(3) { background: var(--hos-workflow); }
+
+.wf-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-left: var(--space-sm);
+}
+
+.wf-body { padding: var(--space-md); }
+
+/* 代码类 wireframe */
+.wf-code-line {
+  display: flex;
+  gap: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.wf-ln {
+  color: var(--ink-muted);
+  opacity: 0.45;
+  min-width: 16px;
+  text-align: right;
+}
+
+.wf-code-text { color: var(--ink-secondary); }
+.wf-code-text .kw  { color: var(--hos-violet-light); }
+.wf-code-text .str { color: var(--hos-bronze-light); }
+.wf-code-text .cmt { color: var(--ink-muted); opacity: 0.6; }
+
+.wf-console {
+  margin-top: var(--space-sm);
+  padding: 6px 10px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border-left: 2px solid var(--hos-workflow);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--hos-bronze-light);
+}
+
+.wf-console::before {
+  content: '▶ ';
+  color: var(--hos-workflow);
+}
+
+/* AI 对话类 wireframe */
+.wf-chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.wf-bubble {
+  max-width: 82%;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.wf-bubble--user {
+  align-self: flex-end;
+  background: var(--hos-violet);
+  color: var(--ink-on-violet);
+  border-bottom-right-radius: 2px;
+}
+
+.wf-bubble--ai {
+  align-self: flex-start;
+  background: var(--bg-card);
+  color: var(--ink-secondary);
+  border: 1px solid rgba(124,58,237,0.3);
+  border-bottom-left-radius: 2px;
+}
+
+.wf-bubble--ai .ref {
+  display: inline-block;
+  font-size: 10px;
+  color: var(--hos-violet-light);
+  border: 1px solid rgba(124,58,237,0.4);
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  margin-top: 4px;
+}
+
+.wf-flow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px dashed rgba(124,58,237,0.25);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  flex-wrap: wrap;
+}
+
+.wf-flow-node {
+  padding: 2px 6px;
+  background: var(--bg-card);
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: var(--radius-sm);
+  color: var(--ink-secondary);
+}
+
+.wf-flow-arrow { color: var(--hos-violet); }
+
+/* 安全报告类 wireframe */
+.wf-report-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(124,58,237,0.2);
+}
+
+.wf-report-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-primary);
+}
+
+.wf-report-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(139,26,60,0.15);
+  color: var(--hos-burgundy-soft);
+  border: 1px solid rgba(139,26,60,0.4);
+}
+
+.wf-sev-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.wf-sev-label {
+  font-family: var(--font-mono);
+  color: var(--ink-secondary);
+  min-width: 40px;
+}
+
+.wf-sev-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-card);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.wf-sev-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+}
+
+.wf-sev-fill--high { background: var(--hos-burgundy-soft); width: 35%; }
+.wf-sev-fill--mid  { background: var(--price-anchor); width: 55%; }
+.wf-sev-fill--low  { background: var(--hos-workflow); width: 80%; }
+
+.wf-sev-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+  min-width: 64px;
+  text-align: right;
+}
+
+/* 辅导笔记类 wireframe */
+.wf-note {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  background-image: linear-gradient(transparent 23px, rgba(124,58,237,0.10) 24px);
+  background-size: 100% 24px;
+  background-position: 0 6px;
+}
+
+.wf-note-line {
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--ink-secondary);
+  font-family: var(--font-display);
+}
+
+.wf-note-line .hl      { color: var(--hos-violet-light); font-weight: 600; }
+.wf-note-line .formula { font-family: var(--font-mono); color: var(--price-anchor); }
+
+.wf-tree {
+  margin-top: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-darkest);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-secondary);
+  line-height: 1.7;
+}
+
+.wf-tree .root { color: var(--hos-violet-light); }
+.wf-tree .leaf { color: var(--hos-bronze-light); }
+
+/* 跨领域组合 wireframe */
+.wf-multi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+
+.wf-multi--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.wf-multi-col {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  border-top: 2px solid var(--hos-violet);
+}
+
+.wf-multi-col--ai  { border-top-color: var(--hos-forge); }
+.wf-multi-col--sec { border-top-color: var(--hos-burgundy-soft); }
+.wf-multi-col--edu { border-top-color: var(--hos-workflow); }
+
+.wf-multi-head {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.wf-mini-line {
+  height: 4px;
+  background: rgba(124,58,237,0.18);
+  border-radius: var(--radius-sm);
+  margin-bottom: 4px;
+}
+
+.wf-mini-line:nth-child(2) { width: 90%; }
+.wf-mini-line:nth-child(3) { width: 68%; }
+.wf-mini-line:nth-child(4) { width: 82%; }
+
+.wf-mini-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  margin-top: 4px;
+}
+
+.wf-mini-tag--ok  { background: rgba(5,150,105,0.2); color: var(--hos-workflow); }
+.wf-mini-tag--ai  { background: rgba(37,99,235,0.2); color: var(--hos-forge); }
+.wf-mini-tag--sec { background: rgba(139,26,60,0.2); color: var(--hos-burgundy-soft); }
+
+/* 技术特征 metric 样式 */
+.metric-value--tech {
+  color: var(--hos-violet-light);
+  font-size: 13px;
+}
+
+/* ========== 6. 一站式服务流程 ========== */
+.flow-section {
+  background: var(--bg-card);
+}
+
+.flow-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  position: relative;
+}
+
+.flow-list::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 24px;
+  bottom: 24px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--hos-violet) 0%, var(--hos-workflow) 100%);
+  opacity: 0.4;
+}
+
+.flow-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  position: relative;
+  z-index: 1;
+}
+
+.flow-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 2px solid var(--hos-violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--price-anchor);
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(124,58,237,0.3);
+}
+
+.flow-step:nth-child(5) .flow-dot {
+  border-color: var(--hos-workflow);
+  box-shadow: 0 0 12px rgba(5,150,105,0.3);
+  color: var(--hos-workflow);
+}
+
+.flow-body {
+  flex: 1;
+  padding-top: 6px;
+}
+
+.flow-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink-primary);
+  margin-bottom: 2px;
+}
+
+.flow-desc {
+  font-size: 14px;
+  color: var(--ink-secondary);
+}
+
+/* ========== 7. 红线声明 ========== */
+.redline-section {
+  background: var(--bg-darkest);
+}
+
+.redline-box {
+  background: rgba(139,26,60,0.08);
+  border: 1px solid rgba(139,26,60,0.4);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.redline-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--hos-burgundy-soft);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.redline-title::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--hos-burgundy);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--hos-burgundy);
+}
+
+.redline-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.redline-list li {
+  font-size: 14px;
+  color: var(--ink-secondary);
+  padding-left: var(--space-md);
+  position: relative;
+  line-height: 1.6;
+}
+
+.redline-list li::before {
+  content: '×';
+  position: absolute;
+  left: 0;
+  color: var(--hos-burgundy-soft);
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+/* ========== 8. CTA 区 ========== */
+.cta-section {
+  background: linear-gradient(180deg, var(--bg-darkest) 0%, var(--bg-dark) 100%);
+  padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+  text-align: center;
+}
+
+.cta-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 24px;
+  color: var(--ink-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.cta-sub {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-bottom: var(--space-lg);
+}
+
+.qr-placeholder {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto var(--space-lg);
+  background: var(--ink-primary);
+  border-radius: var(--radius-lg);
+  padding: 8px;
+  box-shadow: var(--shadow-glow-violet);
+}
+
+.qr-inner {
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(45deg, var(--bg-darkest) 25%, transparent 25%, transparent 75%, var(--bg-darkest) 75%),
+    linear-gradient(45deg, var(--bg-darkest) 25%, transparent 25%, transparent 75%, var(--bg-darkest) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+  background-color: var(--ink-primary);
+  border-radius: var(--radius-md);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-inner::after {
+  content: 'HOS';
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 20px;
+  color: var(--hos-violet);
+  background: var(--ink-primary);
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.cta-btn {
+  display: inline-block;
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(135deg, var(--hos-violet) 0%, var(--hos-violet-deep) 100%);
+  color: var(--ink-on-violet);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-glow-violet);
+  margin-bottom: var(--space-md);
+  transition: transform 0.2s;
+}
+
+.cta-btn:active {
+  transform: scale(0.98);
+}
+
+.cta-note {
+  font-size: 14px;
+  color: var(--price-anchor);
+  font-family: var(--font-mono);
+}
+
+/* ========== 页脚 ========== */
+.page-footer {
+  background: var(--bg-darkest);
+  padding: var(--space-lg);
+  text-align: center;
+  border-top: 1px solid rgba(124,58,237,0.15);
+}
+
+.footer-band {
+  height: 3px;
+  background: var(--brand-band-gradient);
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-md);
+}
+
+.footer-text {
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
+.footer-text .brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--ink-secondary);
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 1. 品牌头 -->
+  <div class="brand-band"></div>
+  <header class="brand-header">
+    <div class="brand-logo">
+      <div class="brand-mark">H</div>
+      <div class="brand-text">
+        <span class="brand-name">HOS</span>
+        <span class="brand-slogan">技术深度 · 微商可信</span>
+      </div>
+    </div>
+    <a href="../index.html" class="back-link">← 返回</a>
+  </header>
+
+  <!-- 2. Hero 区 -->
+  <section class="hero">
+    <span class="hero-eyebrow">CASE SHOWCASE</span>
+    <h1 class="hero-title">全四类<span class="accent">综合案例</span>展示</h1>
+    <p class="hero-subtitle">一站式技术能力<span class="sep">·</span>HOS 生态背书</p>
+    <div class="trust-stats">
+      <div class="stat-item">
+        <div class="stat-number">4类</div>
+        <div class="stat-label">服务覆盖</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">3</div>
+        <div class="stat-label">生态仓库</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">7天</div>
+        <div class="stat-label">统一售后</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">免费</div>
+        <div class="stat-label">5分钟咨询</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. HOS 生态背书 -->
+  <section class="section eco-section">
+    <h2 class="section-title">HOS 生态背书</h2>
+    <p class="section-subtitle">三仓库协同 · 技术深度可信</p>
+    <div class="eco-grid">
+
+      <div class="eco-card eco-card--forge">
+        <div class="eco-head">
+          <div class="eco-icon">F</div>
+          <div>
+            <div class="eco-name">HOS-Forge</div>
+            <div class="eco-tag">#2563EB · 系统底层</div>
+          </div>
+        </div>
+        <p class="eco-desc">系统底层与开源工具仓库，沉淀基础设施、命令行工具与工程化脚手架，保障交付的可复现性与工程深度。</p>
+      </div>
+
+      <div class="eco-card eco-card--ls">
+        <div class="eco-head">
+          <div class="eco-icon">L</div>
+          <div>
+            <div class="eco-name">HOS-LS</div>
+            <div class="eco-tag">#7C3AED · 生活方式与技术服务</div>
+          </div>
+        </div>
+        <p class="eco-desc">生活方式与技术服务主仓库，承接四类综合产品线交付，覆盖程序设计、AI 应用、信息安全与计算机基础。</p>
+      </div>
+
+      <div class="eco-card eco-card--flow">
+        <div class="eco-head">
+          <div class="eco-icon">W</div>
+          <div>
+            <div class="eco-name">HOS-Workflow</div>
+            <div class="eco-tag">#059669 · 工作流与效率</div>
+          </div>
+        </div>
+        <p class="eco-desc">工作流与效率仓库，沉淀自动化流程、交付流水线与质量门禁，让每一次交付都经得起复检。</p>
+      </div>
+
+    </div>
+
+    <div class="eco-band">
+      <span></span><span></span><span></span>
+    </div>
+
+    <div class="eco-footer">
+      三仓库协同 · <strong>Forge × LS × Workflow</strong> · 技术深度可信
+    </div>
+  </section>
+
+  <!-- 4. 四类能力总览 -->
+  <section class="section cap-section">
+    <h2 class="section-title">四类能力总览</h2>
+    <p class="section-subtitle">覆盖技术服务的四个核心领域</p>
+    <div class="cap-grid">
+
+      <div class="cap-col cap-col--1">
+        <div class="cap-title"><span class="cap-title-num">01</span>程序设计</div>
+        <ul class="cap-list">
+          <li>Java</li><li>Python</li><li>SpringCloud</li><li>Vue</li><li>微服务</li><li>Docker</li><li>全栈</li>
+        </ul>
+      </div>
+
+      <div class="cap-col cap-col--2">
+        <div class="cap-title"><span class="cap-title-num">02</span>AI 应用</div>
+        <ul class="cap-list">
+          <li>LangChain</li><li>GPT-4</li><li>RAG</li><li>Streamlit</li><li>知识库</li><li>Agent</li>
+        </ul>
+      </div>
+
+      <div class="cap-col cap-col--3">
+        <div class="cap-title"><span class="cap-title-num">03</span>信息安全</div>
+        <ul class="cap-list">
+          <li>Burp Suite</li><li>Nmap</li><li>SQLMap</li><li>渗透测试</li><li>等保</li><li>加固</li>
+        </ul>
+      </div>
+
+      <div class="cap-col cap-col--4">
+        <div class="cap-title"><span class="cap-title-num">04</span>计算机基础</div>
+        <ul class="cap-list">
+          <li>C++</li><li>STL</li><li>算法</li><li>数据结构</li><li>辅导</li><li>培训</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5. 案例卡片列表 -->
+  <section class="section case-section">
+    <h2 class="section-title">跨领域脱敏案例</h2>
+    <p class="section-subtitle">6 个真实交付 · 全部脱敏处理</p>
+    <div class="case-list">
+
+      <!-- 案例 1 -->
+      <article class="case-card">
+        <div class="case-head">
+          <span class="case-num">CASE 01</span>
+          <div class="case-tags">
+            <span class="case-tag case-tag--violet">程序设计</span>
+          </div>
+        </div>
+        <h3 class="case-title">某高校综合毕设：基于微服务的在线考试系统</h3>
+        <span class="case-desens">脱敏标识 · 客户信息已处理</span>
+        <div class="case-stack">
+          <span>Java</span><span>SpringCloud</span><span>Redis</span><span>Docker</span>
+        </div>
+        <p class="case-desc">面向高校毕业设计交付，采用微服务架构实现题库管理、自动组卷、在线答题与防作弊监控，含部署文档与答辩思路整理。</p>
+        <div class="case-preview">
+          <div class="case-preview-label">界面预览 · 运行时示意</div>
+          <div class="wf">
+            <div class="wf-titlebar">
+              <span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span>
+              <span class="wf-title">ExamServiceApplication.java</span>
+            </div>
+            <div class="wf-body">
+              <div class="wf-code-line"><span class="wf-ln">01</span><span class="wf-code-text"><span class="kw">@SpringBootApplication</span></span></div>
+              <div class="wf-code-line"><span class="wf-ln">02</span><span class="wf-code-text"><span class="kw">public class</span> ExamApplication {</span></div>
+              <div class="wf-code-line"><span class="wf-ln">03</span><span class="wf-code-text">  <span class="kw">public static void</span> main(...){</span></div>
+              <div class="wf-code-line"><span class="wf-ln">04</span><span class="wf-code-text">    <span class="cmt">// 启动题库 / 组卷 / 答题 / 监控 4 个微服务</span></span></div>
+              <div class="wf-code-line"><span class="wf-ln">05</span><span class="wf-code-text">    run(ExamApplication.<span class="kw">class</span>, args);</span></div>
+              <div class="wf-code-line"><span class="wf-ln">06</span><span class="wf-code-text">  }</span></div>
+              <div class="wf-code-line"><span class="wf-ln">07</span><span class="wf-code-text">}</span></div>
+              <div class="wf-console">Tomcat started on port(s): 8081~8084 · 4 services online</div>
+            </div>
+          </div>
+        </div>
+        <div class="case-metrics">
+          <div class="metric"><span class="metric-value">12天</span><span class="metric-label">交付周期</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">微服务拆分</span><span class="metric-label">技术特征</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">容器化部署</span><span class="metric-label">技术特征</span></div>
+        </div>
+        <p class="case-quote">从需求到部署全包了，答辩 PPT 都是他们帮整理的思路。</p>
+      </article>
+
+      <!-- 案例 2 -->
+      <article class="case-card">
+        <div class="case-head">
+          <span class="case-num">CASE 02</span>
+          <div class="case-tags">
+            <span class="case-tag case-tag--blue">AI应用</span>
+          </div>
+        </div>
+        <h3 class="case-title">某教育公司：智能答疑助手</h3>
+        <span class="case-desens">脱敏标识 · 客户信息已处理</span>
+        <div class="case-stack">
+          <span>Python</span><span>LangChain</span><span>GPT-4</span><span>Streamlit</span>
+        </div>
+        <p class="case-desc">接入公司内部知识库构建 RAG 答疑链路，支持多轮对话与引用溯源，部署为内部 Streamlit 应用，客服团队直接使用。</p>
+        <div class="case-preview">
+          <div class="case-preview-label">界面预览 · 对话与数据流</div>
+          <div class="wf">
+            <div class="wf-titlebar">
+              <span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span>
+              <span class="wf-title">智能答疑助手 · Streamlit</span>
+            </div>
+            <div class="wf-body">
+              <div class="wf-chat">
+                <div class="wf-bubble wf-bubble--user">退货流程是什么？</div>
+                <div class="wf-bubble wf-bubble--ai">依据公司知识库，退货需先在订单页申请，审核通过后寄回。<span class="ref">来源：客服手册 §3.2</span></div>
+              </div>
+              <div class="wf-flow">
+                <span class="wf-flow-node">提问</span>
+                <span class="wf-flow-arrow">→</span>
+                <span class="wf-flow-node">Embedding</span>
+                <span class="wf-flow-arrow">→</span>
+                <span class="wf-flow-node">向量检索</span>
+                <span class="wf-flow-arrow">→</span>
+                <span class="wf-flow-node">LLM 生成</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="case-metrics">
+          <div class="metric"><span class="metric-value">7天</span><span class="metric-label">交付周期</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">RAG 检索增强</span><span class="metric-label">技术特征</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">引用溯源</span><span class="metric-label">技术特征</span></div>
+        </div>
+        <p class="case-quote">支持多轮对话与知识库溯源，覆盖咨询、教务、技术答疑场景</p>
+      </article>
+
+      <!-- 案例 3 -->
+      <article class="case-card">
+        <div class="case-head">
+          <span class="case-num">CASE 03</span>
+          <div class="case-tags">
+            <span class="case-tag case-tag--red">信息安全</span>
+          </div>
+        </div>
+        <h3 class="case-title">某互联网公司：Web 应用渗透测试</h3>
+        <span class="case-desens">脱敏标识 · 客户信息已处理</span>
+        <div class="case-stack">
+          <span>Burp Suite</span><span>Nmap</span><span>SQLMap</span>
+        </div>
+        <p class="case-desc">对客户线上 Web 应用进行授权渗透测试，覆盖 OWASP Top 10 风险点，输出含复现步骤与修复建议的检测报告。</p>
+        <div class="case-preview">
+          <div class="case-preview-label">界面预览 · 检测报告示意</div>
+          <div class="wf">
+            <div class="wf-titlebar">
+              <span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span>
+              <span class="wf-title">Web 应用渗透检测报告 · 授权范围</span>
+            </div>
+            <div class="wf-body">
+              <div class="wf-report-head">
+                <div class="wf-report-title">风险等级分布</div>
+                <span class="wf-report-badge">OWASP Top 10</span>
+              </div>
+              <div class="wf-sev-row">
+                <span class="wf-sev-label">高危</span>
+                <span class="wf-sev-bar"><span class="wf-sev-fill wf-sev-fill--high"></span></span>
+                <span class="wf-sev-note">SQL注入等</span>
+              </div>
+              <div class="wf-sev-row">
+                <span class="wf-sev-label">中危</span>
+                <span class="wf-sev-bar"><span class="wf-sev-fill wf-sev-fill--mid"></span></span>
+                <span class="wf-sev-note">XSS / 越权</span>
+              </div>
+              <div class="wf-sev-row">
+                <span class="wf-sev-label">低危</span>
+                <span class="wf-sev-bar"><span class="wf-sev-fill wf-sev-fill--low"></span></span>
+                <span class="wf-sev-note">配置项</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="case-metrics">
+          <div class="metric"><span class="metric-value">5天</span><span class="metric-label">交付周期</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">OWASP 覆盖</span><span class="metric-label">技术特征</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">复现+修复</span><span class="metric-label">技术特征</span></div>
+        </div>
+        <p class="case-quote">发现的注入漏洞我们自己完全没意识到。</p>
+      </article>
+
+      <!-- 案例 4 -->
+      <article class="case-card">
+        <div class="case-head">
+          <span class="case-num">CASE 04</span>
+          <div class="case-tags">
+            <span class="case-tag case-tag--green">计算机基础</span>
+          </div>
+        </div>
+        <h3 class="case-title">某考研学生：数据结构 + 算法辅导</h3>
+        <span class="case-desens">脱敏标识 · 客户信息已处理</span>
+        <div class="case-stack">
+          <span>C++</span><span>STL</span><span>算法</span>
+        </div>
+        <p class="case-desc">针对考研 408 大纲进行数据结构与算法一对一辅导，配套专题讲解与真题带练，帮助建立完整解题框架。</p>
+        <div class="case-preview">
+          <div class="case-preview-label">界面预览 · 板书与笔记示意</div>
+          <div class="wf">
+            <div class="wf-titlebar">
+              <span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span>
+              <span class="wf-title">数据结构专题 · 平衡二叉树</span>
+            </div>
+            <div class="wf-body">
+              <div class="wf-note">
+                <div class="wf-note-line"><span class="hl">AVL 树</span>：任意节点左右子树高度差 ≤ 1</div>
+                <div class="wf-note-line">平衡因子 BF = <span class="formula">h(L) − h(R)</span> ∈ {−1, 0, 1}</div>
+                <div class="wf-note-line">插入失衡 → <span class="hl">LL / RR / LR / RL</span> 旋转</div>
+              </div>
+              <div class="wf-tree">
+                <span class="root">root</span><br>
+                ├─ L (h=2)<br>
+                │&nbsp;&nbsp;├─ <span class="leaf">leaf</span><br>
+                │&nbsp;&nbsp;└─ <span class="leaf">leaf</span><br>
+                └─ R (h=1) → <span class="leaf">leaf</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="case-metrics">
+          <div class="metric"><span class="metric-value">10天</span><span class="metric-label">辅导周期</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">408 大纲对齐</span><span class="metric-label">技术特征</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">真题带练</span><span class="metric-label">技术特征</span></div>
+        </div>
+        <p class="case-quote">从摸鱼到上岸，算法题终于不虚了。</p>
+      </article>
+
+      <!-- 案例 5：跨领域 -->
+      <article class="case-card case-card--cross">
+        <div class="case-head">
+          <span class="case-num">CASE 05</span>
+          <div class="case-tags">
+            <span class="case-tag case-tag--violet">程序设计</span>
+            <span class="case-tag-plus">+</span>
+            <span class="case-tag case-tag--blue">AI</span>
+            <span class="case-tag-plus">+</span>
+            <span class="case-tag case-tag--red">安全</span>
+          </div>
+        </div>
+        <h3 class="case-title">某创业团队：技术合伙人外包</h3>
+        <span class="case-desens">脱敏标识 · 客户信息已处理</span>
+        <div class="case-stack">
+          <span>全栈</span><span>LLM</span><span>安全加固</span>
+        </div>
+        <p class="case-desc">作为技术合伙人承接 MVP 全链路交付：后端服务 + 前端原型 + LLM 智能模块 + 上线前安全加固，一人覆盖三个技术角色。</p>
+        <div class="case-preview">
+          <div class="case-preview-label">界面预览 · 三模块并行交付</div>
+          <div class="wf">
+            <div class="wf-titlebar">
+              <span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span>
+              <span class="wf-title">MVP 全链路 · 技术合伙人视图</span>
+            </div>
+            <div class="wf-body">
+              <div class="wf-multi wf-multi--3">
+                <div class="wf-multi-col">
+                  <div class="wf-multi-head">后端 / 全栈</div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <span class="wf-mini-tag wf-mini-tag--ok">已部署</span>
+                </div>
+                <div class="wf-multi-col wf-multi-col--ai">
+                  <div class="wf-multi-head">LLM 智能模块</div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <span class="wf-mini-tag wf-mini-tag--ai">已接入</span>
+                </div>
+                <div class="wf-multi-col wf-multi-col--sec">
+                  <div class="wf-multi-head">安全加固</div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <span class="wf-mini-tag wf-mini-tag--sec">已复测</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="case-metrics">
+          <div class="metric"><span class="metric-value">30天</span><span class="metric-label">交付周期</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">全栈 + LLM 一体</span><span class="metric-label">技术特征</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">上线前安全加固</span><span class="metric-label">技术特征</span></div>
+        </div>
+        <p class="case-quote">一个人当三个人用，技术栈覆盖太全了。</p>
+      </article>
+
+      <!-- 案例 6：跨领域 -->
+      <article class="case-card case-card--cross">
+        <div class="case-head">
+          <span class="case-num">CASE 06</span>
+          <div class="case-tags">
+            <span class="case-tag case-tag--green">计算机基础</span>
+            <span class="case-tag-plus">+</span>
+            <span class="case-tag case-tag--violet">程序设计</span>
+            <span class="case-tag-plus">+</span>
+            <span class="case-tag case-tag--red">安全</span>
+          </div>
+        </div>
+        <h3 class="case-title">某企业：技术培训 + 系统建设</h3>
+        <span class="case-desens">脱敏标识 · 客户信息已处理</span>
+        <div class="case-stack">
+          <span>培训文档</span><span>内部系统</span><span>等保</span>
+        </div>
+        <p class="case-desc">为企业提供员工技术培训 + 内部系统开发 + 等保合规整改的一站式打包交付，免去多方对接成本。</p>
+        <div class="case-preview">
+          <div class="case-preview-label">界面预览 · 培训+系统+合规</div>
+          <div class="wf">
+            <div class="wf-titlebar">
+              <span class="wf-dot"></span><span class="wf-dot"></span><span class="wf-dot"></span>
+              <span class="wf-title">企业一站式交付 · 总览视图</span>
+            </div>
+            <div class="wf-body">
+              <div class="wf-multi wf-multi--3">
+                <div class="wf-multi-col wf-multi-col--edu">
+                  <div class="wf-multi-head">技术培训</div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <span class="wf-mini-tag wf-mini-tag--ok">已结业</span>
+                </div>
+                <div class="wf-multi-col">
+                  <div class="wf-multi-head">内部系统</div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <span class="wf-mini-tag wf-mini-tag--ok">已上线</span>
+                </div>
+                <div class="wf-multi-col wf-multi-col--sec">
+                  <div class="wf-multi-head">等保合规</div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <div class="wf-mini-line"></div>
+                  <span class="wf-mini-tag wf-mini-tag--sec">已整改</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="case-metrics">
+          <div class="metric"><span class="metric-value">20天</span><span class="metric-label">交付周期</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">培训+系统打包</span><span class="metric-label">技术特征</span></div>
+          <div class="metric"><span class="metric-value metric-value--tech">等保合规整改</span><span class="metric-label">技术特征</span></div>
+        </div>
+        <p class="case-quote">培训加落地一起做，省了找三家供应商的麻烦。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 6. 一站式服务流程 -->
+  <section class="section flow-section">
+    <h2 class="section-title">一站式服务流程</h2>
+    <p class="section-subtitle">5 步从需求到售后</p>
+    <div class="flow-list">
+
+      <div class="flow-step">
+        <div class="flow-dot">1</div>
+        <div class="flow-body">
+          <div class="flow-name">需求沟通</div>
+          <div class="flow-desc">明确四类需求边界、交付物与时间节点</div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-dot">2</div>
+        <div class="flow-body">
+          <div class="flow-name">专家匹配</div>
+          <div class="flow-desc">按领域匹配 HOS 生态对应仓库的负责人</div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-dot">3</div>
+        <div class="flow-body">
+          <div class="flow-name">定金确认</div>
+          <div class="flow-desc">签订脱敏协议与定金，启动交付</div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-dot">4</div>
+        <div class="flow-body">
+          <div class="flow-name">分领域交付</div>
+          <div class="flow-desc">各领域并行推进，统一质量门禁验收</div>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-dot">5</div>
+        <div class="flow-body">
+          <div class="flow-name">统一售后</div>
+          <div class="flow-desc">单一对接入口，四类问题统一响应</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 7. 红线声明 -->
+  <section class="section redline-section">
+    <h2 class="section-title">红线声明</h2>
+    <p class="section-subtitle">综合四类 · 坚守底线</p>
+    <div class="redline-box">
+      <div class="redline-title">不可触碰的红线</div>
+      <ul class="redline-list">
+        <li>不代写学术论文（毕设代码与答辩辅导除外）</li>
+        <li>不代考、不代做在线考试答题</li>
+        <li>不进行未授权的非法攻击与入侵</li>
+        <li>不接违法违规项目（含灰产、黑产、作弊工具）</li>
+        <li>所有对外案例均做脱敏处理，不泄露客户信息</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 8. CTA 区 -->
+  <section class="cta-section">
+    <h2 class="cta-title">立即咨询</h2>
+    <p class="cta-sub">全四类一站搞定 · HOS 生态背书</p>
+    <div class="qr-placeholder">
+      <div class="qr-inner"></div>
+    </div>
+    <a href="#" class="cta-btn">扫码加微信，全四类一站搞定</a>
+    <p class="cta-note">技术深度 · 微商可信</p>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="page-footer">
+    <div class="footer-band"></div>
+    <p class="footer-text">
+      <span class="brand">HOS</span> · HOS-Forge × HOS-LS × HOS-Workflow<br>
+      三仓库协同 · 技术深度可信
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>
