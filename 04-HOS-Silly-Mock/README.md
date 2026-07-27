@@ -4,60 +4,98 @@
 >
 > **强制 AI 在不确定时"停下来问"，而不是"编一个能跑的假系统"**
 
-[![HOS-Sec-Engine](https://img.shields.io/badge/HOS-Sec--Engine-blue)](https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Compatibility](https://img.shields.io/badge/compatible-Claude%20Code%20%7C%20Cursor%20%7C%20Windsurf%20%7C%20GitHub%20Copilot%20%7C%20Trae--CN-orange)
 
 ---
 
-## 🚨 问题
+## 📋 概述
 
-AI 生成代码的三大致命问题：
+HOS-Silly-Mock 是一个 **Reality Enforcement Layer（真实强制执行层）**，专门用于检测和阻止 AI 生成代码中的虚假确定性。
 
-| # | 问题 | 表现 | 后果 |
-|---|------|------|------|
-| 1 | **MOCK 污染** | API 没接→写假数据，UI 没后端→填 demo json | 不可维护的假系统 |
-| 2 | **Regex 硬编码** | JSON parse→regex, HTML→regex, log→regex | 脆弱解析，易崩溃 |
-| 3 | **沉默失败** | 不报错，继续写完整系统，但系统是假的 | 生产事故 |
-
-## 🎯 解决方案
-
-**HOS-Silly-Mock** 是一个 **Reality Enforcement Layer（真实强制执行层）**，在 AI 生成代码时进行 4 层防御检测：
+### 核心哲学
 
 ```
-┌──────────────────────────────────────────────────────┐
-│                 HOS-Silly-Mock                        │
-│                                                       │
-│  Layer 1: MOCK显性化强制器                             │
-│  Layer 2: Regex禁用反射器                              │
-│  Layer 3: 真实连接强制器                                │
-│  Layer 4: 沉默失败检测器                                │
-└──────────────────────────────────────────────────────┘
+❌ 阻止 AI 用"编造确定性"替代"不确定真实系统"
+✅ 强制 AI 诚实表达不确定性
 ```
+
+---
+
+## ✨ 特性
+
+### 4 层防御系统
+
+| 层级 | 名称 | 功能 |
+|------|------|------|
+| **Layer 1** | MOCK 显性化强制器 | 检测未经标注的 mock 数据、catch→mock 模式 |
+| **Layer 2** | Regex 禁用反射器 | 禁止 regex 用于结构化数据解析（JSON/HTML/XML） |
+| **Layer 3** | 真实连接强制器 | 强制每个变量绑定 source → transform → sink 三元组 |
+| **Layer 4** | 沉默失败检测器 | 检测"完整但不真实"的逻辑链 |
+
+### 核心能力
+
+- ✅ **静态分析扫描**: AST 级别识别 mock 数据模式
+- ✅ **正则上下文分析**: 判断 regex 是否用于结构化解析
+- ✅ **数据流追踪**: 追踪变量 source → sink 链路完整性
+- ✅ **Reality Score 评分**: 0-100 分量化数据真实性
+- ✅ **多格式输出**: JSON / Markdown / Console 报告
+- ✅ **CI/CD 集成**: 作为质量门禁阻断低分代码
 
 ---
 
 ## 📦 安装
 
-### 作为 Claude Code Skill
+### 作为 AI IDE Skill
 
-将 `SKILL.md` 复制到 `.claude/skills/hos-silly-mock-001/` 目录：
+#### Claude Code
 
 ```bash
-# 使用 HOS-Sec-Engine 部署
-npx hos-sec-engine deploy --claude
-
-# 或手动复制
-mkdir -p .claude/skills/hos-silly-mock-001
-cp SKILL.md .claude/skills/hos-silly-mock-001/
+# 复制到 Claude Code skills 目录
+mkdir -p .claude/skills/hos-silly-mock
+cp SKILL.md .claude/skills/hos-silly-mock/
 ```
 
-### 作为 NPM 包
+#### Cursor
+
+```bash
+# 复制到 Cursor rules 目录
+mkdir -p .cursor/rules
+cp SKILL.md .cursor/rules/hos-silly-mock.md
+```
+
+#### Windsurf
+
+```bash
+# 复制到 Windsurf rules 目录
+mkdir -p .windsurf/rules
+cp SKILL.md .windsurf/rules/hos-silly-mock.md
+```
+
+#### GitHub Copilot
+
+```bash
+# 复制到 GitHub Copilot instructions
+mkdir -p .github/copilot-instructions
+cp SKILL.md .github/copilot-instructions/hos-silly-mock.md
+```
+
+#### Trae-CN
+
+```bash
+# 复制到 Trae skills 目录
+mkdir -p .trae/skills
+cp SKILL.md .trae/skills/hos-silly-mock.md
+```
+
+### 作为 NPM 包（开发中）
 
 ```bash
 npm install hos-silly-mock
 ```
 
-### 作为 CLI 工具
+### 作为 CLI 工具（开发中）
 
 ```bash
 npx hos-silly-mock analyze src/**/*.ts
@@ -181,7 +219,7 @@ async function processOrders() {
 
 ---
 
-## 📊 Reality Score
+## 📊 Reality Score 报告
 
 每次分析输出 Reality Score 报告：
 
@@ -212,7 +250,7 @@ async function processOrders() {
 
 ---
 
-## 🔧 配置
+## ⚙️ 配置
 
 ```typescript
 import { enforce, DEFAULT_CONFIG } from 'hos-silly-mock';
@@ -230,6 +268,15 @@ const config = {
 
 const result = enforce('/path/to/file.ts', config);
 ```
+
+### 配置选项
+
+| 选项 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `scoreThreshold` | number | 60 | Reality Score 阈值 |
+| `mock.largeDataThreshold` | number | 3 | 大数据结构行数阈值 |
+| `allowTestExemption` | boolean | true | 测试文件豁免 |
+| `testExemptionMarker` | string | '@silly-mock:allow' | 豁免标记 |
 
 ---
 
@@ -289,6 +336,18 @@ npx hos-sec-engine deploy --global
 - "AI Completeness Bias" — O'Reilly AI Engineering 2025
 - CWE-1104: Use of Unmaintainable Code for Input Validation
 
+---
+
 ## 📄 许可
 
-MIT License — 用于授权的安全测试、CTF 竞赛和教育场景。
+MIT License - 用于授权的安全测试、CTF 竞赛和教育场景。
+
+---
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+---
+
+**Made with ❤️ by HOS-Sec-Engine**

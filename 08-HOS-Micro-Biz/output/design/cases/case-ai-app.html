@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI应用案例展示 · HOS 微商技术服务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* 主色 */
+  --hos-violet-deep:  #5B2C91;
+  --hos-violet:       #7C3AED;
+  --hos-violet-light: #A78BFA;
+  --hos-violet-glow:  #C4B5FD;
+  /* 辅色 */
+  --hos-burgundy:      #8B1A3C;
+  --hos-burgundy-soft: #B91C5C;
+  --hos-bronze-green:  #3D5A4C;
+  --hos-bronze-light:  #6B8E7A;
+  /* 暗背景 */
+  --bg-darkest:   #0F0A1F;
+  --bg-dark:      #1A1129;
+  --bg-card:      #241638;
+  --bg-elevated:  #2E1F47;
+  /* 文字 */
+  --ink-primary:    #F5F0FF;
+  --ink-secondary:  #C4B5E0;
+  --ink-muted:      #8B7DAA;
+  --ink-on-violet:  #FFFFFF;
+  --ink-on-burgundy:#FFE8EE;
+  /* 语义色 */
+  --price-anchor: #FFB347;
+  --price-anchor-glow: rgba(255,179,71,0.25);
+  /* 间距 */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+  --space-2xl: 64px;
+  /* 圆角 */
+  --radius-sm:    4px;
+  --radius-md:    8px;
+  --radius-lg:    16px;
+  --radius-pill:  999px;
+  /* 阴影 */
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,0.5);
+  --shadow-glow-violet: 0 0 24px rgba(124,58,237,0.35);
+  /* 字体 */
+  --font-display: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-body:    'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  /* 字号 */
+  --fs-h2:      28px;
+  --fs-h3:      22px;
+  --fs-body:    16px;
+  --fs-body-sm: 14px;
+  --fs-caption: 12px;
+  /* 行高 */
+  --lh-tight:   1.2;
+  --lh-snug:    1.4;
+  --lh-normal:  1.6;
+  --lh-relaxed: 1.7;
+  /* 三色色带 */
+  --brand-band-gradient: linear-gradient(
+    90deg,
+    var(--hos-violet) 0%,
+    var(--hos-violet) 33%,
+    var(--hos-burgundy) 33%,
+    var(--hos-burgundy) 66%,
+    var(--hos-bronze-green) 66%,
+    var(--hos-bronze-green) 100%
+  );
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-darkest);
+  color: var(--ink-primary);
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--bg-dark);
+  min-height: 100vh;
+  box-shadow: var(--shadow-lg);
+  overflow-x: hidden;
+}
+
+/* ============ 通用区块 ============ */
+.section {
+  padding: var(--space-xl) var(--space-lg);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 700;
+  color: var(--ink-primary);
+  line-height: var(--lh-tight);
+  margin-bottom: var(--space-sm);
+}
+.section-subtitle {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  margin-bottom: var(--space-lg);
+  line-height: var(--lh-relaxed);
+}
+.section-divider {
+  width: 48px;
+  height: 3px;
+  background: var(--hos-violet);
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-lg);
+}
+
+/* ============ 模块1：品牌头 ============ */
+.brand-band {
+  height: 4px;
+  background: var(--brand-band-gradient);
+  width: 100%;
+}
+.brand-header {
+  background: var(--hos-violet-deep);
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--hos-violet) 0%, var(--hos-violet-light) 100%);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 16px;
+  color: var(--ink-on-violet);
+  box-shadow: var(--shadow-glow-violet);
+}
+.brand-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.brand-name .name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ink-on-violet);
+  letter-spacing: 0.5px;
+}
+.brand-name .tagline {
+  font-size: 11px;
+  color: var(--hos-violet-glow);
+  margin-top: 2px;
+}
+.back-link {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  text-decoration: none;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid rgba(199,181,253,0.3);
+  border-radius: var(--radius-pill);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.back-link:hover {
+  color: var(--ink-on-violet);
+  border-color: var(--hos-violet-light);
+  background: rgba(124,58,237,0.2);
+}
+
+/* ============ 模块2：Hero 区 ============ */
+.hero {
+  padding: var(--space-xl) var(--space-lg) var(--space-lg);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-card) 100%);
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(124,58,237,0.25) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--ink-primary);
+  line-height: var(--lh-tight);
+  margin-bottom: var(--space-sm);
+  position: relative;
+}
+.hero-subtitle {
+  font-size: var(--fs-body);
+  color: var(--ink-secondary);
+  margin-bottom: var(--space-xl);
+  line-height: var(--lh-relaxed);
+  position: relative;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  position: relative;
+}
+.stat-card {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  border: 1px solid rgba(124,58,237,0.2);
+  text-align: center;
+}
+.stat-number {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--price-anchor);
+  text-shadow: 0 0 12px var(--price-anchor-glow);
+  line-height: 1.1;
+}
+.stat-label {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  margin-top: var(--space-xs);
+}
+
+/* ============ 模块3：技术栈展示 ============ */
+.tech-stack {
+  background: var(--bg-card);
+}
+.tech-category {
+  margin-bottom: var(--space-lg);
+}
+.tech-category:last-child { margin-bottom: 0; }
+.tech-cat-title {
+  font-size: var(--fs-body-sm);
+  font-weight: 700;
+  color: var(--ink-secondary);
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.tech-cat-title::before {
+  content: '';
+  width: 4px;
+  height: 14px;
+  border-radius: 2px;
+}
+.tech-cat-title.cat-llm::before { background: var(--hos-violet); }
+.tech-cat-title.cat-eng::before { background: var(--hos-bronze-green); }
+.tech-cat-title.cat-fe::before  { background: var(--hos-violet-light); }
+.tech-cat-title.cat-deploy::before { background: var(--hos-violet-deep); }
+
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs) var(--space-sm);
+}
+.tech-tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-body-sm);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.tech-tag.cat-llm {
+  background: rgba(124,58,237,0.18);
+  color: var(--hos-violet-light);
+  border: 1px solid rgba(124,58,237,0.35);
+}
+.tech-tag.cat-eng {
+  background: rgba(61,90,76,0.35);
+  color: var(--hos-bronze-light);
+  border: 1px solid rgba(107,142,122,0.4);
+}
+.tech-tag.cat-fe {
+  background: rgba(167,139,250,0.15);
+  color: var(--hos-violet-glow);
+  border: 1px solid rgba(199,181,253,0.3);
+}
+.tech-tag.cat-deploy {
+  background: rgba(91,44,145,0.35);
+  color: var(--hos-violet-glow);
+  border: 1px solid rgba(91,44,145,0.55);
+}
+
+/* ============ 模块4：案例卡片列表 ============ */
+.cases {
+  background: var(--bg-dark);
+}
+.case-card {
+  background: var(--bg-elevated);
+  border-left: 4px solid var(--hos-violet);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg) var(--space-md);
+  margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-md);
+}
+.case-card:last-child { margin-bottom: 0; }
+.case-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+  gap: var(--space-sm);
+}
+.case-no {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  font-weight: 700;
+}
+.case-category {
+  font-size: var(--fs-caption);
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: rgba(124,58,237,0.25);
+  color: var(--hos-violet-light);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.case-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  color: var(--ink-primary);
+  line-height: var(--lh-snug);
+  margin-bottom: var(--space-xs);
+}
+.case-desensitize {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-caption);
+  color: var(--hos-bronze-light);
+  background: rgba(61,90,76,0.3);
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+}
+.case-desensitize::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hos-bronze-light);
+}
+.case-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+.case-stack .tech-tag {
+  font-size: var(--fs-caption);
+  padding: 2px var(--space-sm);
+}
+.case-desc {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  line-height: var(--lh-relaxed);
+  margin-bottom: var(--space-md);
+}
+.case-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xs);
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+.metric {
+  text-align: center;
+}
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--price-anchor);
+  line-height: 1.2;
+}
+.metric-label {
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 2px;
+}
+.case-quote {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  line-height: var(--lh-relaxed);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(124,58,237,0.08);
+  border-radius: var(--radius-sm);
+  border-left: 2px solid var(--hos-violet-light);
+  font-style: italic;
+  position: relative;
+}
+.case-quote::before {
+  content: '"';
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--hos-violet-light);
+  font-style: normal;
+  margin-right: 2px;
+}
+
+/* ============ 案例界面预览（wireframe 风格） ============ */
+.case-mockup {
+  background: var(--bg-darkest);
+  border: 1px solid var(--hos-violet);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-md);
+  box-shadow: 0 0 0 1px rgba(124,58,237,0.12), var(--shadow-md);
+}
+.mockup-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-card);
+  border-bottom: 1px solid rgba(124,58,237,0.25);
+}
+.mockup-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.mockup-dot.r { background: var(--hos-burgundy-soft); }
+.mockup-dot.y { background: var(--price-anchor); }
+.mockup-dot.g { background: var(--hos-bronze-light); }
+.mockup-title-text {
+  margin-left: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  letter-spacing: 0.3px;
+}
+.mockup-body {
+  padding: var(--space-md);
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.mockup-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--hos-violet-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 文字型 metric（替代虚构数字） */
+.metric-value.is-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--hos-violet-light);
+  line-height: 1.2;
+}
+
+/* 聊天界面（CASE 01 智能答疑） */
+.mockup-chat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.chat-bubble {
+  font-size: 11px;
+  line-height: 1.5;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  max-width: 88%;
+}
+.chat-bubble.user {
+  align-self: flex-end;
+  background: rgba(124,58,237,0.25);
+  color: var(--ink-primary);
+  border: 1px solid rgba(124,58,237,0.4);
+}
+.chat-bubble.bot {
+  align-self: flex-start;
+  background: var(--bg-elevated);
+  color: var(--ink-secondary);
+  border: 1px solid rgba(124,58,237,0.2);
+}
+.chat-cite {
+  display: inline-block;
+  margin-left: 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--hos-bronze-light);
+  background: rgba(61,90,76,0.3);
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* 生成结果列表（CASE 02 内容生成） */
+.gen-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.gen-item {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(124,58,237,0.2);
+  border-radius: var(--radius-sm);
+  padding: 6px var(--space-sm);
+}
+.gen-style {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--hos-violet-light);
+  margin-bottom: 4px;
+}
+.gen-line {
+  height: 5px;
+  border-radius: 2px;
+  background: rgba(199,181,253,0.18);
+  margin-bottom: 3px;
+}
+.gen-line.w90 { width: 90%; }
+.gen-line.w85 { width: 85%; }
+.gen-line.w70 { width: 70%; }
+.gen-line.w60 { width: 60%; }
+
+/* 文档标注（CASE 03 合同审查） */
+.doc-mock {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.doc-line {
+  height: 6px;
+  border-radius: 2px;
+  background: rgba(199,181,253,0.15);
+}
+.doc-line.w100 { width: 100%; }
+.doc-line.w85 { width: 85%; }
+.doc-line.risk {
+  background: rgba(185,28,92,0.35);
+  border: 1px solid var(--hos-burgundy-soft);
+}
+.doc-line.warn {
+  background: rgba(255,179,71,0.3);
+  border: 1px solid var(--price-anchor);
+}
+.doc-annot {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--hos-burgundy-soft);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.doc-annot.warn { color: var(--price-anchor); }
+
+/* 节点图（CASE 04 工作流） */
+.flow-nodes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.flow-node {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-primary);
+  background: rgba(124,58,237,0.2);
+  border: 1px solid var(--hos-violet);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+.flow-arrow {
+  font-size: 11px;
+  color: var(--hos-violet-light);
+}
+.flow-node.auto {
+  background: rgba(61,90,76,0.3);
+  border-color: var(--hos-bronze-light);
+  color: var(--hos-bronze-light);
+}
+
+/* 检索界面（CASE 05 知识库） */
+.mockup-searchbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: var(--bg-elevated);
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: var(--radius-pill);
+  padding: 6px var(--space-md);
+  margin-bottom: var(--space-xs);
+}
+.search-icon {
+  color: var(--hos-violet-light);
+  font-size: 14px;
+  line-height: 1;
+}
+.search-text {
+  font-size: 11px;
+  color: var(--ink-secondary);
+}
+.search-result {
+  background: var(--bg-elevated);
+  border: 1px solid rgba(124,58,237,0.2);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm);
+}
+.result-title {
+  font-size: 11px;
+  color: var(--ink-primary);
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+.result-snippet {
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(199,181,253,0.15);
+  width: 80%;
+  margin-bottom: 4px;
+}
+.result-cite {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--hos-bronze-light);
+}
+
+/* ============ 模块5：能力矩阵 ============ */
+.capability {
+  background: var(--bg-card);
+}
+.cap-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+}
+.cap-item {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-sm);
+  border: 1px solid rgba(124,58,237,0.15);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.cap-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--hos-violet) 0%, var(--hos-violet-deep) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ink-on-violet);
+}
+.cap-name {
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--ink-primary);
+  line-height: 1.3;
+}
+
+/* ============ 模块6：服务流程 ============ */
+.process {
+  background: var(--bg-dark);
+}
+.process-list {
+  position: relative;
+  padding-left: var(--space-md);
+}
+.process-list::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--hos-violet) 0%, var(--hos-bronze-green) 100%);
+}
+.process-step {
+  position: relative;
+  padding-bottom: var(--space-lg);
+  padding-left: var(--space-lg);
+}
+.process-step:last-child { padding-bottom: 0; }
+.process-step::before {
+  content: '';
+  position: absolute;
+  left: -9px;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg-dark);
+  border: 3px solid var(--hos-violet);
+  box-shadow: 0 0 0 3px var(--bg-dark);
+}
+.process-step:nth-child(4)::before,
+.process-step:nth-child(5)::before {
+  border-color: var(--hos-bronze-green);
+}
+.process-step-title {
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--ink-primary);
+  margin-bottom: 2px;
+}
+.process-step-desc {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  line-height: var(--lh-normal);
+}
+.process-step-no {
+  font-family: var(--font-mono);
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  margin-right: var(--space-xs);
+}
+
+/* ============ 模块7：红线声明 ============ */
+.redline {
+  background: var(--bg-card);
+  border-top: 1px solid rgba(139,26,60,0.3);
+  border-bottom: 1px solid rgba(139,26,60,0.3);
+}
+.redline-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  color: var(--hos-burgundy-soft);
+  margin-bottom: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.redline-title::before {
+  content: '';
+  width: 6px;
+  height: 20px;
+  background: var(--hos-burgundy);
+  border-radius: var(--radius-sm);
+}
+.redline-list {
+  list-style: none;
+}
+.redline-item {
+  font-size: var(--fs-body-sm);
+  color: var(--ink-secondary);
+  line-height: var(--lh-relaxed);
+  padding: var(--space-xs) 0;
+  padding-left: var(--space-lg);
+  position: relative;
+}
+.redline-item::before {
+  content: '✕';
+  position: absolute;
+  left: 0;
+  top: var(--space-xs);
+  color: var(--hos-burgundy);
+  font-weight: 700;
+  font-size: 13px;
+}
+.redline-note {
+  margin-top: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(61,90,76,0.2);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-body-sm);
+  color: var(--hos-bronze-light);
+  line-height: var(--lh-relaxed);
+}
+
+/* ============ 模块8：CTA 区 ============ */
+.cta {
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--hos-violet-deep) 100%);
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+}
+.cta-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: 900;
+  color: var(--ink-on-violet);
+  line-height: var(--lh-tight);
+  margin-bottom: var(--space-sm);
+}
+.cta-subtitle {
+  font-size: var(--fs-body);
+  color: var(--hos-violet-glow);
+  margin-bottom: var(--space-lg);
+  line-height: var(--lh-relaxed);
+}
+.qr-placeholder {
+  width: 160px;
+  height: 160px;
+  margin: 0 auto var(--space-lg);
+  border: 2px dashed var(--hos-violet-light);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15,10,31,0.5);
+  position: relative;
+}
+.qr-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  background:
+    repeating-linear-gradient(0deg, rgba(199,181,253,0.15) 0 4px, transparent 4px 8px),
+    repeating-linear-gradient(90deg, rgba(199,181,253,0.15) 0 4px, transparent 4px 8px);
+  border-radius: var(--radius-sm);
+}
+.qr-placeholder-text {
+  position: relative;
+  font-size: var(--fs-caption);
+  color: var(--ink-secondary);
+  background: var(--bg-card);
+  padding: 4px var(--space-sm);
+  border-radius: var(--radius-sm);
+  z-index: 1;
+}
+.cta-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--price-anchor) 0%, #FF8C42 100%);
+  color: #1A1129;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(255,179,71,0.4);
+  margin-bottom: var(--space-sm);
+}
+.cta-note {
+  font-size: var(--fs-body-sm);
+  color: var(--hos-violet-glow);
+  line-height: var(--lh-relaxed);
+}
+
+/* ============ 页脚 ============ */
+.footer-band {
+  height: 4px;
+  background: var(--brand-band-gradient);
+}
+.footer {
+  background: var(--bg-darkest);
+  padding: var(--space-lg);
+  text-align: center;
+}
+.footer-text {
+  font-size: var(--fs-caption);
+  color: var(--ink-muted);
+  line-height: var(--lh-relaxed);
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 模块1：品牌头 -->
+  <div class="brand-band"></div>
+  <header class="brand-header">
+    <div class="brand-logo">
+      <div class="logo-mark">H</div>
+      <div class="brand-name">
+        <span class="name">HOS</span>
+        <span class="tagline">技术深度 · 微商可信</span>
+      </div>
+    </div>
+    <a href="../index.html" class="back-link">← 返回</a>
+  </header>
+
+  <!-- 模块2：Hero 区 -->
+  <section class="hero">
+    <h1 class="hero-title">AI应用案例展示</h1>
+    <p class="hero-subtitle">从模型到落地 · 全链路交付</p>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">RAG</div>
+        <div class="stat-label">核心能力</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">5+</div>
+        <div class="stat-label">技术栈</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">7天</div>
+        <div class="stat-label">标准交付</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">本地</div>
+        <div class="stat-label">可部署</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 模块3：技术栈展示 -->
+  <section class="section tech-stack">
+    <h2 class="section-title">技术栈展示</h2>
+    <div class="section-divider"></div>
+
+    <div class="tech-category">
+      <div class="tech-cat-title cat-llm">LLM 层</div>
+      <div class="tech-tags">
+        <span class="tech-tag cat-llm">GPT-4</span>
+        <span class="tech-tag cat-llm">Claude</span>
+        <span class="tech-tag cat-llm">Llama</span>
+        <span class="tech-tag cat-llm">Qwen</span>
+        <span class="tech-tag cat-llm">DeepSeek</span>
+        <span class="tech-tag cat-llm">RAG</span>
+        <span class="tech-tag cat-llm">LangChain</span>
+        <span class="tech-tag cat-llm">LlamaIndex</span>
+      </div>
+    </div>
+
+    <div class="tech-category">
+      <div class="tech-cat-title cat-eng">工程层</div>
+      <div class="tech-tags">
+        <span class="tech-tag cat-eng">Python</span>
+        <span class="tech-tag cat-eng">FastAPI</span>
+        <span class="tech-tag cat-eng">LangChain</span>
+        <span class="tech-tag cat-eng">Vector DB</span>
+        <span class="tech-tag cat-eng">Docker</span>
+        <span class="tech-tag cat-eng">Redis</span>
+      </div>
+    </div>
+
+    <div class="tech-category">
+      <div class="tech-cat-title cat-fe">前端层</div>
+      <div class="tech-tags">
+        <span class="tech-tag cat-fe">React</span>
+        <span class="tech-tag cat-fe">Vue</span>
+        <span class="tech-tag cat-fe">Streamlit</span>
+        <span class="tech-tag cat-fe">Gradio</span>
+      </div>
+    </div>
+
+    <div class="tech-category">
+      <div class="tech-cat-title cat-deploy">部署层</div>
+      <div class="tech-tags">
+        <span class="tech-tag cat-deploy">Docker</span>
+        <span class="tech-tag cat-deploy">vLLM</span>
+        <span class="tech-tag cat-deploy">Ollama</span>
+        <span class="tech-tag cat-deploy">Cloudflare</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 模块4：案例卡片列表 -->
+  <section class="section cases">
+    <h2 class="section-title">交付案例</h2>
+    <div class="section-divider"></div>
+
+    <!-- 案例1 -->
+    <article class="case-card">
+      <div class="case-header">
+        <span class="case-no">CASE 01</span>
+        <span class="case-category">智能答疑</span>
+      </div>
+      <h3 class="case-title">某教育公司 智能答疑助手</h3>
+      <div class="case-desensitize">客户信息已脱敏</div>
+      <div class="case-stack">
+        <span class="tech-tag cat-eng">Python</span>
+        <span class="tech-tag cat-llm">LangChain</span>
+        <span class="tech-tag cat-llm">GPT-4</span>
+        <span class="tech-tag cat-eng">Pinecone</span>
+        <span class="tech-tag cat-fe">Streamlit</span>
+      </div>
+      <p class="case-desc">接入公司内部知识库，构建基于 RAG 的智能答疑系统，支持多轮对话与精准溯源，覆盖课程咨询、教务流程、技术答疑等场景。</p>
+      <div class="case-mockup">
+        <div class="mockup-titlebar">
+          <span class="mockup-dot r"></span>
+          <span class="mockup-dot y"></span>
+          <span class="mockup-dot g"></span>
+          <span class="mockup-title-text">智能答疑 · 多轮对话</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-label">聊天界面</div>
+          <div class="mockup-chat">
+            <div class="chat-bubble user">课程退费流程是什么？</div>
+            <div class="chat-bubble bot">根据《教务管理规范》第三章，学员可在开课后 7 日内申请全额退费，需提交申请单至教务系统审批。<span class="chat-cite">来源：知识库#12</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <div class="metric-value">7天</div>
+          <div class="metric-label">交付周期</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value is-text">RAG 架构</div>
+          <div class="metric-label">核心技术</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value is-text">多轮对话</div>
+          <div class="metric-label">功能特征</div>
+        </div>
+      </div>
+      <div class="case-quote">支持多轮对话与知识库溯源，覆盖咨询、教务、技术答疑场景</div>
+    </article>
+
+    <!-- 案例2 -->
+    <article class="case-card">
+      <div class="case-header">
+        <span class="case-no">CASE 02</span>
+        <span class="case-category">内容生成</span>
+      </div>
+      <h3 class="case-title">某电商团队 商品文案生成器</h3>
+      <div class="case-desensitize">客户信息已脱敏</div>
+      <div class="case-stack">
+        <span class="tech-tag cat-eng">Python</span>
+        <span class="tech-tag cat-eng">FastAPI</span>
+        <span class="tech-tag cat-llm">Qwen</span>
+        <span class="tech-tag cat-eng">Redis</span>
+        <span class="tech-tag cat-fe">Vue</span>
+      </div>
+      <p class="case-desc">基于通义千问构建商品文案批量生成系统，支持多风格切换、卖点提取、SEO 优化，前端可视化操作并支持模板复用。</p>
+      <div class="case-mockup">
+        <div class="mockup-titlebar">
+          <span class="mockup-dot r"></span>
+          <span class="mockup-dot y"></span>
+          <span class="mockup-dot g"></span>
+          <span class="mockup-title-text">文案生成器 · 多风格批量产出</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-label">生成结果列表</div>
+          <div class="gen-list">
+            <div class="gen-item">
+              <div class="gen-style">风格 · 小红书种草</div>
+              <div class="gen-line w90"></div>
+              <div class="gen-line w70"></div>
+            </div>
+            <div class="gen-item">
+              <div class="gen-style">风格 · 电商详情页</div>
+              <div class="gen-line w85"></div>
+              <div class="gen-line w60"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <div class="metric-value">5天</div>
+          <div class="metric-label">交付周期</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value is-text">多风格切换</div>
+          <div class="metric-label">技术特征</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value is-text">支持复用</div>
+          <div class="metric-label">交付特征</div>
+        </div>
+      </div>
+      <div class="case-quote">批量生成文案省了三个人力，质量比人工还稳定</div>
+    </article>
+
+    <!-- 案例3 -->
+    <article class="case-card">
+      <div class="case-header">
+        <span class="case-no">CASE 03</span>
+        <span class="case-category">合同审查</span>
+      </div>
+      <h3 class="case-title">某律所 合同审查系统</h3>
+      <div class="case-desensitize">客户信息已脱敏</div>
+      <div class="case-stack">
+        <span class="tech-tag cat-eng">Python</span>
+        <span class="tech-tag cat-llm">LangChain</span>
+        <span class="tech-tag cat-llm">Claude</span>
+        <span class="tech-tag cat-eng">Chroma</span>
+        <span class="tech-tag cat-fe">React</span>
+      </div>
+      <p class="case-desc">基于 Claude 构建合同风险条款识别系统，支持多格式合同解析、风险点高亮、修改建议生成，律师只需复核一遍即可定稿。</p>
+      <div class="case-mockup">
+        <div class="mockup-titlebar">
+          <span class="mockup-dot r"></span>
+          <span class="mockup-dot y"></span>
+          <span class="mockup-dot g"></span>
+          <span class="mockup-title-text">合同审查 · 风险条款标注</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-label">文档标注</div>
+          <div class="doc-mock">
+            <div class="doc-line w100"></div>
+            <div class="doc-line w85"></div>
+            <div class="doc-line w100 risk"></div>
+            <div class="doc-annot">▲ 第8条：违约金比例偏高，建议调整为 20%</div>
+            <div class="doc-line w85 warn"></div>
+            <div class="doc-annot warn">◆ 第12条：付款条件需补充说明</div>
+          </div>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <div class="metric-value">10天</div>
+          <div class="metric-label">交付周期</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value is-text">多格式解析</div>
+          <div class="metric-label">技术特征</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value is-text">风险高亮</div>
+          <div class="metric-label">功能特征</div>
+        </div>
+      </div>
+      <div class="case-quote">风险条款识别很准，律师只需要复核一遍</div>
+    </article>
+
+    <!-- 案例4 -->
+    <article class="case-card">
+      <div class="case-header">
+        <span class="case-no">CASE 04</span>
+        <span class="case-category">自动化工作流</span>
+      </div>
+      <h3 class="case-title">某自媒体 内容创作工作流</h3>
+      <div class="case-desensitize">客户信息已脱敏</div>
+      <div class="case-stack">
+        <span class="tech-tag cat-eng">Python</span>
+        <span class="tech-tag cat-eng">n8n</span>
+        <span class="tech-tag cat-llm">GPT-4</span>
+        <span class="tech-tag cat-llm">DALL-E</span>
+        <span class="tech-tag cat-deploy">自动化</span>
+      </div>
+      <p class="case-desc">搭建从选题、文案、配图到多平台发布的全自动内容创作工作流，结合 GPT-4 文案生成与 DALL-E 配图，一人管五号。</p>
+      <div class="case-mockup">
+        <div class="mockup-titlebar">
+          <span class="mockup-dot r"></span>
+          <span class="mockup-dot y"></span>
+          <span class="mockup-dot g"></span>
+          <span class="mockup-title-text">内容工作流 · 节点编排</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-label">节点图</div>
+          <div class="flow-nodes">
+            <span class="flow-node">选题</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-node">文案</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-node">配图</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-node auto">发布</span>
+          </div>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <div class="metric-value">6天</div>
+          <div class="metric-label">交付周期</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value is-text">全自动</div>
+          <div class="metric-label">交付特征</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value is-text">多平台</div>
+          <div class="metric-label">功能特征</div>
+        </div>
+      </div>
+      <div class="case-quote">从选题到发布全自动，现在一个人管五个号</div>
+    </article>
+
+    <!-- 案例5 -->
+    <article class="case-card">
+      <div class="case-header">
+        <span class="case-no">CASE 05</span>
+        <span class="case-category">企业知识库</span>
+      </div>
+      <h3 class="case-title">某企业内部知识库 RAG 系统</h3>
+      <div class="case-desensitize">客户信息已脱敏</div>
+      <div class="case-stack">
+        <span class="tech-tag cat-eng">Python</span>
+        <span class="tech-tag cat-llm">LlamaIndex</span>
+        <span class="tech-tag cat-llm">Llama3</span>
+        <span class="tech-tag cat-eng">Milvus</span>
+        <span class="tech-tag cat-deploy">Docker</span>
+      </div>
+      <p class="case-desc">基于 Llama3 + Milvus 构建企业级内部文档智能检索系统，支持多部门权限隔离、文档增量入库、答案溯源引用，新员工上手提速显著。</p>
+      <div class="case-mockup">
+        <div class="mockup-titlebar">
+          <span class="mockup-dot r"></span>
+          <span class="mockup-dot y"></span>
+          <span class="mockup-dot g"></span>
+          <span class="mockup-title-text">知识库检索 · 答案溯源</span>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-label">检索界面</div>
+          <div class="mockup-searchbar">
+            <span class="search-icon">⌕</span>
+            <span class="search-text">报销流程需要哪些材料？</span>
+          </div>
+          <div class="search-result">
+            <div class="result-title">差旅报销管理办法</div>
+            <div class="result-snippet"></div>
+            <div class="result-cite">来源：财务部#03 · 置信度 0.92</div>
+          </div>
+        </div>
+      </div>
+      <div class="case-metrics">
+        <div class="metric">
+          <div class="metric-value">12天</div>
+          <div class="metric-label">交付周期</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value is-text">权限隔离</div>
+          <div class="metric-label">技术特征</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value is-text">答案溯源</div>
+          <div class="metric-label">功能特征</div>
+        </div>
+      </div>
+      <div class="case-quote">内部文档终于能智能检索了，新员工上手快多了</div>
+    </article>
+  </section>
+
+  <!-- 模块5：能力矩阵 -->
+  <section class="section capability">
+    <h2 class="section-title">能力矩阵</h2>
+    <div class="section-divider"></div>
+    <div class="cap-grid">
+      <div class="cap-item">
+        <div class="cap-icon">01</div>
+        <div class="cap-name">需求拆解</div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-icon">02</div>
+        <div class="cap-name">Prompt 工程</div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-icon">03</div>
+        <div class="cap-name">RAG 构建</div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-icon">04</div>
+        <div class="cap-name">模型微调</div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-icon">05</div>
+        <div class="cap-name">Agent 开发</div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-icon">06</div>
+        <div class="cap-name">API 集成</div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-icon">07</div>
+        <div class="cap-name">前端可视化</div>
+      </div>
+      <div class="cap-item">
+        <div class="cap-icon">08</div>
+        <div class="cap-name">部署运维</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 模块6：服务流程 -->
+  <section class="section process">
+    <h2 class="section-title">服务流程</h2>
+    <div class="section-divider"></div>
+    <div class="process-list">
+      <div class="process-step">
+        <div class="process-step-title"><span class="process-step-no">01</span>需求沟通</div>
+        <div class="process-step-desc">明确业务场景、数据规模、预期效果，梳理可交付边界</div>
+      </div>
+      <div class="process-step">
+        <div class="process-step-title"><span class="process-step-no">02</span>技术选型 + 报价</div>
+        <div class="process-step-desc">输出技术方案、模型选型、周期与报价，确认后启动</div>
+      </div>
+      <div class="process-step">
+        <div class="process-step-title"><span class="process-step-no">03</span>开发迭代</div>
+        <div class="process-step-desc">按里程碑交付，每 2 天同步进度，支持中途调整需求</div>
+      </div>
+      <div class="process-step">
+        <div class="process-step-title"><span class="process-step-no">04</span>交付演示</div>
+        <div class="process-step-desc">完整功能演示 + 源码交付 + 部署文档 + 使用说明</div>
+      </div>
+      <div class="process-step">
+        <div class="process-step-title"><span class="process-step-no">05</span>售后支持</div>
+        <div class="process-step-desc">交付后 30 天免费答疑，提供部署运维技术支持</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 模块7：红线声明 -->
+  <section class="section redline">
+    <h2 class="redline-title">红线声明</h2>
+    <ul class="redline-list">
+      <li class="redline-item">不代写论文、不提供学术造假相关服务</li>
+      <li class="redline-item">不开发用于欺诈、侵权、违法用途的 AI 应用</li>
+      <li class="redline-item">所有项目仅用于合法商业用途，需签署合规承诺</li>
+    </ul>
+    <div class="redline-note">我们只服务真实商业场景，拒绝任何灰色地带需求。技术能力用于创造价值，而非制造风险。</div>
+  </section>
+
+  <!-- 模块8：CTA 区 -->
+  <section class="cta">
+    <h2 class="cta-title">立即咨询</h2>
+    <p class="cta-subtitle">扫码加微信，先聊不收费</p>
+    <div class="qr-placeholder">
+      <span class="qr-placeholder-text">微信二维码</span>
+    </div>
+    <a href="../index.html" class="cta-btn">立即咨询</a>
+    <p class="cta-note">扫码加微信，先聊不收费<br>需求评估 · 方案规划 · 报价沟通</p>
+  </section>
+
+  <!-- 页脚 -->
+  <div class="footer-band"></div>
+  <footer class="footer">
+    <p class="footer-text">HOS 微商技术服务 · AI应用开发产品线<br>技术深度 · 微商可信</p>
+  </footer>
+
+</div>
+</body>
+</html>

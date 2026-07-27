@@ -1,21 +1,27 @@
 ---
-name: hos-silly-mock-001
+name: HOS-Silly-Mock
 description: "Anti-Fake Data & Anti-Regex Reality Enforcement Layer — 阻止 AI 用 MOCK/regex/静态数据伪造系统可运行性，强制 AI 在不确定时停下来问而非编造假系统"
+version: "1.0.0"
+author: HOS-Sec-Engine
 license: MIT
+compatibility:
+  - claude-code
+  - cursor
+  - windsurf
+  - github-copilot
+  - trae-cn
 metadata:
-  author: HOS-Sec-Engine
-  version: 2026-06
   tags:
-  - code-integrity
-  - mock-detection
-  - regex-abuse
-  - reality-binding
-  - silent-failure
-  - ai-code-quality
-  - enforcement
-  - code-review
-  - static-analysis
-  - quality-gate
+    - code-integrity
+    - mock-detection
+    - regex-abuse
+    - reality-binding
+    - silent-failure
+    - ai-code-quality
+    - enforcement
+    - code-review
+    - static-analysis
+    - quality-gate
   category: code-review
   subCategory: code-integrity-enforcement
   risk-level: high

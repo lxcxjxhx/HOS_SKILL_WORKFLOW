@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOS 对外获客设计资产 — 总索引</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hos-violet-deep:#5B2C91; --hos-violet:#7C3AED; --hos-violet-light:#A78BFA; --hos-violet-glow:#C4B5FD;
+  --hos-burgundy:#8B1A3C; --hos-burgundy-soft:#B91C5C;
+  --hos-bronze-green:#3D5A4C; --hos-bronze-light:#6B8E7A;
+  --hos-forge:#2563EB; --hos-ls:#7C3AED; --hos-workflow:#059669;
+  --bg-darkest:#0F0A1F; --bg-dark:#1A1129; --bg-card:#241638; --bg-elevated:#2E1F47;
+  --ink-primary:#F5F0FF; --ink-secondary:#C4B5E0; --ink-muted:#8B7DAA;
+  --price-anchor:#FFB347;
+  --font-display:'Noto Serif SC',serif; --font-body:'Noto Sans SC',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --brand-band-gradient:linear-gradient(90deg,#7C3AED 0%,#7C3AED 33%,#8B1A3C 33%,#8B1A3C 66%,#3D5A4C 66%,#3D5A4C 100%);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:var(--font-body);
+  background:var(--bg-darkest);
+  color:var(--ink-primary);
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(124,58,237,0.12) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(139,26,60,0.10) 0%, transparent 40%);
+}
+.brand-band { height:4px; background:var(--brand-band-gradient); width:100%; position:sticky; top:0; z-index:100; }
+.container { max-width:1200px; margin:0 auto; padding:0 24px; }
+
+/* Hero */
+.hero { padding:80px 0 56px; text-align:center; }
+.hero-logo {
+  font-family:var(--font-display); font-size:64px; font-weight:700;
+  background:linear-gradient(135deg,#A78BFA 0%,#7C3AED 50%,#8B1A3C 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  letter-spacing:8px; margin-bottom:16px;
+}
+.hero-tagline { font-size:18px; color:var(--ink-secondary); letter-spacing:2px; }
+.hero-meta {
+  font-family:var(--font-mono); font-size:13px; color:var(--ink-muted);
+  margin-top:24px; display:flex; gap:32px; justify-content:center; flex-wrap:wrap;
+}
+.hero-meta span { display:inline-flex; align-items:center; gap:6px; }
+.dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+
+/* Section */
+section.block { padding:56px 0; border-top:1px solid rgba(124,58,237,0.15); }
+.section-head { margin-bottom:32px; }
+.section-num {
+  font-family:var(--font-mono); font-size:13px; color:var(--hos-violet-light);
+  letter-spacing:3px; margin-bottom:8px;
+}
+.section-title {
+  font-family:var(--font-display); font-size:36px; font-weight:700;
+  color:var(--ink-primary); margin-bottom:8px;
+}
+.section-desc { color:var(--ink-secondary); font-size:15px; max-width:720px; }
+
+/* Stat grid */
+.stats {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:16px; margin-bottom:40px;
+}
+.stat {
+  background:var(--bg-card); border-radius:12px; padding:24px;
+  border:1px solid rgba(124,58,237,0.2);
+}
+.stat-num { font-family:var(--font-mono); font-size:32px; font-weight:700; color:var(--hos-violet-light); }
+.stat-label { font-size:13px; color:var(--ink-muted); margin-top:4px; }
+
+/* Product line tabs */
+.tabs {
+  display:flex; gap:8px; margin-bottom:32px; flex-wrap:wrap;
+  border-bottom:1px solid rgba(124,58,237,0.15); padding-bottom:0;
+}
+.tab {
+  padding:12px 20px; background:transparent; border:none; cursor:pointer;
+  font-family:var(--font-body); font-size:15px; color:var(--ink-muted);
+  border-bottom:2px solid transparent; transition:all .2s;
+}
+.tab:hover { color:var(--ink-primary); }
+.tab.active { color:var(--ink-primary); border-bottom-color:var(--hos-violet); }
+
+/* Asset grid */
+.grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:24px;
+}
+.card {
+  background:var(--bg-card); border-radius:14px; overflow:hidden;
+  border:1px solid rgba(124,58,237,0.18);
+  transition:transform .2s, border-color .2s, box-shadow .2s;
+  display:flex; flex-direction:column;
+}
+.card:hover {
+  transform:translateY(-4px); border-color:rgba(124,58,237,0.5);
+  box-shadow:0 12px 32px rgba(124,58,237,0.25);
+}
+.card-thumb {
+  aspect-ratio:4/3; background:var(--bg-elevated); overflow:hidden; position:relative;
+}
+.card-thumb img { width:100%; height:100%; object-fit:cover; }
+.card-thumb.html-thumb {
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#241638 0%,#2E1F47 100%);
+}
+.card-thumb.html-thumb::before {
+  content:"HTML"; font-family:var(--font-mono); font-size:28px; font-weight:700;
+  color:var(--hos-violet-light); letter-spacing:2px;
+}
+.card-thumb.css-thumb {
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,#1A1129 0%,#241638 100%);
+}
+.card-thumb.css-thumb::before {
+  content:"CSS"; font-family:var(--font-mono); font-size:28px; font-weight:700;
+  color:var(--hos-bronze-light); letter-spacing:2px;
+}
+.card-body { padding:16px 20px; flex:1; display:flex; flex-direction:column; }
+.card-tag {
+  display:inline-block; font-family:var(--font-mono); font-size:11px;
+  padding:2px 8px; border-radius:4px; margin-bottom:8px; width:fit-content;
+}
+.tag-pdp { background:rgba(124,58,237,0.2); color:var(--hos-violet-light); }
+.tag-main { background:rgba(255,179,71,0.15); color:var(--price-anchor); }
+.tag-poster { background:rgba(139,26,60,0.25); color:#FFB0C4; }
+.tag-lead { background:rgba(61,90,76,0.3); color:var(--hos-bronze-light); }
+.tag-lp { background:rgba(124,58,237,0.2); color:var(--hos-violet-light); }
+.tag-pack { background:rgba(37,99,235,0.2); color:#93C5FD; }
+.tag-system { background:rgba(5,150,105,0.2); color:#6EE7B7; }
+.card-title { font-size:15px; font-weight:600; margin-bottom:4px; color:var(--ink-primary); }
+.card-platform { font-size:12px; color:var(--ink-muted); margin-bottom:12px; }
+.card-actions { margin-top:auto; display:flex; gap:8px; flex-wrap:wrap; }
+.btn {
+  display:inline-block; padding:6px 12px; border-radius:6px;
+  font-size:12px; font-family:var(--font-mono); text-decoration:none;
+  border:1px solid rgba(124,58,237,0.3); color:var(--ink-primary);
+  transition:all .15s;
+}
+.btn:hover { background:var(--hos-violet); border-color:var(--hos-violet); color:#fff; }
+.btn-primary { background:var(--hos-violet); border-color:var(--hos-violet); color:#fff; }
+.btn-primary:hover { background:var(--hos-violet-deep); }
+
+/* Line filter */
+.line-panel { display:none; }
+.line-panel.active { display:block; }
+
+/* Quick start */
+.quick {
+  background:var(--bg-card); border-radius:14px; padding:32px;
+  border:1px solid rgba(124,58,237,0.2); margin-bottom:32px;
+}
+.quick h3 { font-family:var(--font-display); font-size:20px; margin-bottom:16px; color:var(--ink-primary); }
+.quick ol { padding-left:20px; }
+.quick li { margin-bottom:12px; color:var(--ink-secondary); }
+.quick li strong { color:var(--ink-primary); }
+.quick code {
+  font-family:var(--font-mono); font-size:13px; background:var(--bg-darkest);
+  padding:2px 6px; border-radius:4px; color:var(--hos-violet-light);
+}
+
+/* Color palette */
+.palette { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+.swatch {
+  flex:1; min-width:120px; border-radius:8px; padding:16px; text-align:center;
+  border:1px solid rgba(255,255,255,0.08);
+}
+.swatch-hex { font-family:var(--font-mono); font-size:12px; opacity:0.9; }
+.swatch-name { font-size:11px; opacity:0.7; margin-top:2px; }
+
+/* Footer */
+footer {
+  margin-top:80px; padding:40px 0; border-top:1px solid rgba(124,58,237,0.15);
+  text-align:center; color:var(--ink-muted); font-size:13px;
+}
+footer a { color:var(--hos-violet-light); text-decoration:none; }
+footer .brand-mini { font-family:var(--font-display); font-size:20px; color:var(--ink-primary); margin-bottom:8px; }
+
+/* Responsive */
+@media (max-width:768px) {
+  .hero-logo { font-size:48px; }
+  .section-title { font-size:28px; }
+  .grid { grid-template-columns:1fr; }
+  .stats { grid-template-columns:repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+<div class="brand-band"></div>
+
+<div class="container">
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-logo">HOS</div>
+  <div class="hero-tagline">对外获客设计资产 · 总索引</div>
+  <div class="hero-meta">
+    <span><span class="dot" style="background:var(--hos-violet)"></span>68 文件</span>
+    <span><span class="dot" style="background:var(--hos-burgundy)"></span>4 产品线</span>
+    <span><span class="dot" style="background:var(--hos-bronze-green)"></span>6 资产类型</span>
+    <span><span class="dot" style="background:var(--price-anchor)"></span>风信子视觉系统</span>
+  </div>
+</header>
+
+<!-- Stats -->
+<section class="block" style="border-top:none">
+  <div class="stats">
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">视觉系统文件</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">详情页长图 KV</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">详情页 HTML</div></div>
+    <div class="stat"><div class="stat-num">12</div><div class="stat-label">主图/海报/引流图</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">精装落地页</div></div>
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">案例展示页</div></div>
+    <div class="stat"><div class="stat-num">37</div><div class="stat-label">素材包文件</div></div>
+  </div>
+
+  <div class="quick">
+    <h3>快速开始</h3>
+    <ol>
+      <li><strong>闲鱼上架</strong>：进入 <code>packs/pack-{产品线}/</code>，按 README 的 9 图位规划上传，首图用 <code>lead-{产品线}.jpg</code>（引用 <code>../../main-and-posters/</code>）</li>
+      <li><strong>拼多多/淘宝 PDP</strong>：用 <code>pdp/pdp-{产品线}.html</code> 截图为长图，或直接用 <code>pdp/kv-{产品线}.jpg</code> 作主图</li>
+      <li><strong>私域转化</strong>：发 <code>landing-pages/lp-{产品线}.html</code> 链接到微信（单文件无依赖）</li>
+      <li><strong>朋友圈运营</strong>：按"案例/知识/促销"三型轮换，用 pack 内 <code>06/07/08-*.jpg</code></li>
+      <li><strong>小红书种草</strong>：用 pack 内 <code>05-xhs-cover.jpg</code> 作首图封面</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 视觉系统 -->
+<section class="block">
+  <div class="section-head">
+    <div class="section-num">B0 / VISUAL SYSTEM</div>
+    <h2 class="section-title">视觉系统基线</h2>
+    <p class="section-desc">基于风信子特写参考图提炼的三色高对比体系，所有后续资产共用此 token。</p>
+  </div>
+  <div class="palette">
+    <div class="swatch" style="background:#5B2C91"><div class="swatch-hex">#5B2C91</div><div class="swatch-name">深紫罗兰</div></div>
+    <div class="swatch" style="background:#7C3AED"><div class="swatch-hex">#7C3AED</div><div class="swatch-name">HOS-LS 主色</div></div>
+    <div class="swatch" style="background:#8B1A3C"><div class="swatch-hex">#8B1A3C</div><div class="swatch-name">勃艮第红</div></div>
+    <div class="swatch" style="background:#3D5A4C"><div class="swatch-hex">#3D5A4C</div><div class="swatch-name">青铜绿</div></div>
+    <div class="swatch" style="background:#0F0A1F"><div class="swatch-hex">#0F0A1F</div><div class="swatch-name">暗背景</div></div>
+    <div class="swatch" style="background:#FFB347"><div class="swatch-hex">#FFB347</div><div class="swatch-name">价格锚金</div></div>
+  </div>
+  <div class="grid" style="margin-top:24px">
+    <div class="card">
+      <div class="card-thumb css-thumb"></div>
+      <div class="card-body">
+        <span class="card-tag tag-system">CSS TOKEN</span>
+        <div class="card-title">colors_and_type.css</div>
+        <div class="card-platform">配色 token · 字体 · 间距 · 圆角 · 阴影 · 工具类</div>
+        <div class="card-actions"><a class="btn btn-primary" href="design-system/colors_and_type.css">查看</a></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-thumb"><img src="design-system/hos-visual-sample.jpg" alt="风信子样板"></div>
+      <div class="card-body">
+        <span class="card-tag tag-system">SAMPLE</span>
+        <div class="card-title">hos-visual-sample.jpg</div>
+        <div class="card-platform">风信子主视觉样板 · 验证三色配比</div>
+        <div class="card-actions"><a class="btn" href="design-system/hos-visual-sample.jpg" target="_blank">查看</a></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-thumb html-thumb"></div>
+      <div class="card-body">
+        <span class="card-tag tag-system">PROMPT</span>
+        <div class="card-title">image-prompt-templates.md</div>
+        <div class="card-platform">4 类 GenerateImage prompt 模板</div>
+        <div class="card-actions"><a class="btn" href="design-system/image-prompt-templates.md">查看</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 产品线切换 -->
+<section class="block">
+  <div class="section-head">
+    <div class="section-num">B1-B4 / ASSETS BY PRODUCT LINE</div>
+    <h2 class="section-title">按产品线浏览资产</h2>
+    <p class="section-desc">每条产品线含：详情页长图 KV + 详情页 HTML + 主图/海报/引流图 + 精装落地页 + 全套素材包。</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-line="course-project">课设/毕设</button>
+    <button class="tab" data-line="ai-app">AI 应用</button>
+    <button class="tab" data-line="security">信息安全</button>
+    <button class="tab" data-line="all-in-one">全四类综合</button>
+  </div>
+
+  <div id="line-course-project" class="line-panel active">
+    <div class="grid">
+      <div class="card"><div class="card-thumb"><img src="pdp/kv-course-project.jpg"></div><div class="card-body"><span class="card-tag tag-pdp">PDP KV</span><div class="card-title">详情页主视觉</div><div class="card-platform">拼多多/淘宝 PDP · 864×1152</div><div class="card-actions"><a class="btn" href="pdp/kv-course-project.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb html-thumb"></div><div class="card-body"><span class="card-tag tag-pdp">PDP HTML</span><div class="card-title">详情页长图</div><div class="card-platform">八模块竖版 · 移动端滚动</div><div class="card-actions"><a class="btn btn-primary" href="pdp/pdp-course-project.html" target="_blank">打开</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/main-course-project.jpg"></div><div class="card-body"><span class="card-tag tag-main">主图</span><div class="card-title">商品主图</div><div class="card-platform">闲鱼/拼多多 · 1024×1024</div><div class="card-actions"><a class="btn" href="main-and-posters/main-course-project.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/poster-course-project.jpg"></div><div class="card-body"><span class="card-tag tag-poster">海报</span><div class="card-title">促销海报</div><div class="card-platform">朋友圈/社群 · 720×1280</div><div class="card-actions"><a class="btn" href="main-and-posters/poster-course-project.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/lead-course-project.jpg"></div><div class="card-body"><span class="card-tag tag-lead">引流图</span><div class="card-title">闲鱼首图</div><div class="card-platform">闲鱼 · 864×1152</div><div class="card-actions"><a class="btn" href="main-and-posters/lead-course-project.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb html-thumb"></div><div class="card-body"><span class="card-tag tag-lp">LANDING</span><div class="card-title">精装落地页</div><div class="card-platform">H5 · 表单+案例轮播+价格计算</div><div class="card-actions"><a class="btn btn-primary" href="landing-pages/lp-course-project.html" target="_blank">打开</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="packs/pack-course-project/05-xhs-cover.jpg"></div><div class="card-body"><span class="card-tag tag-pack">PACK</span><div class="card-title">全套素材包</div><div class="card-platform">8 张图 + README · 一键投放</div><div class="card-actions"><a class="btn btn-primary" href="packs/pack-course-project/README.md">README</a><a class="btn" href="packs/pack-course-project/05-xhs-cover.jpg" target="_blank">预览</a></div></div></div>
+    </div>
+  </div>
+
+  <div id="line-ai-app" class="line-panel">
+    <div class="grid">
+      <div class="card"><div class="card-thumb"><img src="pdp/kv-ai-app.jpg"></div><div class="card-body"><span class="card-tag tag-pdp">PDP KV</span><div class="card-title">详情页主视觉</div><div class="card-platform">拼多多/淘宝 PDP · 864×1152</div><div class="card-actions"><a class="btn" href="pdp/kv-ai-app.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb html-thumb"></div><div class="card-body"><span class="card-tag tag-pdp">PDP HTML</span><div class="card-title">详情页长图</div><div class="card-platform">八模块竖版 · 移动端滚动</div><div class="card-actions"><a class="btn btn-primary" href="pdp/pdp-ai-app.html" target="_blank">打开</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/main-ai-app.jpg"></div><div class="card-body"><span class="card-tag tag-main">主图</span><div class="card-title">商品主图</div><div class="card-platform">闲鱼/拼多多 · 1024×1024</div><div class="card-actions"><a class="btn" href="main-and-posters/main-ai-app.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/poster-ai-app.jpg"></div><div class="card-body"><span class="card-tag tag-poster">海报</span><div class="card-title">促销海报</div><div class="card-platform">朋友圈/社群 · 720×1280</div><div class="card-actions"><a class="btn" href="main-and-posters/poster-ai-app.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/lead-ai-app.jpg"></div><div class="card-body"><span class="card-tag tag-lead">引流图</span><div class="card-title">闲鱼首图</div><div class="card-platform">闲鱼 · 864×1152</div><div class="card-actions"><a class="btn" href="main-and-posters/lead-ai-app.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb html-thumb"></div><div class="card-body"><span class="card-tag tag-lp">LANDING</span><div class="card-title">精装落地页</div><div class="card-platform">H5 · 表单+案例轮播+需求自测</div><div class="card-actions"><a class="btn btn-primary" href="landing-pages/lp-ai-app.html" target="_blank">打开</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="packs/pack-ai-app/05-xhs-cover.jpg"></div><div class="card-body"><span class="card-tag tag-pack">PACK</span><div class="card-title">全套素材包</div><div class="card-platform">8 张图 + README · 一键投放</div><div class="card-actions"><a class="btn btn-primary" href="packs/pack-ai-app/README.md">README</a><a class="btn" href="packs/pack-ai-app/05-xhs-cover.jpg" target="_blank">预览</a></div></div></div>
+    </div>
+  </div>
+
+  <div id="line-security" class="line-panel">
+    <div class="grid">
+      <div class="card"><div class="card-thumb"><img src="pdp/kv-security.jpg"></div><div class="card-body"><span class="card-tag tag-pdp">PDP KV</span><div class="card-title">详情页主视觉</div><div class="card-platform">拼多多/淘宝 PDP · 864×1152</div><div class="card-actions"><a class="btn" href="pdp/kv-security.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb html-thumb"></div><div class="card-body"><span class="card-tag tag-pdp">PDP HTML</span><div class="card-title">详情页长图</div><div class="card-platform">八模块竖版 · 移动端滚动</div><div class="card-actions"><a class="btn btn-primary" href="pdp/pdp-security.html" target="_blank">打开</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/main-security.jpg"></div><div class="card-body"><span class="card-tag tag-main">主图</span><div class="card-title">商品主图</div><div class="card-platform">闲鱼/拼多多 · 1024×1024</div><div class="card-actions"><a class="btn" href="main-and-posters/main-security.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/poster-security.jpg"></div><div class="card-body"><span class="card-tag tag-poster">海报</span><div class="card-title">促销海报</div><div class="card-platform">朋友圈/社群 · 720×1280</div><div class="card-actions"><a class="btn" href="main-and-posters/poster-security.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/lead-security.jpg"></div><div class="card-body"><span class="card-tag tag-lead">引流图</span><div class="card-title">闲鱼首图</div><div class="card-platform">闲鱼 · 864×1152</div><div class="card-actions"><a class="btn" href="main-and-posters/lead-security.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb html-thumb"></div><div class="card-body"><span class="card-tag tag-lp">LANDING</span><div class="card-title">精装落地页</div><div class="card-platform">H5 · 表单+案例轮播+授权确认</div><div class="card-actions"><a class="btn btn-primary" href="landing-pages/lp-security.html" target="_blank">打开</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="packs/pack-security/05-xhs-cover.jpg"></div><div class="card-body"><span class="card-tag tag-pack">PACK</span><div class="card-title">全套素材包</div><div class="card-platform">8 张图 + README · 一键投放</div><div class="card-actions"><a class="btn btn-primary" href="packs/pack-security/README.md">README</a><a class="btn" href="packs/pack-security/05-xhs-cover.jpg" target="_blank">预览</a></div></div></div>
+    </div>
+  </div>
+
+  <div id="line-all-in-one" class="line-panel">
+    <div class="grid">
+      <div class="card"><div class="card-thumb"><img src="pdp/kv-all-in-one.jpg"></div><div class="card-body"><span class="card-tag tag-pdp">PDP KV</span><div class="card-title">详情页主视觉</div><div class="card-platform">拼多多/淘宝 PDP · 864×1152</div><div class="card-actions"><a class="btn" href="pdp/kv-all-in-one.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb html-thumb"></div><div class="card-body"><span class="card-tag tag-pdp">PDP HTML</span><div class="card-title">详情页长图</div><div class="card-platform">八模块竖版 · 移动端滚动</div><div class="card-actions"><a class="btn btn-primary" href="pdp/pdp-all-in-one.html" target="_blank">打开</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/main-all-in-one.jpg"></div><div class="card-body"><span class="card-tag tag-main">主图</span><div class="card-title">商品主图</div><div class="card-platform">闲鱼/拼多多 · 1024×1024</div><div class="card-actions"><a class="btn" href="main-and-posters/main-all-in-one.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/poster-all-in-one.jpg"></div><div class="card-body"><span class="card-tag tag-poster">海报</span><div class="card-title">促销海报</div><div class="card-platform">朋友圈/社群 · 720×1280</div><div class="card-actions"><a class="btn" href="main-and-posters/poster-all-in-one.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="main-and-posters/lead-all-in-one.jpg"></div><div class="card-body"><span class="card-tag tag-lead">引流图</span><div class="card-title">闲鱼首图</div><div class="card-platform">闲鱼 · 864×1152</div><div class="card-actions"><a class="btn" href="main-and-posters/lead-all-in-one.jpg" target="_blank">查看</a></div></div></div>
+      <div class="card"><div class="card-thumb html-thumb"></div><div class="card-body"><span class="card-tag tag-lp">LANDING</span><div class="card-title">精装落地页</div><div class="card-platform">H5 · 表单+案例轮播+分类切换</div><div class="card-actions"><a class="btn btn-primary" href="landing-pages/lp-all-in-one.html" target="_blank">打开</a></div></div></div>
+      <div class="card"><div class="card-thumb"><img src="packs/pack-all-in-one/09-ecosystem.jpg"></div><div class="card-body"><span class="card-tag tag-pack">PACK</span><div class="card-title">全套素材包</div><div class="card-platform">9 张图 + README · 含生态图</div><div class="card-actions"><a class="btn btn-primary" href="packs/pack-all-in-one/README.md">README</a><a class="btn" href="packs/pack-all-in-one/09-ecosystem.jpg" target="_blank">预览</a></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 案例展示 -->
+<section class="block">
+  <div class="section-head">
+    <div class="section-num">CASES / TRUST SHOWCASE</div>
+    <h2 class="section-title">案例展示页 · 信任外壳</h2>
+    <p class="section-desc">四个方向的"徒有其表"案例展示页，脱敏案例 + 信任统计 + 红线声明 + CTA，让客户点进来就有信任感。移动端竖版长图，可直接发微信链接。</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-thumb html-thumb"></div>
+      <div class="card-body">
+        <span class="card-tag tag-pdp">课设毕设</span>
+        <div class="card-title">课设毕设案例展示</div>
+        <div class="card-platform">5 个脱敏案例 + 信任统计 + 信任墙 + 红线声明</div>
+        <div class="card-actions"><a class="btn btn-primary" href="cases/case-course-project.html" target="_blank">打开</a></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-thumb html-thumb"></div>
+      <div class="card-body">
+        <span class="card-tag tag-lp">AI 应用</span>
+        <div class="card-title">AI 应用案例展示</div>
+        <div class="card-platform">5 个脱敏案例 + 技术栈展示 + 能力矩阵 + 红线声明</div>
+        <div class="card-actions"><a class="btn btn-primary" href="cases/case-ai-app.html" target="_blank">打开</a></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-thumb html-thumb"></div>
+      <div class="card-body">
+        <span class="card-tag tag-poster">信息安全</span>
+        <div class="card-title">信息安全案例展示</div>
+        <div class="card-platform">5 个脱敏案例 + 授权合规声明 + 交付物清单 + 强化红线</div>
+        <div class="card-actions"><a class="btn btn-primary" href="cases/case-security.html" target="_blank">打开</a></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-thumb html-thumb"></div>
+      <div class="card-body">
+        <span class="card-tag tag-pack">全四类综合</span>
+        <div class="card-title">全四类综合案例展示</div>
+        <div class="card-platform">6 个跨领域案例 + HOS 三色生态背书 + 四类能力总览</div>
+        <div class="card-actions"><a class="btn btn-primary" href="cases/case-all-in-one.html" target="_blank">打开</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 按平台速查 -->
+<section class="block">
+  <div class="section-head">
+    <div class="section-num">QUICK FIND / BY PLATFORM</div>
+    <h2 class="section-title">按投放平台速查</h2>
+    <p class="section-desc">不同平台用不同资产组合，点击直达对应文件。</p>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="card-body"><span class="card-tag tag-lead">闲鱼</span><div class="card-title">9 图位组合</div><div class="card-platform">首图 04-lead → 卖点 01-main → KV 02 → 案例 06 → 流程/价格/保障文字图 → 好评 → 二维码 03-poster</div><div class="card-actions"><a class="btn" href="packs/pack-course-project/README.md">课设 pack</a><a class="btn" href="packs/pack-ai-app/README.md">AI pack</a><a class="btn" href="packs/pack-security/README.md">安全 pack</a><a class="btn" href="packs/pack-all-in-one/README.md">综合 pack</a></div></div>
+    <div class="card"><div class="card-body"><span class="card-tag tag-pdp">拼多多/淘宝</span><div class="card-title">PDP 详情页</div><div class="card-platform">主图 main-*.jpg + 详情页 HTML 截长图 或 KV 长图 kv-*.jpg</div><div class="card-actions"><a class="btn" href="pdp/pdp-course-project.html" target="_blank">课设</a><a class="btn" href="pdp/pdp-ai-app.html" target="_blank">AI</a><a class="btn" href="pdp/pdp-security.html" target="_blank">安全</a><a class="btn" href="pdp/pdp-all-in-one.html" target="_blank">综合</a></div></div>
+    <div class="card"><div class="card-body"><span class="card-tag tag-lp">微信私域</span><div class="card-title">H5 落地页链接</div><div class="card-platform">单文件 HTML 无依赖，直接发链接到微信</div><div class="card-actions"><a class="btn" href="landing-pages/lp-course-project.html" target="_blank">课设</a><a class="btn" href="landing-pages/lp-ai-app.html" target="_blank">AI</a><a class="btn" href="landing-pages/lp-security.html" target="_blank">安全</a><a class="btn" href="landing-pages/lp-all-in-one.html" target="_blank">综合</a></div></div>
+    <div class="card"><div class="card-body"><span class="card-tag tag-poster">朋友圈</span><div class="card-title">三型轮换配图</div><div class="card-platform">案例 06 / 知识 07 / 促销 08，配 hos-micro-biz.md 文案模板</div><div class="card-actions"><a class="btn" href="packs/pack-course-project/06-friend-case.jpg" target="_blank">案例型</a><a class="btn" href="packs/pack-course-project/07-friend-knowledge.jpg" target="_blank">知识型</a><a class="btn" href="packs/pack-course-project/08-friend-promo.jpg" target="_blank">促销型</a></div></div>
+    <div class="card"><div class="card-body"><span class="card-tag tag-pack">小红书</span><div class="card-title">封面图</div><div class="card-platform">05-xhs-cover.jpg · 1080×1440 竖版 · 大字钩子标题</div><div class="card-actions"><a class="btn" href="packs/pack-course-project/05-xhs-cover.jpg" target="_blank">课设</a><a class="btn" href="packs/pack-ai-app/05-xhs-cover.jpg" target="_blank">AI</a><a class="btn" href="packs/pack-security/05-xhs-cover.jpg" target="_blank">安全</a><a class="btn" href="packs/pack-all-in-one/05-xhs-cover.jpg" target="_blank">综合</a></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="brand-mini">HOS</div>
+  <div>对外获客设计资产 · 风信子视觉系统</div>
+  <div style="margin-top:8px">HOS-Forge · HOS-LS · HOS-Workflow 三仓库生态支撑</div>
+</footer>
+
+</div>
+
+<script>
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.line-panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('line-' + t.dataset.line).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
