@@ -1,0 +1,84 @@
+name: Skill Validation
+
+on:
+  pull_request:
+    paths:
+      - '*/skill-manifest.yaml'
+      - '*/README.md'
+
+jobs:
+  validate-skill-manifest:
+    name: Validate Skill Manifest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install PyYAML
+        run: pip install pyyaml
+      
+      - name: Validate skill manifests
+        run: |
+          python3 << 'EOF'
+          import yaml
+          import os
+          import sys
+          
+          def validate_manifest(path):
+              """验证 skill manifest 文件"""
+              try:
+                  with open(path, 'r', encoding='utf-8') as f:
+                      manifest = yaml.safe_load(f)
+                  
+                  # 检查必需字段
+                  required_fields = ['name', 'version', 'description']
+                  for field in required_fields:
+                      if field not in manifest:
+                          print(f"❌ {path}: Missing required field '{field}'")
+                          return False
+                  
+                  # 检查 commands 字段
+                  if 'commands' in manifest:
+                      for cmd in manifest['commands']:
+                          if 'name' not in cmd or 'usage' not in cmd:
+                              print(f"❌ {path}: Command missing 'name' or 'usage'")
+                              return False
+                  
+                  print(f"✅ {path}: Valid")
+                  return True
+              except Exception as e:
+                  print(f"❌ {path}: {e}")
+                  return False
+          
+          # 查找所有 skill-manifest.yaml 文件
+          valid = True
+          for root, dirs, files in os.walk('.'):
+              if 'skill-manifest.yaml' in files:
+                  path = os.path.join(root, 'skill-manifest.yaml')
+                  if not validate_manifest(path):
+                      valid = False
+          
+          sys.exit(0 if valid else 1)
+          EOF
+
+  check-readme:
+    name: Check README
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check README files
+        run: |
+          for dir in 01-HOS-TECH-ARCH 02-HOS-LIFE-OKR 03-HOS-DEV-OPS; do
+            if [ -d "$dir" ]; then
+              if [ ! -f "$dir/README.md" ]; then
+                echo "❌ Missing README.md in $dir"
+                exit 1
+              fi
+              echo "✅ $dir/README.md exists"
+            fi
+          done
