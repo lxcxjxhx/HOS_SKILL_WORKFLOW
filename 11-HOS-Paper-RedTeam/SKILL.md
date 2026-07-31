@@ -70,7 +70,7 @@ HOS 模式（红队）：
 3. Experiment Auditor 与 Security Auditor 可并行，输出统一汇总到 Paper Autopsy。
 4. **每条发现必须挂 RVE 编号**（见 [rve-catalog.md](references/rve-catalog.md)），否则不进入正式输出。
 5. 最后必须产出 **Patch（修复方案）** 与 **Next Paper Idea（下一篇论文方向）**——只骂不补不是红队，是喷子。
-6. **评分卡永远在最顶部**（[score-card.md](templates/score-card.md)）——先给结论（分数+一句话点评），长文靠后。评分模型见 [score-model.md](references/score-model.md)。
+6. **评分卡永远在最顶部**——用 TS 渲染器（`node src/index.ts <review.json>`，结构见 [ghfind-card.md](references/ghfind-card.md)）生成 ghfind 式评分卡（分数+评级+维度条+一句话点评），长文靠后。评分模型见 [score-model.md](references/score-model.md)。
 7. 输出语言跟随用户语言；默认中文。
 
 ---
@@ -142,7 +142,7 @@ HOS-RVE-YYYY-NNNN     # 例：HOS-RVE-2026-0001
 
 | 场景 | 模板 | 说明 |
 |------|------|------|
-| 🎴 评分卡（必输出，最顶部） | [score-card.md](templates/score-card.md) | 评分+维度倾向+一句话点评 |
+| 🎴 评分卡（必输出，最顶部） | [score-card.md](templates/score-card.md) + [src/render.ts](src/render.ts) | 评分+评级+维度条+一句话点评（TS 渲染，通用于所有论文） |
 | 论文审计（全流程） | [paper-audit.md](templates/paper-audit.md) | 十步完整报告 |
 | 论文鞭尸局（核心 IP） | [paper-autopsy.md](templates/paper-autopsy.md) | 单篇毒舌点评 |
 | 审稿模拟 | [reviewer-report.md](templates/reviewer-report.md) | Reviewer 打分 |

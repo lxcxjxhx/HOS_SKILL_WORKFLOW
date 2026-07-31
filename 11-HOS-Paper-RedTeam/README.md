@@ -80,7 +80,14 @@ Paper → Audit → Exploit → Patch → Research Idea
 ├── references/
 │   ├── style-guide.md        # 毒舌风格指南
 │   ├── rve-catalog.md        # RVE 漏洞编号规范
-│   └── score-model.md        # 评分模型（ghfind 式评分卡）
+│   ├── score-model.md        # 评分模型（ghfind 式评分卡）
+│   └── ghfind-card.md        # ghfind 评分卡结构内嵌参考（免抓取）
+├── src/                      # TS 评分卡渲染器（Node 24+ 直接跑）
+│   ├── types.ts              # PaperReviewData 接口 + 通用六维
+│   ├── render.ts             # renderCard() 渲染逻辑
+│   ├── index.ts              # CLI 入口
+│   └── example-review.json   # 示例数据
+├── package.json / tsconfig.json
 └── workflows/                # 自动化节奏
     ├── daily-scan.yaml
     ├── weekly-report.yaml
@@ -110,6 +117,18 @@ Paper → Audit → Exploit → Patch → Research Idea
 ```
 
 需要深度分析时用 `output_mode: full`，评分卡后跟完整鞭尸局长文（`templates/paper-autopsy.md`）。
+
+### 🎴 TS 渲染器（模板化，通用于所有论文类型）
+
+> 卡片结构参考 ghfind.com 并**内嵌**在 `references/ghfind-card.md`（无需抓站）。渲染器只认 `PaperReviewData` 数据形状，维度数据驱动，喂什么领域的数据出什么卡。
+
+```bash
+# Node 24+ 直接跑 TS
+node src/index.ts src/example-review.json      # 跑示例
+node src/index.ts review.json                  # 渲染你自己的评审 JSON
+```
+
+评分卡数据由 Scorer 组装（`agents/11-scorer.md`），结构定义见 `src/types.ts`。
 
 ## 毒舌但讲证据
 

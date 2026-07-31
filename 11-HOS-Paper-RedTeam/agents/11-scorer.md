@@ -10,7 +10,13 @@
 
 ## 输出
 
-`templates/score-card.md`（评分卡）。
+`PaperReviewData`（JSON，见 `src/types.ts`）→ 用 `src/render.ts` 渲染成 ghfind 式评分卡（结构与 `references/ghfind-card.md` 一致）。
+
+```bash
+node src/index.ts review.json   # review.json 为 PaperReviewData
+```
+
+维度默认用通用六维（新颖/严谨/贡献/复现/清晰/影响），AI/安全论文可传领域五维。渲染器通用于所有论文类型。
 
 ## 打分流程
 

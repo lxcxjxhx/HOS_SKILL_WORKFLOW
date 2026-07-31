@@ -27,10 +27,15 @@ default_template: "templates/paper-autopsy.md"
 
 # ===== 评分模型（详见 references/score-model.md）=====
 scoring:
-  weights: { eval: 0.30, data: 0.20, repro: 0.20, nov: 0.15, sec: 0.15 }
+  dims: "universal"       # universal(通用六维,默认) / security(AI安全五维)
   deduction: { critical: 3.0, high: 2.0, medium: 1.0, low: 0.5 }
   show_percentile: true   # 显示"击败 X% 已审论文"，样本<5 时自动隐藏
   min_percentile_sample: 5
+
+# ===== 评分卡渲染（ghfind 式，详见 references/ghfind-card.md）=====
+renderer:
+  cmd: "node src/index.ts <review.json>"   # TS 渲染器用法
+  example: "src/example-review.json"
 
 # ===== RVE 编号 =====
 rve_auto_assign: true   # 自动分配 HOS-RVE-YYYY-NNNN
