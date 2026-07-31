@@ -55,10 +55,11 @@ HOS 模式（红队）：
 | 6 | [Reproduction Agent](agents/06-reproduction-agent.md) | 复现评估 | 复现难度 |
 | 7 | [Reviewer Simulator](agents/07-reviewer-simulator.md) | 模拟顶会审稿 | 评分 + 决策 |
 | 8 | [Paper Autopsy](agents/08-paper-autopsy.md) | 论文尸检 | 《论文鞭尸局》 |
+| 8b | [Scorer](agents/11-scorer.md) | 汇总评分卡 | 🎴 评分卡（最顶部） |
 | 9 | [Research Miner](agents/09-research-miner.md) | 挖掘研究机会 | 下一篇论文方向 |
 | 10 | [Blogger Agent](agents/10-blogger-agent.md) | 生成公开内容 | 博客/周报 |
 
-**最小可用路径**：用户只给一篇论文时，从第 3 步直接跑到第 9 步（Paper Autopsy + Research Miner 是必输出）；只有第 1 步（Paper Hunter）依赖抓取外部源，其余各步只要输入论文文本/PDF/链接即可。
+**最小可用路径**：用户只给一篇论文时，从第 3 步直接跑到第 9 步（Paper Autopsy + Scorer + Research Miner 是必输出）；只有第 1 步（Paper Hunter）依赖抓取外部源，其余各步只要输入论文文本/PDF/链接即可。
 
 ---
 
@@ -69,7 +70,8 @@ HOS 模式（红队）：
 3. Experiment Auditor 与 Security Auditor 可并行，输出统一汇总到 Paper Autopsy。
 4. **每条发现必须挂 RVE 编号**（见 [rve-catalog.md](references/rve-catalog.md)），否则不进入正式输出。
 5. 最后必须产出 **Patch（修复方案）** 与 **Next Paper Idea（下一篇论文方向）**——只骂不补不是红队，是喷子。
-6. 输出语言跟随用户语言；默认中文。
+6. **评分卡永远在最顶部**（[score-card.md](templates/score-card.md)）——先给结论（分数+一句话点评），长文靠后。评分模型见 [score-model.md](references/score-model.md)。
+7. 输出语言跟随用户语言；默认中文。
 
 ---
 
@@ -140,11 +142,24 @@ HOS-RVE-YYYY-NNNN     # 例：HOS-RVE-2026-0001
 
 | 场景 | 模板 | 说明 |
 |------|------|------|
+| 🎴 评分卡（必输出，最顶部） | [score-card.md](templates/score-card.md) | 评分+维度倾向+一句话点评 |
 | 论文审计（全流程） | [paper-audit.md](templates/paper-audit.md) | 十步完整报告 |
 | 论文鞭尸局（核心 IP） | [paper-autopsy.md](templates/paper-autopsy.md) | 单篇毒舌点评 |
 | 审稿模拟 | [reviewer-report.md](templates/reviewer-report.md) | Reviewer 打分 |
 | 公开博客 | [blog-article.md](templates/blog-article.md) | 公开发布版 |
 | 研究机会 | [research-idea.md](templates/research-idea.md) | Next Paper Idea |
+
+### 输出模式（防长文、防枯燥）
+
+`config.yaml#output_mode` 控制输出长度，默认 `scorecard`：
+
+| 模式 | 行为 | 适用 |
+|------|------|------|
+| `scorecard` | 只输出评分卡 + RVE 摘要，长文按需展开 | **默认**，快速可视化 |
+| `full` | 评分卡 + 完整鞭尸局长文 | 深度分析 |
+| `brief` | 只给评分 + 一句话点评 + 评级 | 社交媒体 |
+
+**无论哪种模式，评分卡都必须在最顶部**——结论先行，细节靠后，禁止上来就是一篇长文博客。
 
 ---
 

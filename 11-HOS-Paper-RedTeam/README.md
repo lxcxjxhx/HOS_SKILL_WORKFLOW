@@ -54,7 +54,7 @@ Paper → Audit → Exploit → Patch → Research Idea
 │   ├── arxiv.yaml
 │   ├── openreview.yaml
 │   └── github.yaml
-├── agents/                   # 10 个红队 Agent 定义
+├── agents/                   # 11 个红队 Agent 定义
 │   ├── 01-paper-hunter.md
 │   ├── 02-hype-detector.md
 │   ├── 03-claim-analyzer.md
@@ -64,8 +64,10 @@ Paper → Audit → Exploit → Patch → Research Idea
 │   ├── 07-reviewer-simulator.md
 │   ├── 08-paper-autopsy.md
 │   ├── 09-research-miner.md
-│   └── 10-blogger-agent.md
+│   ├── 10-blogger-agent.md
+│   └── 11-scorer.md           # 评分官：汇总评分卡
 ├── templates/                # 输出模板
+│   ├── score-card.md          # 🎴 评分卡（置顶必输出）
 │   ├── paper-audit.md
 │   ├── paper-autopsy.md
 │   ├── reviewer-report.md
@@ -77,35 +79,37 @@ Paper → Audit → Exploit → Patch → Research Idea
 │   └── research-gap.json     # 研究机会池
 ├── references/
 │   ├── style-guide.md        # 毒舌风格指南
-│   └── rve-catalog.md        # RVE 漏洞编号规范
+│   ├── rve-catalog.md        # RVE 漏洞编号规范
+│   └── score-model.md        # 评分模型（ghfind 式评分卡）
 └── workflows/                # 自动化节奏
     ├── daily-scan.yaml
     ├── weekly-report.yaml
     └── monthly-report.yaml
 ```
 
-## 核心输出示例：《论文鞭尸局》
+## 核心输出示例：🎴 评分卡优先（3 秒可读）
+
+> 仿 ghfind.com 的"毒舌评分"——**先给结论，长文靠后**。默认 `output_mode: scorecard`，只出评分卡，长文按需展开。
 
 ```markdown
-# HOS论文鞭尸局 #001
+# 🎴 HOS 论文评分卡
 
-**Target**: MultiVer (arXiv:2602.17875)
-**辣度**: 3
-**TL;DR**: 精确率只有 48.8%，一半以上告警是误报，靠误报堆出来的 82.7% 召回。
+**评分**: **37.1 / 100**   🔴 噱头大于实质 · 复现劝退   击败 18% 已审论文
+**一句话点评**: 433 个告警自称全面工业实证，样本连泛化都不配提。
 
-## 攻击面
-- [RVE-EVAL-001] 选择性报告指标：F1 61.4 vs 微调基线 71.6，整体反而低 10 个点
-- [RVE-DATA-002] 只在 202 个 Python 样本上测过，无真实项目验证
+| 维度 | 分数 | 可视化 |
+|------|------|--------|
+| 实验 EVAL | 3.2 | ███░░░░░░░ |
+| 数据 DATA | 4.0 | ████░░░░░░ |
+| 复现 REPRO | 1.5 | █░░░░░░░░░ |
+| 新颖 NOV | 6.0 | ██████░░░░ |
+| 安全 SEC | 5.0 | █████░░░░░ |
 
-## Patch
-1. 报告完整 P/R/F1 矩阵，禁止单项遮丑
-2. 补充真实项目验证 + 多语言实验
-
-## Next Paper Idea
-动态 Agent 安全评估：在真实攻击环境里测 multi-agent 系统的防御能力
+**倾向**: 低分主因 = 复现层（闭源+零参数细节）
+**RVE 摘要**: 6 条  CRITICAL×1 HIGH×3 MEDIUM×2
 ```
 
-完整模板见 `templates/paper-autopsy.md`。
+需要深度分析时用 `output_mode: full`，评分卡后跟完整鞭尸局长文（`templates/paper-autopsy.md`）。
 
 ## 毒舌但讲证据
 
