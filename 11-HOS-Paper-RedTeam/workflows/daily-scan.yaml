@@ -1,0 +1,48 @@
+# 每日扫描工作流（HOS-Paper-RedTeam）
+# 说明：本文件是编排说明，供调度器/人工触发，不自行执行。
+
+name: hos-paper-redteam-daily
+schedule: "0 6 * * *"      # 每日 06:00（可改用 cron）
+enabled: true
+
+steps:
+  - id: 1-paper-hunter
+    agent: "01-paper-hunter"
+    action: "抓取 100 篇候选论文（sources/arxiv.yaml + github.yaml）"
+    output: "database/paper.json#candidates"
+
+  - id: 2-hype-filter
+    agent: "02-hype-detector"
+    action: "对候选论文做营销浓度检测，剔除 hype_score < 3 且无攻击价值的"
+    output: "10 篇候选"
+
+  - id: 3-human-confirm
+    action: "人工确认 3 篇进入深度分析（可在输出目录放候选清单）"
+    output: "3 篇选中论文"
+
+  - id: 4-deep-audit
+    agent: "03/04/05/06/07"
+    action: "对 3 篇选中论文跑完整审计（Claim→Experiment→Security→Repro→Reviewer）"
+    output: "3 份审计结果"
+
+  - id: 5-autopsy
+    agent: "08-paper-autopsy"
+    action: "生成《论文鞭尸局》"
+    output: "1 篇（当天发布）"
+
+  - id: 6-research-miner
+    agent: "09-research-miner"
+    action: "从 RVE 挖掘研究机会，更新 research-gap.json"
+    output: "研究机会 ≥ 1"
+
+  - id: 7-publish
+    agent: "10-blogger-agent"
+    action: "鞭尸局转公开版，发布 1 篇（辣度 1-2）"
+    output: "发布 1 篇"
+
+  - id: 8-persist
+    action: "更新 database/paper.json, vulnerability.json, research-gap.json"
+    output: "数据沉淀完成"
+
+metrics:
+  targets: { scanned: 100, shortlisted: 10, deep: 3, published: 1 }
