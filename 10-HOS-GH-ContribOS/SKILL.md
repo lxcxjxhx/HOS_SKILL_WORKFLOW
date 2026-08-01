@@ -1,7 +1,7 @@
 ---
 name: HOS-GH-ContribOS
-description: GitHub 贡献操作系统 — 统一框架覆盖项目全生命周期，内置 CI/CD 智能引擎、贡献智能引擎（含审核者视角自检门与场景记忆）、6 种角色视图
-version: 3.1.0
+description: GitHub 贡献操作系统 — 统一框架覆盖项目全生命周期，内置 CI/CD 智能引擎、贡献智能引擎（含审核者视角自检门 G0–G8 与场景记忆）、6 种角色视图
+version: 3.2.0
 author: HOS Team
 tags:
   - github
@@ -32,13 +32,13 @@ tags:
 │  │  │  CI/CD Intelligence │     │  Contribution           │    │  │
 │  │  │  Engine             │     │  Intelligence Engine    │    │  │
 │  │  │                     │     │                         │    │  │
-│  │  │  · Workflow AST     │     │  · 项目评估（7维+权重） │    │  │
+│  │  │  · Workflow AST     │     │  · 项目评估（8维+权重） │    │  │
 │  │  │  · 安全审查（7规则）│◄───►│  · 源码分析（3策略）   │    │  │
 │  │  │  · CI 调试知识库    │     │  · PR 规范（13项检查） │    │  │
-│  │  │  · 自动修复引擎     │     │  · 失败模式（7类）     │    │  │
+│  │  │  · 自动修复引擎     │     │  · 失败模式（13类）     │    │  │
 │  │  │  · 权限分级（5级）  │     │  · 跟进策略（Day3-21） │    │  │
 │  │  └─────────────────────┘     │  · 经验循环（持续优化）│    │  │
-│  │                               │  · 审核者自检门（5闸门） │    │  │
+│  │                               │  · 审核者自检门（9闸门） │    │  │
 │  │                               │  · 场景记忆（Memory）   │    │  │
 │  │                               └─────────────────────────┘    │  │
 │  └──────────────────────────────────────────────────────────────┘  │
@@ -79,9 +79,11 @@ Workflow AST 解析 → 7 条安全审查规则 → CI 调试知识库 → 自�
 
 ## 引擎二：Contribution Intelligence Engine
 
-项目评估（7 维）→ 避坑指南 → 源码分析 3 策略 → PR 规范 → 13 项强制检查 → **审核者视角自检门（5 闸门）** → 跟进策略 → 环境清理。**完整内容见 [engines/contribution-intelligence.md](engines/contribution-intelligence.md)。**
+项目评估（8 维，含**合并速度**）→ 避坑指南 → 源码分析 3 策略 → PR 规范 → 13 项强制检查 → **审核者视角自检门（G0–G8，9 闸门）** → 跟进策略 → 环境清理。**完整内容见 [engines/contribution-intelligence.md](engines/contribution-intelligence.md)。**
 
-> **审核者视角自检门（提交前强制）**：G1 语义理解 / G2 动机真实性 / G3 归属与范围 / G4 惊讶测试 / G5 自反预审。任一红灯 → 返回源码分析，禁止提交。工作底稿见 [templates/reviewer-perspective-gate.md](templates/reviewer-perspective-gate.md)。
+> **审核者视角自检门（提交前强制）**：G0 问题真实性（修复类）/ G1 语义理解 / G2 动机真实性 / G3 归属与范围 / G4 惊讶测试 / G5 自反预审 / G6 重复与方向（大功能）/ G7 项目规则（微小改动）/ G8 批量节流（多 PR）。任一红灯 → 返回源码分析，禁止提交。工作底稿见 [templates/reviewer-perspective-gate.md](templates/reviewer-perspective-gate.md)。
+>
+> **批量节流（强制）**：1 天 ≤3 仓库；同一功能模板禁止复制到多仓库；同仓库同模式累计 ≥3 暂停。经验数据：第三方 PR 合并率仅约 9%，批量提交不会提高过审率。
 >
 > **AI 披露（强制）**：每次 PR 描述必须包含"skill 协助撰写 + 发出者人工逐条审核/测试/负责"声明，且与事实一致——诚实披露 + 展示理解 = 诚恳，避免被判定"纯 AI PR"进黑名单。
 
@@ -120,7 +122,7 @@ Workflow AST 解析 → 7 条安全审查规则 → CI 调试知识库 → 自�
 
 | 能力 | 引擎来源 | 输出 |
 |------|---------|------|
-| Project Matcher | Contribution Engine | 7 维度加权评分 + 推荐列表 |
+| Project Matcher | Contribution Engine | 8 维度加权评分（含合并速度）+ 推荐列表 |
 | Issue Finder | Contribution Engine | good first issue + help wanted 筛选 |
 | PR Preparation Kit | Contribution Engine | 源码分析 + 改动验证 + 测试检查 |
 | Submission Guide | Contribution Engine | 分步骤指导 + PR 模板 |
@@ -144,7 +146,7 @@ Workflow AST 解析 → 7 条安全审查规则 → CI 调试知识库 → 自�
 | 能力 | 引擎来源 | 输出 |
 |------|---------|------|
 | Review Checklist Generator | 双引擎 | 按改动类型生成检查清单 |
-| Reviewer's Perspective Gate | Contribution Engine | 提交前 5 闸门自检（G1–G5） |
+| Reviewer's Perspective Gate | Contribution Engine | 提交前 9 闸门自检（G0–G8） |
 | Impact Analyzer | CI/CD Engine | 改动对下游依赖的影响分析 |
 | Security Scanner | CI/CD Engine | 安全风险检测（7 条规则） |
 | Feedback Template | Contribution Engine | 结构化 review 意见模板 |
@@ -169,10 +171,10 @@ Workflow AST 解析 → 7 条安全审查规则 → CI 调试知识库 → 自�
 
 | # | Skill | 输入 | 输出 |
 |---|-------|------|------|
-| 1 | Project Evaluation | 仓库 URL | 7 维度加权评分报告 |
+| 1 | Project Evaluation | 仓库 URL | 8 维度加权评分报告 |
 | 2 | Repository Analysis | 仓库路径 | Project Profile（语言/框架/依赖/标签） |
 | 3 | CI/CD Review | Workflow YAML | 安全审查报告（7 规则） |
-| 4 | PR Preparation | Project Profile + Issue | PR 草稿 + 测试计划 + 强制过 5 闸门 |
+| 4 | PR Preparation | Project Profile + Issue | PR 草稿 + 测试计划 + 强制过 9 闸门 |
 | 5 | CI Debug | Actions log | Root Cause + Fix Suggestion |
 | 6 | Experience Capture | PR 结果 | 经验更新 + 流程优化建议 |
 
@@ -201,7 +203,7 @@ Workflow AST 解析 → 7 条安全审查规则 → CI 调试知识库 → 自�
 2. 选择 "good first issue"，在 Issue 中评论意图
 3. 源码分析 3 策略定位改动点
 4. 本地开发 + pre-commit 检查 + 测试
-5. PR 模板生成 + 13 项强制检查 + 5 闸门自检（审核者视角）
+5. PR 模板生成 + 13 项强制检查 + 9 闸门自检（审核者视角 G0–G8）
 6. 提交后 Day 3/7/14/21 跟进
 7. PR 合并 → 场景记忆记录
 
@@ -234,7 +236,7 @@ Workflow AST 解析 → 7 条安全审查规则 → CI 调试知识库 → 自�
 |------|--------|-----------|
 | 架构 | 工具拼接 | 一个引擎，6 个视图 |
 | CI/CD | 手动检查 | 7 条安全规则 + AST 解析 + 自动修复 |
-| PR 提交 | 凭经验 | 7 维评估 + 3 策略分析 + 13 项检查 + 5 闸门自检 + 7 类失败模式 |
+| PR 提交 | 凭经验 | 8 维评估 + 3 策略分析 + 13 项检查 + 9 闸门自检 + 13 类失败模式 |
 | 经验 | 每次从零开始 | 场景记忆 + 经验循环 + 41 个 PR 复盘 + 版本化管理 |
 | 角色 | 各用各的工具 | 同一引擎，角色无缝切换 |
 | 覆盖 | 只关注 PR | 项目创建 → 社区运营，完整闭环 |
