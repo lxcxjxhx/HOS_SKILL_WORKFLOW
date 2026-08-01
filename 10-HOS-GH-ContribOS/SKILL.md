@@ -1,6 +1,6 @@
 ---
 name: HOS-GH-ContribOS
-description: GitHub 贡献操作系统 — 统一框架覆盖项目全生命周期，内置 CI/CD 智能引擎和 PR 贡献引擎，支持维护者、贡献者、初次提交者等 6 种角色视图
+description: GitHub 贡献操作系统 — 统一框架覆盖项目全生命周期，内置 CI/CD 智能引擎、贡献智能引擎（含审核者视角自检门与场景记忆）、6 种角色视图
 version: 3.1.0
 author: HOS Team
 tags:
@@ -16,7 +16,7 @@ tags:
 
 # HOS-GH-ContribOS
 
-> **GitHub 贡献操作系统** — 不是工具集合，是统一框架。两个核心引擎（CI/CD Intelligence + Contribution Intelligence），六个角色视图，一套经验循环。覆盖从项目创建到 PR 合并的完整生命周期。
+> **GitHub 贡献操作系统** — 不是工具集合，是统一框架。两个核心引擎（CI/CD Intelligence + Contribution Intelligence），六个角色视图，一套经验循环 + 场景记忆。覆盖从项目创建到 PR 合并的完整生命周期。
 
 ## 架构总览
 
@@ -53,419 +53,37 @@ tags:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
----
+## 文件结构
+
+```
+10-HOS-GH-ContribOS/
+├── SKILL.md                              # 本文件：主入口（架构/角色/模式/场景）
+├── engines/
+│   ├── ci-cd-intelligence.md             # 引擎一：CI/CD Intelligence
+│   └── contribution-intelligence.md      # 引擎二：Contribution Intelligence
+├── templates/
+│   ├── reviewer-perspective-gate.md      # 审核者视角自检门工作底稿
+│   ├── pr-description-template.md        # PR 描述模板 + AI Disclosure
+│   └── maintainer-communication-templates.md  # 维护者沟通模板库
+├── experience/
+│   ├── continuous-improvement.md         # 经验循环 + 场景记忆协议
+│   └── failure-modes.md                  # 失败模式库（7 类）+ Datus 案例
+└── memory/
+    ├── README.md                         # 记忆协议（实际记录存用户本地）
+    └── index.md                          # 场景记忆索引
+```
 
 ## 引擎一：CI/CD Intelligence Engine
 
-### 1.1 Workflow AST 解析
-
-将 GitHub Actions workflow YAML 解析为可操作的抽象语法树，支持解析、修改、生成与 diff。
-
-**输入**：`.github/workflows/*.yml`  
-**输出**：结构化 Workflow 对象
-
-```python
-# 解析流程
-yaml_content → PyYAML → raw_dict → WorkflowAST → Workflow Object
-
-# 关键数据结构
-Workflow(
-  name="CI",
-  trigger=TriggerConfig(
-    push=PushTrigger(branches=["main"]),
-    pull_request=PRTrigger(types=["opened", "synchronize"])
-  ),
-  permissions=PermissionConfig(default="read", jobs={...}),
-  jobs={
-    "build": Job(
-      runs_on="ubuntu-latest",
-      permissions=JobPermission(...),
-      steps=[
-        Step(name="Checkout", uses="actions/checkout@v4"),
-        Step(name="Test", run="pytest --cov=src")
-      ],
-      env={"PYTHON_VERSION": "3.11"}
-    )
-  }
-)
-```
-
-**已知陷阱与修复**：
-- PyYAML 将 `on:` 键解析为布尔值 `True`，必须同时检查 `data.get("on")` 和 `data.get(True)`
-- `permissions: write-all` 是高危配置，需标记为 CRITICAL
-- `pull_request_target` 存在安全风险（可访问 secrets），需标记为 HIGH
-
-### 1.2 安全审查规则（7 条）
-
-| 规则 ID | 名称 | 级别 | 检测内容 | 修复建议 |
-|---------|------|------|---------|---------|
-| E001 | 废弃命令 | ERROR | `::set-env`、`::set-output` 等已废弃的 workflow command | 迁移到 `$GITHUB_ENV`、`$GITHUB_OUTPUT` |
-| E002 | 硬编码密钥 | ERROR | token/password/api_key/secret 等硬编码值 | 使用 `${{ secrets.XXX }}` |
-| W001 | 根权限缺失 | WARNING | workflow 级别缺少 `permissions` 配置 | 添加 `permissions: contents: read` |
-| S001 | Step 命名缺失 | WARNING | step 缺少 `name` 字段 | 添加描述性 name |
-| SEC001 | write-all 权限 | CRITICAL | `permissions: write-all` | 替换为最小权限 |
-| SEC002 | pull_request_target | HIGH | 使用 `pull_request_target` 触发器 | 评估是否可替换为 `pull_request` |
-| SEC003 | Action 版本未锁定 | MEDIUM | 第三方 Action 使用 `@main` | 锁定到具体版本标签 `@v4` |
-
-### 1.3 CI 调试知识库
-
-基于实战积累的 CI 失败模式 → 修复映射：
-
-| 失败类型 | 根因 | 修复方法 | 预防手段 |
-|---------|------|---------|---------|
-| Lint 失败 | 代码格式不符合规范 | `pre-commit run --all-files` | 本地安装 pre-commit hooks |
-| 测试失败 | 测试用例逻辑错误 | 检查断言和 mock 设置 | 本地先跑通 `pytest -v` |
-| 构建失败 | 依赖冲突或版本不兼容 | 检查 requirements/setup 文件 | 使用 lock 文件锁定版本 |
-| CLA 未签署 | 项目要求 CLA 但未签 | 签署 CLA（个人/企业） | 提交前检查项目 CLA 要求 |
-| codecov 失败 | 覆盖率下降 | 补充测试用例 | 确保新代码有测试覆盖 |
-| 首次贡献者 CI 阻塞 | 维护者需手动批准 | 等待维护者在线 | 选择有自动 CI 的项目 |
-| Node 版本不兼容 | Action 要求更高 Node 版本 | 升级 runner 或 Action 版本 | 使用 `@v4` 以上版本 |
-
-### 1.4 自动修复引擎
-
-```
-CI 失败日志
-  ↓
-错误模式匹配（正则 + 关键词）
-  ↓
-知识库查询 → 匹配修复方案
-  ↓
-生成修复 patch
-  ↓
-本地验证 → 通过 → 提交修复 commit
-         → 失败 → 标记为需人工介入
-```
-
-### 1.5 权限分级系统
-
-| 级别 | 名称 | 适用角色 | 能力边界 |
-|------|------|----------|---------|
-| Level 0 | 只读分析 | 所有人 | 分析仓库、生成报告、查看数据 |
-| Level 1 | 建议模式 | 初次贡献者 | 生成 PR 草稿和 CI/CD 建议，需人工确认 |
-| Level 2 | 半自动 | 贡献者 | 低风险操作自动执行，中高风险需审批 |
-| Level 3 | 高度自动 | 维护者 | 中低风险自动操作，支持自动合并 |
-| Level 4 | 完全自主 | Project Owner | 所有操作自动执行，仅 CRITICAL 需审批 |
-
----
+Workflow AST 解析 → 7 条安全审查规则 → CI 调试知识库 → 自动修复引擎 → 权限分级（5 级）。**完整内容见 [engines/ci-cd-intelligence.md](engines/ci-cd-intelligence.md)。**
 
 ## 引擎二：Contribution Intelligence Engine
 
-### 2.1 项目评估体系（7 维度 + 加权评分）
-
-基于 41 个 PR 实战提炼的评估标准：
-
-| 维度 | 权重 | 评估方法 | 合格标准 |
-|------|------|---------|---------|
-| 技术栈匹配度 | 20% | 检查主要语言/框架/依赖/构建工具 | 日常使用的技术栈 |
-| 社区活跃度 | 15% | `git log --since="3 months ago"` + 近期 commit/issue/PR | 近 3 月有持续提交 |
-| 贡献友好度 | 15% | 检查 CONTRIBUTING.md / PR 模板 / good first issue | 有明确贡献指南 |
-| 维护者响应 | 15% | 历史 PR 的平均首次回复时间 | < 1 周 |
-| 文档完善度 | 10% | README + API 文档 + 架构说明 | 有完整开发文档 |
-| 测试覆盖率 | 15% | 是否有 CI + 测试是否容易本地运行 | 有自动化测试 |
-| 改动规模适配 | 10% | 是否有 small scope 的改进空间 | 有 good first issue 标签 |
-
-**决策流程**：
-- 加权总分 ≥ 4 → 强烈推荐，继续
-- 3-4 分 → 推荐，需额外准备
-- 2-3 分 → 谨慎考虑，评估替代项目
-- < 2 分 → 放弃
-
-**快速评估检查清单**（提交 PR 前逐项检查）：
-- [ ] 技术栈匹配度 ≥ 3？
-- [ ] 社区活跃度 ≥ 3？
-- [ ] 维护者响应时间 < 1 周？
-- [ ] 有 CONTRIBUTING.md？
-- [ ] 有 good first issue 标签？
-- [ ] 历史外部 PR 合并率 > 50%？
-
-### 2.2 避坑指南（实战验证）
-
-**必须避免的项目**：
-- 代码量 > 50 万行（Kubernetes、TensorFlow 级别）
-- 冷门技术栈（OCaml、Haskell 等，学习成本过高）
-- 超 6 个月无提交的不活跃项目
-- 明确拒绝小型贡献的项目（如 Juice Shop："Low-effort contributions are not welcome"）
-- 需要签署 CLA 且流程复杂的项目（除非已提前签署）
-- 首次贡献者 CI 需手动批准的项目（冷启动周期过长）
-
-**优先选择的项目**：
-- 代码量 5-20 万行，架构清晰
-- 多个活跃维护者，近期有 commit
-- 有 CONTRIBUTING.md + PR 模板 + 自动 CI
-- 历史外部 PR 合并率 > 50%
-- 有 "good first issue" 标签
-
-### 2.3 源码分析 3 策略
-
-**策略 1：从 issue 列表寻找**
-```bash
-gh issue list --label bug --state open          # 已知 bug
-gh issue list --label "good first issue" --state open  # 新手友好
-```
-
-**策略 2：分析历史 PR**
-```bash
-gh pr list --state merged --limit 20             # 学习成功模式
-gh pr list --state closed --search "is:unmerged" # 了解拒绝模式
-```
-
-**策略 3：代码审查发现**
-```bash
-grep -r "TODO\|FIXME\|XXX" --include="*.py" .   # 待修复项
-grep -r "except:" --include="*.py" .             # 裸异常
-grep -r "deprecated\|DEPRECATED" --include="*.py" . # 废弃代码
-```
-
-**验证问题真实性（必须）**：
-- 问题在实际代码中存在（非假设性）
-- 准备复现示例或测试用例
-- 参考社区讨论确认问题价值
-- 确保改动符合项目设计理念
-
-### 2.4 PR 提交规范
-
-**Git 操作流程**：
-```bash
-# 1. 创建 feature branch
-git checkout -b fix/issue-description
-
-# 2. Stage 改动（禁止 git add -A）
-git add <specific-files>
-
-# 3. Commit（conventional commit 格式）
-git commit -m "fix(scope): description"
-
-# 4. Push 到 fork
-git push -u origin fix/issue-description
-```
-
-**PR 描述模板**：
-```markdown
-## Motivation
-[问题背景和重要性，使用具体数据和示例]
-
-## Changes
-[改动内容，按文件/模块列出具体改动]
-
-## Testing
-[测试方法和结果，提供可复现的步骤]
-
-## Checklist
-- [ ] Code follows the project's coding standards
-- [ ] Tests have been added/updated
-- [ ] Documentation has been updated (if applicable)
-- [ ] No new dependencies introduced (or justified)
-- [ ] Changes are backward compatible
-
-## AI Disclosure（强制，不得省略）
-This PR was drafted with the assistance of an AI skill (HOS-GH-ContribOS) and has been **manually reviewed line-by-line by the human author** before submission — every diff was read, tests were run, and the semantics of the change are understood by the author, who takes full responsibility for the content.
-```
-
-> **真实底线**：披露必须与事实一致。人工未实际逐条审核 → 先补审核再提交。诚实披露 + 展示理解 = 诚恳；隐瞒 + 机械改动 = 被判定"纯 AI PR"进黑名单。
-
-### 2.5 提交前强制检查（13 项）
-
-基于 41 个 PR 复盘 + 审核者视角提炼的强制检查清单：
-
-| # | 检查项 | 重要性 | 失败案例 |
-|---|--------|--------|---------|
-| 1 | 代码可以编译/运行 | 极高 | — |
-| 2 | 所有测试通过 | 极高 | — |
-| 3 | 代码覆盖率不降低 | 高 | mitmproxy #8314 |
-| 4 | 代码格式符合规范（pre-commit） | 高 | — |
-| 5 | commit message 清晰规范 | 中 | — |
-| 6 | PR 描述完整，使用项目模板 | 高 | NetExec #1304 |
-| 7 | 一个 PR 只做一个改动 | 极高 | seclab-taskflow-agent #285 |
-| 8 | 已阅读 CONTRIBUTING.md | 高 | — |
-| 9 | CLA 已签署（如需要） | 极高 | pytorch #189023, trivy #10930 |
-| 10 | 技术细节全部准确 | 高 | garak #1913 |
-| 11 | 能解释改动语义（非代码语言，见自检门 G1） | 极高 | Datus-agent #1236 |
-| 12 | 改动动机来自真实使用/issue，非代码扫描 | 极高 | Datus-agent #1236 |
-| 13 | 已披露 AI 使用 + 人工逐条审核声明 | 高 | 纯 AI PR 黑名单风险 |
-
-### 2.6 审核者视角自检门（提交前强制闸门）⛔
-
-> **在改动准备完成之后、PR 提交之前，必须逐门通过。任一红灯 → 强制返回源码分析，禁止提交。** 每门须产出书面内容（非是/否），并可对照本地记忆库（见 2.9 场景记忆）相似案例。
-
-以严格维护者/审核者的视角，逐门自检：
-
-| 门 | 核心问题 | 红灯信号 |
-|----|---------|---------|
-| **G1 语义理解** | 用非代码语言解释改动在算什么（输入→计算→输出→指标含义）；涉及构造（self-join/聚合/窗口函数）各自职责与差异；当前为何错（有反例）；边界情况 | 只能引用代码、无法独立复述 |
-| **G2 动机真实性** | 动机来自真实使用/观察或 issue 链接，而非"最佳实践"套话 | grep/静态分析模式、无真实使用场景 |
-| **G3 归属与范围** | 项目已承认的问题(issue/roadmap) or 个人假设？good-first-issue or 深域核心逻辑？ | 无归属 + 深域核心逻辑 |
-| **G4 惊讶测试** | 陌生人读 diff 会"哦合理"还是"为什么要做这个"？ | 需解释才懂、自明性不足 |
-| **G5 自反预审** | 预写 3 条最可能被 review 的反对意见并预先回应（写入 PR 描述） | 写不出或稻草人 |
-
-**阻断执行**：① 位置阻断——未过闸门不得进入 PR 提交；② 产物阻断——每门须填书面底稿；③ 记忆阻断——提交前检索场景记忆；④ 红灯即停——任一红灯返回源码分析。
-
-**抗合理化红旗表**（出现这些念头 = 想跳过闸门，立刻停止）：
-
-| 合理化话术 | 想跳过 | 强制动作 |
-|-----------|--------|---------|
-| "改动很小，不用这么复杂" | G1/G4 | 越小越要过语义门 |
-| "这是最佳实践/常见模式" | G2 | 必须给出真实使用场景 |
-| "维护者会理解的" | G4/G5 | 做惊讶测试 + 写 3 条预审 |
-| "先提交，被拒再改" | 全部 | 红灯即停，禁止提交 |
-| "项目太复杂我理解不了" | G1 | 返回源码分析，别提交 |
-
-**触发词**（命中任一 → 强制检索场景记忆并过 G1）：`self-join`、`窗口函数`、`period-over-period`、`环比`、`指标计算`、`语义等价`、`构造转换`、`internal representation`、`LAG`。
-
-### 2.7 失败模式库（7 类，来自 41 个 PR 复盘 + 审核者视角）
-
-| 失败特征 | 典型案例 | 根因 | 避免方法 |
-|---------|---------|------|---------|
-| 混合无关改动 | seclab-taskflow-agent #285 | 一次改太多，被评"AI-generated" | 一个 PR 一个改动 |
-| 方向不符 | LlamaFactory #10626 | 未提前沟通，维护者指出方向错误 | 先在 issue 沟通 |
-| 未使用 PR 模板 | NetExec #1304 | 忽略 CONTRIBUTING.md | 仔细阅读贡献指南 |
-| CLA 未签署 | pytorch #189023 | 提交前未检查 CLA 要求 | 提前签署 CLA |
-| 技术细节错误 | garak #1913 | 假设性判断，未验证 | 确认所有技术细节准确 |
-| 冷启动无响应 | 38/41 个 PR 无 review | 选择的项目维护者不活跃 | 选维护者活跃的项目 |
-| 纯AI PR / 语义不理解 / 构造混用 | Datus-agent #1236 | 机械模式匹配，把 self-join 的 POP 指标强制套入 LAG() 表示，未理解语义差异 | 提交前过 G1 语义门；真实使用项目后再提交；诚实披露 AI |
-
-**案例：Datus-agent #1236** — [PR](https://github.com/Datus-ai/Datus-agent/pull/1236) 把 self-join 实现的环比（period-over-period）指标强制复用 LAG() 窗口函数内部表示。self-join 与 LAG() 业务概念相同但计算语义不同（无上期记录时 NULL 行为、重复/缺失日期的配对、聚合时机差异）。维护者反馈的要点：改动"没有理解在做什么"、不是 good-first-issue 范围、应真实使用项目后再参与。教训：指标/语义类改动必须先写非代码语义解释（G1）；同一业务概念的两种 SQL 构造 ≠ 等价；深域核心逻辑改动须先有 issue 归属。
-
-### 2.8 跟进策略（Day 3/7/14/21）
-
-| 时间节点 | 行动 | 模板 |
-|---------|------|------|
-| Day 1-3 | 等待 | 正常等待，不要催促 |
-| Day 3 | 检查 CI | 确认 CI 是否通过，失败则立即修复 |
-| Day 7 | 礼貌提醒 | "Hi @maintainer, just a friendly reminder that this PR is ready for review." |
-| Day 14 | 二次跟进 | "I'm following up on this PR. If it's not aligned with the project's direction, please let me know." |
-| Day 21 | 评估关闭 | 如仍无响应，考虑主动关闭，转向其他项目 |
-
-### 2.9 经验循环机制
-
-```
-每次 PR 后 →
-  记录：PR URL、状态、审核周期、过审/被拒原因、维护者反馈
-  ↓
-  分析：哪些项目容易过审？哪些改动类型受欢迎？哪些沟通方式有效？
-  ↓
-  优化：调整项目选择策略、改进 PR 准备流程、优化沟通技巧
-  ↓
-  分享：更新经验文档、帮助新手避坑、建立最佳实践
-```
-
-**经验文档版本化管理**：
-- 每次 PR 后更新 `tracking/pr-log.md`
-- 关键经验提炼到 `reusable-experience.md`
-- 流程调整记录到 `changelog.md`
-- 采用语义化版本号 `MAJOR.MINOR`
-
-**版本命名规范**：
-| 版本变更 | 含义 | 示例 |
-|---------|------|------|
-| MAJOR（主版本） | 文档结构重大调整、核心流程变更 | v1.0 -> v2.0 |
-| MINOR（次版本） | 新增经验条目、模板更新、流程优化 | v1.0 -> v1.1 |
-
-**更新流程**：
-1. 记录 PR 结果：在 `tracking/pr-log.md` 中添加本次 PR 记录
-2. 提炼经验：将本次 PR 的关键经验（无论成功或失败）追加到对应文档
-3. 更新版本：在 `changelog.md` 中记录本次变更
-4. 检查模板：如果现有模板不再适用，更新模板内容
-
-#### 场景记忆（Scenario Memory）— 前瞻性经验循环
-
-旧循环是"事后记录型"，只在被批评后才更新。场景记忆让 skill **主动从每个真实场景学习**，无需等用户转述反馈。
-
-- **存储**：用户本地路径（默认 `~/.claude/memory` 或 `memory/`，可配置）。**隐私**：含维护者逐字反馈，**严禁提交到公开仓库**；公开 skill 仅引用 PR 链接或中性化概括。
-- **提交前（consult）**：进入源码分析与自检门时，检索记忆索引（触发词：`self-join`、`窗口函数`、`period-over-period`、`环比`、`指标计算`、`语义等价`、`构造转换`、`internal representation`、`LAG`）；命中相似案例 → 对照其"应由哪道门拦截"与"提炼规则"。
-- **提交后（write）**：每次真实 PR 交互（成功/失败/被批评）写一条结构化记录——日期、项目、PR 链接、状态、**维护者原话（verbatim）**、根因、应由哪道门拦截、提炼规则、检索关键词。
-- **闭环**：真实场景 → 场景记忆 → 提炼规则 → 自检门 G1–G5 → 新场景。种子案例：Datus-agent #1236（见 2.7 失败模式库）。
-
-### 2.10 维护者沟通模板库
-
-基于实战提炼的沟通模板，覆盖 PR 提交后的各种场景：
-
-**跟进审核（等待一周后）**：
-```
-Hi @maintainer-username,
-
-I wanted to follow up on this PR (#PR-number) which has been open for [X days/weeks]. 
-I understand you're busy, but I'd appreciate it if you could take a look when you have a moment.
-
-I've addressed all the items in the checklist and the CI checks are passing. 
-Please let me know if there's anything else I need to do.
-
-Thank you for your time!
-```
-
-**回应 review 意见（同意并修改）**：
-```
-Great catch! I've updated the code to [describe what you changed]. 
-
-The key changes:
-- [Change 1]
-- [Change 2]
-
-Please let me know if this looks good or if you'd like any further adjustments.
-```
-
-**礼貌地不同意**：
-```
-Thank you for the suggestion. I appreciate you taking the time to review this.
-
-After considering it, I'd like to respectfully disagree with this particular point. 
-Here's my reasoning:
-
-1. [Reason 1 with evidence/data if possible]
-2. [Reason 2]
-3. [Reason 3]
-
-I'm open to further discussion if you see it differently. What are your thoughts?
-```
-
-**完成修改后的提醒**：
-```
-Hi @reviewer-username,
-
-I've addressed all the review comments from the last round:
-
-- [x] Fixed [issue 1 description]
-- [x] Updated [issue 2 description]
-- [x] Added tests for [feature/fix description]
-
-Could you please take another look when you have a chance? 
-Let me know if there are any remaining issues.
-
-Thanks!
-```
-
-### 2.11 环境准备与清理
-
-在 skill 执行的每个关键阶段前，必须确保执行环境健康，避免僵尸进程干扰。
-
-**自动清理触发点**：
-1. 项目评估前 — 确保评估环境干净
-2. 源码分析前 — 避免残留进程干扰分析
-3. PR 提交前 — 确保 Git 操作环境干净
-4. CI 应对阶段 — 每次修复 CI 问题后运行清理
-
-**清理工具调用**（Windows PowerShell）：
-```powershell
-# 使用 JSON 输出模式，便于解析结果
-$result = powershell -ExecutionPolicy Bypass -File "cleanup-zombie-processes.ps1" -JsonOutput -Silent | ConvertFrom-Json
-
-# 检查退出码
-#   0 = 清理成功，无残留
-#   1 = 有残留进程未清理
-#   2 = 执行失败
-$exitCode = $LASTEXITCODE
-```
-
-**清理失败时的手动处理**：
-```powershell
-# 手动查看高CPU PowerShell进程
-Get-Process powershell | Where-Object { $_.CPU -gt 100 } | Select-Object Id, CPU, WorkingSet64
-
-# 手动终止指定进程
-Stop-Process -Id <PID> -Force
-
-# 手动查看无响应进程
-Get-Process | Where-Object { $_.Responding -eq $false }
-```
+项目评估（7 维）→ 避坑指南 → 源码分析 3 策略 → PR 规范 → 13 项强制检查 → **审核者视角自检门（5 闸门）** → 跟进策略 → 环境清理。**完整内容见 [engines/contribution-intelligence.md](engines/contribution-intelligence.md)。**
+
+> **审核者视角自检门（提交前强制）**：G1 语义理解 / G2 动机真实性 / G3 归属与范围 / G4 惊讶测试 / G5 自反预审。任一红灯 → 返回源码分析，禁止提交。工作底稿见 [templates/reviewer-perspective-gate.md](templates/reviewer-perspective-gate.md)。
+>
+> **AI 披露（强制）**：每次 PR 描述必须包含"skill 协助撰写 + 发出者人工逐条审核/测试/负责"声明，且与事实一致——诚实披露 + 展示理解 = 诚恳，避免被判定"纯 AI PR"进黑名单。
 
 ---
 
@@ -502,7 +120,7 @@ Get-Process | Where-Object { $_.Responding -eq $false }
 
 | 能力 | 引擎来源 | 输出 |
 |------|---------|------|
-| Project Matcher | Contribution Engine | 4 维度加权评分 + 推荐列表 |
+| Project Matcher | Contribution Engine | 7 维度加权评分 + 推荐列表 |
 | Issue Finder | Contribution Engine | good first issue + help wanted 筛选 |
 | PR Preparation Kit | Contribution Engine | 源码分析 + 改动验证 + 测试检查 |
 | Submission Guide | Contribution Engine | 分步骤指导 + PR 模板 |
@@ -526,7 +144,7 @@ Get-Process | Where-Object { $_.Responding -eq $false }
 | 能力 | 引擎来源 | 输出 |
 |------|---------|------|
 | Review Checklist Generator | 双引擎 | 按改动类型生成检查清单 |
-| Reviewer's Perspective Gate | Contribution Engine | 提交前 5 闸门自检（G1–G5，含语义理解/动机/归属/惊讶/预审） |
+| Reviewer's Perspective Gate | Contribution Engine | 提交前 5 闸门自检（G1–G5） |
 | Impact Analyzer | CI/CD Engine | 改动对下游依赖的影响分析 |
 | Security Scanner | CI/CD Engine | 安全风险检测（7 条规则） |
 | Feedback Template | Contribution Engine | 结构化 review 意见模板 |
@@ -585,7 +203,7 @@ Get-Process | Where-Object { $_.Responding -eq $false }
 4. 本地开发 + pre-commit 检查 + 测试
 5. PR 模板生成 + 13 项强制检查 + 5 闸门自检（审核者视角）
 6. 提交后 Day 3/7/14/21 跟进
-7. PR 合并 → 经验记录
+7. PR 合并 → 场景记忆记录
 
 ### 场景 2：维护者日常运营
 
@@ -632,6 +250,6 @@ Get-Process | Where-Object { $_.Responding -eq $false }
 5. **持续学习**：每次 PR 都是学习机会，记录经验，持续优化
 6. **真实性**：改动必须基于真实源码分析，非假设性问题
 7. **聚焦**：一个 PR 一个改动，不混合无关更改
-8. **闸门**：提交前必须通过审核者视角自检门（2.6）5/5，任何红灯即返回源码分析，禁止带病提交
-9. **记忆**：提交前检索场景记忆（2.9），交互后回写；记忆库含逐字反馈，严禁提交到公开仓库
+8. **闸门**：提交前必须通过审核者视角自检门（见 engines/contribution-intelligence.md §2.6）5/5，任何红灯即返回源码分析，禁止带病提交
+9. **记忆**：提交前检索场景记忆，交互后回写；记忆库含逐字反馈，严禁提交到公开仓库
 10. **披露**：每次 PR 必须如实披露"skill 协助撰写 + 发出者人工逐条审核/测试/负责"；披露须真实，禁止虚称人工审核
