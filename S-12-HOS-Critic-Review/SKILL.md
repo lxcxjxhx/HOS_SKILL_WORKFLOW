@@ -46,7 +46,7 @@ Discovery → Chunk → Analyzer → Evidence → Critic → Judge → Report
 1. **读入输入**（URL / 文件路径 / 粘贴文本 / JSON 载荷），走 [Discovery](agents/01-discovery.md)；
 2. 按类型选择切片策略（[chunk-engine/](chunk-engine/)）与分析器（[references/](references/) 内置清单）；
 3. 顺序执行七步，每步产物按 [schemas/](schemas/) 校验后进入下一步；
-4. 输出：人类报告（默认 Quick）+ 机器 JSON + 写入 [database/](database/) Review Store；
+4. 输出：人类报告（默认 Quick）+ 机器 JSON + 写入 [database/](database/) Review Store；报告格式可一键升级为美观网页 / PDF（见 §五 与 [docs/09](docs/09-extraction-and-rendering.md)，由 script 完成、不额外消耗 LLM token）；
 5. 输出语言跟随用户；默认中文。
 
 **最小可用路径**：对象仅需快速评审时，可从 Chunk/Analyzer 起步（跳过外部抓取步骤），但 Critic + Judge + Report 必跑。
@@ -59,13 +59,21 @@ Discovery → Chunk → Analyzer → Evidence → Critic → Judge → Report
 | `expert` | 完整分析报告 | [templates/expert.md](templates/expert.md) |
 | `academic` | 论文审稿决策 | [templates/academic.md](templates/academic.md) |
 
+输出格式（`render --format`）：
+
+| 格式 | 说明 |
+|------|------|
+| `md` | Markdown（默认，`render.ts`） |
+| `html` | 单文件美观网页（`render-html.ts`，内联 CSS，评分卡/维度条/徽章） |
+| `pdf` | HTML → PDF（`render-pdf.py`，零 LLM token，weasyprint→playwright→Edge/Chrome 降级链） |
+
 ## 六、配置
 
 `config.yaml`：输出模式、辣度、六维权重、阈值、降级开关。用户一句话可覆盖（「正经点」→辣度 0，「往死里骂」→辣度 5）。
 
 ## 七、文档指针
 
-- 完整规格：`docs/`（01-overview 起）
+- 完整规格：`docs/`（01-overview 起；输入提取与输出渲染见 [09](docs/09-extraction-and-rendering.md)）
 - 评分模型 / 编号体系 / 风格指南：`references/`
 - 切片规则：`chunk-engine/`
 - 正式 Schema：`schemas/`

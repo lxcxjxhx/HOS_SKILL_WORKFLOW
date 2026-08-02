@@ -1,5 +1,33 @@
 # HOS-CRITIC-REVIEW 变更记录
 
+## [0.4.0] - 2026-08-02（输入质量 + 输出渲染升级）
+
+### 新增
+- **论文 tex 源优先**（`scripts/tools/tex-fetch.py`）：arXiv id/URL → e-print → 主 .tex → 纯文本；
+  公式保留 LaTeX 原文（`[FORMULA: …]`）、表格/图保留 caption 占位、`\input/\include` 递归展开；
+  最干净的论文文本形态，优先于 PDF 提取（pdf-extract `--arxiv` 自动调用）
+- **PDF 解析链 v2**（`scripts/tools/pdf-extract.py` 重写）：
+  - `structured` 模式：按 text block 重建阅读顺序 + 双栏/单栏自动检测重排
+  - 表格 `find_tables()` → Markdown 表格块（`[TABLE] … [/TABLE]`）
+  - 数学公式字体 span / 孤立符号行 → `[FORMULA]` 占位，不再把公式拆成碎片
+  - `docx` 模式：PDF → docx（libreoffice + pandoc）→ gfm
+  - `ocr` 模式：扫描版页面走 `HOS_OCR_API`（OpenAI 兼容视觉接口）或本地 tesseract
+  - **quality 自检**：layout / char_per_page / scanned_pages / formula_count / table_count /
+    warnings 写入输出，宿主据此在报告中如实记录 degradations（降级不撒谎）
+- **HTML 渲染器**（`scripts/render-html.ts`）：ReviewReport JSON → 单文件美观 HTML
+  （内联 CSS：评分卡大卡片、六维进度条、severity 徽章、critique 分组、`@media print` A4 样式、HTML 转义防注入）
+- **HTML → PDF 导出**（`scripts/tools/render-pdf.py`）：零 LLM token 消耗；
+  降级链 weasyprint → playwright(chromium) → msedge headless → chrome headless，自动探测
+- CLI：`render --format md|html|pdf|auto`（按 `--out` 后缀推断）；`extract pdf` 子命令暴露 v2 管线
+
+### 修复
+- PyMuPDF 1.27 在 stdout 打印 layout 提示污染 JSON 管道（提取全程 stdout→stderr 重定向 +
+  CLI 端 JSON 容错解析）
+- 扫描版/图密集 PDF（如 T2L-Agent 后半 21 页）此前静默丢内容，现通过 `scanned_pages` 显式暴露
+
+### 测试
+- 新增 `tests/unit/render-html.test.ts`（5 个：结构/评分卡/quick 裁剪/HTML 转义防注入/徽章），全套 54 通过
+
 ## [0.3.0] - 2026-08-02（M3 完成 + M4 主体）
 
 ### 新增
