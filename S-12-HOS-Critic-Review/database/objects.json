@@ -1,0 +1,48 @@
+{
+  "objects": [
+    {
+      "object_id": "obj-a1b2c3",
+      "type": "article",
+      "source": "examples/fixtures/sample-article.md",
+      "reviews": [
+        "rr-20260801-a1b2c3"
+      ],
+      "findings": [
+        "HCR-CLAIM-2026-0001",
+        "HCR-CLAIM-2026-0002",
+        "HCR-DATA-2026-0003",
+        "HCR-CLAIM-2026-0004",
+        "HCR-REPRO-2026-0005",
+        "HCR-SEC-2026-0006"
+      ]
+    },
+    {
+      "object_id": "obj-67bdd4",
+      "type": "repo",
+      "source": "https://github.com/facebook/react",
+      "reviews": [
+        "rr-20260802-b1c2d3"
+      ],
+      "findings": [
+        "HCR-ECO-2026-0001",
+        "HCR-REPRO-2026-0002",
+        "HCR-SEC-2026-0003"
+      ]
+    },
+    {
+      "object_id": "obj-9f3c21",
+      "type": "paper",
+      "source": "examples/fixtures/sample-paper.md",
+      "reviews": [
+        "rr-20260802-c3d4e5"
+      ],
+      "findings": [
+        "HCR-EVAL-2026-0001",
+        "HCR-DATA-2026-0002",
+        "HCR-REPRO-2026-0003",
+        "HCR-EVAL-2026-0004",
+        "HCR-CLAIM-2026-0005"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+{
+  "findings": [
+    {
+      "hcr_id": "HCR-CLAIM-2026-0001",
+      "report_id": "rr-20260801-a1b2c3",
+      "object_id": "obj-a1b2c3",
+      "class": "CLAIM",
+      "severity": "CRITICAL",
+      "title": "宣称「零代码零依赖」，正文依赖 5 类外部组件",
+      "claim": "宣称开箱即用零依赖，正文明确要求自备向量库/LLM Key/SSO/8核16G 服务器",
+      "evidence_status": "verified",
+      "evidence_sources": [
+        "examples/fixtures/sample-article.md:unit-003/004/005"
+      ],
+      "unit_refs": [
+        "unit-003",
+        "unit-004",
+        "unit-005"
+      ],
+      "patch": "将宣称改为『业务侧零代码接入』并给出完整前置依赖清单",
+      "status": "open",
+      "created": "2026-08-01"
+    },
+    {
+      "hcr_id": "HCR-CLAIM-2026-0002",
+      "report_id": "rr-20260801-a1b2c3",
+      "object_id": "obj-a1b2c3",
+      "class": "CLAIM",
+      "severity": "MEDIUM",
+      "title": "「业界首创三段式混合检索」实为常见组件组合",
+      "claim": "业界首创表述无对比证据，组件均为开源项目组合",
+      "evidence_status": "partial",
+      "evidence_sources": [
+        "examples/fixtures/sample-article.md:unit-003"
+      ],
+      "unit_refs": [
+        "unit-003"
+      ],
+      "patch": "删除『业界首创』或补充架构对比",
+      "status": "open",
+      "created": "2026-08-01"
+    },
+    {
+      "hcr_id": "HCR-DATA-2026-0003",
+      "report_id": "rr-20260801-a1b2c3",
+      "object_id": "obj-a1b2c3",
+      "class": "DATA",
+      "severity": "HIGH",
+      "title": "效果数据无样本量与口径，「23% 提升」无基线",
+      "claim": "91.2% 基于 3 家客户测试，无评测集/样本量/判定标准；23% 无对比基线",
+      "evidence_status": "verified",
+      "evidence_sources": [
+        "examples/fixtures/sample-article.md:unit-006"
+      ],
+      "unit_refs": [
+        "unit-006"
+      ],
+      "patch": "公开评测集、样本量、判定标准与基线配置",
+      "status": "open",
+      "created": "2026-08-01"
+    },
+    {
+      "hcr_id": "HCR-CLAIM-2026-0004",
+      "report_id": "rr-20260801-a1b2c3",
+      "object_id": "obj-a1b2c3",
+      "class": "CLAIM",
+      "severity": "MEDIUM",
+      "title": "「37% 时间找资料」来源标注「内部调研，未公开」",
+      "claim": "关键统计数字来源不可核验",
+      "evidence_status": "unverifiable",
+      "evidence_sources": [],
+      "unit_refs": [
+        "unit-002"
+      ],
+      "patch": "补充可核验来源或引用公开报告",
+      "status": "open",
+      "created": "2026-08-01"
+    },
+    {
+      "hcr_id": "HCR-REPRO-2026-0005",
+      "report_id": "rr-20260801-a1b2c3",
+      "object_id": "obj-a1b2c3",
+      "class": "REPRO",
+      "severity": "MEDIUM",
+      "title": "宣称开箱即用，实际需 8核16G+向量库+SSO 联调 2-4 周",
+      "claim": "部署前置条件与『开箱即用』不符，成本被低估",
+      "evidence_status": "verified",
+      "evidence_sources": [
+        "examples/fixtures/sample-article.md:unit-005"
+      ],
+      "unit_refs": [
+        "unit-005"
+      ],
+      "patch": "拆分体验版与生产部署两档，补齐前置清单",
+      "status": "open",
+      "created": "2026-08-01"
+    },
+    {
+      "hcr_id": "HCR-SEC-2026-0006",
+      "report_id": "rr-20260801-a1b2c3",
+      "object_id": "obj-a1b2c3",
+      "class": "SEC",
+      "severity": "LOW",
+      "title": "权限过滤依赖客户自建 SSO，Community 版无权限功能",
+      "claim": "权限能力依赖客户基础设施，免费版不含权限，安全边界未说明",
+      "evidence_status": "verified",
+      "evidence_sources": [
+        "examples/fixtures/sample-article.md:unit-004/005"
+      ],
+      "unit_refs": [
+        "unit-004",
+        "unit-005"
+      ],
+      "patch": "补充默认安全基线说明与 Community 版能力边界",
+      "status": "open",
+      "created": "2026-08-01"
+    },
+    {
+      "hcr_id": "HCR-ECO-2026-0001",
+      "report_id": "rr-20260802-b1c2d3",
+      "object_id": "obj-67bdd4",
+      "class": "ECO",
+      "severity": "INFO",
+      "title": "GitHub 生态指标全面健康",
+      "claim": "仓库活跃度高、协作高效、发布稳定，未发现 ECO 类问题",
+      "evidence_status": "verified",
+      "evidence_sources": [],
+      "unit_refs": [
+        "unit-000"
+      ],
+      "patch": null,
+      "status": "open",
+      "created": "2026-08-02T12:07:50.201Z"
+    },
+    {
+      "hcr_id": "HCR-REPRO-2026-0002",
+      "report_id": "rr-20260802-b1c2d3",
+      "object_id": "obj-67bdd4",
+      "class": "REPRO",
+      "severity": "LOW",
+      "title": "React 19 升级存在隐藏迁移成本",
+      "claim": "React 19 引入一批弃用与破坏性变更，生态迁移是未计入的隐藏成本",
+      "evidence_status": "verified",
+      "evidence_sources": [],
+      "unit_refs": [
+        "unit-000"
+      ],
+      "patch": "官方已提供升级指南与 codemod；建议对升级成本做量化披露（受影响包清单/迁移时长估算）",
+      "status": "open",
+      "created": "2026-08-02T12:07:50.201Z"
+    },
+    {
+      "hcr_id": "HCR-SEC-2026-0003",
+      "report_id": "rr-20260802-b1c2d3",
+      "object_id": "obj-67bdd4",
+      "class": "SEC",
+      "severity": "LOW",
+      "title": "XSS 防护依赖应用层正确使用 API",
+      "claim": "框架默认转义受控内容，但 dangerouslySetInnerHTML 等逃生舱口的安全责任在开发者，框架层不兜底",
+      "evidence_status": "partial",
+      "evidence_sources": [],
+      "unit_refs": [
+        "unit-000"
+      ],
+      "patch": "在文档显著位置补充安全反模式清单；生态层可考虑 lint 规则强制审查逃生舱口使用",
+      "status": "open",
+      "created": "2026-08-02T12:07:50.201Z"
+    },
+    {
+      "hcr_id": "HCR-EVAL-2026-0001",
+      "report_id": "rr-20260802-c3d4e5",
+      "object_id": "obj-9f3c21",
+      "class": "EVAL",
+      "severity": "HIGH",
+      "title": "SOTA 宣称缺乏强基线对比",
+      "claim": "Abstract 宣称全面超越所有现有方法（SOTA），但实验仅对比 TF-IDF+SVM、随机森林、MLP 三个弱基线，未对比任何近年深度方法",
+      "evidence_status": "verified",
+      "evidence_sources": [],
+      "unit_refs": [
+        "unit-005"
+      ],
+      "patch": "补充与 ≥2 个近年深度检测方法（如 Transformer 类）的对比，或删除 SOTA 表述",
+      "status": "open",
+      "created": "2026-08-02T12:11:13.782Z"
+    },
+    {
+      "hcr_id": "HCR-DATA-2026-0002",
+      "report_id": "rr-20260802-c3d4e5",
+      "object_id": "obj-9f3c21",
+      "class": "DATA",
+      "severity": "MEDIUM",
+      "title": "自建数据集未公开，公开数据集陈旧",
+      "claim": "两个自建数据集（共 7,400 样本）来源不可核验且未公开；唯一公开数据集为 2017 年数据，时效性不足",
+      "evidence_status": "verified",
+      "evidence_sources": [],
+      "unit_refs": [
+        "unit-004"
+      ],
+      "patch": "公开数据样本/脱敏说明，补充近年公开数据集",
+      "status": "open",
+      "created": "2026-08-02T12:11:13.782Z"
+    },
+    {
+      "hcr_id": "HCR-REPRO-2026-0003",
+      "report_id": "rr-20260802-c3d4e5",
+      "object_id": "obj-9f3c21",
+      "class": "REPRO",
+      "severity": "MEDIUM",
+      "title": "代码、超参数与数据均不可得，复现为零",
+      "claim": "Abstract 明示代码与数据集暂未公开；超参数网格『正式版本中给出』；参考文献 [1] 链接已失效",
+      "evidence_status": "verified",
+      "evidence_sources": [],
+      "unit_refs": [
+        "unit-001",
+        "unit-003",
+        "unit-007"
+      ],
+      "patch": "开源代码与数据（至少匿名仓库），补全超参与有效引用",
+      "status": "open",
+      "created": "2026-08-02T12:11:13.782Z"
+    },
+    {
+      "hcr_id": "HCR-EVAL-2026-0004",
+      "report_id": "rr-20260802-c3d4e5",
+      "object_id": "obj-9f3c21",
+      "class": "EVAL",
+      "severity": "MEDIUM",
+      "title": "无消融实验，贡献无法归因",
+      "claim": "『哈希+GRU+注意力』三层各自贡献无实验支撑，99.2% 无法归因到具体组件",
+      "evidence_status": "verified",
+      "evidence_sources": [],
+      "unit_refs": [
+        "unit-006"
+      ],
+      "patch": "补充消融：逐层移除特征哈希/自注意力并报告指标变化",
+      "status": "open",
+      "created": "2026-08-02T12:11:13.782Z"
+    },
+    {
+      "hcr_id": "HCR-CLAIM-2026-0005",
+      "report_id": "rr-20260802-c3d4e5",
+      "object_id": "obj-9f3c21",
+      "class": "CLAIM",
+      "severity": "LOW",
+      "title": "「三段式结构是核心创新」表述缺乏对比支撑",
+      "claim": "CAMEL-GRU 为特征哈希+GRU+自注意力池化的常见组件组合，『核心创新』的宣称无与既有轻量级方法的对比证据",
+      "evidence_status": "partial",
+      "evidence_sources": [],
+      "unit_refs": [
+        "unit-003"
+      ],
+      "patch": "补充与轻量级基线（如 MobileNet 风格时序模型、轻量 Transformer）的架构对比",
+      "status": "open",
+      "created": "2026-08-02T12:11:13.782Z"
+    }
+  ]
+}

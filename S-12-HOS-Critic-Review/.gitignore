@@ -1,0 +1,22 @@
+# 依赖与产物
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# 缓存与临时
+.pytest_cache/
+*.log
+_semgrep_out.json
+
+# 评审中间产物（可选保留；如需入库请解除）
+examples/**/data/
+examples/**/chunk-result.json
+
+# 系统
+.DS_Store
+Thumbs.db

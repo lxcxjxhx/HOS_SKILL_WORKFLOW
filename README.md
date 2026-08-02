@@ -1,4 +1,4 @@
-﻿# HOS Skill Workflow
+# HOS Skill Workflow
 
 > **AI Agent Skill 工程化框架** — 标准化、可复用、企业级的 AI 技能体系
 
@@ -45,6 +45,7 @@ HOS Skill Workflow 是一个面向 AI Agent、AI IDE、Claude Code、Codex、Cur
 | S-09 | [HOS-Ops-Skills](S-09-HOS-Ops-Skills/) | Markdown | HOS 生态运营工具集：周报/日志/Release Notes/多平台适配/社区运营/品牌守护/微商运营 | [README](S-09-HOS-Ops-Skills/README.md) |
 | S-10 | [HOS-GH-ContribOS](S-10-HOS-GH-ContribOS/) | Markdown | GitHub 贡献操作系统：从项目创建到 PR 合并的完整开源贡献生命周期，双引擎 + 六角色视图 + 经验循环 | [README](S-10-HOS-GH-ContribOS/README.md) |
 | S-11 | [HOS-Paper-RedTeam](S-11-HOS-Paper-RedTeam/) | Markdown | 论文红队系统（HOS论文鞭尸局）：发现→审计→攻击→修复→研究机会，毒舌点评 + RVE 漏洞编号 | [README](S-11-HOS-Paper-RedTeam/README.md) |
+| S-12 | [HOS-Critic-Review](S-12-HOS-Critic-Review/) | TypeScript | 六维批判式评审引擎：七 Agent 流水线 + 泛化语义切片 + 证据驱动六维评分 + MCP server | [README](S-12-HOS-Critic-Review/README.md) |
 
 ---
 
@@ -117,6 +118,7 @@ HOS_SKILL_WORKFLOW/
 ├── S-09-HOS-Ops-Skills/          # HOS 生态运营工具集
 ├── S-10-HOS-GH-ContribOS/        # GitHub 贡献操作系统
 ├── S-11-HOS-Paper-RedTeam/       # 论文红队系统（HOS论文鞭尸局）
+├── S-12-HOS-Critic-Review/       # 六维批判式评审引擎（HOS-Critic-Review）
 ├── .github/workflows/ci.yml    # CI 配置
 └── LICENSE.txt                 # MIT 许可证
 ```

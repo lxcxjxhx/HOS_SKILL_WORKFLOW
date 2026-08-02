@@ -1,0 +1,60 @@
+# HOS-CRITIC-REVIEW 配置
+# 用户一句话可覆盖以下默认值（如「正经点」→ spiciness 0）
+
+# 输出模式：quick | expert | academic
+output_mode: quick
+
+# 毒舌辣度 0-5（默认 3）
+spiciness: 3
+
+# 六维权重（合计应为 1.00；可按对象类型覆盖，见 weights_by_type）
+weights:
+  technical: 0.20
+  innovation: 0.20
+  engineering: 0.15
+  ecosystem: 0.15
+  risk: 0.15
+  strategic: 0.15
+
+# 对象类型覆盖示例（paper 提高创新权重）
+weights_by_type:
+  paper:
+    technical: 0.15
+    innovation: 0.25
+    engineering: 0.15
+    ecosystem: 0.10
+    risk: 0.15
+    strategic: 0.20
+
+# 切片阈值（与 chunk-engine/ 一致）
+chunking:
+  unit_max_tokens: 4000
+  fallback_chunk_size: 1500
+  fallback_overlap: 150
+  coverage_threshold: 0.95
+  sample_target_tokens: 200000
+
+# 评分基准与扣分
+scoring:
+  baseline: 7.0
+  no_finding_baseline: { technical: 8, innovation: 7, engineering: 8, ecosystem: 7, risk: 7, strategic: 7 }
+  severity_penalty: { CRITICAL: 2.0, HIGH: 1.5, MEDIUM: 1.0, LOW: 0.5, INFO: 0.0 }
+  evidence_factor: { verified: 1.0, partial: 0.7, low_confidence: 0.5, refuted: 0.0 }
+
+# 降级开关（全部默认允许；--no-network 强制关闭网络能力）
+degradation:
+  allow_tool_degradation: true
+  allow_network: true
+  cache_ttl_seconds: 3600
+
+# 上下文预算（宿主上下文限制相关）
+budget:
+  max_input_tokens: 200000
+  max_pre_critic_tokens: 60000
+  critic_role_input_tokens: 15000
+  judge_input_tokens: 25000
+
+# 报告
+report:
+  top_findings_count: 5
+  default_language: "zh"
