@@ -48,8 +48,8 @@ jobs:
     strategy:
       matrix:
         module:
-          - 00-HOS-Sec-Engine
-          - 04-HOS-Silly-Mock
+          - S-00-HOS-Sec-Engine
+          - S-04-HOS-Silly-Mock
       fail-fast: false
 
     steps:
@@ -122,7 +122,7 @@ jobs:
     strategy:
       matrix:
         module:
-          - 13-HOS-AI-Guardrail
+          - W-13-HOS-AI-Guardrail
       fail-fast: false
 
     steps:
