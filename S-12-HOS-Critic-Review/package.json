@@ -1,0 +1,24 @@
+{
+  "name": "hos-critic-review",
+  "version": "0.3.0",
+  "description": "HOS-CRITIC-REVIEW 辅助脚本层（M2）：fetch/validate/render/store 工具，零 npm 依赖，Node >= 24 直接运行 TS",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "hos-critic-review": "scripts/cli.ts"
+  },
+  "scripts": {
+    "cli": "node scripts/cli.ts",
+    "test": "node --test tests/unit/*.test.ts",
+    "github": "node scripts/cli.ts github",
+    "paper": "node scripts/cli.ts paper",
+    "benchmark": "node scripts/calibrate.ts"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "tree-sitter": "^0.21.1",
+    "tree-sitter-typescript": "^0.23.2"
+  }
+}

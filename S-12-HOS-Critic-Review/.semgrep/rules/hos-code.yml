@@ -1,0 +1,48 @@
+# HOS-CRITIC-REVIEW 本地 semgrep 规则集
+# 用法: semgrep scan --config .semgrep/rules <file>
+# 由 scripts/analyzers/code.ts 优先使用（无网络依赖、确定性），不可用时回退 p/default
+rules:
+  - id: hos-hardcoded-secret
+    languages: [typescript, javascript, python, go, java, ruby]
+    message: Hardcoded credential or secret detected（凭据硬编码）
+    severity: ERROR
+    patterns:
+      - pattern-either:
+          - pattern: $VAR = "$VALUE"
+          - pattern: $VAR = '$VALUE'
+          - pattern: const $VAR = "$VALUE"
+          - pattern: let $VAR = "$VALUE"
+      - metavariable-regex:
+          metavariable: $VAR
+          regex: "(?i)(api[_-]?key|secret|passwd|password|token|credential)"
+      - metavariable-regex:
+          metavariable: $VALUE
+          regex: '^(''|")(sk-|AKIA|ghp_|AIza|ya29\.|eyJ)[A-Za-z0-9_\-\.]{10,}(''|")$'
+
+  - id: hos-dangerous-dynamic-exec
+    languages: [javascript, typescript, python]
+    message: Dangerous dynamic execution（动态执行风险）
+    severity: WARNING
+    patterns:
+      - pattern-either:
+          - pattern: eval($X)
+          - pattern: exec($X)
+          - pattern: execSync($X)
+          - pattern: child_process.exec($X)
+
+  - id: hos-innerhtml-unsanitized
+    languages: [javascript, typescript]
+    message: innerHTML direct assignment may lead to XSS（XSS 风险）
+    severity: WARNING
+    patterns:
+      - pattern: $EL.innerHTML = $VALUE
+      - pattern: $EL.outerHTML = $VALUE
+
+  - id: hos-todo-marker
+    languages: [typescript, javascript, python, go, java]
+    message: TODO/FIXME left in code（遗留待办）
+    severity: INFO
+    patterns:
+      - pattern-either:
+          - pattern-regex: "TODO"
+          - pattern-regex: "FIXME"
