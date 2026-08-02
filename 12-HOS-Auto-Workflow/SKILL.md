@@ -1,5 +1,5 @@
 ---
-name: HOS-AUTO-WORKFLOW
+name: HOS-Auto-Workflow
 description: "HOS 自动化工作流 — 基于 Dify 平台的 AI 报告撰写自动化工具"
 version: "0.1.0"
 author: "HOS"
@@ -14,7 +14,7 @@ risk-level: low
 confidence: 0.80
 ---
 
-# HOS-AUTO-WORKFLOW：自动化工作流引擎
+# HOS-Auto-Workflow：自动化工作流引擎
 
 > 基于 Dify 平台的 AI 自动化报告撰写工具，支持多模型接入与工作流编排。
 
@@ -22,7 +22,7 @@ confidence: 0.80
 
 ## 一、概述
 
-HOS-AUTO-WORKFLOW 提供基于 Dify 平台的自动化工作流配置，用于 AI 报告的自动化撰写。支持 DeepSeek、OpenAI 等多种模型后端。
+HOS-Auto-Workflow 提供基于 Dify 平台的自动化工作流配置，用于 AI 报告的自动化撰写。支持 DeepSeek、OpenAI 等多种模型后端。
 
 ## 二、核心能力
 
@@ -34,7 +34,7 @@ HOS-AUTO-WORKFLOW 提供基于 Dify 平台的自动化工作流配置，用于 A
 ## 三、文件结构
 
 ```
-100-HOS-AUTO-WORKFLOW/
+12-HOS-Auto-Workflow/
 ├── SKILL.md                          # 本文件
 ├── README.md                         # 使用指南
 ├── HOS自动化报告撰写工具 v0.1.yml     # Dify 工作流配置

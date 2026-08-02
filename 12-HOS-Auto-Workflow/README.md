@@ -4,7 +4,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![AI IDE Compatible](https://img.shields.io/badge/AI%20IDE-Compatible-success.svg)
 
-# 🤖 HOS-AUTO-WORKFLOW
+# 🤖 HOS-Auto-Workflow
 
 **HOS 自动化工作流 — 基于 Dify 平台的 AI 报告撰写自动化工具**
 
@@ -16,7 +16,7 @@
 
 ## 📖 简介
 
-HOS-AUTO-WORKFLOW 提供基于 Dify 平台的自动化工作流配置，用于 AI 报告的自动化撰写。支持 DeepSeek、OpenAI 等多种模型后端，通过可视化工作流编排实现智能报告生成。
+HOS-Auto-Workflow 提供基于 Dify 平台的自动化工作流配置，用于 AI 报告的自动化撰写。支持 DeepSeek、OpenAI 等多种模型后端，通过可视化工作流编排实现智能报告生成。
 
 ### ✨ 核心特性
 
@@ -42,21 +42,21 @@ HOS-AUTO-WORKFLOW 提供基于 Dify 平台的自动化工作流配置，用于 A
 
 ```bash
 # 在 Claude Code 中直接使用
-# 系统会自动识别并加载 HOS-AUTO-WORKFLOW 技能
+# 系统会自动识别并加载 HOS-Auto-Workflow 技能
 ```
 
 #### TRAE
 
 ```bash
 # TRAE IDE 已内置支持
-# 通过技能市场安装 HOS-AUTO-WORKFLOW
+# 通过技能市场安装 HOS-Auto-Workflow
 ```
 
 #### Cursor
 
 ```bash
 # 在 Cursor 中添加技能
-# 导入 100-HOS-AUTO-WORKFLOW 目录
+# 导入 12-HOS-Auto-Workflow 目录
 ```
 
 #### 通用安装
@@ -66,7 +66,7 @@ HOS-AUTO-WORKFLOW 提供基于 Dify 平台的自动化工作流配置，用于 A
 git clone <repository-url>
 
 # 进入技能目录
-cd 100-HOS-AUTO-WORKFLOW
+cd 12-HOS-Auto-Workflow
 
 # 技能会自动被 AI IDE 识别和加载
 ```
@@ -93,7 +93,7 @@ cd 100-HOS-AUTO-WORKFLOW
 帮我生成一份关于大语言模型最新进展的研究报
 
 # 自定义报告模板
-使用 HOS-AUTO-WORKFLOW 生成技术趋势分析报告
+使用 HOS-Auto-Workflow 生成技术趋势分析报告
 
 # 数据集管理
 导入我的研究数据集并生成分析报告
@@ -132,7 +132,7 @@ OPENAI_API_KEY=your-openai-key
 ## 🏗️ 架构
 
 ```
-100-HOS-AUTO-WORKFLOW/
+12-HOS-Auto-Workflow/
 ├── SKILL.md                          # 技能定义文件
 ├── README.md                         # 本文件 — 使用指南
 ├── HOS自动化报告撰写工具 v0.1.yml     # Dify 工作流配置

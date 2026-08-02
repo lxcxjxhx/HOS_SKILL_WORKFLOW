@@ -1,5 +1,5 @@
 ---
-name: HUMAN-PASS
+name: HOS-Human-Pass
 description: "人机验证通行技能 — 安全测试中的人机识别与验证机制研究"
 version: "0.1.0"
 author: "HOS"
@@ -13,11 +13,11 @@ risk-level: medium
 confidence: 0.70
 ---
 
-# HUMAN-PASS
+# HOS-Human-Pass
 
 ## Overview
 
-HUMAN-PASS is a security testing skill focused on human verification mechanisms and bot detection systems. This skill provides comprehensive analysis of CAPTCHA systems, behavioral biometrics, device fingerprinting, and risk control assessment to help security teams evaluate and improve their human verification defenses.
+HOS-Human-Pass is a security testing skill focused on human verification mechanisms and bot detection systems. This skill provides comprehensive analysis of CAPTCHA systems, behavioral biometrics, device fingerprinting, and risk control assessment to help security teams evaluate and improve their human verification defenses.
 
 **Purpose**: Research and test human verification mechanisms in security contexts, helping organizations understand their bot detection capabilities and identify potential vulnerabilities.
 
@@ -90,7 +90,7 @@ Evaluation of risk control systems and decision engines:
 ## File Structure
 
 ```
-300-HUMAN-PASS/
+15-HOS-Human-Pass/
 ├── SKILL.md                      # Skill metadata (this file)
 ├── README.md                     # Project documentation
 ├── src/

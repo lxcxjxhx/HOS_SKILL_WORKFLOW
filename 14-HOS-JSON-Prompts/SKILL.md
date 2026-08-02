@@ -1,5 +1,5 @@
 ---
-name: JSON-Structured-Prompts
+name: HOS-JSON-Prompts
 description: "Structured prompt engineering framework with JSON templates for generating standardized, reusable AI prompts across diverse scenarios including articles, exams, projects, security, and operations."
 version: 1.0.0
 author: HOS
@@ -71,7 +71,7 @@ All templates enforce consistent writing standards:
 ## File Structure
 
 ```
-200-JSON结构化提示词/
+14-HOS-JSON-Prompts/
 ├── AAA-develop-template.json          # Master template with adaptive instructions
 ├── develop-article.json               # Article writing template
 ├── develop-article-code.json          # Article with code examples template

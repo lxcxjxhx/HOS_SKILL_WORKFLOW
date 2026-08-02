@@ -1,4 +1,4 @@
-# 🤖 300-HUMAN-PASS
+# 🤖 15-HOS-Human-Pass
 
 > Human Verification Testing Skill for Security Assessment
 
@@ -33,7 +33,7 @@
 
 ## 🎯 概述
 
-HUMAN-PASS 是一个专注于人机验证机制和机器人检测系统的安全测试技能。本技能提供 CAPTCHA 系统、行为生物特征、设备指纹和风险控制的全面分析，帮助安全团队评估和改进其人机验证防御能力。
+HOS-Human-Pass 是一个专注于人机验证机制和机器人检测系统的安全测试技能。本技能提供 CAPTCHA 系统、行为生物特征、设备指纹和风险控制的全面分析，帮助安全团队评估和改进其人机验证防御能力。
 
 **目的**：在安全环境中研究和测试人机验证机制，帮助组织了解其机器人检测能力并识别潜在漏洞。
 
@@ -112,7 +112,7 @@ HUMAN-PASS 是一个专注于人机验证机制和机器人检测系统的安全
 ## 📁 文件结构
 
 ```
-300-HUMAN-PASS/
+15-HOS-Human-Pass/
 ├── SKILL.md                      # 技能元数据（本文件）
 ├── README.md                     # 项目文档
 ├── src/
