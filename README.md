@@ -25,24 +25,26 @@ HOS Skill Workflow 是一个面向 AI Agent、AI IDE、Claude Code、Codex、Cur
 
 ## Skill 模块
 
+> **前缀约定**：`W-` = Workflow / 老版单文件强约束格式（Dify 工作流、Python 应用、JSON 模板、占位记录）；`S-` = Standard 标准多文件结构 skill（`SKILL.md` + `src/` / `templates/` / `workflows/` 子目录）
+
 | 编号 | 模块 | 语言 | 描述 | 文档 |
 |------|------|------|------|------|
-| 00 | [HOS-Sec-Engine](00-HOS-Sec-Engine/) | TypeScript | AI 原生安全测试引擎，流程模板 + 决策树 + CVE 集成 + MCP 管理层 | [README](00-HOS-Sec-Engine/README.md) |
-| 01 | [HOS-Save-Cost](01-HOS-Save-Cost/) | Markdown | AI 成本优化技能集：Token 优先工程、上下文压缩、最小重构架构 | [README](01-HOS-Save-Cost/skills/README.md) |
-| 02 | [HOS-LIFE-OKR](02-HOS-LIFE-OKR/) | Markdown | 生活 OKR 自动化学习引擎：OKR 驱动 + KPI 约束 + 时间切片 + 自动任务生成 | [SKILL.md](02-HOS-LIFE-OKR/SKILL.md) |
-| 03 | [HOS-Vibe-Guard](03-HOS-Vibe-Guard/) | TypeScript | 防 Vibe Coding 退化护栏：选题质量检测 + 架构升级引擎 + 安全护栏 | [README](03-HOS-Vibe-Guard/README.md) |
-| 04 | [HOS-Silly-Mock](04-HOS-Silly-Mock/) | TypeScript | 反假数据/反正则现实强制层：阻止 AI 伪造系统可运行性 | [README](04-HOS-Silly-Mock/README.md) |
-| 05 | [HOS-XRG-Loop](05-HOS-XRG-Loop/) | Shell | 自稳定工程系统：目标动态调节 + 价值密度控制 + 现实反馈闭环 | [CLAUDE.md](05-HOS-XRG-Loop/CLAUDE.md) |
-| 06 | [HOS-Fuck-Demo](06-HOS-Fuck-Demo/) | Markdown | AI 内容工业流水线：全自动输出内容包+PPT+音频+视频+项目注册 | [README](06-HOS-Fuck-Demo/README.md) |
-| 07 | [HOS-IP-Writing](07-HOS-IP-Writing/) | Markdown | 知识产权写作系统：论文、专利、软著、书籍、博客、润色六大场景 | [README](07-HOS-IP-Writing/README.md) |
-| 08 | [HOS-Micro-Biz](08-HOS-Micro-Biz/) | Markdown | 微商技术服务运营：服务设计 + 定价策略 + 获客文案 + 客户沟通 SOP + 订单管理 + 风控合规 | [README](08-HOS-Micro-Biz/README.md) |
-| 09 | [HOS-Ops-Skills](09-HOS-Ops-Skills/) | Markdown | HOS 生态运营工具集：周报/日志/Release Notes/多平台适配/社区运营/品牌守护/微商运营 | [README](09-HOS-Ops-Skills/README.md) |
-| 10 | [HOS-GH-ContribOS](10-HOS-GH-ContribOS/) | Markdown | GitHub 贡献操作系统：从项目创建到 PR 合并的完整开源贡献生命周期，双引擎 + 六角色视图 + 经验循环 | [README](10-HOS-GH-ContribOS/README.md) |
-| 11 | [HOS-Paper-RedTeam](11-HOS-Paper-RedTeam/) | Markdown | 论文红队系统（HOS论文鞭尸局）：发现→审计→攻击→修复→研究机会，毒舌点评 + RVE 漏洞编号 | [README](11-HOS-Paper-RedTeam/README.md) |
-| 12 | [HOS-Auto-Workflow](12-HOS-Auto-Workflow/) | YAML | 自动化工作流配置：报告撰写工具 + 配置手册 | - |
-| 13 | [HOS-AI-Guardrail](13-HOS-AI-Guardrail/) | Python | AI 安全检测插件：文本/文件/图片输入输出检测，FastAPI 实现 | - |
-| 14 | [HOS-JSON-Prompts](14-HOS-JSON-Prompts/) | JSON | 开发模板集合：项目、安全、测试、运营、模型、考试等场景 | - |
-| 15 | [HOS-Human-Pass](15-HOS-Human-Pass/) | Text | 人工验证通过记录 | - |
+| W-12 | [HOS-Auto-Workflow](W-12-HOS-Auto-Workflow/) | YAML | 自动化工作流配置：报告撰写工具 + 配置手册 | - |
+| W-13 | [HOS-AI-Guardrail](W-13-HOS-AI-Guardrail/) | Python | AI 安全检测插件：文本/文件/图片输入输出检测，FastAPI 实现 | - |
+| W-14 | [HOS-JSON-Prompts](W-14-HOS-JSON-Prompts/) | JSON | 开发模板集合：项目、安全、测试、运营、模型、考试等场景 | - |
+| W-15 | [HOS-Human-Pass](W-15-HOS-Human-Pass/) | Text | 人工验证通过记录 | - |
+| S-00 | [HOS-Sec-Engine](S-00-HOS-Sec-Engine/) | TypeScript | AI 原生安全测试引擎，流程模板 + 决策树 + CVE 集成 + MCP 管理层 | [README](S-00-HOS-Sec-Engine/README.md) |
+| S-01 | [HOS-Save-Cost](S-01-HOS-Save-Cost/) | Markdown | AI 成本优化技能集：Token 优先工程、上下文压缩、最小重构架构 | [README](S-01-HOS-Save-Cost/skills/README.md) |
+| S-02 | [HOS-LIFE-OKR](S-02-HOS-LIFE-OKR/) | Markdown | 生活 OKR 自动化学习引擎：OKR 驱动 + KPI 约束 + 时间切片 + 自动任务生成 | [SKILL.md](S-02-HOS-LIFE-OKR/SKILL.md) |
+| S-03 | [HOS-Vibe-Guard](S-03-HOS-Vibe-Guard/) | TypeScript | 防 Vibe Coding 退化护栏：选题质量检测 + 架构升级引擎 + 安全护栏 | [README](S-03-HOS-Vibe-Guard/README.md) |
+| S-04 | [HOS-Silly-Mock](S-04-HOS-Silly-Mock/) | TypeScript | 反假数据/反正则现实强制层：阻止 AI 伪造系统可运行性 | [README](S-04-HOS-Silly-Mock/README.md) |
+| S-05 | [HOS-XRG-Loop](S-05-HOS-XRG-Loop/) | Shell | 自稳定工程系统：目标动态调节 + 价值密度控制 + 现实反馈闭环 | [CLAUDE.md](S-05-HOS-XRG-Loop/CLAUDE.md) |
+| S-06 | [HOS-Fuck-Demo](S-06-HOS-Fuck-Demo/) | Markdown | AI 内容工业流水线：全自动输出内容包+PPT+音频+视频+项目注册 | [README](S-06-HOS-Fuck-Demo/README.md) |
+| S-07 | [HOS-IP-Writing](S-07-HOS-IP-Writing/) | Markdown | 知识产权写作系统：论文、专利、软著、书籍、博客、润色六大场景 | [README](S-07-HOS-IP-Writing/README.md) |
+| S-08 | [HOS-Micro-Biz](S-08-HOS-Micro-Biz/) | Markdown | 微商技术服务运营：服务设计 + 定价策略 + 获客文案 + 客户沟通 SOP + 订单管理 + 风控合规 | [README](S-08-HOS-Micro-Biz/README.md) |
+| S-09 | [HOS-Ops-Skills](S-09-HOS-Ops-Skills/) | Markdown | HOS 生态运营工具集：周报/日志/Release Notes/多平台适配/社区运营/品牌守护/微商运营 | [README](S-09-HOS-Ops-Skills/README.md) |
+| S-10 | [HOS-GH-ContribOS](S-10-HOS-GH-ContribOS/) | Markdown | GitHub 贡献操作系统：从项目创建到 PR 合并的完整开源贡献生命周期，双引擎 + 六角色视图 + 经验循环 | [README](S-10-HOS-GH-ContribOS/README.md) |
+| S-11 | [HOS-Paper-RedTeam](S-11-HOS-Paper-RedTeam/) | Markdown | 论文红队系统（HOS论文鞭尸局）：发现→审计→攻击→修复→研究机会，毒舌点评 + RVE 漏洞编号 | [README](S-11-HOS-Paper-RedTeam/README.md) |
 
 ---
 
@@ -66,7 +68,7 @@ cd HOS_SKILL_WORKFLOW
 ### 示例：使用 HOS-Sec-Engine
 
 ```bash
-cd 00-HOS-Sec-Engine
+cd S-00-HOS-Sec-Engine
 npm install
 npm run build
 npm start
@@ -75,7 +77,7 @@ npm start
 ### 示例：使用 HOS-Silly-Mock
 
 ```bash
-cd 04-HOS-Silly-Mock
+cd S-04-HOS-Silly-Mock
 npm install
 npm test
 ```
@@ -99,22 +101,22 @@ npm test
 
 ```
 HOS_SKILL_WORKFLOW/
-├── 00-HOS-Sec-Engine/          # 安全测试引擎 (TypeScript)
-├── 01-HOS-Save-Cost/           # AI 成本优化技能集
-├── 02-HOS-LIFE-OKR/            # 生活 OKR 学习引擎
-├── 03-HOS-Vibe-Guard/          # Vibe Coding 护栏
-├── 04-HOS-Silly-Mock/          # 反假数据检测器
-├── 05-HOS-XRG-Loop/            # 自稳定工程系统 (Shell)
-├── 06-HOS-Fuck-Demo/           # AI 内容工业流水线
-├── 07-HOS-IP-Writing/          # 知识产权写作系统
-├── 08-HOS-Micro-Biz/           # 微商技术服务运营
-├── 09-HOS-Ops-Skills/          # HOS 生态运营工具集
-├── 10-HOS-GH-ContribOS/        # GitHub 贡献操作系统
-├── 11-HOS-Paper-RedTeam/       # 论文红队系统（HOS论文鞭尸局）
-├── 12-HOS-Auto-Workflow/       # 自动化工作流配置 (YAML)
-├── 13-HOS-AI-Guardrail/        # AI 安全检测插件 (Python)
-├── 14-HOS-JSON-Prompts/        # JSON 开发模板
-├── 15-HOS-Human-Pass/          # 人工验证记录
+├── W-12-HOS-Auto-Workflow/       # 自动化工作流配置 (YAML)
+├── W-13-HOS-AI-Guardrail/        # AI 安全检测插件 (Python)
+├── W-14-HOS-JSON-Prompts/        # JSON 开发模板
+├── W-15-HOS-Human-Pass/          # 人工验证记录
+├── S-00-HOS-Sec-Engine/          # 安全测试引擎 (TypeScript)
+├── S-01-HOS-Save-Cost/           # AI 成本优化技能集
+├── S-02-HOS-LIFE-OKR/            # 生活 OKR 学习引擎
+├── S-03-HOS-Vibe-Guard/          # Vibe Coding 护栏
+├── S-04-HOS-Silly-Mock/          # 反假数据检测器
+├── S-05-HOS-XRG-Loop/            # 自稳定工程系统 (Shell)
+├── S-06-HOS-Fuck-Demo/           # AI 内容工业流水线
+├── S-07-HOS-IP-Writing/          # 知识产权写作系统
+├── S-08-HOS-Micro-Biz/           # 微商技术服务运营
+├── S-09-HOS-Ops-Skills/          # HOS 生态运营工具集
+├── S-10-HOS-GH-ContribOS/        # GitHub 贡献操作系统
+├── S-11-HOS-Paper-RedTeam/       # 论文红队系统（HOS论文鞭尸局）
 ├── .github/workflows/ci.yml    # CI 配置
 └── LICENSE.txt                 # MIT 许可证
 ```

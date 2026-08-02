@@ -1,0 +1,112 @@
+{
+  "skillsEnabled": true,
+  "autoActivation": true,
+  "skillsDirectory": ".kiro/skills/",
+  "skills": [
+    {
+      "id": "tfe",
+      "name": "Token First Engineering",
+      "file": "tfe-token-first-engineering.skill",
+      "priority": 1,
+      "enabled": true,
+      "autoActivate": true,
+      "applicableWhen": [
+        "writing-code",
+        "optimizing-cost",
+        "every-task"
+      ],
+      "keywords": [
+        "token-optimization",
+        "efficiency",
+        "minimal-context",
+        "cost-reduction"
+      ]
+    },
+    {
+      "id": "anpe",
+      "name": "AI Native Product Engineering",
+      "file": "anpe-ai-native-product-engineering.skill",
+      "priority": 2,
+      "enabled": true,
+      "autoActivate": true,
+      "applicableWhen": [
+        "new-project-setup",
+        "architecture-design",
+        "project-structure"
+      ],
+      "keywords": [
+        "ai-first-design",
+        "configuration-driven",
+        "asset-management",
+        "maintainability"
+      ],
+      "prerequisites": ["tfe"]
+    },
+    {
+      "id": "mra",
+      "name": "Minimal Refactor Architecture",
+      "file": "mra-minimal-refactor-architecture.skill",
+      "priority": 3,
+      "enabled": true,
+      "autoActivate": true,
+      "applicableWhen": [
+        "legacy-system-takeover",
+        "refactoring",
+        "bugfix-in-legacy-code"
+      ],
+      "keywords": [
+        "legacy-systems",
+        "refactoring",
+        "minimal-change",
+        "backward-compatibility"
+      ],
+      "prerequisites": ["tfe"]
+    },
+    {
+      "id": "cce",
+      "name": "Context Compression Engineering",
+      "file": "cce-context-compression-engineering.skill",
+      "priority": 4,
+      "enabled": true,
+      "autoActivate": true,
+      "applicableWhen": [
+        "large-codebases",
+        "100k-plus-lines",
+        "agent-onboarding",
+        "rag-systems"
+      ],
+      "keywords": [
+        "context-compression",
+        "large-codebases",
+        "memory-structure",
+        "information-architecture"
+      ],
+      "prerequisites": ["tfe", "anpe"]
+    }
+  ],
+  "activationRules": {
+    "defaultActivation": "tfe",
+    "contextScanning": {
+      "enabled": true,
+      "checkForProjectYaml": true,
+      "checkForLargeCodebase": true,
+      "checkForLegacyPatterns": true
+    },
+    "autoSuggest": {
+      "enabled": true,
+      "showRecommendedSkillAtTaskStart": true
+    }
+  },
+  "tokenBudgeting": {
+    "enabled": true,
+    "estimateBeforeCoding": true,
+    "trackTokenUsage": true,
+    "dailyBudgetLimit": null,
+    "warnThreshold": 100000
+  },
+  "documentation": {
+    "readmeFile": "README.md",
+    "showGuideOnFirstUse": true,
+    "integrationGuide": "README.md#integration-guide"
+  }
+}
