@@ -23,3 +23,6 @@ Thumbs.db
 
 # Spec documents
 .trae/specs/
+
+# Reasonix local tool config
+reasonix.toml

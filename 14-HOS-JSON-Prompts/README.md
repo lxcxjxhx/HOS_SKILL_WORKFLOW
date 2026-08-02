@@ -37,7 +37,7 @@ JSON Structured Prompts 是一个结构化的提示词工程框架，通过 15 �
 ```bash
 # 克隆仓库
 git clone <repository-url>
-cd 200-JSON结构化提示词
+cd 14-HOS-JSON-Prompts
 
 # 选择模板
 ls *.json
@@ -217,7 +217,7 @@ HOS-Silly-Mock (防假数据)
 ## 📋 文件结构
 
 ```
-200-JSON结构化提示词/
+14-HOS-JSON-Prompts/
 ├── README.md                          # 本文件
 ├── SKILL.md                           # 技能定义文档
 ├── AAA-develop-template.json          # 主模板（参考框架）

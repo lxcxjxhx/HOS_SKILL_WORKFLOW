@@ -1,5 +1,5 @@
 ---
-name: HOS-SAVE-COST
+name: HOS-Save-Cost
 version: 1.0.0
 description: AI 原生产品工程技能系统 — 四技能集成，最小化 Token 成本、上下文爆炸和维护负担
 author: HOS Team
@@ -23,7 +23,7 @@ metadata:
   confidence: 0.95
 ---
 
-# 💰 HOS-SAVE-COST
+# 💰 HOS-Save-Cost
 
 > AI 原生产品工程技能系统 — 四技能集成，最小化 Token 成本
 
@@ -71,7 +71,7 @@ metadata:
 git clone https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW.git
 
 # 进入目录
-cd HOS_SKILL_WORKFLOW/01-HOS-SAVE-COST
+cd HOS_SKILL_WORKFLOW/01-HOS-Save-Cost
 
 # 查看技能详情
 cat skills/README.md

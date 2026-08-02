@@ -28,7 +28,7 @@ HOS Skill Workflow 是一个面向 AI Agent、AI IDE、Claude Code、Codex、Cur
 | 编号 | 模块 | 语言 | 描述 | 文档 |
 |------|------|------|------|------|
 | 00 | [HOS-Sec-Engine](00-HOS-Sec-Engine/) | TypeScript | AI 原生安全测试引擎，流程模板 + 决策树 + CVE 集成 + MCP 管理层 | [README](00-HOS-Sec-Engine/README.md) |
-| 01 | [HOS-SAVE-COST](01-HOS-SAVE-COST/) | Markdown | AI 成本优化技能集：Token 优先工程、上下文压缩、最小重构架构 | [README](01-HOS-SAVE-COST/skills/README.md) |
+| 01 | [HOS-Save-Cost](01-HOS-Save-Cost/) | Markdown | AI 成本优化技能集：Token 优先工程、上下文压缩、最小重构架构 | [README](01-HOS-Save-Cost/skills/README.md) |
 | 02 | [HOS-LIFE-OKR](02-HOS-LIFE-OKR/) | Markdown | 生活 OKR 自动化学习引擎：OKR 驱动 + KPI 约束 + 时间切片 + 自动任务生成 | [SKILL.md](02-HOS-LIFE-OKR/SKILL.md) |
 | 03 | [HOS-Vibe-Guard](03-HOS-Vibe-Guard/) | TypeScript | 防 Vibe Coding 退化护栏：选题质量检测 + 架构升级引擎 + 安全护栏 | [README](03-HOS-Vibe-Guard/README.md) |
 | 04 | [HOS-Silly-Mock](04-HOS-Silly-Mock/) | TypeScript | 反假数据/反正则现实强制层：阻止 AI 伪造系统可运行性 | [README](04-HOS-Silly-Mock/README.md) |
@@ -36,13 +36,13 @@ HOS Skill Workflow 是一个面向 AI Agent、AI IDE、Claude Code、Codex、Cur
 | 06 | [HOS-Fuck-Demo](06-HOS-Fuck-Demo/) | Markdown | AI 内容工业流水线：全自动输出内容包+PPT+音频+视频+项目注册 | [README](06-HOS-Fuck-Demo/README.md) |
 | 07 | [HOS-IP-Writing](07-HOS-IP-Writing/) | Markdown | 知识产权写作系统：论文、专利、软著、书籍、博客、润色六大场景 | [README](07-HOS-IP-Writing/README.md) |
 | 08 | [HOS-Micro-Biz](08-HOS-Micro-Biz/) | Markdown | 微商技术服务运营：服务设计 + 定价策略 + 获客文案 + 客户沟通 SOP + 订单管理 + 风控合规 | [README](08-HOS-Micro-Biz/README.md) |
-| 09 | [HOS-Content-Engine](09-HOS-Content-Engine/) | Markdown | AI 安全实验室内容引擎：4D 内容模型（Discover→Dissect→Develop→Document）+ 六大内容支柱 + B站视频脚本生成 | [README](09-HOS-Content-Engine/README.md) |
-| 09b | [HOS-Ops-Skills](09-HOS-Ops-Skills/) | Markdown | HOS 生态运营工具集：周报/日志/Release Notes/多平台适配/社区运营/品牌守护/微商运营 | [README](09-HOS-Ops-Skills/README.md) |
+| 09 | [HOS-Ops-Skills](09-HOS-Ops-Skills/) | Markdown | HOS 生态运营工具集：周报/日志/Release Notes/多平台适配/社区运营/品牌守护/微商运营 | [README](09-HOS-Ops-Skills/README.md) |
+| 10 | [HOS-GH-ContribOS](10-HOS-GH-ContribOS/) | Markdown | GitHub 贡献操作系统：从项目创建到 PR 合并的完整开源贡献生命周期，双引擎 + 六角色视图 + 经验循环 | [README](10-HOS-GH-ContribOS/README.md) |
 | 11 | [HOS-Paper-RedTeam](11-HOS-Paper-RedTeam/) | Markdown | 论文红队系统（HOS论文鞭尸局）：发现→审计→攻击→修复→研究机会，毒舌点评 + RVE 漏洞编号 | [README](11-HOS-Paper-RedTeam/README.md) |
-| 100 | [HOS-AUTO-WORKFLOW](100-HOS-AUTO-WORKFLOW/) | YAML | 自动化工作流配置：报告撰写工具 + 配置手册 | - |
-| 101 | [HOS-AI Guardrail](101-HOS-AI%20Guardrail/) | Python | AI 安全检测插件：文本/文件/图片输入输出检测，FastAPI 实现 | - |
-| 200 | [JSON结构化提示词](200-JSON%E7%BB%93%E6%9E%84%E5%8C%96%E6%8F%90%E7%A4%BA%E8%AF%8D/) | JSON | 开发模板集合：项目、安全、测试、运营、模型、考试等场景 | - |
-| 300 | [HUMAN-PASS](300-HUMAN-PASS/) | Text | 人工验证通过记录 | - |
+| 12 | [HOS-Auto-Workflow](12-HOS-Auto-Workflow/) | YAML | 自动化工作流配置：报告撰写工具 + 配置手册 | - |
+| 13 | [HOS-AI-Guardrail](13-HOS-AI-Guardrail/) | Python | AI 安全检测插件：文本/文件/图片输入输出检测，FastAPI 实现 | - |
+| 14 | [HOS-JSON-Prompts](14-HOS-JSON-Prompts/) | JSON | 开发模板集合：项目、安全、测试、运营、模型、考试等场景 | - |
+| 15 | [HOS-Human-Pass](15-HOS-Human-Pass/) | Text | 人工验证通过记录 | - |
 
 ---
 
@@ -100,7 +100,7 @@ npm test
 ```
 HOS_SKILL_WORKFLOW/
 ├── 00-HOS-Sec-Engine/          # 安全测试引擎 (TypeScript)
-├── 01-HOS-SAVE-COST/           # AI 成本优化技能集
+├── 01-HOS-Save-Cost/           # AI 成本优化技能集
 ├── 02-HOS-LIFE-OKR/            # 生活 OKR 学习引擎
 ├── 03-HOS-Vibe-Guard/          # Vibe Coding 护栏
 ├── 04-HOS-Silly-Mock/          # 反假数据检测器
@@ -108,13 +108,13 @@ HOS_SKILL_WORKFLOW/
 ├── 06-HOS-Fuck-Demo/           # AI 内容工业流水线
 ├── 07-HOS-IP-Writing/          # 知识产权写作系统
 ├── 08-HOS-Micro-Biz/           # 微商技术服务运营
-├── 09-HOS-Content-Engine/      # AI 安全实验室内容引擎 (4D 内容模型)
 ├── 09-HOS-Ops-Skills/          # HOS 生态运营工具集
+├── 10-HOS-GH-ContribOS/        # GitHub 贡献操作系统
 ├── 11-HOS-Paper-RedTeam/       # 论文红队系统（HOS论文鞭尸局）
-├── 100-HOS-AUTO-WORKFLOW/      # 自动化工作流配置 (YAML)
-├── 101-HOS-AI Guardrail/       # AI 安全检测插件 (Python)
-├── 200-JSON结构化提示词/        # JSON 开发模板
-├── 300-HUMAN-PASS/             # 人工验证记录
+├── 12-HOS-Auto-Workflow/       # 自动化工作流配置 (YAML)
+├── 13-HOS-AI-Guardrail/        # AI 安全检测插件 (Python)
+├── 14-HOS-JSON-Prompts/        # JSON 开发模板
+├── 15-HOS-Human-Pass/          # 人工验证记录
 ├── .github/workflows/ci.yml    # CI 配置
 └── LICENSE.txt                 # MIT 许可证
 ```

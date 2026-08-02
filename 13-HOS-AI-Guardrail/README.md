@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛡️ HOS-AI Guardrail
+# 🛡️ HOS-AI-Guardrail
 
 **AI 安全围栏 — 输入输出双向安全检测与策略引擎**
 
@@ -33,7 +33,7 @@
 
 ## 🎯 概述
 
-HOS-AI Guardrail 是一个全面的 AI 安全检测系统，基于 FastAPI 构建。系统对输入提示词和模型输出进行双向检测与过滤，确保内容符合安全策略。
+HOS-AI-Guardrail 是一个全面的 AI 安全检测系统，基于 FastAPI 构建。系统对输入提示词和模型输出进行双向检测与过滤，确保内容符合安全策略。
 
 **核心功能：**
 - 🔍 实时检测提示词注入攻击
@@ -101,7 +101,7 @@ default:
 ## 📁 文件结构
 
 ```
-101-HOS-AI Guardrail/
+13-HOS-AI-Guardrail/
 ├── SKILL.md                    # 技能元数据
 ├── README.md                   # 项目说明文档（本文件）
 ├── main.py                     # FastAPI 入口
@@ -144,7 +144,7 @@ default:
 ```bash
 # 1. 克隆项目
 git clone <repo-url>
-cd "101-HOS-AI Guardrail"
+cd "13-HOS-AI-Guardrail"
 
 # 2. 安装依赖
 pip install fastapi uvicorn pyyaml httpx loguru
