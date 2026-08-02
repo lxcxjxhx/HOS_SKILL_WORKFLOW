@@ -20,6 +20,7 @@ import { scanCodeFile, saveCodeData } from './analyzers/code.ts';
 import { chunkText } from './chunker.ts';
 import { validateReport } from './core/validate.ts';
 import { render } from './render.ts';
+import { renderHtml } from './render-html.ts';
 import { loadStore, recordReview, toStoreFinding } from './store.ts';
 import { emitEvent, enableEvents } from './events.ts';
 import { treeSitterDetector } from './detectors/tree-sitter.ts';
@@ -34,7 +35,8 @@ const USAGE = `用法:
   node scripts/cli.ts chunk <file> --type article|paper|repo|proposal|license|dataset [--lang ts|py|...] [--out <dir>]
   node scripts/cli.ts run <type> <target> --until discovery|chunk|analyze [--lang ts|py|...] [--out <dir>]
   node scripts/cli.ts validate <review.json>
-  node scripts/cli.ts render <review.json> [--mode quick|expert|academic] [--out <file>]
+  node scripts/cli.ts render <review.json> [--mode quick|expert|academic] [--format md|html|pdf|auto] [--out <file>]
+  node scripts/cli.ts extract pdf <file.pdf> [--mode auto|text|structured|docx|ocr] [--arxiv <id>] [--out <dir>]
   node scripts/cli.ts store <review.json> [--dir database]`;
 
 function parseArgs(argv: string[]): Record<string, string> {
@@ -245,6 +247,34 @@ async function cmdFetchPaperPdf(file: string, out: string): Promise<void> {
   console.log(`OUT=${resolve(out)}`);
 }
 
+/** extract pdf：暴露 v2 提取管线（structured/docx/ocr 降级链 + tex 源优先），输出含 quality 自检 */
+async function cmdExtractPdf(file: string, mode: string, arxivId: string | undefined, out: string | undefined): Promise<void> {
+  const args = ['scripts/tools/pdf-extract.py', file, '--mode', mode];
+  if (arxivId) args.push('--arxiv', arxivId);
+  const r = spawnSync('python', args, {
+    encoding: 'utf8', timeout: 300_000,
+    env: { ...process.env, PYTHONIOENCODING: 'utf-8', PYTHONUTF8: '1' },
+    windowsHide: true,
+  });
+  if (r.status !== 0 || !r.stdout) {
+    let msg = (r.stderr || r.stdout || '').slice(0, 300);
+    try { msg = JSON.parse((r.stdout || r.stderr || '').trim()).error || msg; } catch { /* 保留原始错误 */ }
+    throw new Error(`PDF 提取失败（需 python + pymupdf）: ${msg}`);
+  }
+  // 容错：stdout 可能混入非 JSON 行（如第三方库提示），取第一个 { 之后的内容解析
+  const jsonStart = r.stdout.indexOf('{');
+  const res = JSON.parse(jsonStart >= 0 ? r.stdout.slice(jsonStart) : r.stdout);
+  if (out) {
+    await mkdir(`${out}/data`, { recursive: true });
+    const target = `${out}/data/paper-pdf.json`;
+    await writeFile(target, JSON.stringify({ file, total_pages: res.total_pages, text: res.text, pages: res.pages, quality: res.quality }, null, 2) + '\n', 'utf8');
+    console.log(`EXTRACT-PDF=${file} MODE=${res.quality?.mode_used ?? mode} LAYOUT=${res.quality?.layout ?? 'n/a'} PAGES=${res.total_pages} CHARS/PP=${res.quality?.char_per_page ?? 'n/a'} TABLES=${res.quality?.table_count ?? 'n/a'} FORMULAS=${res.quality?.formula_count ?? 'n/a'} DEGRAD=${res.quality?.warnings?.length ?? 0}`);
+    console.log(`OUT=${resolve(target)}`);
+  } else {
+    console.log(JSON.stringify(res, null, 2));
+  }
+}
+
 async function cmdChunk(file: string, type: string, lang: string | undefined, out: string | undefined, useTsDetector = true): Promise<void> {
   let text: string;
   let chunkType: string = type;
@@ -287,8 +317,34 @@ async function cmdValidate(file: string): Promise<void> {
   }
 }
 
-async function cmdRender(file: string, mode: string, out: string | undefined): Promise<void> {
+async function cmdRender(file: string, mode: string, out: string | undefined, format = 'auto'): Promise<void> {
   const r = await readJson(file);
+  if (format === 'auto') {
+    const ext = out ? out.toLowerCase().split('.').pop() : '';
+    format = ext === 'html' ? 'html' : ext === 'pdf' ? 'pdf' : 'md';
+  }
+  if (format === 'html') {
+    const html = renderHtml(r, mode);
+    if (out) {
+      await mkdir(dirname(out), { recursive: true });
+      await writeFile(out, html + '\n', 'utf8');
+      console.log(`RENDER=${mode} HTML OK → ${resolve(out)}`);
+    } else console.log(html);
+    return;
+  }
+  if (format === 'pdf') {
+    // HTML → PDF 走本地脚本（render-pdf.py 降级链），不消耗 LLM token
+    const htmlPath = out ? out.replace(/\.pdf$/i, '') + '.html' : `${file}.render.html`;
+    await mkdir(dirname(htmlPath), { recursive: true });
+    await writeFile(htmlPath, renderHtml(r, mode) + '\n', 'utf8');
+    const pdfOut = out ?? htmlPath.replace(/\.html$/i, '.pdf');
+    const r2 = spawnSync('python', ['scripts/tools/render-pdf.py', htmlPath, '--out', pdfOut], {
+      encoding: 'utf8', timeout: 180_000, windowsHide: true,
+    });
+    if (r2.status !== 0) throw new Error(`PDF 渲染失败（需 weasyprint/playwright/Edge/Chrome）: ${(r2.stderr || r2.stdout || '').slice(0, 300)}`);
+    console.log(`RENDER=${mode} PDF OK → ${resolve(pdfOut)}`);
+    return;
+  }
   const md = render(r, mode);
   if (out) {
     await mkdir(dirname(out), { recursive: true });
@@ -420,7 +476,11 @@ async function main(): Promise<void> {
     case 'chunk': await cmdChunk(sub, opts.type ?? 'article', opts.lang, opts.out, opts['no-tree-sitter'] !== 'true'); break;
     case 'run': await cmdRun(sub, target, opts.out ?? '.', opts.until ?? 'analyze', opts.lang); break;
     case 'validate': await cmdValidate(sub); break;
-    case 'render': await cmdRender(sub, opts.mode ?? 'quick', opts.out); break;
+    case 'render': await cmdRender(sub, opts.mode ?? 'quick', opts.out, opts.format ?? 'auto'); break;
+    case 'extract':
+      if (sub === 'pdf') await cmdExtractPdf(target, opts.mode ?? 'auto', opts.arxiv, opts.out);
+      else throw new Error('extract 子命令: pdf（tex 源优先，见 scripts/tools/tex-fetch.py）');
+      break;
     case 'store': await cmdStore(sub, opts.dir ?? 'database'); break;
     default: throw new Error(`未知命令 ${cmd}\n${USAGE}`);
   }

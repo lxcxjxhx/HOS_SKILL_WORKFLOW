@@ -49,6 +49,14 @@ pip install pymupdf    # 安装 PyMuPDF（论文 PDF 解析）
 node scripts/cli.ts --help
 node scripts/cli.ts run license LICENSE.txt --until analyze --events
 node scripts/calibrate.ts --online    # 基准集校准
+
+# 论文输入：tex 源优先，PDF 多级降级链（structured/docx/ocr，详见 docs/09）
+python scripts/tools/tex-fetch.py 2306.00491 --out out/paper.json
+node scripts/cli.ts extract pdf paper.pdf --mode auto --out out/
+
+# 报告输出：美观 HTML / PDF（零 LLM token 消耗，详见 docs/09）
+node scripts/cli.ts render review.json --mode expert --format html --out out/report.html
+node scripts/cli.ts render review.json --mode expert --format pdf  --out out/report.pdf
 ```
 
 ## 核心能力
@@ -57,7 +65,7 @@ node scripts/calibrate.ts --online    # 基准集校准
 - **泛化切片引擎 v2**：一套语义管线适用全部对象类型，单元细化到语义块并带角色标注（claim/evidence/method/…）；tree-sitter / PyMuPDF 等工具按需注入（**干什么事调用什么工具**）
 - **六维评分**：Technical / Innovation / Engineering / Ecosystem / Risk / Strategic，跨对象可比
 - **独立编号体系**：`HCR-<CLASS>-YYYY-NNNN`，评审记录持久化 Review Store
-- **可编程输出**：Quick / Expert / Academic 三报告模板 + 机器 JSON + 事件流（`--events`）+ MCP server
+- **可编程输出**：Quick / Expert / Academic 三报告模板 + 机器 JSON + 事件流（`--events`）+ MCP server；`render --format html|pdf` 一键出美观网页 / PDF（script 完成，不额外消耗 LLM token）
 
 ## 文档
 
