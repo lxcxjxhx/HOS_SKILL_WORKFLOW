@@ -120,7 +120,7 @@ HOS_SKILL_WORKFLOW/
 ├── S-11-HOS-Paper-RedTeam/       # 论文红队系统（HOS论文鞭尸局）
 ├── S-12-HOS-Critic-Review/       # 六维批判式评审引擎（HOS-Critic-Review）
 ├── .github/workflows/ci.yml    # CI 配置
-└── LICENSE.txt                 # MIT 许可证
+└── LICENSE                    # AGPLv3 许可证
 ```
 
 ---
@@ -141,9 +141,6 @@ skill-name/
 
 ---
 
-## 许可证
-
-MIT License — 详见 [LICENSE.txt](LICENSE.txt)
 
 
 ## License (许可证)
