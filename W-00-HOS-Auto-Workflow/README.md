@@ -56,7 +56,7 @@ HOS-Auto-Workflow 提供基于 Dify 平台的自动化工作流配置，用于 A
 
 ```bash
 # 在 Cursor 中添加技能
-# 导入 W-12-HOS-Auto-Workflow 目录
+# 导入 W-00-HOS-Auto-Workflow 目录
 ```
 
 #### 通用安装
@@ -66,7 +66,7 @@ HOS-Auto-Workflow 提供基于 Dify 平台的自动化工作流配置，用于 A
 git clone <repository-url>
 
 # 进入技能目录
-cd W-12-HOS-Auto-Workflow
+cd W-00-HOS-Auto-Workflow
 
 # 技能会自动被 AI IDE 识别和加载
 ```
@@ -132,7 +132,7 @@ OPENAI_API_KEY=your-openai-key
 ## 🏗️ 架构
 
 ```
-W-12-HOS-Auto-Workflow/
+W-00-HOS-Auto-Workflow/
 ├── SKILL.md                          # 技能定义文件
 ├── README.md                         # 本文件 — 使用指南
 ├── HOS自动化报告撰写工具 v0.1.yml     # Dify 工作流配置

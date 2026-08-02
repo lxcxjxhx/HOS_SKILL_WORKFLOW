@@ -29,10 +29,10 @@ HOS Skill Workflow 是一个面向 AI Agent、AI IDE、Claude Code、Codex、Cur
 
 | 编号 | 模块 | 语言 | 描述 | 文档 |
 |------|------|------|------|------|
-| W-12 | [HOS-Auto-Workflow](W-12-HOS-Auto-Workflow/) | YAML | 自动化工作流配置：报告撰写工具 + 配置手册 | - |
-| W-13 | [HOS-AI-Guardrail](W-13-HOS-AI-Guardrail/) | Python | AI 安全检测插件：文本/文件/图片输入输出检测，FastAPI 实现 | - |
-| W-14 | [HOS-JSON-Prompts](W-14-HOS-JSON-Prompts/) | JSON | 开发模板集合：项目、安全、测试、运营、模型、考试等场景 | - |
-| W-15 | [HOS-Human-Pass](W-15-HOS-Human-Pass/) | Text | 人工验证通过记录 | - |
+| W-00 | [HOS-Auto-Workflow](W-00-HOS-Auto-Workflow/) | YAML | 自动化工作流配置：报告撰写工具 + 配置手册 | - |
+| W-01 | [HOS-AI-Guardrail](W-01-HOS-AI-Guardrail/) | Python | AI 安全检测插件：文本/文件/图片输入输出检测，FastAPI 实现 | - |
+| W-02 | [HOS-JSON-Prompts](W-02-HOS-JSON-Prompts/) | JSON | 开发模板集合：项目、安全、测试、运营、模型、考试等场景 | - |
+| W-03 | [HOS-Human-Pass](W-03-HOS-Human-Pass/) | Text | 人工验证通过记录 | - |
 | S-00 | [HOS-Sec-Engine](S-00-HOS-Sec-Engine/) | TypeScript | AI 原生安全测试引擎，流程模板 + 决策树 + CVE 集成 + MCP 管理层 | [README](S-00-HOS-Sec-Engine/README.md) |
 | S-01 | [HOS-Save-Cost](S-01-HOS-Save-Cost/) | Markdown | AI 成本优化技能集：Token 优先工程、上下文压缩、最小重构架构 | [README](S-01-HOS-Save-Cost/skills/README.md) |
 | S-02 | [HOS-LIFE-OKR](S-02-HOS-LIFE-OKR/) | Markdown | 生活 OKR 自动化学习引擎：OKR 驱动 + KPI 约束 + 时间切片 + 自动任务生成 | [SKILL.md](S-02-HOS-LIFE-OKR/SKILL.md) |
@@ -101,10 +101,10 @@ npm test
 
 ```
 HOS_SKILL_WORKFLOW/
-├── W-12-HOS-Auto-Workflow/       # 自动化工作流配置 (YAML)
-├── W-13-HOS-AI-Guardrail/        # AI 安全检测插件 (Python)
-├── W-14-HOS-JSON-Prompts/        # JSON 开发模板
-├── W-15-HOS-Human-Pass/          # 人工验证记录
+├── W-00-HOS-Auto-Workflow/       # 自动化工作流配置 (YAML)
+├── W-01-HOS-AI-Guardrail/        # AI 安全检测插件 (Python)
+├── W-02-HOS-JSON-Prompts/        # JSON 开发模板
+├── W-03-HOS-Human-Pass/          # 人工验证记录
 ├── S-00-HOS-Sec-Engine/          # 安全测试引擎 (TypeScript)
 ├── S-01-HOS-Save-Cost/           # AI 成本优化技能集
 ├── S-02-HOS-LIFE-OKR/            # 生活 OKR 学习引擎

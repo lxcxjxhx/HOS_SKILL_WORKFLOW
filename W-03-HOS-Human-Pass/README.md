@@ -1,4 +1,4 @@
-# 🤖 W-15-HOS-Human-Pass
+# 🤖 W-03-HOS-Human-Pass
 
 > Human Verification Testing Skill for Security Assessment
 
@@ -112,7 +112,7 @@ HOS-Human-Pass 是一个专注于人机验证机制和机器人检测系统的�
 ## 📁 文件结构
 
 ```
-W-15-HOS-Human-Pass/
+W-03-HOS-Human-Pass/
 ├── SKILL.md                      # 技能元数据（本文件）
 ├── README.md                     # 项目文档
 ├── src/

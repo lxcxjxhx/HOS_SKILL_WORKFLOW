@@ -34,7 +34,7 @@ HOS-Auto-Workflow 提供基于 Dify 平台的自动化工作流配置，用于 A
 ## 三、文件结构
 
 ```
-W-12-HOS-Auto-Workflow/
+W-00-HOS-Auto-Workflow/
 ├── SKILL.md                          # 本文件
 ├── README.md                         # 使用指南
 ├── HOS自动化报告撰写工具 v0.1.yml     # Dify 工作流配置
