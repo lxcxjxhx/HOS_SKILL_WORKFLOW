@@ -122,7 +122,7 @@ jobs:
     strategy:
       matrix:
         module:
-          - W-13-HOS-AI-Guardrail
+          - W-01-HOS-AI-Guardrail
       fail-fast: false
 
     steps:

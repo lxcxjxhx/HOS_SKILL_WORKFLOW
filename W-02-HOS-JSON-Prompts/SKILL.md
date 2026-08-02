@@ -71,7 +71,7 @@ All templates enforce consistent writing standards:
 ## File Structure
 
 ```
-W-14-HOS-JSON-Prompts/
+W-02-HOS-JSON-Prompts/
 ├── AAA-develop-template.json          # Master template with adaptive instructions
 ├── develop-article.json               # Article writing template
 ├── develop-article-code.json          # Article with code examples template

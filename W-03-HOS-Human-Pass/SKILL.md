@@ -90,7 +90,7 @@ Evaluation of risk control systems and decision engines:
 ## File Structure
 
 ```
-W-15-HOS-Human-Pass/
+W-03-HOS-Human-Pass/
 ├── SKILL.md                      # Skill metadata (this file)
 ├── README.md                     # Project documentation
 ├── src/

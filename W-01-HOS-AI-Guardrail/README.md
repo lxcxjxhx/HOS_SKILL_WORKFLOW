@@ -101,7 +101,7 @@ default:
 ## 📁 文件结构
 
 ```
-W-13-HOS-AI-Guardrail/
+W-01-HOS-AI-Guardrail/
 ├── SKILL.md                    # 技能元数据
 ├── README.md                   # 项目说明文档（本文件）
 ├── main.py                     # FastAPI 入口
@@ -144,7 +144,7 @@ W-13-HOS-AI-Guardrail/
 ```bash
 # 1. 克隆项目
 git clone <repo-url>
-cd "W-13-HOS-AI-Guardrail"
+cd "W-01-HOS-AI-Guardrail"
 
 # 2. 安装依赖
 pip install fastapi uvicorn pyyaml httpx loguru
