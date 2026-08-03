@@ -13,10 +13,10 @@
 ## 3. 执行步骤
 
 1. 组装 `ReviewReport` JSON（严格按 [schemas/review-report.schema.json](../schemas/review-report.schema.json)）；
-2. 按模式套用模板渲染人类报告（[templates/](../templates/)）；
+2. 按模式套用模板渲染人类报告（[templates/](../templates/)）——**默认输出单文件 HTML**（`output_format: html`，`render-html.ts` 内联 CSS 渲染，评分卡/维度条/徽章），可由 `render --format md|pdf` 覆盖；
 3. 校验 JSON 通过 Schema；
 4. 写入 Review Store（[database/](../database/)）：`reviews.json`（索引）、`findings.json`（HCR-FIND 登记）、`objects.json`（对象档案）；
-5. 输出：人类报告（默认 Quick 置顶评分卡）+ JSON。
+5. 输出：人类报告（默认 Quick 模板，HTML 渲染置顶评分卡）+ JSON。
 
 ## 4. 输出 `ReviewReport`
 
@@ -41,7 +41,7 @@
 | `expert` | 执行摘要 + 六维 + Findings + Evidence + Critiques + 建议 | [templates/expert.md](../templates/expert.md) |
 | `academic` | 论文决策 + Reviewer 总结 + 阻塞问题 + 修改建议 | [templates/academic.md](../templates/academic.md) |
 
-**铁律**：无论哪种模式，评分卡（分数 + 一句话 + 维度条）必须出现在最顶部；长文靠后。
+**铁律**：无论哪种模式，评分卡（分数 + 一句话 + 维度条）必须出现在最顶部；长文靠后。**交付物默认是 HTML**（`render-html.ts`），Markdown 模板是渲染数据源而非交付格式。
 
 ## 6. 质量门槛
 

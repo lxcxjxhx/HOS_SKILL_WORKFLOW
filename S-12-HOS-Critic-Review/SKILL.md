@@ -38,16 +38,18 @@ Discovery → Chunk → Analyzer → Evidence → Critic → Judge → Report
 3. **攻击对象，不攻击人**：可骂方法/证据/实验/设计，禁止对作者/团队人格攻击。
 4. **先复述后拆台**：先中性复述对象声称，再逐条攻击（声称 → 证据 → 缺口）。
 5. **结尾必须认可**：至少一条「认可点」，毒舌文档不能纯喷。
-6. **降级不撒谎**：工具缺失/网络失败必须写入 `degradations`，不许假装查证过。
+6. **降级不撒谎**：工具缺失/网络失败必须写入 `degradations`，不许假装查证过；**反过来也不许偷懒**——网络可用时未尝试核验 arXiv/GitHub/DOI 就标 `unverifiable`，同样是违规（Evidence-Agent 联网核验为默认动作）。
 7. **打分必须可复核**：每个维度分引用 finding/critique id，公式见 [references/score-model.md](references/score-model.md)。
 
 ## 四、执行路径
 
 1. **读入输入**（URL / 文件路径 / 粘贴文本 / JSON 载荷），走 [Discovery](agents/01-discovery.md)；
-2. 按类型选择切片策略（[chunk-engine/](chunk-engine/)）与分析器（[references/](references/) 内置清单）；
-3. 顺序执行七步，每步产物按 [schemas/](schemas/) 校验后进入下一步；
-4. 输出：人类报告（默认 Quick）+ 机器 JSON + 写入 [database/](database/) Review Store；报告格式可一键升级为美观网页 / PDF（见 §五 与 [docs/09](docs/09-extraction-and-rendering.md)，由 script 完成、不额外消耗 LLM token）；
+2. 按类型选择切片策略（[chunk-engine/](chunk-engine/)）与分析器（[references/](references/) 内置清单）；`paper`/`repo` 对象在 Discovery 阶段提取 arXiv ID / GitHub URL / DOI 等可核验锚点；
+3. 顺序执行七步，每步产物按 [schemas/](schemas/) 校验后进入下一步；Evidence 阶段对锚点做联网核验（arXiv abs / GitHub API / DOI），失败才降级；
+4. 输出：人类报告（默认 Quick 模板，**渲染为单文件 HTML**——`output_format: html` 为默认，见 [config.yaml](config.yaml)）+ 机器 JSON + 写入 [database/](database/) Review Store；HTML 可一键再转 PDF（见 §五 与 [docs/09](docs/09-extraction-and-rendering.md)，均由 script 完成、不额外消耗 LLM token）；
 5. 输出语言跟随用户；默认中文。
+
+**⚠ 网络核验为默认动作（Evidence-Agent 铁律）**：对 `paper`/`repo` 类对象，必须尝试联网核验 arXiv 元数据（标题/版本/发表状态/代码链接）、GitHub 仓库、DOI/Zenodo 等官方来源——论文自带 arXiv 链接与开源仓库时，核验这些链接**不是可选增强，而是 Evidence 阶段的必做步骤**。只有**已尝试且失败**才允许标 `unverifiable`（写「查不到，证据缺口」）；未尝试联网就标 unverifiable 属于流程缺陷。详见 [agents/04-evidence.md](agents/04-evidence.md)。
 
 **最小可用路径**：对象仅需快速评审时，可从 Chunk/Analyzer 起步（跳过外部抓取步骤），但 Critic + Judge + Report 必跑。
 
@@ -63,8 +65,8 @@ Discovery → Chunk → Analyzer → Evidence → Critic → Judge → Report
 
 | 格式 | 说明 |
 |------|------|
-| `md` | Markdown（默认，`render.ts`） |
-| `html` | 单文件美观网页（`render-html.ts`，内联 CSS，评分卡/维度条/徽章） |
+| `md` | Markdown（`render.ts`，机器友好） |
+| `html` | 单文件美观网页（`render-html.ts`，内联 CSS，评分卡/维度条/徽章）——**默认输出格式**（`output_format: html`，可由 `render --format` 覆盖） |
 | `pdf` | HTML → PDF（`render-pdf.py`，零 LLM token，weasyprint→playwright→Edge/Chrome 降级链） |
 
 ## 六、配置

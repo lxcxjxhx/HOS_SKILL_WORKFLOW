@@ -8,14 +8,22 @@
 
 ## 2. 输入
 
-`Finding[]` + 可访问校验源（M1：本地文件为主；有网络时可选 GitHub API / Semantic Scholar）。
+`Finding[]` + 可访问校验源（本地文件为主；**网络核验为默认动作**，见 §3）。
+
+> **网络核验不是可选增强**：`paper`/`repo` 对象必须尝试核验官方来源——arXiv abs 页（标题/版本/发表状态/代码链接）、GitHub API（仓库存在性/star/commit/LICENSE）、DOI/Zenodo 记录。宿主具备网络能力时必须执行；无网络属降级，须写入 `degradations`。
 
 ## 3. 执行步骤
 
 1. 逐条 Finding 定位可核验点（数字、链接、依赖、引用）；
-2. 尝试校验：本地文件核对 → 网络 API（若可用）→ 宿主已知事实（标 low 置信）；
+2. 尝试校验（**顺序执行，前一级失败才降级下一级**）：
+   1. **官方源联网核验**（arXiv abs / GitHub API / DOI / Zenodo）——paper/repo 对象默认必做；
+   2. 本地文件核对；
+   3. 缓存（TTL 内同目标复用）；
+   4. 宿主已知事实（标 low 置信）；
 3. 判定 `status` 并记录来源；
 4. 需要时生成 `adjustment`（严重度修正），修正必须先于 Critic/Judge 生效。
+
+**判定纪律**：`unverifiable` 只允许出现在「已尝试官方源/本地核对均无结果」之后；未尝试联网就标 `unverifiable` 视为流程缺陷（`degradations` 记为 `evidence_network_skipped`）。
 
 ## 4. 输出 `EvidenceResult`
 
@@ -52,7 +60,8 @@
 1. 每条 Finding 必须挂 ≥1 条 EvidenceRecord（含 `unverifiable`），覆盖率 100%；
 2. **查不到 ≠ 不存在**：写「查不到，证据缺口」，禁止编造核验结果；
 3. `refuted` 必须给反证来源；
-4. 无网络时不得假装 API 校验——一律 `unverifiable` 或基于本地文件 `verified/refuted`。
+4. **无网络时不得假装 API 校验**——一律 `unverifiable` 或基于本地文件 `verified/refuted`，且必须写入 `degradations`；
+5. **网络可用时不得跳过官方源核验**——arXiv/GitHub/DOI 锚点未核验就标 `unverifiable` 属违规；「别人在 arXiv 挂了链接你不去读，然后说查不到」是流程缺陷，不是证据缺口。
 
 ## 6. 质量门槛
 
@@ -63,5 +72,7 @@
 ## 7. 降级链
 
 ```
-一手来源（本地文件/官方 API）→ 缓存 → 宿主已知事实（low 置信）→ unverifiable
+官方源联网核验（arXiv abs / GitHub API / DOI / Zenodo）→ 本地文件 → 缓存 → 宿主已知事实（low 置信）→ unverifiable
 ```
+
+> 网络不可用属**降级**而非默认路径：必须在 `degradations` 记录「网络不可用，官方源未核验」，并把原本可核验的锚点列为「因降级未核验」，而不是直接宣称「查不到」。

@@ -54,9 +54,12 @@ node scripts/calibrate.ts --online    # 基准集校准
 python scripts/tools/tex-fetch.py 2306.00491 --out out/paper.json
 node scripts/cli.ts extract pdf paper.pdf --mode auto --out out/
 
-# 报告输出：美观 HTML / PDF（零 LLM token 消耗，详见 docs/09）
-node scripts/cli.ts render review.json --mode expert --format html --out out/report.html
-node scripts/cli.ts render review.json --mode expert --format pdf  --out out/report.pdf
+# 报告输出：默认单文件 HTML（零 LLM token），可再转 PDF（详见 docs/09）
+node scripts/cli.ts render review.json --mode expert --out out/report.html        # 缺省 --format = html
+node scripts/cli.ts render review.json --mode expert --format pdf --out out/report.pdf
+
+> **论文评审默认联网核验**：Evidence-Agent 对 paper/repo 对象必须核验 arXiv abs 页（标题/版本/发表状态）、GitHub 仓库、DOI/Zenodo——论文自带链接不是可选项，未尝试联网就标「无法验证」属流程缺陷。详见 [agents/04-evidence.md](S-12-HOS-Critic-Review/agents/04-evidence.md)。
+
 ```
 
 ## 核心能力

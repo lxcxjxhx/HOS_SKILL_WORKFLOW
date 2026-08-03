@@ -4,10 +4,12 @@
  *   node scripts/cli.ts fetch github <owner/repo> --out <dir>
  *   node scripts/cli.ts fetch paper <query> [--paper-id <id>] --out <dir>
  *   node scripts/cli.ts validate <review.json>
- *   node scripts/cli.ts render <review.json> [--mode quick|expert|academic] [--out <file>]
+ *   node scripts/cli.ts render <review.json> [--mode quick|expert|academic] [--format md|html|pdf|auto] [--out <file>]
+ * # 缺省 --format = html（与 config.yaml#output_format 一致）；auto 按 --out 后缀推断
  *   node scripts/cli.ts store <review.json> [--dir database]
  *
  * 定位：辅助脚本层（拉数据/校验/渲染/持久化），智能环节（Critic/Judge/毒舌）由宿主执行。
+ * 默认输出格式 html（与 config.yaml#output_format 一致），--format 可覆盖；渲染零额外 LLM token。
  */
 import { spawnSync } from 'node:child_process';
 import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
@@ -36,6 +38,7 @@ const USAGE = `用法:
   node scripts/cli.ts run <type> <target> --until discovery|chunk|analyze [--lang ts|py|...] [--out <dir>]
   node scripts/cli.ts validate <review.json>
   node scripts/cli.ts render <review.json> [--mode quick|expert|academic] [--format md|html|pdf|auto] [--out <file>]
+  # 缺省 --format = html（与 config.yaml#output_format 一致）；auto 按 --out 后缀推断
   node scripts/cli.ts extract pdf <file.pdf> [--mode auto|text|structured|docx|ocr] [--arxiv <id>] [--out <dir>]
   node scripts/cli.ts store <review.json> [--dir database]`;
 
@@ -317,11 +320,11 @@ async function cmdValidate(file: string): Promise<void> {
   }
 }
 
-async function cmdRender(file: string, mode: string, out: string | undefined, format = 'auto'): Promise<void> {
+async function cmdRender(file: string, mode: string, out: string | undefined, format = 'html'): Promise<void> {
   const r = await readJson(file);
   if (format === 'auto') {
     const ext = out ? out.toLowerCase().split('.').pop() : '';
-    format = ext === 'html' ? 'html' : ext === 'pdf' ? 'pdf' : 'md';
+    format = ext === 'md' ? 'md' : ext === 'pdf' ? 'pdf' : 'html';
   }
   if (format === 'html') {
     const html = renderHtml(r, mode);
@@ -476,7 +479,7 @@ async function main(): Promise<void> {
     case 'chunk': await cmdChunk(sub, opts.type ?? 'article', opts.lang, opts.out, opts['no-tree-sitter'] !== 'true'); break;
     case 'run': await cmdRun(sub, target, opts.out ?? '.', opts.until ?? 'analyze', opts.lang); break;
     case 'validate': await cmdValidate(sub); break;
-    case 'render': await cmdRender(sub, opts.mode ?? 'quick', opts.out, opts.format ?? 'auto'); break;
+    case 'render': await cmdRender(sub, opts.mode ?? 'quick', opts.out, opts.format ?? 'html'); break;
     case 'extract':
       if (sub === 'pdf') await cmdExtractPdf(target, opts.mode ?? 'auto', opts.arxiv, opts.out);
       else throw new Error('extract 子命令: pdf（tex 源优先，见 scripts/tools/tex-fetch.py）');

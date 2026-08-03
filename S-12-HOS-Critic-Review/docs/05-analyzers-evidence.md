@@ -73,13 +73,18 @@ interface AnalyzerPlugin {
 
 ## 5.4 Paper Analyzer（paper）
 
-### 5.4.1 数据源（Semantic Scholar API）
+### 5.4.1 数据源（Semantic Scholar API + arXiv 官方源）
 
 | 端点 | 用途 |
 |------|------|
+| `GET https://arxiv.org/abs/<id>` | **必查**：标题/版本历史/发表状态（journal-ref）/代码链接佐证 |
 | `GET /graph/v1/paper/search?query=…` | 定位论文元数据 |
 | `GET /graph/v1/paper/{id}?fields=title,abstract,citationCount,venue,year,authors` | 引用量、venue、年份 |
 | `GET /graph/v1/paper/{id}/citations?fields=title,year` | 被引时间线（引用衰减判断） |
+| `GET https://api.github.com/repos/{owner}/{repo}` | 论文声称的代码仓库存在性/star/LICENSE |
+| `GET https://doi.org/<doi>` | 数据集/artifact DOI 解析 |
+
+> **铁律**：arXiv abs 页为 paper 对象默认核验源。论文自带 arXiv 链接/仓库链接时，必须尝试联网核验；网络不可用才降级（写入 `degradations`），不得未经尝试直接标 `unverifiable`。
 
 ### 5.4.2 检查点（映射到 Finding）
 
@@ -91,8 +96,10 @@ interface AnalyzerPlugin {
 | Data | 数据集来源、规模、污染风险 | `DATA` |
 | Repro | 代码/数据/参数是否公开 | `REPRO` |
 | Hype | 摘要 vs 正文的强度差 | `CLAIM` |
+| **元数据核验** | arXiv ID/版本/发表状态真实可查；声称的仓库/DOI/Zenodo 存在且指向一致 | `REPRO` / `CLAIM` |
+| **出版状态** | 「已接收/已发表」声明是否有 arXiv journal-ref/会议页佐证 | `CLAIM` |
 
-> 无网络时降级：仅基于论文文本做上述检查点（标记 `unverifiable` 或 `partial`）。
+> 无网络时降级：元数据/出版状态检查点标 `unverifiable` 并记录降级，其余检查点基于论文文本执行（标记 `unverifiable` 或 `partial`）；**网络可用时必须核验**。
 
 ---
 

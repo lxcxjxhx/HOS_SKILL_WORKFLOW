@@ -220,7 +220,9 @@
 
 ### 3.4.2 输入
 
-`Finding[]` + 可访问的校验源（GitHub API / Semantic Scholar / 本地文件 / 元数据）。
+`Finding[]` + 可访问的校验源（GitHub API / arXiv abs / Semantic Scholar / 本地文件 / 元数据）。
+
+> **网络核验为默认动作**：`paper`/`repo` 对象必须尝试核验官方来源（arXiv abs 页、GitHub API、DOI/Zenodo）；无网络属降级，须写入 `degradations`。
 
 ### 3.4.3 输出 `EvidenceResult`
 
@@ -262,18 +264,24 @@
 
 | 源 | 用途 | 限流/缓存 |
 |----|------|-----------|
+| arXiv abs 页（`arxiv.org/abs/<id>`） | **paper 必查**：标题/版本/发表状态/代码链接 | 无认证限制；缓存 1h |
 | GitHub REST API | repo/commits/issues/pulls/contributors/licenses/releases | 未认证 60 req/h；本地缓存 1h |
 | Semantic Scholar API | paper citation/venue/tldr | 100 req/5min；缓存 24h |
+| DOI / Zenodo | 数据集/artifact 存在性与版本 | 无；缓存 24h |
 | 本地文件系统 | 仓库目录结构、LICENSE、README、CI 配置 | 无 |
 | 依赖元数据 | package.json/pyproject 的依赖与版本 | 无 |
 | 搜索引擎（可选） | 交叉核验存在性 | 人工/宿主能力 |
+
+**执行顺序（降级链）**：官方源联网核验 → 本地文件 → 缓存 → 宿主已知事实（low 置信）→ `unverifiable`。
+网络不可用属降级而非默认路径：必须在 `degradations` 记录「官方源未核验」，禁止未尝试联网直接标 `unverifiable`。
 
 ### 3.4.5 铁律（No Evidence No Criticism）
 
 1. 每条 Finding 必须挂 ≥1 条 EvidenceRecord（含 `unverifiable`），否则不许进入 Critic；
 2. **查不到 ≠ 不存在**：写「查不到，证据缺口」，禁止编造核验结果；
 3. `refuted` 必须给出反证来源，且 Critic/Judge 必须读取修正后的严重度；
-4. 所有外部 API 调用记录 `fetched_at` 与 `status`，保证可审计。
+4. 所有外部 API 调用记录 `fetched_at` 与 `status`，保证可审计；
+5. **网络可用时不得跳过官方源核验**：arXiv/GitHub/DOI 锚点未尝试核验就标 `unverifiable` 属流程缺陷（记 `evidence_network_skipped`）。
 
 ### 3.4.6 质量门槛
 
