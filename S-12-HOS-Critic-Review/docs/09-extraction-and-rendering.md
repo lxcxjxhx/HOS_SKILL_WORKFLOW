@@ -74,6 +74,23 @@ weasyprint（python）→ playwright（chromium）→ msedge headless → chrome
 - 全链不可用时输出清晰错误 + 安装提示，绝不静默产出坏 PDF；
 - `--backend` 可强制指定；HTML 内 `@media print` 已做 A4 排版与颜色保留。
 
+### 2.4 多篇汇总渲染（批处理）
+
+单篇报告之外，可将 **N 份 expert 报告（markdown）** 渲染为一份带总览评分卡 + 每篇详情的单文件 HTML：
+
+```bash
+# 论文清单 JSON（标题/arXiv/联网核验补充/判定影响）→ 汇总 HTML
+python scripts/tools/render-summary-html.py     --manifest papers-manifest.json \   # 结构示例见 examples/papers-manifest.example.json
+    --reports reports/ \                # expert 报告目录（清单中 file 相对此目录）
+    --out out/summary.html
+# 可选：--paper-count N 只渲染前 N 篇；--verify-badge "标题" 覆盖核验块标题
+```
+
+- 清单中 `verified`（联网核验项）与 `corrections`（对原报告的判定影响）为可空数组；
+  支持内联 markdown（`**加粗**` / `` `代码` ``），正文 HTML 一律转义防注入；
+- 总览表自动提取每份报告的 Score / 评级 / One-liner / Decision（支持多种 Executive Summary 格式）；
+- 零额外 LLM token：纯 markdown→HTML 渲染（依赖 `pip install markdown`）。
+
 ## 3. 为什么让 script 出 PDF，而不是 LLM 自己转
 
 1. **省 token**：LLM 手动把 MD 排版成 PDF（或调转换库）会消耗大量输出 token，且结果不可控；
