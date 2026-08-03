@@ -25,6 +25,10 @@
 | P4 | Data | 数据集来源/规模/污染 | `DATA` |
 | P5 | Repro | 代码/数据/参数是否公开 | `REPRO` |
 | P6 | Hype | 摘要 vs 正文的强度差 | `CLAIM` |
+| P7 | **元数据核验** | arXiv ID/版本/发表状态是否真实可查；声称的代码仓库/DOI/Zenodo 链接是否存在、指向是否与正文一致（**必须联网核验 arXiv abs 页与 GitHub API**） | `REPRO` / `CLAIM` |
+| P8 | 出版状态 | 「已接收/已发表」声明（如 IEEE S&P、ICML）是否有 arXiv journal-ref/会议页佐证 | `CLAIM` |
+
+> P7/P8 依赖网络核验：arXiv abs 页（`arxiv.org/abs/<id>`）为必查官方源，其次 GitHub API 与 DOI。网络不可用时 P7/P8 相关 Finding 标 `unverifiable` 并记录降级，不得跳过。
 
 ## 3. 许可检查点（license / repo 的 LICENSE）
 

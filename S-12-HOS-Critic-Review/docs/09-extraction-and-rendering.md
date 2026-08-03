@@ -44,15 +44,17 @@ node scripts/cli.ts extract pdf paper.pdf --mode auto --out out/
 **铁律**：`scanned_pages` 非空时，宿主必须在 degradations 里写明「第 N-M 页为图表/扫描页，
 文本提取缺失，相关结论基于不完整证据」，禁止假装核验过这些页的内容。
 
-## 2. 输出渲染：MD → HTML → PDF
+## 2. 输出渲染：JSON → HTML（默认）→ 可选 PDF
+
+> **默认输出格式为 HTML**（`config.yaml#output_format: html`）。评审流水线的最终交付物是单文件美观网页，而非裸 Markdown；Markdown 模板（`templates/*.md`）是渲染数据源，`render.ts` 仅作机器可读降级。
 
 ### 2.1 三档输出
 
 | 格式 | 生成方式 | 特点 |
 |------|----------|------|
-| `md` | `render.ts`（既有） | 纯文本，机器友好 |
-| `html` | `render-html.ts`（新增） | 单文件内联 CSS，浏览器直开，评分卡/进度条/徽章 |
-| `pdf` | `render-pdf.py`（新增） | HTML → PDF，**零 LLM token 消耗** |
+| `md` | `render.ts` | 纯文本，机器友好（非默认） |
+| `html` | `render-html.ts`（**默认**） | 单文件内联 CSS，浏览器直开，评分卡/进度条/徽章 |
+| `pdf` | `render-pdf.py` | HTML → PDF，**零 LLM token 消耗** |
 
 ### 2.2 命令
 

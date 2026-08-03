@@ -1,5 +1,31 @@
 # HOS-CRITIC-REVIEW 变更记录
 
+## [0.5.0] - 2026-08-03（默认输出 HTML + Evidence 强制联网核验）
+
+### 变更
+- **默认输出格式升级为 HTML**：`config.yaml` 新增 `output_format: html`；`render` 命令缺省
+  `--format` 时输出单文件美观网页（`render-html.ts`，内联 CSS，评分卡/维度条/徽章），
+  `--format auto` 按 `--out` 后缀推断（无后缀默认 html）；Markdown 模板降级为渲染数据源。
+- **Evidence-Agent 联网核验改为默认动作（铁律）**：
+  - `paper`/`repo` 对象必须核验官方来源：arXiv abs 页（标题/版本/发表状态/代码链接）、
+    GitHub API（仓库存在性/star/LICENSE）、DOI/Zenodo（artifact 存在性与版本）；
+  - `unverifiable` 只允许出现在「已尝试官方源与本地核对均无结果」之后；未尝试联网就标
+    「查不到」属流程缺陷（`degradations` 记 `evidence_network_skipped`），不再允许把
+    「网络不可用」当默认路径——降级必须显式记录；
+  - 论文检查点新增 P7（元数据核验）与 P8（出版状态）：arXiv journal-ref/会议页佐证
+    「已接收/已发表」声明。
+- config.yaml 新增 `evidence_network` 配置段（校验源优先级 + unverifiable 判定基准）。
+
+### 修复
+- 之前评审在「论文自带 arXiv/开源链接」时因未联网而误标 unverifiable（如 Sifting-the-Noise
+  的 Zenodo artifact、T2L-Agent 的 GitHub 仓库、Argus-SAST 的 CVE 真实性）——现通过
+  强制联网核验规则从流程上杜绝。
+
+### 测试
+- 新增 `tests/unit/cli-render.test.ts`（4 个 CLI 级回归）：缺省 `--format` 输出 HTML、
+  `--format auto` 无后缀默认 HTML、auto 按 `.md` 后缀推断 Markdown、显式 `--format md` 覆盖。
+  全套单元测试 58 通过（原 54 + 新 4）。
+
 ## [0.4.0] - 2026-08-02（输入质量 + 输出渲染升级）
 
 ### 新增

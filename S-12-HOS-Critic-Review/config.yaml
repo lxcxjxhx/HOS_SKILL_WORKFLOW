@@ -4,6 +4,9 @@
 # 输出模式：quick | expert | academic
 output_mode: quick
 
+# 输出格式：md | html | pdf（默认 html——报告以美观单文件网页交付，零额外 LLM token）
+output_format: html
+
 # 毒舌辣度 0-5（默认 3）
 spiciness: 3
 
@@ -47,6 +50,20 @@ degradation:
   allow_network: true
   cache_ttl_seconds: 3600
 
+# 联网核验（Evidence-Agent 强制项）
+# paper/repo 对象必须核验 arXiv 元数据、GitHub 仓库、DOI/Zenodo 等官方来源；
+# 网络不可用属降级而非默认路径——禁止未尝试联网就直接标 unverifiable（降级不撒谎）。
+evidence_network:
+  required: true
+  # 校验源优先级：官方页面/API 优先，其次聚合索引，最后宿主已知事实
+  sources:
+    - arxiv_abs        # https://arxiv.org/abs/<id>：标题/版本/发表状态/代码链接
+    - github_api       # https://api.github.com/repos/<owner>/<repo>
+    - doi_zenodo       # https://doi.org/<doi> / zenodo.org 记录
+    - semantic_scholar # 引用量/venue 交叉核验
+  # 判定基准：尝试过官方源仍无结果 → 写「查不到，证据缺口」；未尝试 → 视为流程缺陷
+  unverifiable_rule: "must_have_tried"
+
 # 上下文预算（宿主上下文限制相关）
 budget:
   max_input_tokens: 200000
@@ -58,3 +75,6 @@ budget:
 report:
   top_findings_count: 5
   default_language: "zh"
+  # 渲染通道：与 CLI 缺省一致（scripts/cli.ts 缺省 --format = html）
+  #   零额外 LLM token：ReviewReport JSON → HTML（render-html.ts）→ 可选 PDF（render-pdf.py）
+  render_default: "html"  # 规范声明；CLI 当前硬编码 html，如需改默认请同步 scripts/cli.ts
