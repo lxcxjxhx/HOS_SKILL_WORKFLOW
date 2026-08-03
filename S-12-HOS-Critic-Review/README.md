@@ -58,6 +58,10 @@ node scripts/cli.ts extract pdf paper.pdf --mode auto --out out/
 node scripts/cli.ts render review.json --mode expert --out out/report.html        # 缺省 --format = html
 node scripts/cli.ts render review.json --mode expert --format pdf --out out/report.pdf
 
+# 多篇汇总：N 份 expert 报告 → 单文件汇总 HTML（总览评分卡 + 每篇详情）
+# 清单结构见 examples/papers-manifest.example.json，说明见 docs/09 §2.4
+python scripts/tools/render-summary-html.py --manifest papers-manifest.json --reports reports/ --out out/summary.html
+
 > **论文评审默认联网核验**：Evidence-Agent 对 paper/repo 对象必须核验 arXiv abs 页（标题/版本/发表状态）、GitHub 仓库、DOI/Zenodo——论文自带链接不是可选项，未尝试联网就标「无法验证」属流程缺陷。详见 [agents/04-evidence.md](S-12-HOS-Critic-Review/agents/04-evidence.md)。
 
 ```

@@ -1,5 +1,15 @@
 # HOS-CRITIC-REVIEW 变更记录
 
+## [0.5.1] - 2026-08-03（多篇汇总渲染工具）
+
+### 新增
+- **多篇汇总渲染工具**（`scripts/tools/render-summary-html.py`）：N 份 expert 报告（markdown）
+  → 单文件汇总 HTML（总览评分卡表 + 每篇完整详情 + 每篇顶部联网核验补充块）；
+  论文清单由外部 JSON 驱动（`--manifest`，示例见 `examples/papers-manifest.example.json`）；
+  自动提取各报告 Score/评级/One-liner/Decision（兼容多种 Executive Summary 格式）；
+  `verified`/`corrections` 支持内联 markdown（`**加粗**`/`` `代码` ``），正文 HTML 一律转义防注入；
+  零额外 LLM token（依赖 `pip install markdown`）。用法见 `docs/09 §2.4`。
+
 ## [0.5.0] - 2026-08-03（默认输出 HTML + Evidence 强制联网核验）
 
 ### 变更
