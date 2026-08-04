@@ -1,7 +1,7 @@
 ---
 name: HOS-Save-Cost
 version: 2.0.0
-description: 轻量级 Token 管家 — 工作流层降本：任务拆分 + 交接文档 + Token 监控反馈。配套四层集成（mcp-compressor 压缩 MCP 定义 / caveman 精简输出 / RTK+CodeGraph 压缩输入 / 本 Skill 拆分上下文），与 skill-handler 配合按需加载、用完即卸载，避免 Skill 自身 description 常驻上下文
+description: 轻量级 Token 管家 — 工作流层降本：任务拆分 + 交接文档 + Token 监控反馈。配套四层集成（原生 [[plugins]] 直连 MCP / caveman 精简输出 / RTK+CodeGraph 压缩输入 / 本 Skill 拆分上下文），与 skill-handler 配合按需加载、用完即卸载，避免 Skill 自身 description 常驻上下文
 author: HOS Team
 tags:
   - cost-optimization
@@ -49,7 +49,7 @@ metadata:
 
 | 层级 | 工具 / Skill | 作用 | 位置 |
 |------|-------------|------|------|
-| **MCP 压缩层** | `mcp-compressor` | 40+ MCP 工具定义 → 2 个入口 | [`integration/reasonix.toml`](./integration/reasonix.toml) |
+| **MCP 层** | 原生 `[[plugins]]` 直连（可选网关代理） | 只启用需要的 MCP server，最小化工具 schema | [`integration/reasonix.toml`](./integration/reasonix.toml) |
 | **输出精简层** | `caveman` | AI 回复只保留核心内容 | [`skills/style/caveman.skill`](./skills/style/caveman.skill) |
 | **输入压缩层** | `RTK` / `CodeGraph` | 压缩终端输出与代码探索消耗 | — |
 | **工作流管理层** | **本 Skill** | 大任务拆小 + 交接文档 + 监控反馈 | [`skills/workflow/*`](./skills/workflow/) |
@@ -74,7 +74,7 @@ metadata:
    → 完成后 /skill unload hos
 3. 需要精简回复：
    → /skill load caveman → /caveman → 继续对话 → /skill unload caveman
-4. MCP 层面无需操作：工具已被 mcp-compressor 压成 2 个入口
+4. MCP 层面无需操作：按 [`integration/reasonix.toml`](./integration/reasonix.toml) 原生直连所需 server（注：`mcp-compressor` 在 npm 不存在，勿使用）
 ```
 
 ## 文档索引

@@ -18,7 +18,7 @@ HOS-Save-Cost 的核心不是"压缩工具"，而是 **"任务拆分 + 交接文
 
 | 层级 | 工具/Skill | 作用 |
 |------|-----------|------|
-| **MCP 压缩层** | `mcp-compressor` / `4q-tokenz` | 压缩 40+ 个 MCP 工具定义到 2 个入口 |
+| **MCP 层** | 原生 `[[plugins]]` 直连（可按需加网关代理） | 只启用真正需要的 MCP server，最小化工具 schema |
 | **输出精简层** | `caveman` Skill | 让 AI 回复极简，只保留核心内容 |
 | **输入压缩层** | `RTK` / `CodeGraph` | 压缩终端输出和代码探索消耗 |
 | **工作流管理层** | **HOS-Save-Cost** | 大任务拆小 + 交接文档 + 监控反馈 |
@@ -29,7 +29,9 @@ HOS-Save-Cost 的核心不是"压缩工具"，而是 **"任务拆分 + 交接文
 
 ### 3.1 reasonix.toml（MCP 层面）
 
-见 [`reasonix.toml`](./reasonix.toml)。核心：所有 MCP 通过 `mcp-compressor` 代理，只暴露 2 个工具。
+见 [`reasonix.toml`](./reasonix.toml)。使用 **Reasonix 原生 `[[plugins]]` 语法**（stdio 直连），只启用真正需要的 MCP server，避免 40+ 工具 schema 全量进上下文。
+
+> ⚠️ **关于工具定义压缩**：原方案中的 `mcp-compressor` 在 npm registry 上**不存在**（E404），不能直接 `npx mcp-compressor`。请勿照抄该命令。MCP 层的节省改为：**只配置用得到的 server（原生直连）**；若后续安装到可用的 MCP 压缩/网关代理，再用 `args` 包装（`reasonix.toml` 内有完整示例注释）。
 
 ### 3.2 Skill 体系（三层）
 
@@ -73,27 +75,27 @@ HOS-Save-Cost 的核心不是"压缩工具"，而是 **"任务拆分 + 交接文
 
 5. 需要代码图谱时：
    → skill-handler 不介入 MCP 层面
-   → MCP 工具已被 mcp-compressor 压缩成 2 个入口
-   → AI 按需调用 get_tool_schema + invoke_tool
+   → MCP 只配置用得到的 server（原生 [[plugins]] 直连，见 integration/reasonix.toml）
+   → AI 按需调用 codegraph 等 MCP 工具
 ```
 
 ### 成本对比
 
 | 场景 | 无优化 | 有优化 |
 |------|--------|--------|
-| 40 个 MCP 工具 schema | ~20,000 tokens | ~500 tokens（mcp-compressor） |
+| MCP 工具 schema | 40+ server 全量进上下文 | 只配用得到的 server（原生直连） |
 | 5 个 Skill description | ~5,000 tokens | ~50 tokens（skill-handler） |
 | 大任务单次上下文 | ~100,000 tokens | ~15,000 tokens（HOS 拆分） |
 | AI 回复 | ~5,000 tokens/次 | ~1,250 tokens/次（caveman） |
 | 终端输出 | ~10,000 tokens | ~2,000 tokens（RTK） |
 
-**综合估算：原来 4 天 60 元 → 压至 0.2-0.5 元。**
+**综合估算：原来 4 天 60 元 → 压至 0.2-0.5 元。**（注：若接入可用的 MCP 压缩代理，工具 schema 可从 ~20K tokens 再降至 ~500 tokens；`mcp-compressor` 当前不存在，勿直接使用）
 
 ## 五、一句话总结
 
 **四层优化，各司其职，互不重叠：**
 
-1. **MCP 压缩**（`mcp-compressor`）→ 工具定义省 95%
+1. **MCP 层**（原生 `[[plugins]]` 直连 / 可选网关代理）→ 只启用需要的工具
 2. **Skill 管理**（`skill-handler`）→ Skill 描述省 90%
 3. **工作流拆分**（`HOS-Save-Cost`）→ 上下文省 80%
 4. **输入/输出压缩**（`RTK` + `caveman`）→ 内容省 75%

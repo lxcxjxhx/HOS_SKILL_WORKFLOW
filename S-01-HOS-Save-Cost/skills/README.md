@@ -6,7 +6,7 @@
 
 | 层级 | 工具/Skill | 作用 | 文件 |
 |------|-----------|------|------|
-| **MCP 压缩层** | `mcp-compressor` | 40+ MCP 工具定义 → 2 个入口 | [`../integration/reasonix.toml`](../integration/reasonix.toml) |
+| **MCP 层** | 原生 `[[plugins]]` 直连（可选网关代理） | 只启用需要的 MCP server | [`../integration/reasonix.toml`](../integration/reasonix.toml) |
 | **输出精简层** | `caveman` | AI 回复极简 | [`style/caveman.skill`](style/caveman.skill) |
 | **输入压缩层** | `RTK` / `CodeGraph` | 压缩终端输出与代码探索 | — |
 | **工作流管理层** | HOS-Save-Cost | 任务拆分 + 交接 + 监控 | [`workflow/*.skill`](workflow/) |
