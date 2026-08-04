@@ -31,7 +31,7 @@
 1. **启动时只加载 skill-handler 自身**
 2. **其他 Skill 按需加载，用完即卸载**
 3. **避免多个 Skill 的 description 同时占用上下文**
-4. **MCP 层面不介入**：MCP 工具已被 mcp-compressor 压缩成 2 个入口，无需本 Skill 管理
+4. **MCP 层面不介入**：MCP server 由 Reasonix 原生 `[[plugins]]` 直连管理（见 `integration/reasonix.toml`），无需本 Skill 管理
 
 ## 效果
 

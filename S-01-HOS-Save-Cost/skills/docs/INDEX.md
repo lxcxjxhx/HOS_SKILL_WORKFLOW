@@ -10,7 +10,7 @@
 ├── hooks/
 │   └── activate-skills.json                   # 成本敏感场景激活 hook
 ├── integration/
-│   ├── reasonix.toml                          # MCP 压缩层配置（mcp-compressor）
+│   ├── reasonix.toml                          # MCP 层配置（原生 [[plugins]] 直连）
 │   └── INTEGRATION-GUIDE.md                   # 四层集成完整指南
 └── skills/
     ├── handlers/

@@ -53,7 +53,7 @@ max_tool_output_chars = 15000
 
 - 输入压缩：RTK / CodeGraph 已压缩终端输出和代码探索 → 监控更省
 - 输出精简：caveman 降低输出 token → 监控更省
-- MCP 压缩：mcp-compressor 已压缩工具定义 → 监控更省
+- MCP 层：原生 `[[plugins]]` 只配置所需 server（见 integration/reasonix.toml）→ 工具 schema 最小化
 
 ## 反模式
 
