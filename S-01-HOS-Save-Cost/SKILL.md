@@ -88,7 +88,7 @@ metadata:
 | Skill 加载/卸载管理（常驻入口） | [`skills/handlers/skill-handler.skill`](./skills/handlers/skill-handler.skill) |
 | 输出精简层（穴居人模式） | [`skills/style/caveman.skill`](./skills/style/caveman.skill) |
 | 技能系统概览（含方法层四技能详解） | [`skills/README.md`](./skills/README.md) |
-| 方法层 v1 文档：入门/概览/快速参考/实战/CCE 强化 | [`skills/GETTING-STARTED.md`](./skills/GETTING-STARTED.md) · [`skills/OVERVIEW.md`](./skills/OVERVIEW.md) · [`skills/QUICK-REFERENCE.md`](./skills/QUICK-REFERENCE.md) · [`skills/IMPLEMENTATION-GUIDE.md`](./skills/IMPLEMENTATION-GUIDE.md) · [`skills/CCE-FIVE-RULES.md`](./skills/CCE-FIVE-RULES.md) · [`skills/CCE-REINFORCEMENT.md`](./skills/CCE-REINFORCEMENT.md) · [`skills/FINAL-UPDATE.md`](./skills/FINAL-UPDATE.md) |
+| 方法层 v1 文档（已归档到 `skills/docs/`，按需阅读） | [`skills/docs/GETTING-STARTED.md`](./skills/docs/GETTING-STARTED.md) · [`skills/docs/OVERVIEW.md`](./skills/docs/OVERVIEW.md) · [`skills/docs/QUICK-REFERENCE.md`](./skills/docs/QUICK-REFERENCE.md) · [`skills/docs/IMPLEMENTATION-GUIDE.md`](./skills/docs/IMPLEMENTATION-GUIDE.md) · [`skills/docs/CCE-FIVE-RULES.md`](./skills/docs/CCE-FIVE-RULES.md) · [`skills/docs/CCE-REINFORCEMENT.md`](./skills/docs/CCE-REINFORCEMENT.md) · [`skills/docs/FINAL-UPDATE.md`](./skills/docs/FINAL-UPDATE.md) |
 
 ## 许可证
 
