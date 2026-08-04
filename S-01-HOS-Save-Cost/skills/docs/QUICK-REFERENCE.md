@@ -293,6 +293,11 @@ WITH CCE:
 ## File Locations Quick Reference
 
 ```
+Entry (v2.0):
+.kiro/SKILL.md                            ← Workflow-layer Token manager (start here)
+.kiro/integration/INTEGRATION-GUIDE.md    ← Four-layer integration guide
+.kiro/integration/reasonix.toml           ← MCP compression config
+
 Documentation to read:
 .kiro/skills/README.md                    ← Main guide (start here)
 .kiro/skills/GETTING-STARTED.md           ← 5-min intro
@@ -300,7 +305,14 @@ Documentation to read:
 .kiro/skills/IMPLEMENTATION-GUIDE.md      ← Real examples
 .kiro/skills/INDEX.md                     ← Navigation
 
-Skill details:
+Workflow layer (v2.0):
+.kiro/skills/handlers/skill-handler.skill ← Resident entry, /skill load|unload
+.kiro/skills/workflow/task-split.skill    ← Task split protocol
+.kiro/skills/workflow/handoff.skill       ← Handoff document protocol
+.kiro/skills/workflow/token-monitor.skill ← Token monitor protocol
+.kiro/skills/style/caveman.skill          ← Output compression mode
+
+Method layer (load on demand):
 .kiro/skills/tfe-token-first-engineering.skill
 .kiro/skills/anpe-ai-native-product-engineering.skill
 .kiro/skills/mra-minimal-refactor-architecture.skill

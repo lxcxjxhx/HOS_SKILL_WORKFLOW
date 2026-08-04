@@ -1,12 +1,12 @@
 {
-  "name": "Activate AI Cost Optimization Skills",
-  "version": "1.0.0",
-  "description": "Automatically activate appropriate skills based on task type and project structure",
+  "name": "Activate HOS-Save-Cost Workflow Layer",
+  "version": "2.0.0",
+  "description": "仅在成本敏感场景提醒加载 HOS-Save-Cost 工作流层，其余时间只保留 skill-handler 常驻",
   "when": {
     "type": "promptSubmit"
   },
   "then": {
     "type": "askAgent",
-    "prompt": "Before proceeding, check which skills apply to this task:\n\n1. **Always apply TFE** (Token First Engineering) - every task\n   - Estimate tokens before coding\n   - Minimize context and prompts\n   - Prefer libraries over custom code\n\n2. **Check for ANPE** (AI Native Product Engineering)\n   - Does project have project.yaml? → Apply ANPE principles\n   - Modifying existing ANPE project? → Follow ANPE structure\n\n3. **Check for MRA** (Minimal Refactor Architecture)\n   - Working with legacy code? → Apply MRA process\n   - Fixing bugs in old systems? → Map hotspots first\n\n4. **Check for CCE** (Context Compression Engineering)\n   - Codebase >100K lines? → Reference architecture/interface/workflow maps\n   - Large project modification? → Read maps before touching code\n\nRead relevant skill files from .kiro/skills/ and proceed with appropriate approach."
+    "prompt": "判断当前任务是否属于成本敏感场景（大任务 / 长上下文 / 重复性高 / 探索性任务）：\n\n1. **是成本敏感场景** → 建议用户执行：/skill load hos 后按 /hos 激活\n   - 自动拆分子任务（task-split.skill）\n   - 每个子任务独立上下文，完成输出交接文档（handoff.skill）\n   - 持续监控 Token 消耗（token-monitor.skill）\n\n2. **需要精简回复** → 建议用户执行：/skill load caveman 后 /caveman\n\n3. **普通任务** → 不做任何加载，保持 skill-handler 常驻（约 50 tokens）\n\n提示保持简短，不超过 3 行，不打断用户操作。"
   }
 }
