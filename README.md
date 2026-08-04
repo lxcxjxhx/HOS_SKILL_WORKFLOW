@@ -34,7 +34,7 @@ HOS Skill Workflow 是一个面向 AI Agent、AI IDE、Claude Code、Codex、Cur
 | W-02 | [HOS-JSON-Prompts](W-02-HOS-JSON-Prompts/) | JSON | 开发模板集合：项目、安全、测试、运营、模型、考试等场景 | - |
 | W-03 | [HOS-Human-Pass](W-03-HOS-Human-Pass/) | Text | 人工验证通过记录 | - |
 | S-00 | [HOS-Sec-Engine](S-00-HOS-Sec-Engine/) | TypeScript | AI 原生安全测试引擎，流程模板 + 决策树 + CVE 集成 + MCP 管理层 | [README](S-00-HOS-Sec-Engine/README.md) |
-| S-01 | [HOS-Save-Cost](S-01-HOS-Save-Cost/) | Markdown | AI 成本优化技能集：Token 优先工程、上下文压缩、最小重构架构 | [README](S-01-HOS-Save-Cost/skills/README.md) |
+| S-01 | [HOS-Save-Cost](S-01-HOS-Save-Cost/) | Markdown | 轻量级 Token 管家：任务拆分 + 交接文档 + Token 监控，四层集成（mcp-compressor / caveman / RTK / skill-handler） | [README](S-01-HOS-Save-Cost/skills/README.md) |
 | S-02 | [HOS-LIFE-OKR](S-02-HOS-LIFE-OKR/) | Markdown | 生活 OKR 自动化学习引擎：OKR 驱动 + KPI 约束 + 时间切片 + 自动任务生成 | [SKILL.md](S-02-HOS-LIFE-OKR/SKILL.md) |
 | S-03 | [HOS-Vibe-Guard](S-03-HOS-Vibe-Guard/) | TypeScript | 防 Vibe Coding 退化护栏：选题质量检测 + 架构升级引擎 + 安全护栏 | [README](S-03-HOS-Vibe-Guard/README.md) |
 | S-04 | [HOS-Silly-Mock](S-04-HOS-Silly-Mock/) | TypeScript | 反假数据/反正则现实强制层：阻止 AI 伪造系统可运行性 | [README](S-04-HOS-Silly-Mock/README.md) |
@@ -107,7 +107,7 @@ HOS_SKILL_WORKFLOW/
 ├── W-02-HOS-JSON-Prompts/        # JSON 开发模板
 ├── W-03-HOS-Human-Pass/          # 人工验证记录
 ├── S-00-HOS-Sec-Engine/          # 安全测试引擎 (TypeScript)
-├── S-01-HOS-Save-Cost/           # AI 成本优化技能集
+├── S-01-HOS-Save-Cost/           # 轻量级 Token 管家（任务拆分+交接+监控，四层集成）
 ├── S-02-HOS-LIFE-OKR/            # 生活 OKR 学习引擎
 ├── S-03-HOS-Vibe-Guard/          # Vibe Coding 护栏
 ├── S-04-HOS-Silly-Mock/          # 反假数据检测器

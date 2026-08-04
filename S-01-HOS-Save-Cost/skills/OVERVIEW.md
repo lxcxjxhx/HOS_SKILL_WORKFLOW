@@ -215,6 +215,14 @@ With CCE:
 
 ### Core Skill Files
 ```
+.kiro/SKILL.md                               (v2.0: Workflow-layer Token manager)
+.kiro/integration/INTEGRATION-GUIDE.md       (v2.0: Four-layer integration guide)
+.kiro/integration/reasonix.toml              (v2.0: MCP compression config)
+.kiro/skills/handlers/skill-handler.skill    (v2.0: Resident entry, on-demand load)
+.kiro/skills/workflow/task-split.skill       (v2.0: Task split protocol)
+.kiro/skills/workflow/handoff.skill          (v2.0: Handoff document protocol)
+.kiro/skills/workflow/token-monitor.skill    (v2.0: Token monitor protocol)
+.kiro/skills/style/caveman.skill             (v2.0: Output compression mode)
 .kiro/skills/
 ├── tfe-token-first-engineering.skill        (Foundation)
 ├── anpe-ai-native-product-engineering.skill (New projects)

@@ -1,5 +1,23 @@
 # AI Cost Optimization Skill System
 
+> **v2.0 四层集成版** — 本 Skill 现为「工作流层 Token 管家」（任务拆分 + 交接文档 + 监控反馈），方法层四技能按需加载。完整说明见 [`../integration/INTEGRATION-GUIDE.md`](../integration/INTEGRATION-GUIDE.md) 与 [`../SKILL.md`](../SKILL.md)。
+
+## 四层互补架构（v2.0）
+
+| 层级 | 工具/Skill | 作用 | 文件 |
+|------|-----------|------|------|
+| **MCP 压缩层** | `mcp-compressor` | 40+ MCP 工具定义 → 2 个入口 | [`../integration/reasonix.toml`](../integration/reasonix.toml) |
+| **输出精简层** | `caveman` | AI 回复极简 | [`style/caveman.skill`](style/caveman.skill) |
+| **输入压缩层** | `RTK` / `CodeGraph` | 压缩终端输出与代码探索 | — |
+| **工作流管理层** | HOS-Save-Cost | 任务拆分 + 交接 + 监控 | [`workflow/*.skill`](workflow/) |
+| **Skill 管理** | `skill-handler` | 唯一常驻，按需加载/卸载 | [`handlers/skill-handler.skill`](handlers/skill-handler.skill) |
+
+**核心工作流（v2.0）**：`/skill load hos` → `/hos` 拆分任务 → 子任务独立执行 → 每步输出交接文档 → 完成 `/skill unload hos`。
+
+---
+
+## 方法层四技能详解（按需加载）
+
 Four integrated skills for AI-native software development, focusing on minimizing Token cost, context explosion, and maintenance burden.
 
 ## Skills Overview

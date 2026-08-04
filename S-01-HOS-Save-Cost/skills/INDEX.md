@@ -4,20 +4,32 @@
 
 ```
 .kiro/
-├── skills/                                      # All skill files
-│   ├── tfe-token-first-engineering.skill        # Foundation skill ⭐ START HERE
-│   ├── anpe-ai-native-product-engineering.skill # New projects
-│   ├── mra-minimal-refactor-architecture.skill  # Legacy systems
-│   ├── cce-context-compression-engineering.skill # Large codebases
-│   ├── README.md                                # Main orchestration guide
-│   ├── OVERVIEW.md                              # High-level summary
-│   ├── GETTING-STARTED.md                       # 5-min quick tour
-│   ├── IMPLEMENTATION-GUIDE.md                  # Real-world examples
-│   └── INDEX.md                                 # This file
+├── SKILL.md                                   # 工作流层 Token 管家入口 ⭐ 从这里开始
 ├── settings/
-│   └── skills.json                              # Skill configuration
-└── hooks/
-    └── activate-skills.json                     # Auto-activation hook
+│   └── skills.json                            # Skill 配置（skill-handler 常驻，其余按需加载）
+├── hooks/
+│   └── activate-skills.json                   # 成本敏感场景激活 hook
+├── integration/
+│   ├── reasonix.toml                          # MCP 压缩层配置（mcp-compressor）
+│   └── INTEGRATION-GUIDE.md                   # 四层集成完整指南
+└── skills/
+    ├── handlers/
+    │   └── skill-handler.skill                # 唯一常驻入口，/skill load|unload|list|status
+    ├── style/
+    │   └── caveman.skill                      # 输出精简层（穴居人模式）
+    ├── workflow/
+    │   ├── task-split.skill                   # 任务拆分协议
+    │   ├── handoff.skill                      # 交接文档协议
+    │   └── token-monitor.skill                # Token 监控协议
+    ├── tfe-token-first-engineering.skill      # 方法层：Foundation skill ⭐ 按需加载
+    ├── anpe-ai-native-product-engineering.skill # 方法层：New projects
+    ├── mra-minimal-refactor-architecture.skill  # 方法层：Legacy systems
+    ├── cce-context-compression-engineering.skill # 方法层：Large codebases
+    ├── README.md                              # Main orchestration guide（含四层架构）
+    ├── OVERVIEW.md                            # High-level summary
+    ├── GETTING-STARTED.md                     # 5-min quick tour
+    ├── IMPLEMENTATION-GUIDE.md                # Real-world examples
+    └── INDEX.md                               # This file
 ```
 
 ---

@@ -1,96 +1,121 @@
 {
   "skillsEnabled": true,
-  "autoActivation": true,
+  "autoActivation": false,
   "skillsDirectory": ".kiro/skills/",
+  "residentSkills": ["skill-handler"],
   "skills": [
+    {
+      "id": "skill-handler",
+      "name": "Skill Handler",
+      "file": "handlers/skill-handler.skill",
+      "priority": 0,
+      "enabled": true,
+      "resident": true,
+      "autoActivate": true,
+      "description": "唯一常驻入口，按需加载/卸载其他 Skill，避免 description 占用上下文",
+      "keywords": ["skill-management", "load", "unload", "context-saving"]
+    },
+    {
+      "id": "hos",
+      "name": "HOS-Save-Cost (Workflow Layer)",
+      "file": "../SKILL.md",
+      "priority": 1,
+      "enabled": true,
+      "autoActivate": false,
+      "applicableWhen": ["large-task", "cost-sensitive", "long-context"],
+      "keywords": ["task-splitting", "handoff", "token-monitoring", "workflow"],
+      "loadCommand": "/skill load hos"
+    },
+    {
+      "id": "task-split",
+      "name": "Task Split Protocol",
+      "file": "workflow/task-split.skill",
+      "priority": 2,
+      "enabled": true,
+      "autoActivate": false,
+      "prerequisites": ["hos"],
+      "keywords": ["split", "sub-task", "context-isolation"]
+    },
+    {
+      "id": "handoff",
+      "name": "Handoff Document Protocol",
+      "file": "workflow/handoff.skill",
+      "priority": 3,
+      "enabled": true,
+      "autoActivate": false,
+      "prerequisites": ["hos"],
+      "keywords": ["handoff", "state-transfer", "context-handover"]
+    },
+    {
+      "id": "token-monitor",
+      "name": "Token Monitor Protocol",
+      "file": "workflow/token-monitor.skill",
+      "priority": 4,
+      "enabled": true,
+      "autoActivate": false,
+      "prerequisites": ["hos"],
+      "keywords": ["token-monitoring", "budget", "threshold", "model-switch"]
+    },
+    {
+      "id": "caveman",
+      "name": "Caveman Mode (Output Compression)",
+      "file": "style/caveman.skill",
+      "priority": 5,
+      "enabled": true,
+      "autoActivate": false,
+      "applicableWhen": ["verbose-output", "summary-needed"],
+      "keywords": ["output-compression", "minimal-reply", "terse"],
+      "loadCommand": "/skill load caveman"
+    },
     {
       "id": "tfe",
       "name": "Token First Engineering",
       "file": "tfe-token-first-engineering.skill",
-      "priority": 1,
+      "priority": 10,
       "enabled": true,
-      "autoActivate": true,
-      "applicableWhen": [
-        "writing-code",
-        "optimizing-cost",
-        "every-task"
-      ],
-      "keywords": [
-        "token-optimization",
-        "efficiency",
-        "minimal-context",
-        "cost-reduction"
-      ]
+      "autoActivate": false,
+      "applicableWhen": ["writing-code", "optimizing-cost"],
+      "keywords": ["token-optimization", "efficiency", "minimal-context"]
     },
     {
       "id": "anpe",
       "name": "AI Native Product Engineering",
       "file": "anpe-ai-native-product-engineering.skill",
-      "priority": 2,
+      "priority": 11,
       "enabled": true,
-      "autoActivate": true,
-      "applicableWhen": [
-        "new-project-setup",
-        "architecture-design",
-        "project-structure"
-      ],
-      "keywords": [
-        "ai-first-design",
-        "configuration-driven",
-        "asset-management",
-        "maintainability"
-      ],
+      "autoActivate": false,
+      "applicableWhen": ["new-project-setup", "architecture-design"],
+      "keywords": ["ai-first-design", "configuration-driven", "maintainability"],
       "prerequisites": ["tfe"]
     },
     {
       "id": "mra",
       "name": "Minimal Refactor Architecture",
       "file": "mra-minimal-refactor-architecture.skill",
-      "priority": 3,
+      "priority": 12,
       "enabled": true,
-      "autoActivate": true,
-      "applicableWhen": [
-        "legacy-system-takeover",
-        "refactoring",
-        "bugfix-in-legacy-code"
-      ],
-      "keywords": [
-        "legacy-systems",
-        "refactoring",
-        "minimal-change",
-        "backward-compatibility"
-      ],
+      "autoActivate": false,
+      "applicableWhen": ["legacy-system-takeover", "refactoring"],
+      "keywords": ["legacy-systems", "minimal-change", "backward-compatibility"],
       "prerequisites": ["tfe"]
     },
     {
       "id": "cce",
       "name": "Context Compression Engineering",
       "file": "cce-context-compression-engineering.skill",
-      "priority": 4,
+      "priority": 13,
       "enabled": true,
-      "autoActivate": true,
-      "applicableWhen": [
-        "large-codebases",
-        "100k-plus-lines",
-        "agent-onboarding",
-        "rag-systems"
-      ],
-      "keywords": [
-        "context-compression",
-        "large-codebases",
-        "memory-structure",
-        "information-architecture"
-      ],
+      "autoActivate": false,
+      "applicableWhen": ["large-codebases", "100k-plus-lines"],
+      "keywords": ["context-compression", "maps", "memory-structure"],
       "prerequisites": ["tfe", "anpe"]
     }
   ],
   "activationRules": {
-    "defaultActivation": "tfe",
+    "defaultActivation": "skill-handler",
     "contextScanning": {
-      "enabled": true,
-      "checkForProjectYaml": true,
-      "checkForLargeCodebase": true,
-      "checkForLegacyPatterns": true
+      "enabled": false,
+      "note": "改为用户显式 /skill load 触发，避免自动扫描本身消耗上下文"
     },
     "autoSuggest": {
       "enabled": true,
@@ -102,11 +127,11 @@
     "estimateBeforeCoding": true,
     "trackTokenUsage": true,
     "dailyBudgetLimit": null,
-    "warnThreshold": 100000
+    "warnThreshold": 50000
   },
   "documentation": {
     "readmeFile": "README.md",
-    "showGuideOnFirstUse": true,
-    "integrationGuide": "README.md#integration-guide"
+    "integrationGuide": "../integration/INTEGRATION-GUIDE.md",
+    "showGuideOnFirstUse": true
   }
 }
