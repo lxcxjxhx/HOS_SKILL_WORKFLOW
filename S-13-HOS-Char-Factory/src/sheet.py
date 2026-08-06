@@ -11,11 +11,18 @@ from __future__ import annotations
 
 import argparse
 import os
+import shutil
 import sys
 
 from PIL import Image
 
 from comfy_client import ComfyClient, load_config
+
+def _stdout_utf8():
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 NEGATIVE = ("lowres, bad anatomy, bad hands, missing fingers, deformed, blurry, "
             "jpeg artifacts, watermark, text, photorealistic, 3d render, "
@@ -73,6 +80,7 @@ def make_sheet(views: list[str], dirpath: str, out_path: str, label: bool = True
 
 
 def main() -> int:
+    _stdout_utf8()
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config.yaml")
     ap.add_argument("--base", default=None, help="基准图（默认 1000_female 定稿）")
@@ -93,13 +101,26 @@ def main() -> int:
                 "very long hair, amber eyes, gentle smile, hourglass figure, "
                 "female dress, pure white background, masterpiece, best quality")
 
+    # LoadImage 只读 ComfyUI input 目录：基准图复制进去供三视图引用
+    input_dir = cfg.get("comfy", {}).get("input_dir") or ""
+    if not os.path.isdir(input_dir):
+        print(f"[!] ComfyUI input 目录不存在: {input_dir}（config.yaml 需配置 comfy.input_dir）",
+              file=sys.stderr)
+        return 1
+    sheet_input = os.path.join(input_dir, "hcf_sheet")
+    os.makedirs(sheet_input, exist_ok=True)
+    base_input = os.path.join(sheet_input, "base.png")
+    shutil.copy2(base, base_input)
+
+    client = ComfyClient(cfg["comfy"]["host"], cfg["comfy"]["timeout"])
+
     client = ComfyClient(cfg["comfy"]["host"], cfg["comfy"]["timeout"])
     client.ping()
     seed = cfg["sampler"]["seed"]
 
     for view in VIEW_WORDS:
         pos = f"{base_pos}, {VIEW_WORDS[view]}"
-        graph = build_sheet_graph(cfg, base, pos, view, seed)
+        graph = build_sheet_graph(cfg, "hcf_sheet/base.png", pos, view, seed)
         pid = client.submit(graph)
         entry = client.wait(pid)
         images = client.images_of(entry)

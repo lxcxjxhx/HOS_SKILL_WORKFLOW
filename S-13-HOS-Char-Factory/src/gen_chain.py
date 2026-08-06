@@ -14,9 +14,16 @@ from __future__ import annotations
 
 import argparse
 import os
+import shutil
 import sys
 
 from comfy_client import ComfyClient, load_config
+
+def _stdout_utf8():
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
 
 NEGATIVE = ("lowres, bad anatomy, bad hands, missing fingers, extra digits, extra limbs, "
             "deformed, disfigured, blurry, jpeg artifacts, watermark, text, "
@@ -74,6 +81,7 @@ def build_img2img(cfg: dict, image_path: str, positive: str, denoise: float,
 
 
 def main() -> int:
+    _stdout_utf8()
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config.yaml")
     ap.add_argument("--frames", type=int, default=0, help="覆盖总帧数（默认取 config）")
@@ -93,19 +101,30 @@ def main() -> int:
             print(f"[!] 缺定稿 {p}，先跑 gen_still.py", file=sys.stderr)
             return 1
 
+    # LoadImage 只读 ComfyUI input 目录：把上帧复制进去供下一帧引用
+    input_dir = cfg.get("comfy", {}).get("input_dir") or ""
+    if not os.path.isdir(input_dir):
+        print(f"[!] ComfyUI input 目录不存在: {input_dir}（config.yaml 需配置 comfy.input_dir）",
+              file=sys.stderr)
+        return 1
+    chain_input = os.path.join(input_dir, "hcf_chain")
+    os.makedirs(chain_input, exist_ok=True)
+
     client = ComfyClient(cfg["comfy"]["host"], cfg["comfy"]["timeout"])
     client.ping()
     seed = cfg["sampler"]["seed"]
     dn = cfg["sampler"]["denoise"]
 
     prev = os.path.join(still_dir, "000_male.png")
+    prev_input = os.path.join(chain_input, "prev.png")
+    shutil.copy2(prev, prev_input)
     for i in range(1, frames + 1):
         t = (i - 1) / (frames - 1)  # t: 0 → 1
         pos = chain_slots(t)
         # 段首校准帧（i=1,26）用锚点图 + denoise 0.42，其余链式 0.32
         denoise = dn["anchor"] if i in cfg["chain"]["anchor_frames"] else dn["chain"]
         prefix = f"hcf/chain/{i:02d}"
-        graph = build_img2img(cfg, prev, pos, denoise, seed, prefix)
+        graph = build_img2img(cfg, "hcf_chain/prev.png", pos, denoise, seed, prefix)
         pid = client.submit(graph)
         entry = client.wait(pid)
         images = client.images_of(entry)
@@ -115,6 +134,7 @@ def main() -> int:
         sub, fn = images[0]
         local = client.fetch(fn, sub, dest=chain_dir)
         prev = local
+        shutil.copy2(prev, prev_input)  # 更新 input 目录中的上一帧
         if i % 5 == 0 or i == 1:
             print(f"    t={t:.2f} 帧 {i:02d} -> {local}")
 

@@ -5,6 +5,7 @@
 comfy:
   host: "http://127.0.0.1:8188"
   timeout: 300            # 单图超时（秒）
+  input_dir: "C:/Users/46119/AppData/Local/Comfy-Desktop/ComfyUI-Shared/input"  # LoadImage 读取目录（链/三视图复制中间帧用）
 
 # ---- 内容模式：sfw | nsfw ----
 # sfw  : 常规角色素材；nsfw : 成人向变身差分（需 adult 声明 + 模式合规检查）

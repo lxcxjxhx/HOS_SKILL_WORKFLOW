@@ -18,6 +18,13 @@ from PIL import Image
 from comfy_client import load_config
 
 
+def _stdout_utf8():
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
+
 def load_frames(chain_dir: str, transparent: bool) -> list[Image.Image]:
     frames: list[Image.Image] = []
     for p in sorted(glob.glob(os.path.join(chain_dir, "*.png"))):

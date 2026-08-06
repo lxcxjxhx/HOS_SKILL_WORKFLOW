@@ -82,6 +82,10 @@ def fill_prompt(slots: dict) -> str:
 
 
 def main() -> int:
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config.yaml")
     ap.add_argument("--nsfw", action="store_true", help="附加 NSFW 段（需计划成年声明）")
@@ -112,7 +116,13 @@ def main() -> int:
             return 1
         sub, fn = images[0]
         local = client.fetch(fn, sub, dest=out_dir)
-        print(f"    -> {local}")
+        # ComfyUI SaveImage 会加 _00001_ 后缀，重命名为规范名（000_male.png 等）
+        canonical = os.path.join(out_dir, f"{slot['name']}.png")
+        if os.path.abspath(local) != os.path.abspath(canonical):
+            if os.path.exists(canonical):
+                os.remove(canonical)
+            os.rename(local, canonical)
+        print(f"    -> {canonical}")
 
     print(f"[✓] 定稿完成，产物在 {out_dir}/（用户确认后再跑 gen_chain.py）")
     return 0

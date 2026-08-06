@@ -18,6 +18,12 @@ import sys
 
 from PIL import Image
 
+def _stdout_utf8():
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 
 def make_transparent(src: str, dst: str, hard: int = 248, soft: int = 235) -> None:
     """白底 PNG -> 透明 PNG。大于 hard 全透明，soft~hard 渐变。"""
@@ -50,6 +56,7 @@ def process_dir(src_dir: str, dst_dir: str) -> int:
 
 
 def main() -> int:
+    _stdout_utf8()
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config.yaml")
     ap.add_argument("--scope", choices=["still", "chain", "all"], default="all")
