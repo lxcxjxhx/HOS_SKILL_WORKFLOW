@@ -1,0 +1,52 @@
+# HOS-CHAR-FACTORY 全局配置
+# 修改任何参数前先读 references/parameter-guide.md
+
+# ---- 服务 ----
+comfy:
+  host: "http://127.0.0.1:8188"
+  timeout: 300            # 单图超时（秒）
+
+# ---- 内容模式：sfw | nsfw ----
+# sfw  : 常规角色素材；nsfw : 成人向变身差分（需 adult 声明 + 模式合规检查）
+content_mode: "sfw"
+
+# ---- 模型 ----
+model:
+  checkpoint: "ponyDiffusionV6XL_v6StartWithThisOne.safetensors"
+  # LoRA 按需增减（差分渐变权重写在计划里，不用写死）
+  loras: []
+
+# ---- 采样 ----
+sampler:
+  size: [832, 1472]       # 竖版立绘；三视图用 [1216, 832]
+  steps: 28
+  cfg: 6.5
+  sampler_name: "euler_ancestral"
+  scheduler: "normal"
+  seed: 20260806          # ★ 铁律：差分全程固定 seed
+  denoise:
+    still: 1.0            # 定稿
+    anchor: 0.42          # 差分段首校准帧
+    chain: 0.32           # 差分链式帧
+    sheet: 0.85           # 三视图
+
+# ---- 输出 ----
+output:
+  root: "out"             # 全 ASCII 路径，禁止中文目录
+  still: "out/still"      # 定稿 000_male / 500_mid / 1000_female
+  chain: "out/chain"      # 50 帧 01.png..50.png
+  cutout: "out/cutout"    # *_t.png 透明版
+  sheet: "out/sheet"      # 三视图
+  anim: "out/anim"        # preview.webp
+
+# ---- 差分链 ----
+chain:
+  frames: 50              # 总帧数
+  segments: 2             # 两段：t:0→0.5 与 0.5→1.0
+  anchor_frames: [0, 25, 50]   # 段首校准帧索引（0/25/50 对应 000/500/1000）
+
+# ---- 内容护栏（任何模式下生效，不可关闭） ----
+safety:
+  block_minors: true      # 未成年人形象一票否决
+  block_real_person: true # 真实人物肖像一票否决
+  require_adult_decl: true # nsfw 模式必须 adult 声明

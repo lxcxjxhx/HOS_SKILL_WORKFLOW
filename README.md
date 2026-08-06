@@ -46,6 +46,7 @@ HOS Skill Workflow 是一个面向 AI Agent、AI IDE、Claude Code、Codex、Cur
 | S-10 | [HOS-GH-ContribOS](S-10-HOS-GH-ContribOS/) | Markdown | GitHub 贡献操作系统：从项目创建到 PR 合并的完整开源贡献生命周期，双引擎 + 六角色视图 + 经验循环 | [README](S-10-HOS-GH-ContribOS/README.md) |
 | S-11 | [HOS-Paper-RedTeam](S-11-HOS-Paper-RedTeam/) | Markdown | 论文红队系统（HOS论文鞭尸局）：发现→审计→攻击→修复→研究机会，毒舌点评 + RVE 漏洞编号 | [README](S-11-HOS-Paper-RedTeam/README.md) |
 | S-12 | [HOS-Critic-Review](S-12-HOS-Critic-Review/) | TypeScript | 六维批判式评审引擎：七 Agent 流水线 + 泛化语义切片 + 证据驱动六维评分 + MCP server | [README](S-12-HOS-Critic-Review/README.md) |
+| S-13 | [HOS-Char-Factory](S-13-HOS-Char-Factory/) | Python | 角色素材工厂：ComfyUI 批量立绘/50帧变身差分/白底抠图/三视图/动画合成/拆件，NSFW·SFW 双模式内容分级 | [README](S-13-HOS-Char-Factory/README.md) |
 
 ---
 
@@ -119,6 +120,7 @@ HOS_SKILL_WORKFLOW/
 ├── S-10-HOS-GH-ContribOS/        # GitHub 贡献操作系统
 ├── S-11-HOS-Paper-RedTeam/       # 论文红队系统（HOS论文鞭尸局）
 ├── S-12-HOS-Critic-Review/       # 六维批判式评审引擎（HOS-Critic-Review）
+├── S-13-HOS-Char-Factory/        # 角色素材工厂（ComfyUI 差分/抠图/拆件，NSFW·SFW 双模式）
 ├── .github/workflows/ci.yml    # CI 配置
 └── LICENSE                    # AGPLv3 许可证
 ```

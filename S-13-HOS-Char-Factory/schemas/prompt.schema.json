@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/lxcxjxhx/HOS_SKILL_WORKFLOW/S-13-HOS-Char-Factory/schemas/prompt.schema.json",
+  "title": "HCF PromptSheet",
+  "description": "HOS-CHAR-FACTORY 提示词表（PromptEngineer 产物，Runner 零思考执行）",
+  "type": "object",
+  "required": ["plan_id", "style_anchor", "fixed_slots", "frames", "negative"],
+  "properties": {
+    "plan_id": {"type": "string", "pattern": "^HCF-"},
+    "style_anchor": {"type": "string"},
+    "fixed_slots": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "frames": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["frame", "t", "positive", "denoise"],
+        "properties": {
+          "frame": {"type": "integer", "minimum": 1},
+          "t": {"type": "number", "minimum": 0, "maximum": 1},
+          "positive": {"type": "string", "minLength": 10},
+          "denoise": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "negative": {"type": "string", "minLength": 10}
+  }
+}
