@@ -5,6 +5,8 @@
 
 > **ComfyUI Character Portrait Sequence Generator** — 同一角色逐帧渐进变化立绘,输出小游戏可用的 PNG 序列帧。
 
+> **Category: Entertainment (X-series)** — 娱乐向专用,优先级最低,独立于专业工程 S 系列。
+
 ---
 
 ## Description
