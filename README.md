@@ -46,6 +46,7 @@ HOS Skill Workflow 是一个面向 AI Agent、AI IDE、Claude Code、Codex、Cur
 | S-10 | [HOS-GH-ContribOS](S-10-HOS-GH-ContribOS/) | Markdown | GitHub 贡献操作系统：从项目创建到 PR 合并的完整开源贡献生命周期，双引擎 + 六角色视图 + 经验循环 | [README](S-10-HOS-GH-ContribOS/README.md) |
 | S-11 | [HOS-Paper-RedTeam](S-11-HOS-Paper-RedTeam/) | Markdown | 论文红队系统（HOS论文鞭尸局）：发现→审计→攻击→修复→研究机会，毒舌点评 + RVE 漏洞编号 | [README](S-11-HOS-Paper-RedTeam/README.md) |
 | S-12 | [HOS-Critic-Review](S-12-HOS-Critic-Review/) | TypeScript | 六维批判式评审引擎：七 Agent 流水线 + 泛化语义切片 + 证据驱动六维评分 + MCP server | [README](S-12-HOS-Critic-Review/README.md) |
+| S-13 | [HOS-Chara-Sequence](S-13-HOS-Chara-Sequence/) | Python | ComfyUI 角色立绘序列生成：场景配置驱动 + 逐帧平滑渐进（成长/进化/变身）+ PNG 序列输出 | [README](S-13-HOS-Chara-Sequence/README.md) |
 
 
 ---
