@@ -1,0 +1,38 @@
+{
+  "name": "dragon_evolution",
+  "frames": 100,
+  "template": "fantasy RPG monster portrait, 2D game art style, detailed creature illustration, standing upright on plain dark background, centered, full body visible, dramatic lighting, masterpiece, best quality, {subject}",
+  "unique_suffix": "percent",
+  "features": {
+    "size": [
+      "tiny baby dragon, eggshell fragments nearby", "very small young dragon", "small juvenile dragon",
+      "small dragon, growing", "medium young dragon", "medium dragon",
+      "large dragon", "large adult dragon", "very large dragon",
+      "massive adult dragon", "huge ancient dragon", "colossal ancient dragon"
+    ],
+    "horns": [
+      "no horns, smooth head", "tiny horn bumps", "small nub horns",
+      "short curved horns", "medium curved horns", "long curved horns",
+      "long sharp horns", "large branching horns", "large majestic branching horns",
+      "massive ornate horns", "immense ancient horns", "colossal ornate ancient horns"
+    ],
+    "wings": [
+      "no wings, stubby arms", "tiny wing buds", "small undeveloped wings",
+      "small leathery wings", "medium wings", "full spread wings",
+      "large powerful wings", "large majestic wings", "great dragon wings",
+      "massive wings, broad span", "immense wings", "colossal wings, legendary dragon"
+    ],
+    "body": [
+      "round chubby baby body", "soft juvenile body", "growing lean body",
+      "lean agile body", "muscular draconic body", "strong muscular body",
+      "powerful muscular body", "massive muscular body", "armored scaled body",
+      "heavily armored scales, spiked ridge", "ancient armored body, battle scars", "legendary armored body, glowing runes"
+    ],
+    "aura": [
+      "cute harmless baby", "playful young dragon", "curious juvenile",
+      "confident young dragon", "proud adolescent dragon", "fierce young adult",
+      "intimidating adult dragon", "menacing dragon", "fearsome dragon",
+      "terrifying ancient dragon", "legendary dragon, fire aura", "mythic dragon lord, blazing aura"
+    ]
+  }
+}
