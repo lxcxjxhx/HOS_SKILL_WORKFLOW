@@ -37,6 +37,25 @@ renderer:
   cmd: "node src/index.ts <review.json>"   # TS 渲染器用法
   example: "src/example-review.json"
 
+# ===== 方法论背书（详见 references/methodology.md）=====
+methodology:
+  reference: "references/methodology.md"       # 背书书单 + Operationalization 映射
+  authoritative_sources: "references/authoritative-sources.md"  # 权威书评/解读来源库
+  cite_backing: true                           # 输出标注 [背书: <方法论>]，不写「根据我们的经验」
+  require_authoritative_evidence: true         # RVE/一句话点评/Reviewer 对照尽量挂权威佐证
+
+# ===== 联网核验（权威佐证默认动作，对齐 S-12 Evidence-Agent 铁律）=====
+# paper 对象必须尝试核验 arXiv/OpenReview/PWC/S2；已尝试仍无结果才允许写「查不到，证据缺口」
+evidence_network:
+  required: true
+  sources:
+    - arxiv_abs          # https://arxiv.org/abs/<id>：标题/版本/发表状态/代码链接
+    - openreview         # 顶会真实审稿意见（与 Reviewer 模拟对照）
+    - papers_with_code   # 复现记录/SOTA 排名
+    - semantic_scholar   # 引用量/被引趋势
+    - github_api         # 开源仓库健康度
+  unverifiable_rule: "must_have_tried"   # 未尝试联网就标 unverifiable 属流程缺陷
+
 # ===== RVE 编号 =====
 rve_auto_assign: true   # 自动分配 HOS-RVE-YYYY-NNNN
 rve_sequence_file: "database/vulnerability.json"

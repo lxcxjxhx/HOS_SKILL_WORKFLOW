@@ -78,6 +78,8 @@ S-11-HOS-Paper-RedTeam/
 │   ├── vulnerability.json    # RVE 登记表
 │   └── research-gap.json     # 研究机会池
 ├── references/
+│   ├── methodology.md          # 📚 方法论背书（5 本书 + Reviewer Rubric + 映射表）
+│   ├── authoritative-sources.md # 🌐 权威书评/解读来源库
 │   ├── style-guide.md        # 毒舌风格指南
 │   ├── rve-catalog.md        # RVE 漏洞编号规范
 │   ├── score-model.md        # 评分模型（ghfind 式评分卡）
@@ -87,6 +89,9 @@ S-11-HOS-Paper-RedTeam/
 │   ├── render.ts             # renderCard() 渲染逻辑
 │   ├── index.ts              # CLI 入口
 │   └── example-review.json   # 示例数据
+├── docs/
+│   └── 01-overview.md          # 正式规格概览（对齐 S-12 docs/ 体系）
+├── CHANGELOG.md                # 变更记录
 ├── package.json / tsconfig.json
 └── workflows/                # 自动化节奏
     ├── daily-scan.yaml
@@ -139,6 +144,18 @@ node src/index.ts review.json                  # 渲染你自己的评审 JSON
 3. 每条漏洞都有 Patch，结尾必有认可
 
 详细风格规范见 `references/style-guide.md`。
+
+## 方法论背书（不是 AI 自创的清单）
+
+本技能的评审规则工程化自五本权威科研方法论 + CS Reviewer Rubric（对齐 S-12-HOS-Critic-Review 的背书结构）：
+
+- **The Craft of Research 5th**（UChicago Press）—— 研究总纲：问题→证据→论证→贡献
+- **Research Design 5th**（SAGE）—— 先有研究问题后有方法，防「先定方法再硬找问题」
+- **How to Read a Paper**（Keshav）—— 三遍阅读法，第三遍=挑战隐藏假设
+- **How to Write a Lot** / **English for Writing Research Papers** —— 写作生产力与国际论文写作
+- **CS Reviewer Rubric** —— Novelty/Soundness/Baseline/Data/Experiment/Ablation/Statistical validity/Repro/Real-world relevance
+
+每条评审规则的落点映射见 `references/methodology.md`；评审时引用的权威第三方解读（OpenReview 审稿、Papers with Code 复现、Semantic Scholar 引用等）见 `references/authoritative-sources.md`。
 
 ## 自动化
 

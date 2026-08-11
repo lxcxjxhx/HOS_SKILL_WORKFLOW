@@ -91,3 +91,13 @@ review:
 - `database/paper.json` ← 本论文元数据
 - `database/vulnerability.json` ← 本论文全部 RVE
 - `database/research-gap.json` ← 研究机会
+
+## 11. 权威解读与佐证
+
+> Evidence 阶段已核验的权威第三方来源；无则写「未找到权威第三方解读，证据缺口」。
+
+- **arXiv**: <url> — 元数据核验（版本 / 发表状态 / 代码链接）
+- **OpenReview**: forum <url> — 真实审稿意见与本报告发现是否吻合
+- **Papers with Code**: <url> — 复现记录 / SOTA 排名
+- **Semantic Scholar**: <url> — 引用量 / 被引趋势
+- **官方仓库**: <url> — 健康度（star / PR / 维护频率）
