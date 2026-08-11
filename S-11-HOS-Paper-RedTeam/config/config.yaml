@@ -35,6 +35,7 @@ scoring:
 # ===== 评分卡渲染（ghfind 式，详见 references/ghfind-card.md）=====
 renderer:
   cmd: "node src/index.ts <review.json>"   # TS 渲染器用法
+  format: "html"                            # 默认输出单文件 HTML（内联 CSS，浏览器直开）；--format md 输出 markdown
   example: "src/example-review.json"
 
 # ===== 方法论背书（详见 references/methodology.md）=====

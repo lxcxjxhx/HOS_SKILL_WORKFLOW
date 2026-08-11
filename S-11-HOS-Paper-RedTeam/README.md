@@ -125,12 +125,13 @@ S-11-HOS-Paper-RedTeam/
 
 ### 🎴 TS 渲染器（模板化，通用于所有论文类型）
 
-> 卡片结构参考 ghfind.com 并**内嵌**在 `references/ghfind-card.md`（无需抓站）。渲染器只认 `PaperReviewData` 数据形状，维度数据驱动，喂什么领域的数据出什么卡。
+> 卡片结构参考 ghfind.com 并**内嵌**在 `references/ghfind-card.md`（无需抓站）。渲染器只认 `PaperReviewData` 数据形状，维度数据驱动，喂什么领域的数据出什么卡。**默认输出单文件 HTML**（内联 CSS、评分 hero 区、维度进度条、毒舌点评、权威解读与佐证区，浏览器直接打开，可打印/转 PDF），`--format md` 回退纯 markdown。
 
 ```bash
 # Node 24+ 直接跑 TS
-node src/index.ts src/example-review.json      # 跑示例
-node src/index.ts review.json                  # 渲染你自己的评审 JSON
+node src/index.ts src/example-review.json              # 默认 HTML
+node src/index.ts src/example-review.json --format md  # markdown
+node src/index.ts review.json                          # 渲染你自己的评审 JSON
 ```
 
 评分卡数据由 Scorer 组装（`agents/11-scorer.md`），结构定义见 `src/types.ts`。
