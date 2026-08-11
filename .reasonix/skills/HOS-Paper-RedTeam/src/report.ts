@@ -8,7 +8,7 @@
 // 用法：node src/index.ts review.json（默认 report 模式）
 // ============================================================
 
-import type { PaperReviewData, EvidenceLink, ReviewStats, TexQuote } from './types.ts';
+import type { PaperReviewData, EvidenceLink, ReviewStats, TexQuote, CodeAudit } from './types.ts';
 
 function esc(s: unknown): string {
   return String(s ?? '')
@@ -196,6 +196,44 @@ function statsPanel(d: PaperReviewData, stats: ReviewStats): string {
   </div>`;
 }
 
+// —— 代码实现审查区块 ——
+function renderCodeAudit(ca: CodeAudit): string {
+  const bar = (v: number, max: number): string => {
+    const pct = Math.max(0, Math.min(100, (v / max) * 100));
+    return `<div class="dim-track" style="height:8px;max-width:260px"><div class="dim-fill" style="width:${pct.toFixed(1)}%"></div></div>`;
+  };
+  const kv = (k: string, v: unknown): string =>
+    v === undefined || v === null || v === '' ? '' : `<p class="step-txt" style="margin:2px 0"><b>${esc(k)}</b>：${esc(v)}</p>`;
+  const li = (items: string[] | undefined): string =>
+    items?.length ? items.map(i => `<li>${esc(i)}</li>`).join('') : '<li class="muted">无</li>';
+  return `
+  <h2>💻 代码实现审查</h2>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:8px">
+      <span class="cat" style="background:#e8f0fe;color:#174ea6;font-size:13px;padding:4px 12px">${esc(ca.repoType)}</span>
+      ${typeof ca.depthScore === 'number' ? `
+        <span style="font-size:13px"><b>实现深度</b> ${ca.depthScore}/5</span>
+        <div style="flex:1;min-width:180px">${bar(ca.depthScore, 5)}</div>` : ''}
+    </div>
+    ${kv('技术栈', ca.language)}
+    ${typeof ca.loc === 'number' ? kv('代码规模', `${ca.loc.toLocaleString()} 行`) : ''}
+    ${kv('LLM 集成方式', ca.llmIntegration)}
+    ${ca.frameworks?.length ? `<p class="step-txt" style="margin:4px 0"><b>开源框架依赖</b>：${ca.frameworks.map(f => `<span class="badge">${esc(f)}</span>`).join('')}</p>` : ''}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px" class="grid2">
+      <div>
+        <p style="margin:8px 0 2px;font-weight:700;color:#137333">✅ 代码里真实落地的</p>
+        <ul style="margin:0;padding-left:20px">${li(ca.coreImplementations)}</ul>
+      </div>
+      <div>
+        <p style="margin:8px 0 2px;font-weight:700;color:#d93025">❌ 论文声称但代码里找不到的</p>
+        <ul style="margin:0;padding-left:20px">${li(ca.missing)}</ul>
+      </div>
+    </div>
+    ${ca.verified?.length ? `<p class="step-txt" style="margin:8px 0 2px"><b>可核验项</b>：</p><ul style="margin:0;padding-left:20px">${li(ca.verified)}</ul>` : ''}
+    ${ca.verdict ? `<p class="step-txt" style="margin:8px 0 0;background:#fafafa;border:1px dashed var(--line);border-radius:8px;padding:10px 12px"><b>一句话结论</b>：${esc(ca.verdict)}</p>` : ''}
+  </div>`;
+}
+
 // —— 完整审计报表 ——
 export function renderReport(d: PaperReviewData): string {
   const gc = gradeColor(d.score);
@@ -341,6 +379,8 @@ export function renderReport(d: PaperReviewData): string {
 
   ${d.highlights.length ? `<h2>🏆 亮点</h2><div class="card"><ul>${list(d.highlights)}</ul></div>` : ''}
   ${d.methods.length ? `<h2>🛠 关键方法</h2><div class="card"><ul>${list(d.methods)}</ul></div>` : ''}
+
+  ${d.codeAudit ? renderCodeAudit(d.codeAudit) : ''}
 
   <h2>🔥 毒舌点评</h2>
   <div class="card"><div class="roast">${esc(d.roastFull)}</div>

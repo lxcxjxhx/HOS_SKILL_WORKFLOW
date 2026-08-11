@@ -104,6 +104,7 @@ HOS 模式（红队）：
 10. 输出语言跟随用户语言；默认中文。
 11. **tex 源码优先**——所有数字核对必须以下载的 arXiv tex 源码为准（逐字引用 + file:line），禁止依赖 PDF 转换文本；e-print 断点续传、解压、仓库完整克隆、无 tex/无仓库标记规范见 [references/tex-evidence.md](references/tex-evidence.md)。
 12. **批量重审走并行工作流**——N 篇同时审时用 fleet 并行子代理 + write_paths 隔离；RVE 编号由主线程**预分配号段**（子代理只许沿用或写 pending-XX，禁止自编号），避免并行冲突；完整流程见 [workflows/batch-review.md](workflows/batch-review.md)。
+13. **有仓库必审代码实现**——`review.json` 必须携带 `codeAudit` 字段（repoType/深度评分/论文声称↔代码证据对照），回答「论文吹的实现到底存不存在」；五步快速审查法与判定标准见 [references/code-implementation-audit.md](references/code-implementation-audit.md)。
 
 ---
 

@@ -21,6 +21,21 @@ export interface TexQuote {
   note?: string;     // 一句话说明这段为什么是证据
 }
 
+/** 代码实现审查（审查仓库后填充：论文声称 ↔ 代码证据对照） */
+export interface CodeAudit {
+  present: boolean;            // 是否有可审查代码（无仓库 = false）
+  repoType: string;            // 自研工程实现 / artifact仓库 / 概念展示 / 结果档案
+  language?: string;           // 语言/技术栈
+  loc?: number;                // 代码行数（排除 vendored）
+  llmIntegration?: string;     // LLM 调用方式：API 直调 / 自研 agent loop / 无 LLM
+  frameworks?: string[];       // 依赖的开源框架（CodeQL/OSS-Fuzz/sanitizer/CPG...）
+  coreImplementations?: string[]; // 代码里真实落地的核心机制
+  verified?: string[];         // 论文声称、代码里可核验的部分
+  missing?: string[];          // 论文声称、代码里找不到的部分（含死代码）
+  depthScore?: number;         // 实现深度 1-5
+  verdict?: string;            // 一句话结论
+}
+
 /** 单条问题（RVE）的完整证据链路：Claim → tex 原文 → 证据缺口 → RVE → Patch */
 export interface EvidenceLink {
   rveId: string;           // HOS-RVE-2026-00XX
@@ -85,6 +100,9 @@ export interface PaperReviewData {
   // —— 新增：根因证据链 + 问题统计（完整审计报表）——
   issues?: EvidenceLink[];    // 逐条问题（含根因 + tex 原文引用）
   stats?: ReviewStats;        // 问题统计（缺失时渲染器自动从 issues 计算）
+
+  // —— 新增：代码实现审查（有仓库时填充）——
+  codeAudit?: CodeAudit;      // 仓库实现深度：论文声称 ↔ 代码证据对照
 }
 
 /** 通用六维（默认模板，满分合计 100，适用于所有论文类型） */

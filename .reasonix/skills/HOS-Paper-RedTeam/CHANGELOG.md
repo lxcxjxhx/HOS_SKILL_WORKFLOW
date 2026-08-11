@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.0] - 2026-08-12
+
+### Added
+- **代码实现审查规范**（`references/code-implementation-audit.md`）：五步快速审查法（仓库类型定性 / 技术栈规模 / 核心实现定位 / LLM 调用方式 / 论文声称↔代码证据对照）+ 深度评分 1-5 + 审查输出模板。沉淀自 10 仓库逐一审查：论文「玄乎」卖点（信息论/超越 frontier/零日）几乎都在代码里找不到，真正有的是确定性验证闭环（sanitizer/fuzzer/CPG）。
+- **`codeAudit` 数据结构与渲染**：`types.ts` 新增 `CodeAudit` 接口（repoType/loc/llmIntegration/frameworks/coreImplementations/verified/missing/depthScore/verdict）；`report.ts` 新增「💻 代码实现审查」区块（深度评分条 + 真实落地/找不到对照表 + 一句话结论）。
+- **SKILL.md 铁律 13**：有仓库必审代码实现，review.json 必须携带 codeAudit。
+
+### Notes
+- 10 仓库审查结果：真工程实现 5（AEGIS/Revelio/FuzzingBrain-V2/Bench/ZeroFalse）、artifact 仓库 1（AutoTrace 核心未开源）、概念展示 1（SAST-Genius 零代码）、结果档案 1（LLMPFA）、规则引擎+理论包装 1（CodeX-Verify）、artifact 1（DREA）。
+
 ## [1.4.0] - 2026-08-12
 
 ### Added
