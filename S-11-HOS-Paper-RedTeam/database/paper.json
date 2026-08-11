@@ -1,0 +1,21 @@
+{
+  "$schema_note": "论文元数据索引。每次完成 Paper Autopsy 后追加一条。按 arxiv_id 去重。",
+  "papers": [
+    {
+      "arxiv_id": "2602.17875",
+      "title": "MultiVer: Zero-Shot Multi-Agent Vulnerability Detection",
+      "authors": ["Shreshth Rajan"],
+      "institution": "Noumenon Labs / Harvard",
+      "venue": "arXiv preprint",
+      "submitted": "2026-02-19",
+      "updated": "2026-02-19",
+      "journal_ref": null,
+      "categories": ["cs.MA", "cs.AI"],
+      "hype_score": 6,
+      "analyzed": "2026-07-31",
+      "rve_ids": ["HOS-RVE-2026-0001", "HOS-RVE-2026-0002"],
+      "research_gap_ids": ["GAP-2026-001"],
+      "status": "analyzed"
+    }
+  ]
+}
