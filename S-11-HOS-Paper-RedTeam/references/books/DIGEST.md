@@ -98,8 +98,8 @@
 
 ## 提炼结论（对 methodology.md 的修正要求）
 
-1. **How to Read a Paper 升级为「全文级」背书**：新增精确原文（five Cs、virtual re-implementation、三遍时长、文献综述流程），并补充关联文献（Roscoe / Whitesides / Schulzrinne / Peyton Jones）作为拓展阅读。
-2. **其余 4 本明确标注「目录级/书评级/前言级」**：任何输出引用不得写具体页码，只能写「Ch.7（目录级）」或「书评级主张」或「官方前言（原文引述）」，违反即视为幻觉。
-3. **Craft of Research 的第 5 版新增内容（presentations 章 / gen AI 指南 / ethics 扩展）已有官方页原文引述**，可作为版本差异背书。
-4. **English for Writing Research Papers 版本修正为第三版（2023）**：官方前言版权页 "© 2011, 2016, 2023" 证实；前言确认新增 ChatGPT/机器翻译两章（Ch.9-10）、各节含 AI 小节、第 20 章投稿 checklist——替换之前基于 Crossref 章节元数据的推断。
-5. **Springer 官方 Front Matter 是合法免费获取路径**：link.springer.com 每本书免费提供前言/目录 PDF，可据此升级「目录级」背书为「前言级」（官方原文引述）。
+1. **How to Read a Paper 升级为「全文级」背书**：新增精确原文（five Cs、virtual re-implementation、三遍时长、文献综述流程），并补充关联文献（Roscoe / Whitesides / Schulzrinne / Peyton Jones）作为拓展阅读。**唯一允许精确引用的书**。
+2. **其余 4 本无全文 → 仅方向性垫背**：只证明「该书方向/定位真实存在且领域公认」（官方目录 / 简介 / 前言 / 书评），禁止引用正文页码、论证细节、措辞。
+3. **Craft of Research 的第 5 版新增内容（presentations 章 / gen AI 指南 / ethics 扩展）已有官方页原文引述**，可作为版本差异背书（方向性）。
+4. **English for Writing Research Papers 版本修正为第三版（2023）**：官方前言版权页 "© 2011, 2016, 2023" 证实；前言确认新增 ChatGPT/机器翻译两章（Ch.9-10）、各节含 AI 小节、第 20 章投稿 checklist。
+5. **Springer 官方 Front Matter 是合法免费获取路径**：link.springer.com 每本书免费提供前言/目录 PDF，可据此把「方向性背书」升级为「官方原文引述」（前言级），但仍非全文，正文细节不可引用。
