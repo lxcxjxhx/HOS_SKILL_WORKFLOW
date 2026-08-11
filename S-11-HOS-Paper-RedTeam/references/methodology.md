@@ -71,9 +71,18 @@
 
 APA 第 2 版（DOI 10.1037/0000109-000，2019）。**引用级别：Crossref 书目 + 权威学术书评**（付费书无合法全文，提炼见 `references/books/DIGEST.md` §④）。权威书评：Stephen K. Donovan, *Journal of Scholarly Publishing* 39(1): 351-355, 2007（DOI 10.1353/scp.2007.0030）。核心主张（书评级）：写作不是灵感驱动的活动，而是可管理、有计划的日常习惯。**本 Skill 落点**：Blogger Agent（Agent 10）+ workflows/ 三档节奏 = 该队列思想的工作流化（Research Queue → Reading Queue → Experiment Queue → Writing Queue → Submission Queue）；输出不是一次性灵感，是可排期的生产流程。
 
-### 2.5 English for Writing Research Papers —— 国际论文写作（⚠ 章节级背书，无全文）
+### 2.5 English for Writing Research Papers —— 国际论文写作（⚠ 前言级背书，官方 Front Matter 已下载）
 
-Springer 2023 第 2 版（DOI 10.1007/978-3-031-31072-0，`English for Academic Research` 丛书）。**引用级别：Crossref 章节元数据**（付费书无合法全文，提炼见 `references/books/DIGEST.md` §⑤）。Crossref 章节记录证实：Titles / Abstracts: Particular types / Discussing your limitations / Clarifying and Highlighting / **Automatic translation**（含 AI 自动翻译内容，证实新版覆盖 AI 写作）。按论文结构逐章讲解。**本 Skill 落点**：Blogger Agent 公开内容与 research-idea.md 模板的写作检查清单；Research Miner 产出的下一篇论文方向需按此结构给出写作骨架。
+Springer 2023 **第 3 版**（DOI 10.1007/978-3-031-31072-0，`English for Academic Research` 丛书）。**引用级别：官方 Front Matter（前言/目录）**——官方前言 PDF 已下载精读（`references/books/ewrp-frontmatter-springer.pdf`），提炼见 `references/books/DIGEST.md` §⑤。**无正文全文**。
+
+官方前言确认（原文引述）：
+- 结构：**Part I Writing Skills（第 1-13 章）** + **Part II Writing a Paper（第 14-20 章）**，第 20 章为投稿前 checklist。
+- **新版新增两章（第 9、10 章）**："They cover how to use ChatGPT (and similar tools) and machine translation to write and/or correct your paper."
+- 各章节（Abstracts / Introductions / Methods 等）均新增至少一个 "using ChatGPT" 小节。
+
+**本 Skill 落点**：Blogger Agent 公开内容与 research-idea.md 模板的写作骨架按论文结构组织（Part II 即写作检查清单来源）；投稿 checklist（Ch.20）映射 research-idea.md 的投稿可行性检查。⚠ 正文细节未读，仅前言级，禁止引用正文页码。
+
+> 版本修正：2026-02-16 从官方前言确认本书为**第三版**（版权页 © 2011, 2016, 2023），此前误标 2nd ed. 已修正。
 
 ### 2.6 CS Reviewer Rubric —— 同行评审标准（非书籍，领域通行）
 
