@@ -62,6 +62,23 @@ find . -type f \( -name "*.py" -o -name "*.ts" \) -exec cat {} + | wc -l
 
 ---
 
+## 二·五、架构形态判定（agent 框架 vs 硬性 workflow）
+
+用户最关心的架构问题：**是完整 agent 框架（在其上优化）、还是硬性构建选择器（先过滤再 AI 审核的 workflow）？**
+
+| 架构形态 | 判定特征 | 代码证据 |
+|---------|---------|---------|
+| `pipeline`（硬性 workflow）| 固定步骤顺序：确定性选择器/过滤器 → 单次 LLM 审核；**无多轮工具循环**；即使有 "Agent" 类也只是「构造 prompt → 调一次 LLM → 解析」的封装 | BaseAgent 只有 `_call_llm` 没有 loop（AEGIS base.py:41）；三阶段单次调用（ZeroFalse）|
+| `agent-framework`（现成框架上优化）| 用 LangChain/AutoGen/Instructor/Mini-SWE-Agent/Claude Code CLI 等，在其上定制 | `AgentMiddleware`（instructor，DREA middleware.py:23）；改编 Mini-SWE-Agent（Revelio agents/default.py:1-5）；调 Claude Code/Codex CLI（FuzzingBrain-Bench --arm）|
+| `custom-agent`（自研 agent loop）| 自己实现 tool-calling 循环（LLM↔工具多轮迭代）| 自研 BaseAgent loop（FuzzingBrain-V2 agents/base.py:23-33）|
+| `hybrid` | 阶段混合：先确定性函数管线、后 agent 循环 | Stage1 函数管线 + Stage2 agent（Revelio）|
+| `no-code` | 无代码/核心未开源/概念展示 | 散装文件或 artifact 仓库（SAST-Genius/AutoTrace）|
+
+**2026 年实测分布（10 仓库）**：`pipeline` 4（AEGIS/ZeroFalse/CodeX-Verify/LLMPFA）· `agent-framework` 2（DREA/Sifting）· `custom-agent` 1（FuzzingBrain-V2）· `hybrid` 1（Revelio）· `no-code` 2（SAST-Genius/AutoTrace）。
+**结论：多数论文是「硬性 workflow（先确定性过滤/选择 → 再 AI 审核）」，真正实现完整 agent 多轮循环的只有 FuzzingBrain-V2（自研）与 Revelio（改编）——没有一个用 LangChain/AutoGen 完整框架再优化。**
+
+---
+
 ## 三、深度评分（1-5）
 
 | 分 | 判定 | 特征 |

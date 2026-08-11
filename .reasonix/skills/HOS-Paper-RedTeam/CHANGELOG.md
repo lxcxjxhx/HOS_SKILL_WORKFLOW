@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.5.1] - 2026-08-12
+
+### Added
+- **架构形态判定维度**（codeAudit.architecture）：区分 `pipeline`（硬性 workflow：先确定性过滤/选择→再 AI 审核，无多轮循环）/ `agent-framework`（现成框架上优化）/ `custom-agent`（自研 tool-calling loop）/ `hybrid` / `no-code`。
+- **references/code-implementation-audit.md 新增「二·五 架构形态判定」**：判定特征表 + 代码证据（AEGIS BaseAgent 只有 _call_llm 无 loop、DREA instructor/AgentMiddleware、Revelio 改编 Mini-SWE-Agent、FuzzingBrain-V2 自研 loop）。
+- **report.ts 渲染架构标签**：codeAudit 区块新增「架构：xxx」徽章。
+
+### Notes
+- 10 仓库实测分布：pipeline 4（AEGIS/ZeroFalse/CodeX-Verify/LLMPFA）、agent-framework 2（DREA/Sifting）、custom-agent 1（FuzzingBrain-V2）、hybrid 1（Revelio）、no-code 2（SAST-Genius/AutoTrace）。
+- 核心结论：多数论文是「硬性 workflow（先过滤再 AI 审核）」，完整 agent 多轮循环只有 FuzzingBrain-V2（自研）与 Revelio（改编）——没有一个用 LangChain/AutoGen 完整框架再优化。
+
 ## [1.5.0] - 2026-08-12
 
 ### Added

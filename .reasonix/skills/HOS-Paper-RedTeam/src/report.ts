@@ -211,6 +211,7 @@ function renderCodeAudit(ca: CodeAudit): string {
   <div class="card">
     <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:8px">
       <span class="cat" style="background:#e8f0fe;color:#174ea6;font-size:13px;padding:4px 12px">${esc(ca.repoType)}</span>
+      ${ca.architecture ? `<span class="cat" style="background:#fef7e0;color:#7a5c00;font-size:13px;padding:4px 12px">架构：${esc(ca.architecture)}</span>` : ''}
       ${typeof ca.depthScore === 'number' ? `
         <span style="font-size:13px"><b>实现深度</b> ${ca.depthScore}/5</span>
         <div style="flex:1;min-width:180px">${bar(ca.depthScore, 5)}</div>` : ''}

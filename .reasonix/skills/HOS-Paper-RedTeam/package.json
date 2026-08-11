@@ -1,6 +1,6 @@
 {
   "name": "hos-paper-redteam",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "HOS-Paper-RedTeam — 论文审计报表渲染器（评分卡 + 根因证据链 + 问题统计）",
   "type": "module",
   "main": "src/index.ts",

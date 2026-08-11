@@ -25,6 +25,7 @@ export interface TexQuote {
 export interface CodeAudit {
   present: boolean;            // 是否有可审查代码（无仓库 = false）
   repoType: string;            // 自研工程实现 / artifact仓库 / 概念展示 / 结果档案
+  architecture?: string;       // 架构形态：pipeline / agent-framework / custom-agent / hybrid / no-code
   language?: string;           // 语言/技术栈
   loc?: number;                // 代码行数（排除 vendored）
   llmIntegration?: string;     // LLM 调用方式：API 直调 / 自研 agent loop / 无 LLM
