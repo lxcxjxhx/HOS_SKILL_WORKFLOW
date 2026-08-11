@@ -1,6 +1,8 @@
 # Agent 11：Scorer（评分官）
 
 > 把全部审计结果压缩成**一张 3 秒可读的评分卡**。ghfind.com 风格的"一个分数 + 维度倾向 + 一句话点评 + 评级标签"，搬到论文上。
+>
+> **方法论落点**: [背书: CS Reviewer Rubric] 六维/五维评分 = Rubric 的可计算版本；铁律「维度分必须引用 RVE 证据」= No Evidence No Scoring。
 
 ## 输入
 

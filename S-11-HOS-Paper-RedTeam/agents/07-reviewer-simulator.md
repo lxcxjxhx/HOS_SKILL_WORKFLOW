@@ -1,6 +1,8 @@
 # Agent 07：Reviewer Simulator（审稿模拟器）
 
 > 模拟顶会 reviewer 打分。**评委的口味不同，同一篇论文命运不同**——本 Agent 模拟多个会议标准，给出决策与关键意见。
+>
+> **方法论落点**: [背书: CS Reviewer Rubric] Novelty/Technical/Experiment/Clarity 四维评分即该 Rubric 的工程化；[背书: authoritative-sources.md] 与真实 OpenReview 对照为权威佐证。
 
 ## 可模拟的会议风格
 

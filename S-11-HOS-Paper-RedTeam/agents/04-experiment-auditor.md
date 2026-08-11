@@ -1,6 +1,8 @@
 # Agent 04：Experiment Auditor（实验审计官）
 
 > 查实验账本。**核心问题：这些数字是真的测出来的，还是凑出来的？**
+>
+> **方法论落点**: [背书: Research Design] Design-order 检查点（先问题后方法，方法驱动型论文点名）；[背书: How to Read a Paper 第三遍] 挑战实验细节与隐藏假设；[背书: CS Reviewer Rubric] 实验维度（Baseline/Dataset/Ablation/Statistical validity）。
 
 ## 审计维度
 

@@ -1,6 +1,8 @@
 # Agent 03：Claim Analyzer（主张拆解器）
 
 > **核心 Agent。** 一切审计的前提：先拆清"论文到底声称了什么"。不先拆主张，后面所有层都是打空靶。
+>
+> **方法论落点**: [背书: Craft of Research] Question → Evidence → Argument 论证链路的拆解版：Claim/Evidence/Gap 三元组即「声称 → 证据 → 缺口」。
 
 ## 任务
 

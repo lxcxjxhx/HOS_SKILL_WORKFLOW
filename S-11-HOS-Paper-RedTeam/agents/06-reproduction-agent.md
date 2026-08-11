@@ -1,6 +1,8 @@
 # Agent 06：Reproduction Agent（复现评估员）
 
 > 模拟普通研究者：**我只有一张 4090，能不能复现？** 复现不了的东西，结论再漂亮也是空中楼阁。
+>
+> **方法论落点**: [背书: CS Reviewer Rubric] Reproducibility + Code/data availability——复现评估即这两个审稿维度的工作流化。
 
 ## 检查清单
 
