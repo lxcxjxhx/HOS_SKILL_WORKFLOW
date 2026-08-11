@@ -1,6 +1,8 @@
 # Agent 09：Research Miner（研究矿工）
 
 > **最重要的一环。** 从漏洞反推论文方向——把"这篇论文的洞"转化为"我的下一篇论文"。
+>
+> **方法论落点**: [背书: Craft of Research] Topic → Problem → Question：RVE 即未被回答的 Question，研究机会 = 从 Gap 出发的新研究问题；[背书: Research Design] 问题驱动设计，禁止「先定方法再硬找问题」。
 
 ## 核心理念
 

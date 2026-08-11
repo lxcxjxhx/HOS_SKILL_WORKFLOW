@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.1] - 2026-02-16
+
+### Added
+- **Agent 级方法论落点**：11 个 Agent 定义文件（01–11）头部均增加「方法论落点」引用行，将 methodology.md 的映射直接落到每个 Agent——如 Experiment Auditor 挂 Research Design Design-order 检查点、Reviewer Simulator 挂 CS Reviewer Rubric 四维、Research Miner 挂 Craft of Research Topic→Problem→Question。至此方法论背书贯通 SKILL.md → references → agents 三层。
+
 ## [1.1.0] - 2026-02-16
 
 ### Added
