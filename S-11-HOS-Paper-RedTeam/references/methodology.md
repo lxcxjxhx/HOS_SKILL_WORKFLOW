@@ -2,40 +2,43 @@
 
 > 本 Skill 的评审规则不是 AI 自创的「看起来很专业」的清单，而是对通用科研方法论的工程化——对外可解释、有权威来源。背书结构对齐 S-12-HOS-Critic-Review：**权威方法论 → 可解释规则 → Skill → Workflow → AI 执行**。
 
+## ⚠ 背书验证机制（防 AI 幻觉，先读这条）
+
+**每本书的引用必须可核验**，遵守以下铁律：
+
+1. **每条背书必须带锚点**：ISBN / DOI / 官方出版社 URL 三选一，禁止只写书名就声称「官方介绍明确说明……」。锚点需亲自访问核验（访问方式见 `references/authoritative-sources.md` §三）。
+2. **区分「已核验」与「待核验」**：下表 `✅ 已核验（<日期>）` = 官方页面/DOI 已实际访问确认；任何未亲自核验的声明一律标注 `⚠ 待人工核验`，禁止假装查证过。
+3. **禁止转述二手来源当背书**：别人（含 AI）对书的总结、书单推荐、二手书评不构成背书。背书只认出版社官方页面 / DOI 记录 / 作者原文。
+4. **引用页码/章节必须真实**：引用的章节号必须来自官方目录（见下表「目录核实」列），引不到就写「章节号待核实」，禁止编造。
+5. 发现背书错误（如 ISBN 不存在）→ 立即修正并更新 CHANGELOG，向用户说明。
+
 ## 一、背书书单（1 总纲 + 2 核心 + 2 专项 + 1 套审稿标准）
 
-| 优先级 | 书/标准 | 定位 | 覆盖人群 |
-|--------|---------|------|----------|
-| ★★★★★ | **Booth, Colomb & Williams, *The Craft of Research*, 5th ed., University of Chicago Press, 2024** | 科研总纲 | 本/硕/博 |
-| ★★★★★ | **Creswell & Creswell, *Research Design*, 5th ed., SAGE** | 研究设计 | 本/硕/博 |
-| ★★★★★ | **S. Keshav, *How to Read a Paper*** | CS 论文三遍阅读法 | 本/硕/博 |
-| ★★★★☆ | **Paul J. Silvia, *How to Write a Lot*** | 科研写作生产力 | 硕/博 |
-| ★★★★☆ | **Adrian Wallwork, *English for Writing Research Papers*** (Springer) | 国际论文写作 | 硕/博 |
-| ★★★★★ | **Conference/Journal Reviewer Rubric（CS 审稿标准）** | 同行评审判断标准 | 审稿/投稿 |
+| 优先级 | 书/标准 | 定位 | 锚点（已验证） | 覆盖人群 |
+|--------|---------|------|----------------|----------|
+| ★★★★★ | **Booth, Colomb, Williams, Bizup & FitzGerald, *The Craft of Research*, 5th ed., University of Chicago Press, 2024** | 科研总纲 | ISBN 9780226826677 · ✅ 官方页已核验 2026-02-16 | 本/硕/博 |
+| ★★★★★ | **Creswell & Creswell, *Research Design*, 5th ed., SAGE** | 研究设计 | ✅ SAGE 官方页已核验 2026-02-16（**注：SAGE 已出版第 6 版**） | 本/硕/博 |
+| ★★★★★ | **S. Keshav, *How to Read a Paper*** | CS 论文三遍阅读法 | ✅ Stanford 官方 PDF 已核验 2026-02-16（2007 版） | 本/硕/博 |
+| ★★★★☆ | **Paul J. Silvia, *How to Write a Lot: A Practical Guide to Productive Academic Writing*, 2nd ed., APA, 2019** | 科研写作生产力 | DOI 10.1037/0000109-000 · ✅ Crossref 已核验 2026-02-16 | 硕/博 |
+| ★★★★☆ | **Adrian Wallwork, *English for Writing Research Papers*, 2nd ed., Springer, 2023** | 国际论文写作 | DOI 10.1007/978-3-031-31072-0 · ISBN 9783031310720 · ✅ Crossref 已核验 2026-02-16 | 硕/博 |
+| ★★★★★ | **Conference/Journal Reviewer Rubric（CS 审稿标准）** | 同行评审判断标准 | 非书籍，为领域通行实践（见 §2.6 来源说明） | 审稿/投稿 |
 
-**官方来源**：
-- The Craft of Research 5th — University of Chicago Press（官方定位：本科生到高级研究生/研究人员通用，已售百万册，第五版含生成式 AI 与研究伦理章节）：https://press.uchicago.edu/ucp/books/book/chicago/C/bo215874008
-- Research Design 5th — SAGE（qualitative / quantitative / mixed methods 比较研究设计的经典教材，第五版含实验设计、统计功效、数据分析软件）：https://collegepublishing.sagepub.com/products/research-design-5-255675
-- English for Writing Research Papers — Springer（最新版含 AI 辅助科研写作、AI 模拟同行评审、AI 局限性）：https://link.springer.com/book/9783032370884
+> **2026-02-16 核验发现并修正**：原稿引用《English for Writing Research Papers》的 ISBN `9783032370884` **不存在**（AI 幻觉）。经 Crossref 与 Open Library 双重查证，真实 2023 版为 ISBN `9783031310713`（印刷）/ `9783031310720`（电子），DOI `10.1007/978-3-031-31072-0`。早期版本：2011 版 DOI `10.1007/978-1-4419-7922-3`、2016 版 DOI `10.1007/978-3-319-26094-5`。已全部修正。
 
 ## 二、核心方法论 → 本 Skill 落点（Operationalization）
 
-### 2.1 The Craft of Research —— 研究总纲
+### 2.1 The Craft of Research —— 研究总纲（目录已核验）
 
-研究不是「写论文」，是「什么才算研究」。总纲链路：
-
-```
-Topic → Problem → Question → Evidence → Argument → Contribution → Research Output
-```
+研究不是「写论文」，是「什么才算研究」。**官方目录核实**（UChicago Press 页面 2026-02-16）：Part I「Asking Questions, Seeking Answers」= Ch.1 From Topics to Questions → Ch.2 From Questions to a Problem；Part III「Making Your Argument」= Ch.6 Making Claims / Ch.7 Assembling Reasons and Evidence / Ch.8 Warrants；Part V Ch.17 The Ethics of Research；并含「Using Generative Artificial Intelligence」Quick Tip。官方明确：销量超百万册、面向高中生到资深研究者。
 
 **本 Skill 落点**：
-- Claim Analyzer（Agent 03）的证据纪律：「声称必须有证据支撑」= Craft of Research 的论证要求（Claim/Evidence/Gap 三元组即 Question→Evidence→Argument 的拆解版）。
-- Research Miner（Agent 09）挖下一篇论文 = 从「未被回答的 Question」出发找 Gap，禁止凭空拍方向。
-- 铁律「No Evidence No Criticism」直接来自本书的证据纪律。
+- Claim Analyzer（Agent 03）的证据纪律：「声称必须有证据支撑」= Craft of Research Ch.6/Ch.7 的论证要求（Claim/Evidence/Gap 三元组即 Question→Evidence→Argument 的拆解版）。
+- Research Miner（Agent 09）挖下一篇论文 = Ch.1/Ch.2 从「未被回答的 Question」出发找 Gap，禁止凭空拍方向。
+- 铁律「No Evidence No Criticism」直接来自本书 Ch.7 的证据纪律。
 
-### 2.2 Research Design —— 研究设计顺序
+### 2.2 Research Design —— 研究设计顺序（目录已核验）
 
-防止最常见病灶：**先决定方法，再硬找问题**。
+防止最常见病灶：**先决定方法，再硬找问题**。**官方目录核实**（SAGE 页面 2026-02-16）：Ch.1 The Selection of a Research Approach、Ch.7 Research Questions and Hypotheses、Ch.8 Quantitative Methods、Ch.9 Qualitative Methods、Ch.10 Mixed Methods Procedures；第五版新增 power analysis（统计功效确定样本量）、实验与调查设计覆盖。
 
 ```
 正确：Research Question → Research Design → Method → Experiment → Evidence
@@ -46,46 +49,33 @@ Topic → Problem → Question → Evidence → Argument → Contribution → Re
 - Experiment Auditor（Agent 04）新增检查点「Design-order」：论文先定方法后找问题（方法驱动而非问题驱动）必须点名（RVE-EVAL）。
 - 审计「研究问题 → 设计 → 方法 → 实验 → 证据」顺序是否成立。
 
-### 2.3 How to Read a Paper —— CS 论文三遍阅读法
+> ⚠ 已知更新：SAGE 已出版 **Research Design 第 6 版**（J. David Creswell 与新合著者）。本 Skill 引用第 5 版内容（已核验目录），若需第 6 版差异需另行核对官方页。
+
+### 2.3 How to Read a Paper —— CS 论文三遍阅读法（原文已核验）
+
+Stanford 官方 PDF（2007，`web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf`）原文确认三遍法：
 
 | 遍 | 目的 | 看什么 |
 |----|------|--------|
-| 第一遍 | 值不值得读 | Title / Abstract / Intro / Section 标题 / Figures / Conclusion / References |
-| 第二遍 | 作者怎么做 | Method / Experiment / Baseline / Evaluation |
-| 第三遍 | **挑战它** | 数学 / 算法 / Implementation / Appendix / 实验细节 / **Hidden assumptions** |
+| 第一遍 | 值不值得读（5-10 分钟） | Title / Abstract / Intro / Section 标题 / Figures / Conclusion / References |
+| 第二遍 | 作者怎么做（1 小时） | Method / Experiment / Baseline / Evaluation / 抓关键图 |
+| 第三遍 | **挑战它**（数小时） | 数学 / 算法 / Implementation / Appendix / 实验细节 / **Hidden assumptions** |
 
 **本 Skill 落点**：Paper Autopsy（Agent 08）与 Reviewer Simulator（Agent 07）的攻击向量 = 第三遍阅读法的工程化——`hidden-assumption` / `counterexample` 即「隐藏假设」「反例」攻击。读者 → Reviewer / Researcher 的转变正是本 Skill 的定位。
 
-### 2.4 How to Write a Lot —— 写作生产力
+### 2.4 How to Write a Lot —— 写作生产力（DOI 已核验）
 
-写作是固定生产流程，不是「有灵感时写」。对应本 Skill 的 Blog/周报管线：
+APA 2022 第 2 版（DOI 10.1037/0000109-000）核心思想：写作是固定生产流程，不是「有灵感时写」。**本 Skill 落点**：Blogger Agent（Agent 10）+ workflows/ 三档节奏 = 该队列思想的工作流化（Research Queue → Reading Queue → Experiment Queue → Writing Queue → Submission Queue）；输出不是一次性灵感，是可排期的生产流程。
 
-```
-Research Queue → Reading Queue → Experiment Queue → Writing Queue → Submission Queue
-```
+### 2.5 English for Writing Research Papers —— 国际论文写作（DOI 已核验）
 
-**本 Skill 落点**：Blogger Agent（Agent 10）+ workflows/ 三档节奏 = 该队列思想的工作流化；输出不是一次性灵感，是可排期的生产流程。
+Springer 2023 第 2 版（DOI 10.1007/978-3-031-31072-0，Crossref 记录含 Ch.9 Chatbots 等章节，即新版含 AI 辅助写作内容）。按 Title / Abstract / Introduction / Methodology / Results / Discussion / Conclusion 结构写作。**本 Skill 落点**：Blogger Agent 公开内容与 research-idea.md 模板的写作检查清单；Research Miner 产出的下一篇论文方向需按此结构给出写作骨架。
 
-### 2.5 English for Writing Research Papers —— 国际论文写作
+### 2.6 CS Reviewer Rubric —— 同行评审标准（非书籍，领域通行）
 
-按 Title / Abstract / Introduction / Methodology / Results / Discussion / Conclusion 结构写作。**本 Skill 落点**：Blogger Agent 公开内容与 research-idea.md 模板的写作检查清单；Research Miner 产出的下一篇论文方向需按此结构给出写作骨架。
+真正的 Peer Review 判断的是：`Novelty / Correctness / Technical Quality / Significance / Experimental Quality / Clarity / Reproducibility / Limitations`。CS 学科细化（本 Skill 采用）：`Problem significance / Novelty / Technical soundness / Baseline quality / Dataset quality / Experimental design / Ablation / Statistical validity / Reproducibility / Code/data availability / Real-world relevance`。
 
-### 2.6 CS Reviewer Rubric —— 同行评审标准
-
-真正的 Peer Review 判断的是：
-
-```
-Novelty / Correctness / Technical Quality / Significance
-/ Experimental Quality / Clarity / Reproducibility / Limitations
-```
-
-CS 学科细化（本 Skill 采用）：
-
-```
-Problem significance / Novelty / Technical soundness / Baseline quality
-/ Dataset quality / Experimental design / Ablation / Statistical validity
-/ Reproducibility / Code/data availability / Real-world relevance
-```
+**来源说明**：该清单是 CS 顶会（NeurIPS / ICML / ICLR / S&P / USENIX Security）通行审稿标准的凝练，非单一书籍。核验方式：对照顶会公开 reviewer 指南 / OpenReview 实际审稿意见（见 `references/authoritative-sources.md`），不可核验的部分标注待查。
 
 **本 Skill 落点**：
 - Reviewer Simulator（Agent 07）的评分维度（Novelty / Technical / Experiment / Clarity）与 decision 映射 = 该 Rubric 的工程化。
@@ -145,6 +135,7 @@ HOS
 
 ## 五、背书使用铁律
 
-1. 任何一条评审规则若可追溯到上表书籍/Rubric，在输出中用 `[背书: Craft of Research §证据纪律]` 之类的标注，不写「根据我们的经验」。
+1. 任何一条评审规则若可追溯到上表书籍/Rubric，在输出中用 `[背书: Craft of Research §7 证据纪律]` 之类的标注，不写「根据我们的经验」。
 2. 评分卡/审稿报告的维度定义默认以 2.6 的 CS Reviewer Rubric 为准，规则冲突时 Rubric 优先。
 3. 权威解读的引用来源见 `references/authoritative-sources.md`，与本文档配套使用。
+4. **背书声明必须能回答「你怎么知道的？」**——锚点（ISBN/DOI/URL）+ 核验日期 + 验证状态三要素缺一不可；答不上来就标「待核验」，宁可少背书不可假背书。

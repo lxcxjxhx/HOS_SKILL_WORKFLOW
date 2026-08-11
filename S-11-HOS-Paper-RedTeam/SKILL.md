@@ -98,7 +98,7 @@ HOS 模式（红队）：
 4. **每条发现必须挂 RVE 编号**（见 [rve-catalog.md](references/rve-catalog.md)），否则不进入正式输出。
 5. 最后必须产出 **Patch（修复方案）** 与 **Next Paper Idea（下一篇论文方向）**——只骂不补不是红队，是喷子。
 6. **每条发现尽量挂权威佐证**——RVE 证据、一句话点评、Reviewer 对照必须尝试核验权威来源（arXiv/OpenReview/PWC/S2），查不到写「查不到，证据缺口」，禁止编造（降级不撒谎）。
-7. **评分卡永远在最顶部**——用 TS 渲染器（`node src/index.ts <review.json>`，结构见 [ghfind-card.md](references/ghfind-card.md)）生成 ghfind 式评分卡（分数+评级+维度条+一句话点评），长文靠后。评分模型见 [score-model.md](references/score-model.md)。
+7. **评分卡永远在最顶部**——用 TS 渲染器（`node src/index.ts <review.json> [--format md|html]`，**默认 HTML**，结构见 [ghfind-card.md](references/ghfind-card.md)）生成 ghfind 式评分卡（分数+评级+维度条+一句话点评），长文靠后。评分模型见 [score-model.md](references/score-model.md)。
 8. 输出语言跟随用户语言；默认中文。
 
 ---

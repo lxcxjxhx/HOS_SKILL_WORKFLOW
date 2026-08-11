@@ -18,19 +18,34 @@
 2. 查不到 = 写「查不到，证据缺口」（RVE-REPRO），禁止编造查证结果。
 3. 网络不可用时写入 `degradations`，不许假装查证过（降级不撒谎）。
 
-## 二、背书书籍的权威书评（方法论背书佐证）
+## 二、背书书籍的权威书评（方法论背书佐证，2026-02-16 已逐本核验）
 
-方法论背书（`references/methodology.md`）中每本书都有权威来源背书，对外解释时引用出版社官方定位而非自评：
+方法论背书（`references/methodology.md`）中每本书的锚点均经官方页面 / Crossref / 原文 PDF 亲自核验（见 §三 核验方法），对外解释时引用出版社官方定位而非自评：
 
-| 书 | 权威书评/官方定位 | 链接 |
-|----|-------------------|------|
-| The Craft of Research 5th | University of Chicago Press 官方：覆盖选题/提问/资料评价/论证/表达/研究伦理/生成式 AI 使用；定位本科到高级研究者通用；售出超一百万册 | https://press.uchicago.edu/ucp/books/book/chicago/C/bo215874008 |
-| Research Design 5th | SAGE 官方：比较 qualitative / quantitative / mixed methods 设计；第五版新增实验设计、统计功效、数据分析软件 | https://collegepublishing.sagepub.com/products/research-design-5-255675 |
-| How to Read a Paper | CS 研究生必读经典，Three-Pass Approach 被广泛引用为论文阅读标准方法 | https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf |
-| How to Write a Lot | 写作生产力经典，把写作从「灵感」变为「固定生产流程」 | https://www.apa.org/pubs/books/how-to-write-a-lot |
-| English for Writing Research Papers | Springer 官方：最新版含 AI 辅助科研写作、AI 模拟同行评审、AI 局限性；按论文八段结构讲解 | https://link.springer.com/book/9783032370884 |
+| 书 | 锚点（ISBN/DOI/URL，已验证） | 官方定位（核验自官方页面） |
+|----|------------------------------|------------------------------|
+| The Craft of Research 5th | ISBN 9780226826677 · https://press.uchicago.edu/ucp/books/book/chicago/C/bo215874008 | UChicago Press 官方：覆盖选题/提问/资料评价/论证/表达/研究伦理/生成式 AI 使用；定位高中到资深研究者通用；售出超一百万册 |
+| Research Design 5th | https://collegepublishing.sagepub.com/products/research-design-5-255675 | SAGE 官方：比较 qualitative / quantitative / mixed methods 设计；第五版新增 power analysis、实验与调查设计 |
+| How to Read a Paper | https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf | Stanford 官方托管原文 PDF（2007），Three-Pass Approach |
+| How to Write a Lot 2nd | DOI 10.1037/0000109-000 | APA 出版（2019 第 2 版），写作生产力经典 |
+| English for Writing Research Papers 2nd | DOI 10.1007/978-3-031-31072-0 · ISBN 9783031310720 | Springer（2023 第 2 版），Crossref 记录含 Chatbots 章节（AI 辅助写作） |
 
-## 三、与 S-12 对齐：联网核验（Evidence 默认动作）
+> ⚠ 2026-02-16 修正记录：原稿引用的 `9783032370884`（link.springer.com/book/9783032370884）**经 Crossref / Open Library 双重查证不存在**，为 AI 幻觉；已替换为真实 ISBN 9783031310720 与 DOI 10.1007/978-3-031-31072-0。
+
+## 三、背书核验方法（防幻觉标准流程）
+
+对任何一本书/一篇论文的背书声明，按下表核验后才允许引用：
+
+| 核验源 | API/URL | 能确认什么 |
+|--------|---------|-----------|
+| 出版社官方页面 | 逐本访问（如 press.uchicago.edu / collegepublishing.sagepub.com） | 版本、作者、目录、官方简介、书评 |
+| Crossref API | `https://api.crossref.org/works?query.bibliographic=<书名>` | DOI、ISBN、出版年份（最权威的书目记录） |
+| Open Library API | `https://openlibrary.org/api/books?bibkeys=ISBN:<isbn>&format=json&jscmd=data` | ISBN 是否存在 |
+| 原文 PDF/全文 | 官方托管 URL | 内容本身（如 Stanford 的 How to Read a Paper） |
+
+**判定**：ISBN 在 Crossref / Open Library 查不到 = 视为幻觉，禁止引用，改用查证到的真实锚点。
+
+## 四、与 S-12 对齐：联网核验（Evidence 默认动作）
 
 对齐 S-12-HOS-Critic-Review 的 Evidence-Agent 铁律：
 
