@@ -36,6 +36,8 @@
 | `survivorship` | 是不是只展示成功案例？ |
 | `recognition` | （认可类）唯一亮点/真实价值是什么？ |
 
+> `paper` 对象：Critique 须覆盖 CS 审稿 rubric 的关键缺口——Baseline 质量、Ablation 缺失、Statistical validity（单次运行/无显著性检验）、Reproducibility、Code/data availability、Real-world relevance（对应三遍阅读法第三遍的挑战，方法论背书见 SKILL.md §一·五）。
+
 ## 5. 输出 `CritiqueResult`
 
 ```json

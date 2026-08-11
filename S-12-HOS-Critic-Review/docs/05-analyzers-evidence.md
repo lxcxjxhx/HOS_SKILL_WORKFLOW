@@ -98,6 +98,11 @@ interface AnalyzerPlugin {
 | Hype | 摘要 vs 正文的强度差 | `CLAIM` |
 | **元数据核验** | arXiv ID/版本/发表状态真实可查；声称的仓库/DOI/Zenodo 存在且指向一致 | `REPRO` / `CLAIM` |
 | **出版状态** | 「已接收/已发表」声明是否有 arXiv journal-ref/会议页佐证 | `CLAIM` |
+| Problem significance | 问题本身是否重要、是真问题还是凑数 | `CLAIM` |
+| Soundness | 方法/数学/算法正确性；有无证明或严谨推导 | `ARCH` |
+| Statistical validity | 是否多次运行并报均值±方差/置信区间/显著性检验 | `EVAL` |
+| Design-order | 研究问题是否先于方法（先定方法后硬找问题） | `CLAIM` / `ARCH` |
+| Real-world relevance | 结论是否只在玩具/合成场景成立 | `EVAL` / `CLAIM` |
 
 > 无网络时降级：元数据/出版状态检查点标 `unverifiable` 并记录降级，其余检查点基于论文文本执行（标记 `unverifiable` 或 `partial`）；**网络可用时必须核验**。
 

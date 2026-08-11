@@ -17,6 +17,8 @@
 
 ## 2. 论文检查点（paper）
 
+> 映射 CS 审稿 rubric：Problem significance / Novelty / Technical soundness / Baseline quality / Dataset quality / Experimental design / Ablation / Statistical validity / Reproducibility / Code availability / Real-world relevance（方法论背书见 SKILL.md §一·五）。
+
 | # | 检查点 | 问什么 | 产出 class |
 |---|--------|--------|-----------|
 | P1 | Novelty | 方法与已发表工作的差异；是否拼接物 | `CLAIM` / `ARCH` |
@@ -27,6 +29,11 @@
 | P6 | Hype | 摘要 vs 正文的强度差 | `CLAIM` |
 | P7 | **元数据核验** | arXiv ID/版本/发表状态是否真实可查；声称的代码仓库/DOI/Zenodo 链接是否存在、指向是否与正文一致（**必须联网核验 arXiv abs 页与 GitHub API**） | `REPRO` / `CLAIM` |
 | P8 | 出版状态 | 「已接收/已发表」声明（如 IEEE S&P、ICML）是否有 arXiv journal-ref/会议页佐证 | `CLAIM` |
+| P9 | Problem significance | 问题本身是否重要、是真问题还是凑数；动机是否成立 | `CLAIM` |
+| P10 | Soundness | 方法/数学/算法正确性；有无证明或严谨推导，还是只靠直觉 | `ARCH` |
+| P11 | Statistical validity | 是否多次运行并报均值±方差/置信区间/显著性检验；结论是否只有单次结果 | `EVAL` |
+| P12 | Design-order | 研究问题是否先于方法（是否「先有锤子再找钉子」：先定方法后硬找问题） | `CLAIM` / `ARCH` |
+| P13 | Real-world relevance | 结论是否只在玩具/合成场景成立；落地到真实任务还成立吗 | `EVAL` / `CLAIM` |
 
 > P7/P8 依赖网络核验：arXiv abs 页（`arxiv.org/abs/<id>`）为必查官方源，其次 GitHub API 与 DOI。网络不可用时 P7/P8 相关 Finding 标 `unverifiable` 并记录降级，不得跳过。
 
