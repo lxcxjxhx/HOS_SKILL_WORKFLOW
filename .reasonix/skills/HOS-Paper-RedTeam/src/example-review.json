@@ -1,0 +1,127 @@
+{
+  "title": "MultiVer: Zero-Shot Multi-Agent Vulnerability Detection",
+  "arxivId": "2602.17875",
+  "venue": "arXiv 预印本",
+  "authors": "Shreshth Rajan",
+  "submitted": "2026-02-19",
+  "score": 40,
+  "rankEmoji": "🟠",
+  "rankLabel": "画靶射箭型",
+  "tags": ["选择性报告", "数据不自洽", "未开源"],
+  "position": { "rank": 2, "total": 16 },
+  "beatPercent": 12.5,
+  "nextRank": { "label": "有亮点有硬伤", "diff": 15 },
+  "dimensions": [
+    { "key": "novelty", "label": "新颖性", "score": 9, "max": 20, "note": "多 Agent 投票拼装，集成决策逻辑未阐明" },
+    { "key": "rigor", "label": "严谨性", "score": 7, "max": 25, "note": "Table 3 分项 49≠Overall 111，四体集成实为双体" },
+    { "key": "contribution", "label": "贡献度", "score": 9, "max": 20, "note": "FN/FP 成本权衡讨论有参考价值" },
+    { "key": "repro", "label": "可复现性", "score": 5, "max": 15, "note": "未开源、无数据集、无 prompt 模板" },
+    { "key": "clarity", "label": "清晰度", "score": 5, "max": 10, "note": "表格加总对不上，正文口径混乱" },
+    { "key": "impact", "label": "影响力", "score": 5, "max": 10, "note": "预印本、无引用沉淀" }
+  ],
+  "highlights": ["FN vs FP 成本不对称的权衡讨论", "错误分析有一定参考价值"],
+  "methods": ["Zero-shot 多 Agent 投票集成", "RAG 知识库（1,199 条 CVEFixes/BugsInPy 示例）", "Union / Weighted 两种投票"],
+  "similarPapers": [
+    { "title": "CodeX-Verify", "score": 35, "tag": "同作者" },
+    { "title": "SAST-Genius", "score": 46, "tag": "拼接物" }
+  ],
+  "roastFull": "表 3 分项加总 49，Overall 行大笔一挥 111——62 个样本凭空蒸发，检测率全靠一个没有来源的总体数字撑场面。union voting 配置下 performance 和 style 两个 agent 根本不参与决策，四体集成实为双体，功劳簿上却给四个人记功。\"首次零样本超越微调\"的宣传位只敢放 recall 单项 +1.4pp，F1 落后微调基线 10.2 个百分点的事只字不提。未开源、无数据集、无 prompt 模板，声称的可复现性全靠读者想象力。",
+  "oneLiner": "表 3 分项 49≠111，四体集成实为双体。",
+  "riskFlags": ["HOS-RVE-2026-0044", "HOS-RVE-2026-0045", "HOS-RVE-2026-0046", "HOS-RVE-2026-0047"],
+  "suggestions": [
+    "修正 Table 3：分项覆盖全部 121 样本，或下调 Overall 到 49",
+    "在 union voting 配置下如实声明 performance/style agent 不参与决策，或补上它们贡献的度量",
+    "报告完整 P/R/F1 矩阵并按 F1 重述结论，不要只报 recall",
+    "开源代码、数据集与 prompt 模板（至少 Zenodo 快照）"
+  ],
+  "evidence": [
+    "arXiv abs https://arxiv.org/abs/2602.17875 — v1 预印本，无代码链接",
+    "tex 源码 https://arxiv.org/e-print/2602.17875v1 — 官方源码包可核验表格",
+    "GitHub repo search 0 结果 — 未开源，与论文正文一致"
+  ],
+  "issues": [
+    {
+      "rveId": "HOS-RVE-2026-0044",
+      "category": "RVE-DATA",
+      "severity": "CRITICAL",
+      "title": "Table 3 分项合计 49/55，Overall 声称 111/121，62 个样本去向不明",
+      "claim": "On SecurityEval, MultiVer achieves 91.7% detection (111/121 samples), competitive with Aardvark (92%)",
+      "claimRef": "§Results / 摘要",
+      "rootCause": "CWE 分类表 Det 列加总 8+4+4+3+2+4+6+2+5+4+7+0 = 49、Tot 列加总 55，但 Overall 行写 111/121。62 个样本（或 62 个检出）没有任何分类覆盖——要么分类表漏了大部分样本，要么 Overall 是另算的，二者必居其一，表格整体不可信。",
+      "texQuotes": [
+        {
+          "file": "main.tex",
+          "line": 349,
+          "code": "\\textbf{Overall} & \\textbf{111} & \\textbf{121} & \\textbf{91.7\\%} \\\\",
+          "note": "Overall 行：111/121 = 91.7%，与分类分项加总不符"
+        },
+        {
+          "file": "main.tex",
+          "line": 335,
+          "code": "Injection (078, 089, 094) & 8 & 8 & 100\\% \\\\\nCrypto (327, 330) & 4 & 5 & 80\\% \\\\\nInput Valid. (020, 117) & 7 & 9 & 78\\% \\\\\nException (703) & 0 & 3 & 0\\% \\\\",
+          "note": "分类行 Det 加总 49 / Tot 加总 55"
+        }
+      ],
+      "gap": "分项 Det 49 vs Overall 111 相差 62 个检出；分项 Tot 55 vs 121 相差 66 个样本——表格声称的覆盖范围与明细对不上",
+      "exploit": "91.7% 的旗舰数字建立在无法由明细加总还原的 Overall 上，读者无法验证，结论被高估",
+      "patch": "重做分类表覆盖全部 121 样本（补全遗漏 CWE 分类行），或把 Overall 改为与分项一致的真实加总",
+      "evidence": "tex 源码官方包可复现：https://arxiv.org/e-print/2602.17875v1（2026-08-12 核验）"
+    },
+    {
+      "rveId": "HOS-RVE-2026-0045",
+      "category": "RVE-EVAL",
+      "severity": "HIGH",
+      "title": "四体集成实为双体：union voting 下 performance/style agent 不参与决策",
+      "claim": "First to demonstrate that zero-shot multi-agent ensembles can exceed fine-tuned recall",
+      "claimRef": "Contributions",
+      "rootCause": "正文声明 union voting 为主结果配置（\"any security or correctness WARNING/FAIL triggers an overall warning\"），即只有 security 与 correctness 两个 agent 的判定决定最终结果；performance 与 style agent 的投票权重（0.15/0.05）在 union 逻辑下根本不改变输出。所谓『四体集成』实际是双体。",
+      "texQuotes": [
+        {
+          "file": "main.tex",
+          "line": 195,
+          "code": "Union voting maximizes recall: any security or correctness WARNING/FAIL triggers an overall warning. This achieves 82.7\\% recall but 48.8\\% precision",
+          "note": "union 触发条件只含 security/correctness，performance/style 不参与"
+        }
+      ],
+      "gap": "集成架构声称四 agent 协作，但主配置只由两 agent 决定输出",
+      "exploit": "『多 Agent 增益』的贡献被夸大，消融里 agent 数越多越好的结论在 union 下不成立",
+      "patch": "要么让 performance/style 在 union 逻辑中真正影响输出（如加权否决），要么如实改称双体集成",
+      "evidence": "tex 源码 §voting 节，2026-08-12 核验"
+    },
+    {
+      "rveId": "HOS-RVE-2026-0046",
+      "category": "RVE-EVAL",
+      "severity": "MEDIUM",
+      "title": "选择性报告：只报 recall 超 1.4pp，F1 落后微调基线 10.2pp",
+      "claim": "zero-shot multi-agent ensembles can exceed fine-tuned recall: 82.7% versus 81.3%, a 1.4pp improvement",
+      "claimRef": "Abstract",
+      "rootCause": "摘要只挑 recall 单项做『超越』宣传，但同一配置的 F1 为 61.4%，微调 GPT-3.5 是 71.6%——落后 10.2 个百分点。用对己有利的单指标代替综合评估，属于选择性报告。",
+      "texQuotes": [
+        {
+          "file": "main.tex",
+          "line": 245,
+          "code": "The recall improvement comes at a precision cost. \\multiver{} achieves 48.8\\% precision compared to 63.9\\% for fine-tuned GPT-3.5, yielding 61.4\\% F1 versus 71.6\\%.",
+          "note": "正文自认 F1 61.4% vs 71.6%，摘要却只报 recall"
+        }
+      ],
+      "gap": "『超越微调』仅对 recall 成立，F1 口径是退步",
+      "exploit": "宣传位误导：读者按摘要理解会以为整体超越微调基线",
+      "patch": "摘要改用 F1 或 P/R/F1 全矩阵重述结论，并明确『单项 recall 超越』的限定",
+      "evidence": "tex 源码 §6 数字，2026-08-12 核验"
+    },
+    {
+      "rveId": "HOS-RVE-2026-0047",
+      "category": "RVE-REPRO",
+      "severity": "MEDIUM",
+      "title": "未开源：无代码、无数据集、无 prompt 模板",
+      "claim": "（论文未声明开源，但实验细节声称可复现）",
+      "claimRef": "全文",
+      "rootCause": "arXiv 页面无代码链接，GitHub repo search 0 结果，正文未提供任何 artifact。RAG 知识库 1,199 条、prompt 模板、投票权重等复现要素全部缺失，第三方无法复算任何表格数字。",
+      "texQuotes": [],
+      "gap": "声称的实验结果无任何可复现入口",
+      "exploit": "Table 3 等关键数字无法被独立验证，『数据不自洽』类问题也无从交叉确认",
+      "patch": "发布 Zenodo 快照：代码、数据集（含 1,199 条 RAG 示例）、prompt 模板、投票权重与推理 trace",
+      "evidence": "GitHub repo search 0 结果（2026-08-12）；arXiv abs 无代码链接"
+    }
+  ]
+}

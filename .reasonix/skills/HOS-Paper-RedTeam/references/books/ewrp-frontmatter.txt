@@ -1,0 +1,522 @@
+English for Academic Research
+Series Editor
+Adrian Wallwork, English for Academics SAS
+Pisa, Italy
+
+This series aims to help non-native, English-speaking researchers communicate in 
+English. The books in this series are designed like manuals or user guides to help 
+readers find relevant information quickly, and assimilate it rapidly and effectively. 
+The author has divided each book into short subsections of short paragraphs with 
+many bullet points.
+
+Adrian Wallwork
+English for Writing Research 
+Papers 
+Third Edition
+
+ISSN 2625-3445	
+        ISSN 2625-3453  (electronic)
+English for Academic Research
+ISBN 978-3-031-31071-3        ISBN 978-3-031-31072-0  (eBook)
+https://doi.org/10.1007/978-3-031-31072-0
+© The Editor(s) (if applicable) and The Author(s), under exclusive license to Springer Nature Switzerland 
+AG 2011, 2016, 2023
+This work is subject to copyright. All rights are solely and exclusively licensed by the Publisher, whether 
+the whole or part of the material is concerned, specifically the rights of translation, reprinting, reuse of 
+illustrations, recitation, broadcasting, reproduction on microfilms or in any other physical way, and 
+transmission or information storage and retrieval, electronic adaptation, computer software, or by similar 
+or dissimilar methodology now known or hereafter developed.
+The use of general descriptive names, registered names, trademarks, service marks, etc. in this publication 
+does not imply, even in the absence of a specific statement, that such names are exempt from the relevant 
+protective laws and regulations and therefore free for general use.
+The publisher, the authors, and the editors are safe to assume that the advice and information in this book 
+are believed to be true and accurate at the date of publication. Neither the publisher nor the authors or the 
+editors give a warranty, expressed or implied, with respect to the material contained herein or for any 
+errors or omissions that may have been made. The publisher remains neutral with regard to jurisdictional 
+claims in published maps and institutional affiliations.
+This Springer imprint is published by the registered company Springer Nature Switzerland AG
+The registered company address is: Gewerbestrasse 11, 6330 Cham, Switzerland
+Paper in this product is recyclable.
+Adrian Wallwork
+Pisa, Italy
+
+v
+Introduction
+Who is this book for?
+This book is part of the English for Research series of guides for academics 
+of all disciplines who work in an international field. This volume focuses on 
+how to write a research paper in English.
+It is designed both for inexperienced and experienced writers with an upper 
+intermediate (or above) level of English, as well as EAP trainers and scien­
+tific editors.
+How is this book organized? How should I read it?
+Part I: Guidelines on how to improve your writing skills and level of 
+readability.
+Part II: Guidelines about what to write in each section (Abstract, Introduction, 
+Methodology etc.), what tenses to use, and how to use a chatbot to correct 
+and improve your English.
+I recommend you read all of Part I before you start writing your paper. Then 
+refer to specific chapters in Part II when you write the various sections of 
+your paper.
+Chapter 20 concludes the book and contains a checklist of things to consider 
+before sending your manuscript to the journal.
+
+vi
+Each chapter begins with some factoids or quotations that either act as a 
+brief introduction to the topic of the chapter or are just simply interesting in 
+themselves (I hope!). They can be used by EAP teachers as warm-ups for 
+their lessons.
+Chapters are divided into short subsections in answer to specific questions 
+or relating to various guidelines. Each chapter ends with a summary.
+What is different from the previous editions of this book?
+There are two new chapters: Chapters 9 and 10. They cover how to use 
+ChatGPT (and similar tools) and machine translation to write and/or correct 
+your paper. Full details on how to use AI to help you write a paper can be 
+found in the companion volume AI-Assisted Writing and Presenting in 
+English (2024). Writing and grammar exercises related to using AI can be 
+found in the 2024 editions of the exercise books.
+Many of the chapters in Part I have been totally revised or combined together, 
+and several subsections in Part II have been shortened or removed in order 
+to make room for the new chapters. The chapters on how to write Abstracts, 
+Introductions, Methods etc now include at least one subsection on using 
+ChatGPT to help you write those specific sections of a paper.
+Example sentences of good and bad English are now in a blue and red font, 
+respectively.
+The What’s The Buzz sections have been integrated into the main text.
+The chapter on hedging has been removed to provide space for new mate­
+rial, but is still available in the 2016 edition.
+Introduction
+
+vii
+Contents
+Part I  Writing Skills
+	1	
+Planning and Preparation ����������������������������������������������������������������������      3
+	1.1	 Why should I publish? How do I know whether my research 
+is worth publishing?��������������������������������������������������������������������������      4
+	1.2	 Should I write the initial draft in my own language rather 
+than writing it directly in English?����������������������������������������������������      5
+	1.3	 Which journal should I choose?��������������������������������������������������������      7
+	1.4	 How do I know what style and structure to use?������������������������������      8
+	1.5	 What preparation do I need to do?����������������������������������������������������      9
+	1.6	 How can I create a template?������������������������������������������������������������    10
+	1.7	 Writing style: how do I keep the referees happy?����������������������������    11
+	1.8	 In what order should I write the various sections?����������������������������    12
+	1.9	 How can I highlight my key findings?����������������������������������������������    13
+	1.10	 How can I improve the chances of my paper 
+not only being published, but also being read, understood 
+and cited?������������������������������������������������������������������������������������������    14
+	1.11	 I know that the recommendations in this book 
+about writing simply and clearly will improve the readability 
+of my paper, but my professor … ����������������������������������������������������    15
+	1.12	 Summary������������������������������������������������������������������������������������������    17
+	2	
+Word order and sentence length������������������������������������������������������������    19
+	2.1	 Basic word order in English: subject + verb + object 
++ indirect object��������������������������������������������������������������������������������    20
+	2.2	 Place the subject before the verb������������������������������������������������������    21
+	2.3	 Keep the subject and verb close to each other����������������������������������    22
+	2.4	 Avoid inserting parenthetical information between the subject 
+and the verb��������������������������������������������������������������������������������������    23
+	2.5	 Don’t separate the verb from its direct object����������������������������������    24
+	2.6	 Put the direct object before the indirect object ��������������������������������    25
+
+viii
+	2.7	 Don’t use a pronoun (it, they) before you introduce 
+the noun that the pronoun refers to ��������������������������������������������������    25
+	2.8	 Locate not before the main verb, but after auxiliary 
+and modal verbs��������������������������������������������������������������������������������    26
+	2.9	 Locate negations near the beginning of the sentence������������������������    26
+	2.10	 Deciding where to locate an adverb��������������������������������������������������    28
+	2.11	 Put adjectives before the noun they describe������������������������������������    28
+	2.12	 Deciding where to put new and old information within 
+a sentence������������������������������������������������������������������������������������������    29
+	2.13	 Analyse why and how long sentences are created����������������������������    30
+	2.14	 Learn how to break up a long sentence��������������������������������������������    31
+	2.15	 Summary������������������������������������������������������������������������������������������    35
+	3	
+Structuring Paragraphs��������������������������������������������������������������������������    37
+	3.1	 Elegance vs Effectiveness����������������������������������������������������������������    38
+	3.2	 Choose the most relevant subject to put it at the beginning 
+of a sentence that opens a new paragraph����������������������������������������    39
+	3.3	 First paragraph of a new section – begin with a mini summary 
+plus an indication of the structure����������������������������������������������������    40
+	3.4	 Deciding where to put new and old information 
+within a paragraph����������������������������������������������������������������������������    42
+	3.5	 Link each sentence by moving from general concepts 
+to increasingly more specific concepts ��������������������������������������������    44
+	3.6	 Present and explain ideas in the same (logical) sequence����������������    45
+	3.7	 Break up long paragraphs ����������������������������������������������������������������    46
+	3.8	 How to structure a paragraph: an example����������������������������������������    48
+	3.9	 Summary������������������������������������������������������������������������������������������    50
+	4	
+Being Concise and Removing Redundancy������������������������������������������    53
+	4.1	 Being concise is not just an option ��������������������������������������������������    54
+	4.2	 Write less and you will make fewer mistakes in English, 
+and your key points will be clearer��������������������������������������������������    55
+	4.3	 Cut any unnecessary generic words��������������������������������������������������    55
+	4.4	 Consider deleting abstract words and phrases����������������������������������    56
+	4.5	 Prefer verbs to nouns������������������������������������������������������������������������    57
+	4.6	 Choose the shortest expressions��������������������������������������������������������    59
+	4.7	 Cut redundant adjectives������������������������������������������������������������������    60
+	4.8	 Cut pointless introductory phrases and unnecessary link words������    61
+	4.9	 Be concise when referring to figures and tables ������������������������������    63
+	4.10	 Consider reducing the length of your paper��������������������������������������    63
+	4.11	 Summary������������������������������������������������������������������������������������������    64
+	5	
+Avoiding ambiguity, repetition, and vague language����������������������������    65
+	5.1	 Use a simple and accessible style ����������������������������������������������������    66
+	5.2	 Beware that pronouns are probably the greatest source 
+of ambiguity��������������������������������������������������������������������������������������    68
+Contents
+
+ix
+	5.3	 Avoid replacing key words with synonyms and clarify 
+ambiguity introduced by generic words��������������������������������������������    70
+	5.4	 Restrict the use of synonyms to non-key words�������������������������������    72
+	5.5	 Be as precise as possible������������������������������������������������������������������    73
+	5.6	 Choose the least generic word����������������������������������������������������������    74
+	5.7	 Use punctuation to show how words and concepts 
+are related to each other��������������������������������������������������������������������    75
+	5.8	 Defining vs non defining clauses: that vs which / who ��������������������    76
+	5.9	 Clarifying which noun you are referring to when which, 
+that, who and the -ing form��������������������������������������������������������������    78
+	5.10	 -ing form vs. subject + verb��������������������������������������������������������������    79
+	5.11	 Avoiding ambiguity with the -ing form: use by and thus������������������    80
+	5.12	 Uncountable nouns����������������������������������������������������������������������������    82
+	5.13	 Definite and indefinite articles����������������������������������������������������������    83
+	5.14	 Referring backwards: the dangers of the former, the latter��������������    84
+	5.15	 Referring backwards and forwards: the dangers of above, 
+below, previously, earlier, later��������������������������������������������������������    85
+	5.16	 Use of respectively to disambiguate��������������������������������������������������    86
+	5.17	 Distinguishing between both … and, and either … or����������������������    86
+	5.18	 Talking about similarities: as, like, unlike����������������������������������������    87
+	5.19	 Differentiating between from and by������������������������������������������������    88
+	5.20	 Be careful with Latin words��������������������������������������������������������������    88
+	5.21	 False friends��������������������������������������������������������������������������������������    89
+	5.22	 Be careful of typos����������������������������������������������������������������������������    90
+	5.23	 Summary������������������������������������������������������������������������������������������    90
+	6	
+Clarifying and Highlighting��������������������������������������������������������������������    93
+	6.1	 Why is it so important highlight and differentiate my findings 
+in relation to the findings of other research groups?������������������������    94
+	6.2	 Check your journal’s style – first person or passive��������������������������    95
+	6.3	 How to form the passive and when to use it ������������������������������������    95
+	6.4	 Use the active form when the passive might be ambiguous ������������    96
+	6.5	 Consider starting a new paragraph to distinguish between 
+your work and the literature��������������������������������������������������������������    98
+	6.6	 Ensure you use the right tenses to differentiate your work 
+from others, particularly when your journal prohibits 
+the use of we��������������������������������������������������������������������������������������    98
+	6.7	 For journals that allow personal forms, use we to distinguish 
+yourself from other authors��������������������������������������������������������������  100
+	6.8	 Make good use of references������������������������������������������������������������  100
+	6.9	 Avoid long blocks of text������������������������������������������������������������������  102
+	6.10	 When you have something really important to say, make 
+your sentences shorter than normal��������������������������������������������������  103
+	6.11	 Other means of attracting the reader’s eye and keeping 
+their attention������������������������������������������������������������������������������������  104
+Contents
+
+x
+	6.12	 Show your paper to a non-expert and get them to underline 
+your key findings������������������������������������������������������������������������������  106
+	6.13	 Summary������������������������������������������������������������������������������������������  106
+	7	
+Discussing your limitations ��������������������������������������������������������������������  109
+	7.1	 What are my limitations? Should I mention them?��������������������������  110
+	7.2	 Recognize the importance of ‘bad data’ ������������������������������������������  111
+	7.3	 How to avoid losing credibility��������������������������������������������������������  112
+	7.4	 Be constructive in how you present your limitations������������������������  113
+	7.5	 Clarify exactly what your limitations are������������������������������������������  114
+	7.6	 Anticipate alternative interpretations of your data����������������������������  115
+	7.7	 Refer to other authors who experienced similar problems ��������������  115
+	7.8	 Tell the reader that with the current state-of-the-art 
+this problem is not solvable��������������������������������������������������������������  116
+	7.9	 Explain why you did not study certain data��������������������������������������  117
+	7.10	 Don’t end your paper by talking about your limitations������������������  117
+	7.11	 Summary������������������������������������������������������������������������������������������  118
+	8	
+Readability������������������������������������������������������������������������������������������������  119
+	8.1	 You are responsible for enabling your readers to understand 
+what you have written����������������������������������������������������������������������  120
+	8.2	 Basic rules of readability������������������������������������������������������������������  121
+	8.3	 Place the various elements in your sentence in the most 
+logical order possible: don’t force the reader to have 
+to change their perspective����������������������������������������������������������������  121
+	8.4	 Don’t force readers to hold a lot of preliminary information 
+in their head before giving them the main information��������������������  122
+	8.5	 Try to be as concrete as possible as soon as possible ����������������������  123
+	8.6	 When drawing the reader’s attention to something 
+use the least number of words possible��������������������������������������������  124
+	8.7	 State your aim before giving the reasons for it��������������������������������  125
+	8.8	 Be as specific as possible������������������������������������������������������������������  125
+	8.9	 Avoid creating strings of nouns that describe other nouns ��������������  127
+	8.10	 Be careful how you use personal pronouns and avoid 
+stereotyping��������������������������������������������������������������������������������������  128
+	8.11	 Summary������������������������������������������������������������������������������������������  129
+	9	
+Chatbots����������������������������������������������������������������������������������������������������  131
+	9.1	 What are the key things I need to know about chatbots?������������������  133
+	9.2	 What prompts (instructions) can I use to get a chatbot 
+to fulfill my request?������������������������������������������������������������������������  133
+	9.3	 How can I see the changes that the bot has made? 
+What can I learn from the list of changes generated?����������������������  134
+	9.4	 What good corrections do chatbots make? ��������������������������������������  136
+	9.5	 What can’t GPT do? Is it a good idea to pre-edit my original 
+text that I wrote in English?��������������������������������������������������������������  138
+Contents
+
+xi
+	9.6	 What kinds of grammar mistakes does a bot currently fail 
+to correct?������������������������������������������������������������������������������������������  139
+	9.7	 What kinds of errors will a bot probably never be able 
+to correct?������������������������������������������������������������������������������������������  140
+	9.8	 What the most dangerous errors that chatbots make 
+when revising a text in English? ������������������������������������������������������  141
+	9.9	 What are the dangers of modifying the chatbot’s version? 
+Is there a solution?����������������������������������������������������������������������������  142
+	9.10	 What decisions do I need to make before rejecting a change 
+made by GPT?����������������������������������������������������������������������������������  142
+	9.11	 Will a chatbot negatively affect my writing style?����������������������������  143
+	9.12	 How can I assess whether the bot’s version is actually better 
+than my original version?������������������������������������������������������������������  144
+	9.13	 Using AI to generate a rebuttal letter and other types of email��������  145
+	9.14	 When not to use a bot to generate / correct an email������������������������  146
+	9.15	 How easy is it to tell that a text has been generated 
+by artificial intelligence?������������������������������������������������������������������  147
+	9.16	 Is using a chatbot an act of plagiarism?��������������������������������������������  148
+	9.17	 Summary������������������������������������������������������������������������������������������  149
+	10	 Automatic translation������������������������������������������������������������������������������  151
+	10.1	 How does this chapter differ from the chapter on translation 
+in the companion volume on Grammar, Usage and Style?������������  152
+	10.2	 Should I use machine translation? Which application?������������������  153
+	10.3	 Pre-editing: how to improve the chances of getting 
+an accurate automatic translation����������������������������������������������������  154
+	10.4	 Grammar and vocabulary areas where MT may 
+be more accurate than you��������������������������������������������������������������  156
+	10.5	 Typical areas where automatic translators may make mistakes 
+in English if your language is not a major language����������������������  158
+	10.6	 Areas where machine translation will not help you even 
+if your language is a major language����������������������������������������������  160
+	10.7	 The dangers of using machine translation��������������������������������������  162
+	10.8	 How can I combine my use of machine translation with 
+a chatbot?����������������������������������������������������������������������������������������  163
+	10.9	 Will I still improve my level of English if I use machine 
+translators and chatbots?����������������������������������������������������������������  164
+	10.10	 Do NOT use an automatic translator to check your English����������  166
+	10.11	 A note for EAP teachers ����������������������������������������������������������������  166
+	10.12	 Summary����������������������������������������������������������������������������������������  167
+Contents
+
+xii
+Part II  Sections of a Paper
+	11	 Titles����������������������������������������������������������������������������������������������������������  171
+	11.1	 How important is my title?�������������������������������������������������������������  171
+	11.2	 How can I generate a title?��������������������������������������������������������������  172
+	11.3	 Should I try to include some verbs in my title?������������������������������  173
+	11.4	 How will prepositions help to make my title clearer?��������������������  174
+	11.5	 Are articles (a / an, the) necessary?������������������������������������������������  176
+	11.6	 Will adjectives such as innovative and novel attract attention?������  177
+	11.7	 What other criteria should I use to decide whether 
+to include certain words or not?������������������������������������������������������  178
+	11.8	 How should I punctuate my title? What words should 
+I capitalize?������������������������������������������������������������������������������������  179
+	11.9	 How can I make my title shorter?��������������������������������������������������  179
+	11.10	 How can I make my title sound more dynamic?����������������������������  180
+	11.11	 Can I use my title to make a claim?������������������������������������������������  181
+	11.12	 Are questions in titles a good way to attract attention?������������������  182
+	11.13	 When is a two-part title a good idea?����������������������������������������������  182
+	11.14	 How should I write a title for a conference?����������������������������������  183
+	11.15	 What is a running title?������������������������������������������������������������������  183
+	11.16	 Is using an automatic spell check enough?������������������������������������  185
+	11.17	 Using a chatbot to generate or improve your title��������������������������  185
+	11.18	 Summary: How can I assess the quality of my title?����������������������  187
+	12	 Abstracts: Standard types����������������������������������������������������������������������  189
+	12.1	 What is an abstract? When should I write it?����������������������������������  190
+	12.2	 How important is the Abstract?������������������������������������������������������  191
+	12.3	 Where is the Abstract located? What are ‘highlights’?������������������  192
+	12.4	 How should I select my key words? ����������������������������������������������  193
+	12.5	 What is a structured abstract? ��������������������������������������������������������  194
+	12.6	 What style should I use: personal or impersonal?��������������������������  196
+	12.7	 How should I begin my Abstract?��������������������������������������������������  197
+	12.8	 How much background information should I give?������������������������  200
+	12.9	 What tenses should I use?��������������������������������������������������������������  201
+	12.10	 Why and how should I be concise?������������������������������������������������  203
+	12.11	 What should I not mention in my Abstract? ����������������������������������  204
+	12.12	 How can I ensure that my Abstract has maximum impact?������������  204
+	12.13	 How can chatbots help me improve my Abstract?��������������������������  204
+	12.14	 Summary: How can I assess the quality of my Abstract?��������������  205
+	13	 Abstracts: Particular types ��������������������������������������������������������������������  207
+	13.1	 I have never written an Abstract before. I don’t know 
+where to start. Could I chatbot help me?����������������������������������������  208
+	13.2	 Social and behavioral sciences. How should I structure 
+my abstract? How much background information?������������������������  209
+Contents
+
+xiii
+	13.3	 I am a historian. We don’t necessarily get ‘results’ or follow 
+a specific methodology. What should I do?������������������������������������  210
+	13.4	 I am writing an abstract for a presentation at a conference. 
+What do I need to be aware of?������������������������������������������������������  212
+	13.5	 How do I write an abstract for a work in progress 
+that will be presented at a conference? ������������������������������������������  213
+	13.6	 What is an Extended Abstract? ������������������������������������������������������  214
+	13.7	 What is a video abstract? How can I make one?����������������������������  214
+	13.8	 My aim is to have my paper published in Nature. Is a Nature 
+abstract different from abstracts in other journals?������������������������  215
+	13.9	 I know I need to end my Abstract with a view of the big picture. 
+How can I use a chatbot to suggest to me what the implications 
+of my research are?������������������������������������������������������������������������  216
+	13.10	 How do journal editors and conference review committees 
+assess the abstracts that they receive?��������������������������������������������  218
+	13.11	 Summary����������������������������������������������������������������������������������������  219
+	14	 Introduction����������������������������������������������������������������������������������������������  221
+	14.1	 What is an Introduction?����������������������������������������������������������������  222
+	14.2	 How should I structure it? How long should it be?������������������������  222
+	14.3	 How does an Introduction differ from an Abstract?�����������������������  223
+	14.4	 How should I begin my Introduction?��������������������������������������������  225
+	14.5	 How should I structure the rest of the Introduction?����������������������  227
+	14.6	 What tenses should I use?��������������������������������������������������������������  230
+	14.7	 How long should the paragraphs be?����������������������������������������������  232
+	14.8	 How should I outline the structure of the rest of my paper?����������  233
+	14.9	 My research area is not a ‘hard’ science. Are there 
+any other ways of beginning an Introduction?��������������������������������  234
+	14.10	 Can a chatbot help me to write my Introduction?��������������������������  235
+	14.11	 Summary: How can I assess the quality of my Introduction?��������  236
+	15	 Writing a Review of the Literature��������������������������������������������������������  237
+	15.1	 I need to write a Review Paper. How should I structure 
+my Abstract? What are my aims and conclusions?������������������������  238
+	15.2	 How should I structure my review of the literature 
+in my Introduction to my paper?����������������������������������������������������  239
+	15.3	 How should I begin my literature review? How can I structure 
+it to show the progress through the years?��������������������������������������  240
+	15.4	 What is the clearest way to refer to other authors? 
+Should I focus on the authors or their ideas?����������������������������������  241
+	15.5	 How can I talk about the limitations of previous work 
+and the novelty of my work in a constructive 
+and diplomatic way? ����������������������������������������������������������������������  243
+	15.6	 How can I reduce the amount I write when reporting 
+the literature?����������������������������������������������������������������������������������  244
+Contents
+
+xiv
+	15.7	 In my review I need mention what other authors have written. 
+How should I do this? ��������������������������������������������������������������������  245
+	15.8	 How can I quote directly from other papers?����������������������������������  246
+	15.9	 How can I use a bot to help me paraphrase?����������������������������������  247
+	15.10	 How to quote from another paper by paraphrasing������������������������  248
+	15.11	 Paraphrasing: a simple example������������������������������������������������������  249
+	15.12	 Paraphrasing: how it can help you write correct English����������������  250
+	15.13	 What are some more quick tips for writing a review paper?����������  251
+	15.14	 How should I conclude a Review Paper?����������������������������������������  252
+	15.15	 Summary: How can I assess the quality 
+of my Literature Review?���������������������������������������������������������������  252
+	16	 Methods����������������������������������������������������������������������������������������������������  255
+	16.1	 What is a Method’s section? ����������������������������������������������������������  256
+	16.2	 Are there any ways that a chatbot could help me 
+with my Methods section?��������������������������������������������������������������  257
+	16.3	 How should I structure the Methods? ��������������������������������������������  258
+	16.4	 What style: should I use the active or passive? What tenses 
+should I use? ����������������������������������������������������������������������������������  259
+	16.5	 How should I begin the Methods?��������������������������������������������������  261
+	16.6	 My methods use a standard / previous procedure. 
+Do I need to describe the methods in detail?����������������������������������  262
+	16.7	 Should I describe everything in chronological order?��������������������  263
+	16.8	 How many actions / steps can I refer to in a single sentence?��������  263
+	16.9	 How can I reduce the number of words but avoid 
+my Methods appearing like a series of lists?����������������������������������  265
+	16.10	 What potential errors of grammar and syntax do I need 
+to be careful of?������������������������������������������������������������������������������  265
+	16.11	 What other points should I include in the Methods? 
+How should I end the Methods? ����������������������������������������������������  268
+	16.12	 Summary: How can I assess the quality 
+of my Methods section?������������������������������������������������������������������  268
+	17	 Results������������������������������������������������������������������������������������������������������  271
+	17.1	 What is a Results section?��������������������������������������������������������������  272
+	17.2	 How should I structure the Results? ����������������������������������������������  273
+	17.3	 How should I begin the Results?����������������������������������������������������  274
+	17.4	 What tenses and style should I use when reporting 
+my Results?������������������������������������������������������������������������������������  275
+	17.5	 Should I report any negative results?����������������������������������������������  275
+	17.6	 How can I show my readers the value of my data, rather 
+than just telling them?��������������������������������������������������������������������  276
+	17.7	 How should I comment on my tables and figures?������������������������  277
+	17.8	 What more do I need to know about commenting on tables?��������  278
+	17.9	 How can I use a chatbot to help me write the Results section?������  279
+	17.10	 What about legends and captions?��������������������������������������������������  281
+Contents
+
+xv
+	17.11	 My research was based on various surveys and interviews. 
+How should I report quotations from the people 
+we interviewed?������������������������������������������������������������������������������  282
+	17.12	 Summary: How can I assess the quality of my Results section?����  283
+	18	 Discussion�������������������������������������������������������������������������������������������������  285
+	18.1	 What is a Discussion?��������������������������������������������������������������������  286
+	18.2	 How should I structure the Discussion?������������������������������������������  287
+	18.3	 Active or passive? What kind of writing style should I use?����������  288
+	18.4	 How should I begin the Discussion?����������������������������������������������  289
+	18.5	 Why and how should I compare my work with that of others?������  290
+	18.6	 How can I give my interpretation of my data while taking 
+into account other possible interpretations that I do not agree 
+with?������������������������������������������������������������������������������������������������  293
+	18.7	 How can I use seems and appears to admit that 
+I have not investigated all possible cases?��������������������������������������  293
+	18.8	 What about the literature that does not support 
+my findings - should I mention it?��������������������������������������������������  294
+	18.9	 How can I show the pitfalls of other works in the literature? ��������  294
+	18.10	 Should I discuss the limitations of my research?����������������������������  295
+	18.11	 How can I be more concise? ����������������������������������������������������������  295
+	18.12	 How can I use a chatbot to help me with my Discussion?��������������  296
+	18.13	 What are the dangers of using a chatbot to help me write my 
+Discussion? ������������������������������������������������������������������������������������  297
+	18.14	 How long should the paragraphs be?����������������������������������������������  298
+	18.15	 How should I end the Discussion if I have a Conclusions 
+section? ������������������������������������������������������������������������������������������  299
+	18.16	 How should I end the Discussion 
+if I do not have a Conclusions section?������������������������������������������  300
+	18.17	 Summary: How can I assess the quality of my Discussion?����������  301
+	19	 Conclusions����������������������������������������������������������������������������������������������  303
+	19.1	 What is the purpose of the Conclusions section?����������������������������  304
+	19.2	 What tenses should I use?��������������������������������������������������������������  305
+	19.3	 I have no idea how to write a Conclusions section. 
+Is there a quick way that a chatbot could help me?������������������������  306
+	19.4	 How should I structure the Conclusions? ��������������������������������������  308
+	19.5	 How can I differentiate my Conclusions from my Abstract?����������  308
+	19.6	 How can I differentiate my Conclusions 
+from my Introduction and from the last paragraph 
+of my Discussion?��������������������������������������������������������������������������  310
+	19.7	 How can I increase the impact of the first sentence 
+of my Conclusions?������������������������������������������������������������������������  311
+	19.8	 I don’t have any clear Conclusions, what can I do? 
+Should I mention my limitations?��������������������������������������������������  312
+	19.9	 How can I end my Conclusions?����������������������������������������������������  313
+Contents
+
+xvi
+	19.10	 To be honest, I don’t really know what the implications 
+of my research are or what possible avenues for future 
+research there are. How could a chatbot help me?��������������������������  314
+	19.11	 How should I write the Acknowledgements?���������������������������������  315
+	19.12	 Summary: How can I assess the quality of my Conclusions?��������  315
+	20	 The Final Check��������������������������������������������������������������������������������������  317
+	20.1	 How good is my paper?������������������������������������������������������������������  318
+	20.2	 Use AI to check your paper, then print it out����������������������������������  320
+	20.3	 Check your paper for readability����������������������������������������������������  321
+	20.4	 Always have the referee in mind����������������������������������������������������  322
+	20.5	 What to do if your paper is subject to a ‘blind’ review������������������  322
+	20.6	 Be careful with cut and pastes��������������������������������������������������������  323
+	20.7	 Make sure everything is consistent ������������������������������������������������  323
+	20.8	 Check that your English is suitably formal������������������������������������  324
+	20.9	 Don’t underestimate the importance of spelling mistakes��������������  325
+	20.10	 Write a good letter / email to accompany your manuscript������������  326
+	20.11	 Keep an open mind and deal with rejections in a positive way������  326
+	20.12	 Take the editor’s and reviewers’ comments seriously��������������������  327
+	20.13	 A final word from the author: Let’s put a bit of fun 
+into scientific writing!��������������������������������������������������������������������  328
+	20.14	 Summary of this chapter����������������������������������������������������������������  329
+	20.15	 Summary of the entire book: 10 key concepts��������������������������������  330
+Additional information������������������������������������������������������������������������������������  331
+Index������������������������������������������������������������������������������������������������������������������  337
+Contents

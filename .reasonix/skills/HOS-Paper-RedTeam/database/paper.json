@@ -1,0 +1,221 @@
+{
+  "$schema_note": "论文元数据索引。每次完成 Paper Autopsy 后追加一条。按 arxiv_id 去重。",
+  "papers": [
+    {
+      "arxiv_id": "2602.17875",
+      "title": "MultiVer: Zero-Shot Multi-Agent Vulnerability Detection",
+      "authors": [
+        "Shreshth Rajan"
+      ],
+      "venue": "arXiv preprint",
+      "submitted": "2026-02-19",
+      "rve_ids": [
+        "HOS-RVE-2026-0001",
+        "HOS-RVE-2026-0002"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-001"
+      ],
+      "score": 37.1,
+      "status": "analyzed"
+    },
+    {
+      "arxiv_id": "2403.18624",
+      "title": "Vulnerability Detection with Code Language Models: How Far Are We? (PrimeVul)",
+      "authors": [
+        "Yangruibo Ding et al."
+      ],
+      "venue": "ICSE 2025 (CCF-A)",
+      "submitted": "2024-03-27",
+      "rve_ids": [
+        "HOS-RVE-2026-0003",
+        "HOS-RVE-2026-0004",
+        "HOS-RVE-2026-0005",
+        "HOS-RVE-2026-0006"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-002"
+      ],
+      "score": 77,
+      "status": "analyzed"
+    },
+    {
+      "arxiv_id": "2308.06782",
+      "title": "PentestGPT: Evaluating and Harnessing LLMs for Automated Penetration Testing",
+      "authors": [
+        "Gelei Deng et al."
+      ],
+      "venue": "USENIX Security 2024 (CCF-A) + Distinguished Artifact Award",
+      "submitted": "2023-08-13",
+      "rve_ids": [
+        "HOS-RVE-2026-0007",
+        "HOS-RVE-2026-0008",
+        "HOS-RVE-2026-0009",
+        "HOS-RVE-2026-0010"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-003"
+      ],
+      "score": 68,
+      "status": "analyzed"
+    },
+    {
+      "arxiv_id": "2608.03134",
+      "title": "CLEAR: Causal Context-Based Agentic Reasoning for Vulnerability Detection",
+      "authors": [
+        "Sungju Yun, Sijune Hwang, Yeonjoon Lee, Kyungtae Kang, Sungbin Park"
+      ],
+      "venue": "arXiv preprint (2026-08)",
+      "submitted": "2026-08-04",
+      "rve_ids": [
+        "HOS-RVE-2026-0011",
+        "HOS-RVE-2026-0012",
+        "HOS-RVE-2026-0013",
+        "HOS-RVE-2026-0014"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-004"
+      ],
+      "score": 40,
+      "status": "analyzed"
+    },
+    {
+      "arxiv_id": "2607.26656",
+      "title": "Graph Is the Verifier: Agentic RL for Interprocedural Vulnerability Detection (VulAgentRL)",
+      "authors": [
+        "Yikun Li et al. (SMU/HIT/GovTech)"
+      ],
+      "venue": "arXiv preprint (2026-07)",
+      "submitted": "2026-07-29",
+      "rve_ids": [
+        "HOS-RVE-2026-0015",
+        "HOS-RVE-2026-0016",
+        "HOS-RVE-2026-0017",
+        "HOS-RVE-2026-0018"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-004"
+      ],
+      "score": 59,
+      "status": "analyzed"
+    },
+    {
+      "arxiv_id": "2607.24964",
+      "title": "ALIBI: Adaptive Agentic Attacks on LLM-Based Vulnerability Detectors via Adversarial Code Comments",
+      "authors": [
+        "Zixuan Wu, Cristina Nita-Rotaru"
+      ],
+      "venue": "arXiv preprint (2026-07)",
+      "submitted": "2026-07-27",
+      "rve_ids": [
+        "HOS-RVE-2026-0019",
+        "HOS-RVE-2026-0020",
+        "HOS-RVE-2026-0021",
+        "HOS-RVE-2026-0022"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-006"
+      ],
+      "score": 60,
+      "status": "analyzed"
+    },
+    {
+      "arxiv_id": "2607.13439",
+      "title": "DREA: Decoupled Reasoning and Exploration Agents for Repository-Level Vulnerability Detection",
+      "authors": [
+        "Mingyang Sun, Guozhu Meng"
+      ],
+      "venue": "Internetware 2026",
+      "submitted": "2026-07-15",
+      "rve_ids": [
+        "HOS-RVE-2026-0023",
+        "HOS-RVE-2026-0024",
+        "HOS-RVE-2026-0025",
+        "HOS-RVE-2026-0026"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-005"
+      ],
+      "score": 63,
+      "status": "analyzed"
+    },
+    {
+      "arxiv_id": "2607.12058",
+      "title": "AutoTrace: From Patches to Triggers via Agentic Interprocedural Exploration",
+      "authors": "Arastoo Zibaeirad, Marco Vieira, Thomas Zimmermann",
+      "venue": "arXiv preprint (2026-07)",
+      "submitted": "2026-07-13",
+      "rve_ids": [
+        "HOS-RVE-2026-0027",
+        "HOS-RVE-2026-0028",
+        "HOS-RVE-2026-0029",
+        "HOS-RVE-2026-0030"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-004"
+      ],
+      "score": 58,
+      "status": "analyzed"
+    },
+    {
+      "arxiv_id": "2605.21779",
+      "title": "FuzzingBrain V2: A Multi-Agent LLM System for Automated Vulnerability Discovery and Reproduction",
+      "authors": [
+        "Ze Sheng, Zhicheng Chen, Qingxiao Xu, Kewen Zhu, Jeff Huang"
+      ],
+      "venue": "arXiv preprint (2026-05) · AIxCC 2025 Finalist",
+      "submitted": "2026-05-20",
+      "rve_ids": [
+        "HOS-RVE-2026-0031",
+        "HOS-RVE-2026-0032",
+        "HOS-RVE-2026-0033",
+        "HOS-RVE-2026-0034"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-005"
+      ],
+      "score": 67,
+      "status": "analyzed"
+    },
+    {
+      "arxiv_id": "2606.22263",
+      "title": "Revelio: Cost-Efficient Agentic Memory Safety Vulnerability Detection",
+      "authors": [
+        "Yiwei Hou et al. (Koushik Sen, Dawn Song, David Wagner)"
+      ],
+      "venue": "arXiv preprint (2026-06)",
+      "submitted": "2026-06-20",
+      "rve_ids": [
+        "HOS-RVE-2026-0035",
+        "HOS-RVE-2026-0036",
+        "HOS-RVE-2026-0037",
+        "HOS-RVE-2026-0038"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-005"
+      ],
+      "score": 67,
+      "status": "analyzed"
+    },
+    {
+      "arxiv_id": "2603.20637",
+      "title": "AEGIS: From Clues to Verdicts — Graph-Guided Deep Vulnerability Reasoning via Dialectics and Meta-Auditing",
+      "authors": [
+        "Sen Fang, Weiyuan Ding, Zhezhen Cao, Zhou Yang, Bowen Xu"
+      ],
+      "venue": "arXiv preprint (2026-03)",
+      "submitted": "2026-03-21",
+      "rve_ids": [
+        "HOS-RVE-2026-0039",
+        "HOS-RVE-2026-0040",
+        "HOS-RVE-2026-0041",
+        "HOS-RVE-2026-0042"
+      ],
+      "research_gap_ids": [
+        "GAP-2026-004"
+      ],
+      "score": 66,
+      "status": "analyzed"
+    }
+  ]
+}

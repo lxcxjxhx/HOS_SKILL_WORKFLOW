@@ -1,0 +1,89 @@
+{
+  "$schema_note": "研究空白与论文机会池。Research Miner 每次审计后追加，星级>=4 的优先推荐。",
+  "gaps": [
+    {
+      "idea_id": "GAP-2026-001",
+      "source_paper": "2602.17875",
+      "source_rve": "HOS-RVE-2026-0001",
+      "problem": "多智能体漏洞检测系统普遍选择性报告指标，且无动态对抗评测环境",
+      "direction": "Dynamic Agent Security Evaluation：真实攻击环境下的多智能体系统评测框架",
+      "existing_work": "MultiVer (2602.17875) 用静态基准互测；Sifting the Noise (2601.22952) 用 post-cutoff 验证",
+      "gap": "无动态、对抗式、可复现的多智能体安全评测环境",
+      "opportunity": 5,
+      "target_venue": "CCF-A Security (IEEE S&P / USENIX Security)",
+      "feasible_3mo": true,
+      "status": "proposed",
+      "created": "2026-07-31"
+    },
+    {
+      "idea_id": "GAP-2026-002",
+      "source_paper": "2403.18624",
+      "source_rve": "HOS-RVE-2026-0004",
+      "problem": "PrimeVul 证明函数级 code LM 天花板极低，但仓库级 AI 工具相对传统 SAST 的实用价值无统一评测",
+      "direction": "Repo-Level AI Vulnerability Detection vs Traditional SAST: An Adversarial Benchmark",
+      "existing_work": "PrimeVul 函数级基准；VulnAgent-R2/AEGIS 仓库级多 Agent 均以 PrimeVul 评测但无 SAST 对照",
+      "gap": "无统一协议把仓库级 LLM Agent 与成熟 SAST 在同一数据集同一指标下对抗评测",
+      "opportunity": 5,
+      "target_venue": "ICSE / ISSTA (CCF-A SE)",
+      "feasible_3mo": true,
+      "status": "proposed",
+      "created": "2026-08-11"
+    },
+    {
+      "idea_id": "GAP-2026-003",
+      "source_paper": "2308.06782",
+      "source_rve": "HOS-RVE-2026-0007",
+      "problem": "LLM 渗透测试/漏洞检测评测普遍存在训练污染，现有缓解手段无效",
+      "direction": "Post-Cutoff Private Targets: Pollution-Immune Evaluation for LLM Offensive Security",
+      "existing_work": "PentestGPT 公开靶机污染未排除；Cybench/CVE-Bench 同类问题",
+      "gap": "无系统的污染免疫评测协议",
+      "opportunity": 4,
+      "target_venue": "USENIX Security / IEEE S&P (CCF-A Security)",
+      "feasible_3mo": true,
+      "status": "proposed",
+      "created": "2026-08-11"
+    },
+    {
+      "idea_id": "GAP-2026-004",
+      "source_paper": "2603.20637",
+      "source_rve": "HOS-RVE-2026-0039",
+      "problem": "2026 年 8 篇多 Agent 漏洞检测论文 6 篇口径不透明（relaxed VulnHit、fp=P-V+P-R、条件 ASR、赛后回测、同篇矛盾），跨论文完全不可比",
+      "direction": "Metric Forensics for Agentic Vulnerability Detectors: A Cross-Paper Audit of Evaluation Protocols",
+      "existing_work": "AutoTrace relaxed 口径、AEGIS 非常规 FPR、ALIBI 条件 ASR、FuzzingBrain 赛后回测、CLEAR 同篇矛盾",
+      "gap": "无系统性审计 2026 年多 Agent 漏洞检测论文指标口径的工作；每篇都用『自己的尺子』",
+      "opportunity": 4,
+      "target_venue": "ICSE / ISSTA (CCF-A SE)",
+      "feasible_3mo": true,
+      "status": "proposed",
+      "created": "2026-08-11"
+    },
+    {
+      "idea_id": "GAP-2026-005",
+      "source_paper": "2606.22263",
+      "source_rve": "HOS-RVE-2026-0035",
+      "problem": "训练记忆污染（DREA 自认）+ 数据泄漏（Revelio pilot 重合）在 2026 年仍是常态",
+      "direction": "Post-Cutoff Evaluation Protocol for LLM Vulnerability Detectors（私有样本+语料检索+双盲）",
+      "existing_work": "DREA RepoPairBench 污染、Revelio pilot 泄漏、FuzzingBrain 零日可核验实践",
+      "gap": "无统一去污染评测协议；与 GAP-2026-003 合并推进",
+      "opportunity": 4,
+      "target_venue": "USENIX Security (CCF-A Security)",
+      "feasible_3mo": true,
+      "status": "proposed",
+      "created": "2026-08-11"
+    },
+    {
+      "idea_id": "GAP-2026-006",
+      "source_paper": "2607.24964",
+      "source_rve": "HOS-RVE-2026-0022",
+      "problem": "LLM 检测器面对对抗输入毫无鲁棒性（ALIBI 注释攻击 ASR>90%、AEGIS Audit 翻车）",
+      "direction": "Adversarial Robustness Benchmark for LLM-Based Code Auditors（对抗注释/清理/架构隔离量化评测）",
+      "existing_work": "ALIBI 揭示攻击面但防御=移除攻击面；AEGIS Audit 与 Verifier 同模型翻车",
+      "gap": "无统一的 LLM 代码审计器对抗鲁棒性评测基准与量化防御",
+      "opportunity": 4,
+      "target_venue": "IEEE S&P / CCS (CCF-A Security)",
+      "feasible_3mo": true,
+      "status": "proposed",
+      "created": "2026-08-11"
+    }
+  ]
+}
