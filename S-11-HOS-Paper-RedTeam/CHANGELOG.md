@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.1] - 2026-02-16
+
+### Added
+- **官方 Front Matter 下载**：Springer 官方免费前言 PDF（`references/books/ewrp-frontmatter-springer.pdf` + 提取文本）——合法免费获取路径，非盗版。
+- **English for Writing Research Papers 升级为「前言级」背书**：methodology.md §2.5 重写，官方前言原文引述（Part I Writing Skills 1-13 章 / Part II Writing a Paper 14-20 章 / 新增 ChatGPT 两章 / Ch.20 投稿 checklist）。
+
+### Fixed
+- **版本修正**：English for Writing Research Papers 官方前言版权页 "© 2011, 2016, 2023" 证实为**第三版**，此前误标 2nd ed. 已修正。
+- EWRP 的 AI 内容描述从 Crossref 章节推断升级为官方前言原文（Ch.9-10 为 ChatGPT/机器翻译新章）。
+
 ## [1.3.0] - 2026-02-16
 
 ### Added

@@ -75,19 +75,31 @@
 
 **→ 本 Skill 落点**：Blogger Agent + workflows/ 的队列化生产（Research/Reading/Experiment/Writing/Submission Queue）与该书"写作是流程而非灵感"主张一致。⚠ 书评级提炼，未读全文。
 
-## ⑤ English for Writing Research Papers, 2nd ed.（Adrian Wallwork）—— ⚠ 付费书，提炼自 Crossref 章节元数据
+## ⑤ English for Writing Research Papers, 3rd ed.（Adrian Wallwork）—— ⚠ 前言级背书（官方 Front Matter 已下载）
 
-**提炼依据**：Crossref 章节级记录（ISBN 9783031310720，2023，`English for Academic Research` 丛书）。**无全文**。
+**提炼依据**：Springer 官方 Front Matter PDF（`references/books/ewrp-frontmatter-springer.pdf`，16 页官方前言，已下载精读）。**无正文全文**（版权）。
 
-**章节核验（Crossref 章节元数据，节选）**：Titles；Abstracts: Particular types；Discussing your limitations；Clarifying and Highlighting；Automatic translation。该系列按论文结构（Title/Abstract/…/Discussion）逐章讲解，且新版含 AI/自动翻译相关内容（章节 "Automatic translation" 证实）。
+**关键版本修正（官方前言确认）**：**第三版**（Third Edition, 2023），ISBN 978-3-031-31071-3 / 978-3-031-31072-0 (eBook)，DOI 10.1007/978-3-031-31072-0，版权页 "© 2011, 2016, 2023"（2011 第 1 版 / 2016 第 2 版 / 2023 第 3 版）。⚠ 此前误标 "2nd ed." 已修正。
 
-**→ 本 Skill 落点**：Blogger Agent 与 research-idea.md 的写作骨架按论文结构组织。⚠ 章节级提炼，未读全文。
+**结构（官方前言原文）**：
+- **Part I Writing Skills**：第 1-13 章（Planning and Preparation / Word order and sentence length / Structuring Paragraphs / Being Concise and Removing Redundancy / Avoiding ambiguity, repetition, and vague language / … 写作技巧）
+- **Part II Writing a Paper**：第 14-19 章按论文结构（Introduction / Writing a Review of the Literature / … / Conclusions 等）+ **第 20 章**：投稿前 checklist（"Chapter 20 concludes the book and contains a checklist of things to consider before sending your manuscript to the journal"）
+
+**新版差异（官方前言原文引述）**：
+- "There are two new chapters: Chapters 9 and 10. They cover how to use ChatGPT (and similar tools) and machine translation to write and/or correct your paper."
+- "The chapters on how to write Abstracts, Introductions, Methods etc now include at least one subsection on using ChatGPT to help you write those specific sections of a paper."
+- 2016 版 hedging 章节已移除（"still available in the 2016 edition"）
+
+**→ 本 Skill 落点**：Blogger Agent 与 research-idea.md 的写作骨架按论文结构组织（Part II 14-20 章即写作检查清单来源）；投稿 checklist（Ch.20）可映射 research-idea.md 的投稿可行性检查。⚠ 正文细节未读，仅前言级。
+
+> 获取路径说明：Springer 官网 book 页免费提供 Front Matter（书名页/前言/目录）——这是出版社官方免费公开内容，非盗版。
 
 ---
 
 ## 提炼结论（对 methodology.md 的修正要求）
 
 1. **How to Read a Paper 升级为「全文级」背书**：新增精确原文（five Cs、virtual re-implementation、三遍时长、文献综述流程），并补充关联文献（Roscoe / Whitesides / Schulzrinne / Peyton Jones）作为拓展阅读。
-2. **其余 4 本明确标注「目录级/书评级」**：任何输出引用不得写具体页码，只能写「Ch.7（目录级）」或「书评级主张」，违反即视为幻觉。
+2. **其余 4 本明确标注「目录级/书评级/前言级」**：任何输出引用不得写具体页码，只能写「Ch.7（目录级）」或「书评级主张」或「官方前言（原文引述）」，违反即视为幻觉。
 3. **Craft of Research 的第 5 版新增内容（presentations 章 / gen AI 指南 / ethics 扩展）已有官方页原文引述**，可作为版本差异背书。
-4. 第 5 本（Wallwork）章节 "Automatic translation" 证实新版含 AI 写作内容，替换之前「AI 辅助写作」的未证实表述。
+4. **English for Writing Research Papers 版本修正为第三版（2023）**：官方前言版权页 "© 2011, 2016, 2023" 证实；前言确认新增 ChatGPT/机器翻译两章（Ch.9-10）、各节含 AI 小节、第 20 章投稿 checklist——替换之前基于 Crossref 章节元数据的推断。
+5. **Springer 官方 Front Matter 是合法免费获取路径**：link.springer.com 每本书免费提供前言/目录 PDF，可据此升级「目录级」背书为「前言级」（官方原文引述）。
