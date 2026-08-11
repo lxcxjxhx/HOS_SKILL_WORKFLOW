@@ -1,5 +1,17 @@
 # HOS-CRITIC-REVIEW 变更记录
 
+## [0.6.0] - 2026-08-11（方法论背书 + CS 审稿 rubric 补全）
+
+### 新增
+- **方法论背书（Methodology Reference → Operationalization）**：SKILL.md 新增 §一·五，把评审规则锚定到权威科研方法论——Booth et al. *The Craft of Research* (5th ed.)、Creswell *Research Design* (5th ed.)、Keshav *How to Read a Paper*；评审规则从「AI 自创清单」升级为「权威方法论 → 可解释规则 → Skill」。
+- **论文检查点 P9–P13**（`references/analyzers.md` + `docs/05` 同步）：补齐 CS 审稿 rubric 缺项——
+  - P9 Problem significance（问题重要性）、P10 Soundness（方法/数学正确性）、
+    P11 Statistical validity（多次运行/置信区间/显著性检验）、
+    P12 Design-order（防「先有锤子再找钉子」：研究问题必须先于方法）、
+    P13 Real-world relevance（玩具场景 vs 真实落地）；
+- **Critic-Agent paper 提示**（`agents/05-critic.md`）：paper 对象 Critique 须覆盖 rubric 关键缺口（Baseline/Ablation/统计有效性/可复现/代码可用性/真实相关性），对应三遍阅读法第三遍的挑战。
+- **Academic 模板**（`templates/academic.md`）：报告头部新增 Methodology 行，自带方法论背书引用。
+
 ## [0.5.1] - 2026-08-03（多篇汇总渲染工具）
 
 ### 新增

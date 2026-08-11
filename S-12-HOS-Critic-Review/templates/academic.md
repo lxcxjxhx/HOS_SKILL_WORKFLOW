@@ -8,6 +8,7 @@
 Target: {title}（{venue}, {year}）
 Decision: {Weak Accept | Accept | Weak Reject | Reject}
 Score: {score}/100 · {grade_label}
+Methodology: Booth et al., *The Craft of Research* (5th ed.) · Creswell, *Research Design* (5th ed.) · Keshav, *How to Read a Paper*
 
 ## 0. 评分卡（置顶）
 - One-liner: {one_liner}

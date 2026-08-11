@@ -14,6 +14,24 @@ description: 对任意技术对象（GitHub 项目/论文/技术文章/产品方
 - **不是** 总结器、评论机器人、安全扫描器（静态分析只是可选分析器之一）。
 - 智能环节（批判、评分、毒舌点评）由宿主 LLM 执行；外部工具（GitHub API、Tree-sitter、GROBID 等）是可选增强，缺失时自动降级，流水线不中断。
 - 完全独立体系：编号 `HCR-FIND`、六维评分、报告样式均为本项目自建。
+- **方法论背书**：评审规则不是 AI 自创的「看起来很专业」的清单，而是对通用科研方法论的工程化（见 §一·五）——对外可解释、有权威来源。
+
+### 一·五、方法论背书（Methodology Reference → Operationalization）
+
+**Methodology Reference**（评审规则的权威来源）
+
+- Booth, Colomb & Williams, *The Craft of Research*, 5th ed., University of Chicago Press, 2024 —— 研究总纲：问题 → 证据 → 论证 → 贡献
+- Creswell & Creswell, *Research Design*, 5th ed., SAGE —— 研究设计：先有研究问题，后有方法；防止「先决定方法再硬找问题」
+- Keshav, *How to Read a Paper* —— CS 论文三遍阅读法：快速判断 → 理解方法与实验 → 挑战细节（数学/算法/隐藏假设）
+
+**Operationalization**（方法论 → 本 Skill 规则）
+
+| 方法论 | 本 Skill 落点 |
+|--------|--------------|
+| 三遍阅读法第三遍（挑战实验细节/隐藏假设） | Analyzer 论文检查点 + Critic 攻击向量（`hidden-assumption` / `counterexample`） |
+| CS 审稿 rubric（Problem significance / Novelty / Soundness / Baseline / Data / Experiment / Ablation / Statistical validity / Repro / Real-world relevance） | `references/analyzers.md` 论文检查点 P1–P13 |
+| 「研究问题 → 设计 → 方法 → 实验 → 证据」顺序 | 检查点 P12 Design-order：先定方法后找问题的论文必须被点名 |
+| The Craft of Research 的证据纪律（声称必须有证据支撑） | 铁律「No Evidence No Criticism」+ Evidence-Agent 逐条核验 |
 
 ## 二、七 Agent 流水线
 
