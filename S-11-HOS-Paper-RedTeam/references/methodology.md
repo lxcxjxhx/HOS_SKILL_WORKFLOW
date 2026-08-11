@@ -27,18 +27,18 @@
 
 ## 二、核心方法论 → 本 Skill 落点（Operationalization）
 
-### 2.1 The Craft of Research —— 研究总纲（目录已核验）
+### 2.1 The Craft of Research —— 研究总纲（⚠ 目录级背书，无全文）
 
-研究不是「写论文」，是「什么才算研究」。**官方目录核实**（UChicago Press 页面 2026-02-16）：Part I「Asking Questions, Seeking Answers」= Ch.1 From Topics to Questions → Ch.2 From Questions to a Problem；Part III「Making Your Argument」= Ch.6 Making Claims / Ch.7 Assembling Reasons and Evidence / Ch.8 Warrants；Part V Ch.17 The Ethics of Research；并含「Using Generative Artificial Intelligence」Quick Tip。官方明确：销量超百万册、面向高中生到资深研究者。
+研究不是「写论文」，是「什么才算研究」。**引用级别：官方目录 + 官方简介 + 权威书评**（付费书无合法全文，提炼见 `references/books/DIGEST.md` §②）。**官方目录核实**（UChicago Press 页面 2026-02-16）：Part I「Asking Questions, Seeking Answers」= Ch.1 From Topics to Questions → Ch.2 From Questions to a Problem；Part III「Making Your Argument」= Ch.6 Making Claims / Ch.7 Assembling Reasons and Evidence / Ch.8 Warrants；Part V Ch.17 The Ethics of Research；并含「Using Generative Artificial Intelligence」Quick Tip。官方简介原文确认销量超百万册、面向高中生到资深研究者；第 5 版新增 presentations 章、gen AI 指南、ethics 扩展。
 
 **本 Skill 落点**：
 - Claim Analyzer（Agent 03）的证据纪律：「声称必须有证据支撑」= Craft of Research Ch.6/Ch.7 的论证要求（Claim/Evidence/Gap 三元组即 Question→Evidence→Argument 的拆解版）。
 - Research Miner（Agent 09）挖下一篇论文 = Ch.1/Ch.2 从「未被回答的 Question」出发找 Gap，禁止凭空拍方向。
 - 铁律「No Evidence No Criticism」直接来自本书 Ch.7 的证据纪律。
 
-### 2.2 Research Design —— 研究设计顺序（目录已核验）
+### 2.2 Research Design —— 研究设计顺序（⚠ 目录级背书，无全文）
 
-防止最常见病灶：**先决定方法，再硬找问题**。**官方目录核实**（SAGE 页面 2026-02-16）：Ch.1 The Selection of a Research Approach、Ch.7 Research Questions and Hypotheses、Ch.8 Quantitative Methods、Ch.9 Qualitative Methods、Ch.10 Mixed Methods Procedures；第五版新增 power analysis（统计功效确定样本量）、实验与调查设计覆盖。
+防止最常见病灶：**先决定方法，再硬找问题**。**引用级别：官方目录 + 简介**（付费书无合法全文，提炼见 `references/books/DIGEST.md` §③）。**官方目录核实**（SAGE 页面 2026-02-16）：Ch.1 The Selection of a Research Approach、Ch.7 Research Questions and Hypotheses、Ch.8 Quantitative Methods、Ch.9 Qualitative Methods、Ch.10 Mixed Methods Procedures；第五版新增 power analysis（统计功效确定样本量）、实验与调查设计覆盖。
 
 ```
 正确：Research Question → Research Design → Method → Experiment → Evidence
@@ -51,25 +51,29 @@
 
 > ⚠ 已知更新：SAGE 已出版 **Research Design 第 6 版**（J. David Creswell 与新合著者）。本 Skill 引用第 5 版内容（已核验目录），若需第 6 版差异需另行核对官方页。
 
-### 2.3 How to Read a Paper —— CS 论文三遍阅读法（原文已核验）
+### 2.3 How to Read a Paper —— CS 论文三遍阅读法（✅ 全文级背书）
 
-Stanford 官方 PDF（2007，`web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf`）原文确认三遍法：
+**全文已下载精读**：`references/books/how-to-read-a-paper-keshav.pdf`（Stanford 官方托管，2007，3 页全文），提炼见 `references/books/DIGEST.md` §①。以下为原文精确内容：
 
-| 遍 | 目的 | 看什么 |
-|----|------|--------|
-| 第一遍 | 值不值得读（5-10 分钟） | Title / Abstract / Intro / Section 标题 / Figures / Conclusion / References |
-| 第二遍 | 作者怎么做（1 小时） | Method / Experiment / Baseline / Evaluation / 抓关键图 |
-| 第三遍 | **挑战它**（数小时） | 数学 / 算法 / Implementation / Appendix / 实验细节 / **Hidden assumptions** |
+| 遍 | 时长（原文） | 动作（原文） | 产出 |
+|----|------|------------|------|
+| 第一遍 | 5-10 分钟 | 读 title/abstract/intro、只读章节标题、读结论、扫参考文献 | 回答 **five Cs**：Category（论文类型）/ Context（相关论文与理论）/ Correctness（假设是否成立）/ Contributions（主要贡献）/ Clarity（是否好写） |
+| 第二遍 | 约 1 小时 | 仔细读图表、标注未读引用；审稿时评估「证据是否支撑主张」 | 能向他人复述论文主线 |
+| 第三遍 | 新手 4-5 小时，熟手约 1 小时 | **virtual re-implementation（虚拟重实现）**：以作者假设重造工作，对比原论文 | 找出 innovations / hidden failings / assumptions；原文："identify and challenge every assumption in every statement" |
 
-**本 Skill 落点**：Paper Autopsy（Agent 08）与 Reviewer Simulator（Agent 07）的攻击向量 = 第三遍阅读法的工程化——`hidden-assumption` / `counterexample` 即「隐藏假设」「反例」攻击。读者 → Reviewer / Researcher 的转变正是本 Skill 的定位。
+原文明确："To fully understand a paper, particularly if you are a reviewer, requires a third pass."——**审稿必须第三遍**，这正是本 Skill 的定位依据。第三遍产出（原文）：implicit assumptions（隐藏假设）、missing citations（缺失引用）、potential issues with experimental or analytical techniques（实验/分析方法问题）。
 
-### 2.4 How to Write a Lot —— 写作生产力（DOI 已核验）
+原文还给出**文献综述流程**（§3）：搜索引擎找 3-5 篇 → 各做第一遍 → 读 related work → 找共享引用与重复作者（关键论文/研究者）→ 追踪顶会。可映射 Research Miner 的文献调研。
 
-APA 2022 第 2 版（DOI 10.1037/0000109-000）核心思想：写作是固定生产流程，不是「有灵感时写」。**本 Skill 落点**：Blogger Agent（Agent 10）+ workflows/ 三档节奏 = 该队列思想的工作流化（Research Queue → Reading Queue → Experiment Queue → Writing Queue → Submission Queue）；输出不是一次性灵感，是可排期的生产流程。
+**本 Skill 落点**：第一遍 = Paper Hunter（Agent 01）筛选标准（five Cs）；第二遍 = Claim Analyzer（Agent 03）复述；第三遍 = Experiment Auditor（Agent 04）+ Reviewer Simulator（Agent 07）的攻击动作——`hidden-assumption` 攻击向量有原文直接依据（"hidden failings and assumptions"）。
 
-### 2.5 English for Writing Research Papers —— 国际论文写作（DOI 已核验）
+### 2.4 How to Write a Lot —— 写作生产力（⚠ 书评级背书，无全文）
 
-Springer 2023 第 2 版（DOI 10.1007/978-3-031-31072-0，Crossref 记录含 Ch.9 Chatbots 等章节，即新版含 AI 辅助写作内容）。按 Title / Abstract / Introduction / Methodology / Results / Discussion / Conclusion 结构写作。**本 Skill 落点**：Blogger Agent 公开内容与 research-idea.md 模板的写作检查清单；Research Miner 产出的下一篇论文方向需按此结构给出写作骨架。
+APA 第 2 版（DOI 10.1037/0000109-000，2019）。**引用级别：Crossref 书目 + 权威学术书评**（付费书无合法全文，提炼见 `references/books/DIGEST.md` §④）。权威书评：Stephen K. Donovan, *Journal of Scholarly Publishing* 39(1): 351-355, 2007（DOI 10.1353/scp.2007.0030）。核心主张（书评级）：写作不是灵感驱动的活动，而是可管理、有计划的日常习惯。**本 Skill 落点**：Blogger Agent（Agent 10）+ workflows/ 三档节奏 = 该队列思想的工作流化（Research Queue → Reading Queue → Experiment Queue → Writing Queue → Submission Queue）；输出不是一次性灵感，是可排期的生产流程。
+
+### 2.5 English for Writing Research Papers —— 国际论文写作（⚠ 章节级背书，无全文）
+
+Springer 2023 第 2 版（DOI 10.1007/978-3-031-31072-0，`English for Academic Research` 丛书）。**引用级别：Crossref 章节元数据**（付费书无合法全文，提炼见 `references/books/DIGEST.md` §⑤）。Crossref 章节记录证实：Titles / Abstracts: Particular types / Discussing your limitations / Clarifying and Highlighting / **Automatic translation**（含 AI 自动翻译内容，证实新版覆盖 AI 写作）。按论文结构逐章讲解。**本 Skill 落点**：Blogger Agent 公开内容与 research-idea.md 模板的写作检查清单；Research Miner 产出的下一篇论文方向需按此结构给出写作骨架。
 
 ### 2.6 CS Reviewer Rubric —— 同行评审标准（非书籍，领域通行）
 

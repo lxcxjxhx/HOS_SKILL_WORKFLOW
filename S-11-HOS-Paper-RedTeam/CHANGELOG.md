@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0] - 2026-02-16
+
+### Added
+- **背书书籍提炼库**：新增 `references/books/`——`how-to-read-a-paper-keshav.pdf/.txt`（Stanford 官方全文，已精读）+ `DIGEST.md`（五本书真实内容提炼）。
+- **How to Read a Paper 升级为全文级背书**：methodology.md §2.3 重写为原文精确内容（five Cs、virtual re-implementation、三遍时长、文献综述流程、关联文献），隐藏假设攻击向量获得原文直接依据。
+- **引用级别标注**：methodology.md 各书章节标注 `✅全文级 / ⚠目录级 / ⚠书评级 / ⚠章节级`——付费书（Craft of Research / Research Design / How to Write a Lot / English for Writing）无合法全文，只允许目录/书评级引用，禁止编造页码。
+- **权威书评**：How to Write a Lot 挂 *Journal of Scholarly Publishing* 39(1): 351-355, 2007（DOI 10.1353/scp.2007.0030，Stephen K. Donovan）——此前「APA 写作生产力经典」为无来源表述，现获学术书评背书。
+
+### Fixed
+- **修正无来源断言**：How to Write a Lot「写作是固定生产流程」原为自述，现标注书评级并挂书评；English for Writing Research Papers 的「新版含 AI 辅助写作」改为 Crossref 章节证据（Automatic translation 章节）。
+- 版本更正：How to Write a Lot 明确为 2nd ed. 2019（原误写 2022）。
+
 ## [1.2.0] - 2026-02-16
 
 ### Added
