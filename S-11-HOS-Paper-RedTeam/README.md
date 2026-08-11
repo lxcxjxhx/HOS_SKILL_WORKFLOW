@@ -78,8 +78,9 @@ S-11-HOS-Paper-RedTeam/
 │   ├── vulnerability.json    # RVE 登记表
 │   └── research-gap.json     # 研究机会池
 ├── references/
-│   ├── methodology.md          # 📚 方法论背书（5 本书 + Reviewer Rubric + 映射表）
-│   ├── authoritative-sources.md # 🌐 权威书评/解读来源库
+│   ├── methodology.md          # 📚 方法论背书（5 本书 + Reviewer Rubric + 映射表 + 引用级别）
+│   ├── authoritative-sources.md # 🌐 权威书评/解读来源库 + 背书核验流程
+│   ├── books/                  # 📖 背书书籍提炼库（Keshav 全文 PDF/TXT + DIGEST 提炼总结）
 │   ├── style-guide.md        # 毒舌风格指南
 │   ├── rve-catalog.md        # RVE 漏洞编号规范
 │   ├── score-model.md        # 评分模型（ghfind 式评分卡）
