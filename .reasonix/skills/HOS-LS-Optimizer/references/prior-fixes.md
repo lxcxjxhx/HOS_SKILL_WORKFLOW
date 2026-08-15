@@ -31,6 +31,17 @@
 | NVD 接入 | 排除为根因（禁用后 7/10 相同） | 环境因素先对照 |
 | 浅 CPG（同文件被调） | 微弱正向（1/4） | 需完整源码 + 跨文件 |
 | 判定收紧（仅 CONFIRMED+HIGH） | 牺牲召回换精度 | 用双口径替代 |
+| M4 AST 证据 / M7 CWE 指引 | 10 样本无增益且 +token | 保持默认关（PR #30 扰动记录一致） |
+
+## 静态门控成本账（2026-08-15，零 API 成本测算）
+
+- 静态层 100 文件命中 76/100、0 召回 24 个。
+- **硬门控**（AI 只扫静态命中文件）：AI 层 token 省 **21.8%**，但丢 AI 可检盲区样本
+  （21 子集中 `06fdf927` 跨函数 XSS 即 AI-CONFIRMED 而静态 0 召回）。
+- **结论**：软门控 + 早停（Agent-2 零风险 + 静态门零命中 → 跳过 Agent-3~6）是正解——
+  保留盲区检出能力同时控成本；外部 SAST 工具链（Semgrep/Trivy/Gitleaks）仅在非 pure-ai
+  生产模式启用，且本机仅 semgrep 已安装。
+- 复算命令：`python hosls-eval/opt_eval.py static-gate <static-results.json> <ai-results.json>`
 
 ## 根因诊断方法（复用）
 
