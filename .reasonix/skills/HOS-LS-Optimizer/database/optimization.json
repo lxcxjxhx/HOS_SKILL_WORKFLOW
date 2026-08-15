@@ -1,0 +1,31 @@
+{
+  "schema": "HOS-LS-Optimizer optimization ledger",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tag": "v3-baseline-2026-08-14",
+      "scope": "full-100",
+      "confirmed": 35,
+      "recognition": 49,
+      "config": "hos-ls.yaml",
+      "note": "论文 §4.2 基线（PR #28 后）",
+      "artifacts": ["hosls-eval/reports/final-ai-vuln-100-v3-results.json"]
+    },
+    {
+      "tag": "opt-p0p3-smoke-2026-08",
+      "scope": "smoke-1",
+      "confirmed": 1,
+      "recognition": 1,
+      "config": "hos-ls-opt.yaml",
+      "note": "OPT-P0/P1/P2/P3 代码合入后冒烟，00c73b6e CONFIRMED(medium)",
+      "artifacts": ["hosls-eval/reports/smoke-opt.json"]
+    }
+  ],
+  "backlog": [
+    "M4 ast_evidence_enabled A/B（PR #30 曾提示裁决扰动）",
+    "M7 cwe_guidance_enabled A/B（+1K token/文件）",
+    "仓库级子集（repo-eval 三仓库 8 pairs）",
+    "双层模型成本实验（tiered_architecture）",
+    "PoC 动态执行（RECEIPT/AnyPoC 路线，仓库级样本可运行处）"
+  ]
+}

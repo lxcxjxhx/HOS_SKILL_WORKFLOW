@@ -1,0 +1,52 @@
+# HOS-LS-Optimizer 全局配置
+
+# ===== 评测 =====
+eval:
+  bench_root: "HOS-LS-paper/bench-runs"          # 相对仓库根
+  harness: "hosls-eval/opt_eval.py"               # 统一评测入口
+  dataset: "drea/data/repopairbench_100.jsonl"    # RepoPairBench 100 pairs
+  vuln_dir: "hosls-eval/vuln"                     # 漏洞函数样本（code_before）
+  patched_dir: "hosls-eval/patched"               # 修复函数样本（code_after）
+  reports_dir: "hosls-eval/reports"
+  ledger: "hosls-eval/opt-ledger.md"
+  default_config: "hos-ls.yaml"                   # 基线配置
+  opt_config: "hos-ls-opt.yaml"                   # 优化配置（门可消融）
+  model: "deepseek-v4-flash"                      # 受控对比统一模型
+
+# ===== 评测规模（token 预算控制）=====
+scale:
+  smoke: 1
+  subset: 10        # 迭代 A/B 用
+  full: 100         # 终测用
+  repo_subset: 12   # 仓库级子集
+  workers: 3
+
+# ===== 门控 =====
+gate:
+  min_subset_gain: 1        # 子集检出至少 +1 样本
+  full_no_regression: true  # 全量不得倒退
+  seeds: 3                  # 关键结论多 seed
+  union_runs: 2             # 波动样本并集轮数上限
+
+# ===== 口径（见 references/metric-protocol.md）=====
+metrics:
+  dual_caliber: true        # CONFIRMED + 识别双口径
+  target_cwe_judge: true    # 按目标 CWE 判定
+  fpr_definition: "standard"  # FP/(FP+TN)，禁 AEGIS 式逆向口径
+  token_dual: true          # 总 token + 每漏洞 token 双口径
+
+# ===== 论文 =====
+paper:
+  draft_md: "HOS-LS论文初稿/11-论文初稿-标准版.md"
+  draft_md_mirror: "HOS-LS-paper/11-论文初稿-标准版.md"
+  bib: "HOS-LS-paper/references.bib"
+  only_gated_results: true  # 只写门控通过的数字
+
+# ===== 优化模式库（见 references/prior-fixes.md）=====
+fixes:
+  agent4_attack_chain: true      # OPT-P2 prompt 放宽 + 兜底链
+  deterministic_promote: true    # OPT-P1/P3 高危+Agent-3 CONFIRMED 升级
+  cpg_context: true              # OPT-P0 深 CPG 注入（仓库级）
+  cwe_guidance: false            # M7（+1K token，待 A/B）
+  ast_evidence: false            # M4（有扰动，待 A/B）
+  tiered_models: false           # 双层模型成本实验（独立报告）
