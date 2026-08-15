@@ -134,6 +134,24 @@ def main():
     elif cmd == "summary":
         d = json.load(open(sys.argv[2], encoding="utf-8"))
         print_summary(d, sys.argv[2])
+    elif cmd == "static-gate":
+        """静态门控经济账（零 API 成本，用已有产物算）：
+        python opt_eval.py static-gate <static_results.json> <ai_results.json>
+        输出：静态命中/0召回、硬门控 AI 层 token 节省率、AI-CONFIRMED 但静态 0 召回（硬门控会丢的真阳性）。"""
+        static = json.load(open(sys.argv[2], encoding="utf-8"))
+        ai = json.load(open(sys.argv[3], encoding="utf-8"))
+        s_ok = {k: v for k, v in static.items() if v.get("ok")}
+        flagged = {k for k, v in s_ok.items() if v.get("findings", 0) > 0}
+        miss = set(s_ok) - flagged
+        ai_conf = {k for k, v in ai.items() if isinstance(v, dict) and v.get("confirmed", 0) > 0}
+        a_ok = {k: v for k, v in ai.items() if isinstance(v, dict) and v.get("ok", True)}
+        toks = sum(v.get("tokens", 0) for v in a_ok.values())
+        gate_toks = sum(v.get("tokens", 0) for k, v in a_ok.items() if k in flagged)
+        save = (1 - gate_toks / toks) * 100 if toks else 0
+        lost = sorted(ai_conf & miss)
+        print(f"静态命中: {len(flagged)}/{len(s_ok)} | 静态0召回: {len(miss)}")
+        print(f"AI 层 token 合计: {toks:,} | 硬门控后: {gate_toks:,} | 节省 {save:.1f}%")
+        print(f"AI-CONFIRMED 但静态0召回（硬门控会丢的真阳性）: {len(lost)} {lost}")
     elif cmd == "ledger":
         d = json.load(open(sys.argv[2], encoding="utf-8"))
         tag = sys.argv[3]
