@@ -37,11 +37,24 @@
 
 - 静态层 100 文件命中 76/100、0 召回 24 个。
 - **硬门控**（AI 只扫静态命中文件）：AI 层 token 省 **21.8%**，但丢 AI 可检盲区样本
-  （21 子集中 `06fdf927` 跨函数 XSS 即 AI-CONFIRMED 而静态 0 召回）。
+  （21 子集中 `06fdf927` 跨函数 XSS 即 AI-CONFIRMED 而静态 0 召回；`08926a1a` 亦为零命中但
+  AI 曾确认——硬门控连丢 2 个可检样本）。
 - **结论**：软门控 + 早停（Agent-2 零风险 + 静态门零命中 → 跳过 Agent-3~6）是正解——
-  保留盲区检出能力同时控成本；外部 SAST 工具链（Semgrep/Trivy/Gitleaks）仅在非 pure-ai
-  生产模式启用，且本机仅 semgrep 已安装。
+  保留盲区检出能力同时控成本。
 - 复算命令：`python hosls-eval/opt_eval.py static-gate <static-results.json> <ai-results.json>`
+
+## OPT-SASTR：SAST 深度前置过滤（2026-08-15，代码已合入）
+
+- **动机**：`--pure-ai` 原绕过外部 SAST 工具链（scanner 仅非 pure-ai 启用）；用户指令要求
+  AI 前必做深度过滤（CodeQL 为仓库级底座）。
+- **实现**：`src/analyzers/sast_prefilter.py`（codeql > semgrep > builtin 自动探测）+ scanner
+  pure-ai 批量前置 + SAST 证据注入 Agent-3。
+- **实测**：21 子集预过滤命中 18/21、与静态层判定一致 20/21；硬门控零命中文件
+  `08926a1a` 扫描 150s→**11.7s、0 token**（不调 AI）。
+- **环境事实**：本机 codeql 未装（GitHub 下载被墙）、semgrep X509 崩溃——本地生效后端为
+  builtin（AST+CST）；CodeQL 需部署环境安装，代码就位后自动启用。
+- **教训**：硬门控的召回 = 过滤层召回（丢 06fdf927/08926a1a 类），默认必须软门控；
+  省 token 与保检出的平衡点由 `skip_ai_if_no_hits` 显式选择。
 
 ## 根因诊断方法（复用）
 

@@ -66,6 +66,11 @@ python hosls-eval/opt_eval.py ledger <results.json> <tag>
 | cpg_context_enabled | true | 深 CPG 注入（仓库级收益） |
 | ast_evidence_enabled | false | M4 AST 证据（有扰动，A/B 后开） |
 | cwe_guidance_enabled | false | M7 CWE 指引（+1K token） |
+| sast_prefilter.enabled | true | [OPT-SASTR] SAST 深度前置过滤（pure-ai 不再绕过静态过滤） |
+| sast_prefilter.skip_ai_if_no_hits | false | false=软门控（默认，保留盲区检出）；true=硬门控（hos-ls-opt-sast.yaml，零命中完全跳过 AI） |
+| sast_prefilter.inject_evidence | true | SAST 候选命中注入 Agent-3 证据块 |
+
+后端自动探测：codeql（仓库级底座，装好即用）> semgrep（功能探测，本机 X509 异常会跳过）> builtin（AST+CST，与静态层同源，始终可用）。
 
 ## 8. 缓存纪律
 
