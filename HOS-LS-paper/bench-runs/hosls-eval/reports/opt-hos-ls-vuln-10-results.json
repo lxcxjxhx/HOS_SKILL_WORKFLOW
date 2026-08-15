@@ -1,0 +1,138 @@
+{
+ "00c73b6e__networking.py": {
+  "ok": true,
+  "findings": 0,
+  "confirmed": 0,
+  "recog": 0,
+  "statuses": [],
+  "severities": [],
+  "tokens": 68138,
+  "stderr": "e a new signal from Agent-3\nSignal CHAIN-1 invalid transition: REJECTED -> REJECTED blocked by state machine validation\n拒绝 hallucination 漏洞发现: UNVERIFIED_RISK - 原因: ['placeholder_vulnerability_name']\n"
+ },
+ "03e97308__views.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 1,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED"
+  ],
+  "severities": [
+   "critical"
+  ],
+  "tokens": 81300,
+  "stderr": "n tracker (Agent-2 original signals), may be a new signal from Agent-3\nAttempt to change terminal state REJECTED -> CONFIRMED for CHAIN-001 blocked\nAI API key not configured, skipping AI verification\n"
+ },
+ "0294b9f1__svg.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 1,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED"
+  ],
+  "severities": [
+   "high"
+  ],
+  "tokens": 86690,
+  "stderr": "n tracker (Agent-2 original signals), may be a new signal from Agent-3\nAttempt to change terminal state REJECTED -> CONFIRMED for CHAIN-001 blocked\nAI API key not configured, skipping AI verification\n"
+ },
+ "0a06f338__authentication.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 1,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED"
+  ],
+  "severities": [
+   "medium"
+  ],
+  "tokens": 73118,
+  "stderr": "n tracker (Agent-2 original signals), may be a new signal from Agent-3\nAttempt to change terminal state REJECTED -> CONFIRMED for CHAIN-001 blocked\nAI API key not configured, skipping AI verification\n"
+ },
+ "06fdf927__models.py": {
+  "ok": true,
+  "findings": 2,
+  "confirmed": 1,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED",
+   "WEAK"
+  ],
+  "severities": [
+   "high",
+   "high"
+  ],
+  "tokens": 93154,
+  "stderr": "\nSignal CHAIN-002 invalid transition: REJECTED -> UNCERTAIN blocked by state machine validation\nAI API key not configured, skipping AI verification\nAI API key not configured, skipping AI verification\n"
+ },
+ "08926a1a__shared_func.py": {
+  "ok": true,
+  "findings": 2,
+  "confirmed": 2,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED",
+   "CONFIRMED"
+  ],
+  "severities": [
+   "high",
+   "low"
+  ],
+  "tokens": 89202,
+  "stderr": "not contain identifier from description\n Keyword match failed, falling back to AI reported line\nAI API key not configured, skipping AI verification\nAI API key not configured, skipping AI verification\n"
+ },
+ "0bb1aef8__quantization_ops_test.py": {
+  "ok": true,
+  "findings": 0,
+  "confirmed": 0,
+  "recog": 0,
+  "statuses": [],
+  "severities": [],
+  "tokens": 24946,
+  "stderr": ""
+ },
+ "0dc2e99d__filtering.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 0,
+  "recog": 0,
+  "statuses": [
+   "WEAK"
+  ],
+  "severities": [
+   "medium"
+  ],
+  "tokens": 75670,
+  "stderr": " original signals), may be a new signal from Agent-3\nSignal CHAIN-001 invalid transition: REJECTED -> UNCERTAIN blocked by state machine validation\nAI API key not configured, skipping AI verification\n"
+ },
+ "0c8d2aef__connector_registry_service.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 0,
+  "recog": 0,
+  "statuses": [
+   "WEAK"
+  ],
+  "severities": [
+   "low"
+  ],
+  "tokens": 94550,
+  "stderr": " original signals), may be a new signal from Agent-3\nSignal CHAIN-001 invalid transition: REJECTED -> UNCERTAIN blocked by state machine validation\nAI API key not configured, skipping AI verification\n"
+ },
+ "0f0215bf__helper.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 1,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED"
+  ],
+  "severities": [
+   "high"
+  ],
+  "tokens": 82844,
+  "stderr": " original signals), may be a new signal from Agent-3\nSignal CHAIN-001 invalid transition: REJECTED -> UNCERTAIN blocked by state machine validation\nAI API key not configured, skipping AI verification\n"
+ }
+}

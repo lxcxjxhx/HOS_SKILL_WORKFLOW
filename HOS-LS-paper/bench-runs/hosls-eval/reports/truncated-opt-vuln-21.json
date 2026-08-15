@@ -1,0 +1,107 @@
+{
+ "00c73b6e__networking.py": {
+  "confirmed": 1,
+  "recog": 1,
+  "tokens": 65586
+ },
+ "0294b9f1__svg.py": {
+  "confirmed": 1,
+  "recog": 1,
+  "tokens": 74804
+ },
+ "03e97308__views.py": {
+  "confirmed": 2,
+  "recog": 1,
+  "tokens": 88834
+ },
+ "08926a1a__shared_func.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 49036
+ },
+ "06fdf927__models.py": {
+  "confirmed": 1,
+  "recog": 1,
+  "tokens": 82878
+ },
+ "0a06f338__authentication.py": {
+  "confirmed": 1,
+  "recog": 1,
+  "tokens": 85772
+ },
+ "0bb1aef8__quantization_ops_test.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 41560
+ },
+ "0c8d2aef__connector_registry_service.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 49342
+ },
+ "0dc2e99d__filtering.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 39072
+ },
+ "0f0215bf__helper.py": {
+  "confirmed": 1,
+  "recog": 1,
+  "tokens": 73256
+ },
+ "18e78647__open_actions.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 22624
+ },
+ "193c77fa__apkleaks.py": {
+  "confirmed": 2,
+  "recog": 1,
+  "tokens": 45184
+ },
+ "1a1914c0__package_scanner.py": {
+  "confirmed": 5,
+  "recog": 1,
+  "tokens": 49502
+ },
+ "1b48a788__parallel.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 34177
+ },
+ "1bdfa375__app.py": {
+  "confirmed": 1,
+  "recog": 1,
+  "tokens": 30356
+ },
+ "2082c6c6__test_crypto_connect.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 39483
+ },
+ "233c9513__app.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 45277
+ },
+ "24e78349__log.py": {
+  "confirmed": 1,
+  "recog": 1,
+  "tokens": 34099
+ },
+ "256a7c28__main.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 32359
+ },
+ "2b5e4ebf__array_ops_test.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 14540
+ },
+ "36b71012__test_flask_session_captcha.py": {
+  "confirmed": 0,
+  "recog": 0,
+  "tokens": 12121
+ }
+}

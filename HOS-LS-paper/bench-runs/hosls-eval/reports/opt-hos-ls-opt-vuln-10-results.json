@@ -1,0 +1,128 @@
+{
+ "00c73b6e__networking.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 1,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED"
+  ],
+  "severities": [
+   "high"
+  ],
+  "tokens": 65586,
+  "stderr": "rom Agent-3\nSignal CHAIN-001 invalid transition: REJECTED -> REJECTED blocked by state machine validation\n 高危风险被拒绝(低置信度): 路径遍历, 置信度: 0.50, 标记为待人工复核\nAI API key not configured, skipping AI verification\n"
+ },
+ "0294b9f1__svg.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 1,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED"
+  ],
+  "severities": [
+   "high"
+  ],
+  "tokens": 74804,
+  "stderr": "n tracker (Agent-2 original signals), may be a new signal from Agent-3\nAttempt to change terminal state REJECTED -> CONFIRMED for CHAIN-001 blocked\nAI API key not configured, skipping AI verification\n"
+ },
+ "03e97308__views.py": {
+  "ok": true,
+  "findings": 2,
+  "confirmed": 2,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED",
+   "CONFIRMED"
+  ],
+  "severities": [
+   "high",
+   "medium"
+  ],
+  "tokens": 88834,
+  "stderr": "ignal from Agent-3\nAttempt to change terminal state REJECTED -> CONFIRMED for CHAIN-001 blocked\nAI API key not configured, skipping AI verification\nAI API key not configured, skipping AI verification\n"
+ },
+ "08926a1a__shared_func.py": {
+  "ok": true,
+  "findings": 0,
+  "confirmed": 0,
+  "recog": 0,
+  "statuses": [],
+  "severities": [],
+  "tokens": 49036,
+  "stderr": " [PURE-AI] JSON 解析失败，使用 fallback 并修复 schema\n"
+ },
+ "06fdf927__models.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 1,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED"
+  ],
+  "severities": [
+   "high"
+  ],
+  "tokens": 82878,
+  "stderr": " original signals), may be a new signal from Agent-3\nSignal CHAIN-001 invalid transition: REJECTED -> UNCERTAIN blocked by state machine validation\nAI API key not configured, skipping AI verification\n"
+ },
+ "0a06f338__authentication.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 1,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED"
+  ],
+  "severities": [
+   "medium"
+  ],
+  "tokens": 85772,
+  "stderr": " in tracker (Agent-2 original signals), may be a new signal from Agent-3\nAttempt to change terminal state REJECTED -> CONFIRMED for CHAIN-1 blocked\nAI API key not configured, skipping AI verification\n"
+ },
+ "0bb1aef8__quantization_ops_test.py": {
+  "ok": true,
+  "findings": 0,
+  "confirmed": 0,
+  "recog": 0,
+  "statuses": [],
+  "severities": [],
+  "tokens": 41560,
+  "stderr": " [PURE-AI] JSON 解析失败，使用 fallback 并修复 schema\n"
+ },
+ "0c8d2aef__connector_registry_service.py": {
+  "ok": true,
+  "findings": 0,
+  "confirmed": 0,
+  "recog": 0,
+  "statuses": [],
+  "severities": [],
+  "tokens": 49342,
+  "stderr": " [PURE-AI] JSON 解析失败，使用 fallback 并修复 schema\n"
+ },
+ "0dc2e99d__filtering.py": {
+  "ok": true,
+  "findings": 0,
+  "confirmed": 0,
+  "recog": 0,
+  "statuses": [],
+  "severities": [],
+  "tokens": 39072,
+  "stderr": " [PURE-AI] JSON 解析失败，使用 fallback 并修复 schema\n"
+ },
+ "0f0215bf__helper.py": {
+  "ok": true,
+  "findings": 1,
+  "confirmed": 1,
+  "recog": 1,
+  "statuses": [
+   "CONFIRMED"
+  ],
+  "severities": [
+   "high"
+  ],
+  "tokens": 73256,
+  "stderr": "n tracker (Agent-2 original signals), may be a new signal from Agent-3\nAttempt to change terminal state REJECTED -> CONFIRMED for CHAIN-001 blocked\nAI API key not configured, skipping AI verification\n"
+ }
+}
