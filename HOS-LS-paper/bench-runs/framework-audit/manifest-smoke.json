@@ -1,0 +1,83 @@
+[
+ {
+  "item_id": "entry-00057",
+  "framework": "open-webui",
+  "repo_url": "https://github.com/open-webui/open-webui",
+  "language": "javascript",
+  "cve_ids": [
+   "CVE-2025-64495",
+   "GHSA-W7XJ-8FX7-WFCH"
+  ],
+  "cwe_ids": [
+   "CWE-79"
+  ],
+  "description": "Open WebUI Stored DOM XSS via Prompt Insertion Rich Text Feature",
+  "fix_commit": "9942de8011d4b5a141ac507c974c061c0cdad59a",
+  "file_paths": [
+   "src/lib/components/common/RichTextInput.svelte",
+   "src/lib/components/chat/MessageInput/CommandSuggestionList.svelte",
+   "backend/open_webui/routers/prompts.py",
+   "src/lib/components/chat/MessageInput.svelte"
+  ],
+  "sink_file": "src/lib/components/common/RichTextInput.svelte",
+  "sink_line": 348,
+  "vuln_category_l1": "XSS",
+  "vuln_category_l2": "Stored XSS",
+  "verify": 1,
+  "source_url": "https://github.com/advisories/GHSA-w7xj-8fx7-wfch",
+  "report_id": "GHSA-W7XJ-8FX7-WFCH"
+ },
+ {
+  "item_id": "entry-00080",
+  "framework": "Tencent/WeKnora",
+  "repo_url": "https://github.com/Tencent/WeKnora",
+  "language": "go",
+  "cve_ids": [
+   "CVE-2026-22688",
+   "GHSA-78H3-63C4-5FQC"
+  ],
+  "cwe_ids": [
+   "CWE-78"
+  ],
+  "description": "WeKnora MCP stdio 配置命令注入 (CVE-2026-22688) - client.go",
+  "fix_commit": "a20541cd9d0a54dbff0b9112f1299c64347370ff",
+  "file_paths": [
+   "internal/mcp/client.go",
+   "internal/handler/mcp_service.go",
+   "internal/application/service/mcp_service.go"
+  ],
+  "sink_file": "internal/mcp/client.go",
+  "sink_line": 133,
+  "vuln_category_l1": "命令注入",
+  "vuln_category_l2": "OS 命令注入",
+  "verify": 1,
+  "source_url": "https://github.com/advisories/GHSA-78h3-63c4-5fqc",
+  "report_id": "GHSA-78H3-63C4-5FQC"
+ },
+ {
+  "item_id": "entry-00082",
+  "framework": "n8n",
+  "repo_url": "https://github.com/n8n-io/n8n",
+  "language": "typescript",
+  "cve_ids": [
+   "CVE-2025-68613",
+   "GHSA-V98V-FF95-F3CP"
+  ],
+  "cwe_ids": [
+   "CWE-94"
+  ],
+  "description": "n8n Expression Injection leading to Remote Code Execution via Unbound function() this Context - expression-evaluator-proxy.ts",
+  "fix_commit": "008cd8d08369ad188625fb5efaa6fa3707c1548e",
+  "file_paths": [
+   "packages/workflow/src/expression-evaluator-proxy.ts",
+   "packages/workflow/src/expression.ts"
+  ],
+  "sink_file": "packages/workflow/src/expression-evaluator-proxy.ts",
+  "sink_line": 10,
+  "vuln_category_l1": "代码注入",
+  "vuln_category_l2": "表达式注入（Expression Injection）",
+  "verify": 1,
+  "source_url": "https://github.com/advisories/GHSA-v98v-ff95-f3cp",
+  "report_id": "GHSA-V98V-FF95-F3CP"
+ }
+]
