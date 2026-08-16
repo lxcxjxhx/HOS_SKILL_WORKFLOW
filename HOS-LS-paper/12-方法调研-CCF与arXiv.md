@@ -269,6 +269,8 @@
 | FuzzingBrain V2 | reject | 数值不可核实，fuzzing 方向与阶段 4 不匹配 |
 | Bridging CPG+LLM | reject | 综述性，无自有机制 |
 
+> **2026-08-16 增补**（PR #34 合并后追加搜集，详见 `13-2026最新论文搜集增补-数据对比.md`）：SCOUT（consider，交互式仓库探索）/ Code-Augur（consider，规格推断）/ HoF-Bench（adopt 评测参照，AI 发现 CVE 可复现性基准）/ Antaeus（consider，逻辑漏洞定位）/ SEC-bench Pro（consider，长程多步任务评测）/ EntailLLM（adopt 方法验证，逻辑编程外部验证 LLM 发现路径）。全部 6 篇经 web_search 核实存在，数值未完整核实。
+
 ## 三、排除清单
 
 **Rejected（3）**
