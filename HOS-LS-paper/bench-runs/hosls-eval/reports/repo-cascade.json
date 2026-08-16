@@ -1,0 +1,197 @@
+{
+ "06fdf927": {
+  "project": "kiwi",
+  "cve": [
+   "CVE-2023-36809"
+  ],
+  "file": "tcms/testplans/models.py",
+  "codeql_ok": true,
+  "codeql_target_hits": [],
+  "codeql_note": "codeql 命中 4 条",
+  "target_exists": true
+ },
+ "0f0215bf": {
+  "project": "calibre-web",
+  "cve": [
+   "CVE-2022-0766",
+   "CVE-2022-0767"
+  ],
+  "file": "cps/helper.py",
+  "codeql_ok": true,
+  "codeql_target_hits": [
+   {
+    "file": "cps/helper.py",
+    "rule": "py/path-injection",
+    "line": 86,
+    "msg": "This path depends on a [user-provided value](1)."
+   },
+   {
+    "file": "cps/helper.py",
+    "rule": "py/path-injection",
+    "line": 835,
+    "msg": "This path depends on a [user-provided value](1).\nThis path depends on a [user-provided value](2).\nThis path depends on a"
+   }
+  ],
+  "codeql_note": "codeql 命中 36 条",
+  "target_exists": true
+ },
+ "6e68fb86": {
+  "project": "octoprint",
+  "cve": [
+   "CVE-2022-2822"
+  ],
+  "file": "src/octoprint/server/__init__.py",
+  "codeql_ok": true,
+  "codeql_target_hits": [],
+  "codeql_note": "codeql 命中 26 条",
+  "target_exists": true
+ },
+ "7c167feb": {
+  "project": "kiwi",
+  "cve": [
+   "CVE-2022-4105"
+  ],
+  "file": "tcms/core/history.py",
+  "codeql_ok": true,
+  "codeql_target_hits": [],
+  "codeql_note": "codeql 命中 4 条",
+  "target_exists": true
+ },
+ "8c57d15f": {
+  "project": "octoprint",
+  "cve": [
+   "CVE-2022-2930"
+  ],
+  "file": "src/octoprint/server/api/access.py",
+  "codeql_ok": true,
+  "codeql_target_hits": [],
+  "codeql_note": "codeql 命中 26 条",
+  "target_exists": true
+ },
+ "966c6ef1": {
+  "project": "calibre-web",
+  "cve": [
+   "CVE-2022-0273"
+  ],
+  "file": "cps/shelf.py",
+  "codeql_ok": true,
+  "codeql_target_hits": [
+   {
+    "file": "cps/shelf.py",
+    "rule": "py/url-redirection",
+    "line": 102,
+    "msg": "Untrusted URL redirection depends on a [user-provided value](1)."
+   },
+   {
+    "file": "cps/shelf.py",
+    "rule": "py/url-redirection",
+    "line": 109,
+    "msg": "Untrusted URL redirection depends on a [user-provided value](1)."
+   },
+   {
+    "file": "cps/shelf.py",
+    "rule": "py/url-redirection",
+    "line": 205,
+    "msg": "Untrusted URL redirection depends on a [user-provided value](1)."
+   },
+   {
+    "file": "cps/shelf.py",
+    "rule": "py/url-redirection",
+    "line": 211,
+    "msg": "Untrusted URL redirection depends on a [user-provided value](1)."
+   }
+  ],
+  "codeql_note": "codeql 命中 33 条",
+  "target_exists": true
+ },
+ "ad9c9cd4": {
+  "project": "calibre-web",
+  "cve": [
+   "CVE-2021-3987"
+  ],
+  "file": "cps/shelf.py",
+  "codeql_ok": true,
+  "codeql_target_hits": [
+   {
+    "file": "cps/shelf.py",
+    "rule": "py/url-redirection",
+    "line": 102,
+    "msg": "Untrusted URL redirection depends on a [user-provided value](1)."
+   },
+   {
+    "file": "cps/shelf.py",
+    "rule": "py/url-redirection",
+    "line": 109,
+    "msg": "Untrusted URL redirection depends on a [user-provided value](1)."
+   },
+   {
+    "file": "cps/shelf.py",
+    "rule": "py/url-redirection",
+    "line": 205,
+    "msg": "Untrusted URL redirection depends on a [user-provided value](1)."
+   },
+   {
+    "file": "cps/shelf.py",
+    "rule": "py/url-redirection",
+    "line": 211,
+    "msg": "Untrusted URL redirection depends on a [user-provided value](1)."
+   }
+  ],
+  "codeql_note": "codeql 命中 32 条",
+  "target_exists": true
+ },
+ "d873de7f": {
+  "project": "octoprint",
+  "cve": [
+   "CVE-2022-1430"
+  ],
+  "file": "src/octoprint/server/views.py",
+  "codeql_ok": true,
+  "codeql_target_hits": [
+   {
+    "file": "src/octoprint/server/views.py",
+    "rule": "py/path-injection",
+    "line": 1623,
+    "msg": "This path depends on a [user-provided value](1)."
+   },
+   {
+    "file": "src/octoprint/server/views.py",
+    "rule": "py/path-injection",
+    "line": 1711,
+    "msg": "This path depends on a [user-provided value](1).\nThis path depends on a [user-provided value](2)."
+   },
+   {
+    "file": "src/octoprint/server/views.py",
+    "rule": "py/path-injection",
+    "line": 1725,
+    "msg": "This path depends on a [user-provided value](1).\nThis path depends on a [user-provided value](2)."
+   },
+   {
+    "file": "src/octoprint/server/views.py",
+    "rule": "py/url-redirection",
+    "line": 192,
+    "msg": "Untrusted URL redirection depends on a [user-provided value](1)."
+   }
+  ],
+  "codeql_note": "codeql 命中 26 条",
+  "target_exists": true
+ },
+ "ee76e0c9": {
+  "project": "octoprint",
+  "cve": [
+   "CVE-2022-3068"
+  ],
+  "file": "src/octoprint/plugins/pluginmanager/__init__.py",
+  "codeql_ok": true,
+  "codeql_target_hits": [
+   {
+    "file": "src/octoprint/plugins/pluginmanager/__init__.py",
+    "rule": "py/path-injection",
+    "line": 400,
+    "msg": "This path depends on a [user-provided value](1)."
+   }
+  ],
+  "codeql_note": "codeql 命中 26 条",
+  "target_exists": true
+ }
+}
