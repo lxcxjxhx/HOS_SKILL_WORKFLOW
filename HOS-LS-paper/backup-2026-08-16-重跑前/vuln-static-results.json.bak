@@ -1,0 +1,502 @@
+{
+ "00c73b6e__networking.py": {
+  "ok": true,
+  "findings": 3,
+  "high_crit": 1
+ },
+ "0294b9f1__svg.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "03e97308__views.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "06fdf927__models.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "08926a1a__shared_func.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "0a06f338__authentication.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "0bb1aef8__quantization_ops_test.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "0c8d2aef__connector_registry_service.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "0dc2e99d__filtering.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "0f0215bf__helper.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "18e78647__open_actions.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "193c77fa__apkleaks.py": {
+  "ok": true,
+  "findings": 4,
+  "high_crit": 2
+ },
+ "1a1914c0__package_scanner.py": {
+  "ok": true,
+  "findings": 1,
+  "high_crit": 1
+ },
+ "1b48a788__parallel.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "1bdfa375__app.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 2
+ },
+ "2082c6c6__test_crypto_connect.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "233c9513__app.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "24e78349__log.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "256a7c28__main.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "28f88073___dir_browser.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "2b5e4ebf__array_ops_test.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "2d8d5c4c__quantization_ops_test.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "306f60dc__accounts.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "36b71012__test_flask_session_captcha.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "3b525f26____init__.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "3eff03b7__web_utils.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "3f154463__controllers.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "439a5d03__views.py": {
+  "ok": true,
+  "findings": 1,
+  "high_crit": 1
+ },
+ "491d4e03__utils.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "4b250f6b__package_index.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "4f4ba85c__settings.py": {
+  "ok": true,
+  "findings": 1,
+  "high_crit": 1
+ },
+ "53090cd1__matrix_solve_op_test.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "533999b4__report.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "54d21eb5__default.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "56b539a7__lib.py": {
+  "ok": true,
+  "findings": 3,
+  "high_crit": 1
+ },
+ "5b054edf__views.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "5b0e19c8__authentication.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "5eab33ca__common_func.py": {
+  "ok": true,
+  "findings": 5,
+  "high_crit": 3
+ },
+ "619844db__models.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "6738d628__welcome.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "6cd43b15__core.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "6e3699a1__settings.py": {
+  "ok": true,
+  "findings": 1,
+  "high_crit": 1
+ },
+ "6e68fb86____init__.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "6fed39f6__exec.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "713bbf1f__messageboxhandler.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "73794b9d__quantization_ops_test.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "754852b3__manifest_analysis.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "75c21415__app_blueprint.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "7b3646c3__routes.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "7be615b2__common_gui.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 2
+ },
+ "7c167feb__history.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 2
+ },
+ "7fbe4838__repositories.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "83b7fdcf__files.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "8670411d__formparser.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "8678968f__cmapdb.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "87529501__template_helper.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "8adb9061__fickle.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "8c57d15f__access.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "8d15590f__repoproviders.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "8d5ac5ae__omr-admin.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "8e50b867__httpcli.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "8e9ae6c4__course_chapter.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "95115f47__static.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "966c6ef1__shelf.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "9c2f5562__model_chat_blueprint.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "a4d29a63__api.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "a5989d14__manager.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "a922f662__test_http_api.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "aa9144ae__secure_mount.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "ab67c389__config.py": {
+  "ok": true,
+  "findings": 1,
+  "high_crit": 1
+ },
+ "ad9c9cd4__shelf.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "af00c050__utils.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "b12e328f__functions.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "b2044909__shm_broadcast.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "b2079dad__processing_donut.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "b256eb15__service.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "b35811c3____init__.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "b6d52172__authentication.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "b886d117__emailutils.py": {
+  "ok": true,
+  "findings": 1,
+  "high_crit": 1
+ },
+ "babe7119__cache_handler.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "c0261fa4__testing_utils.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "c1e78bce__views.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "c29af17b__token.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "c9c8c36c__modeling_tf_utils.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 2
+ },
+ "cbe8607b__utils.py": {
+  "ok": true,
+  "findings": 4,
+  "high_crit": 2
+ },
+ "cd33186d__dremio_handler.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "d09de727__hub.py": {
+  "ok": true,
+  "findings": 1,
+  "high_crit": 1
+ },
+ "d29b94d5__table.py": {
+  "ok": true,
+  "findings": 3,
+  "high_crit": 1
+ },
+ "d2b7d775__tables.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "d873de7f__views.py": {
+  "ok": true,
+  "findings": 3,
+  "high_crit": 1
+ },
+ "e5222224__notifier.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ },
+ "e5dfeaaa__validate_translation_files.py": {
+  "ok": true,
+  "findings": 1,
+  "high_crit": 1
+ },
+ "e6872b1d__argparse.py": {
+  "ok": true,
+  "findings": 1,
+  "high_crit": 1
+ },
+ "e6aacb53__widgets.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "e7fbb94a__executor.py": {
+  "ok": true,
+  "findings": 1,
+  "high_crit": 0
+ },
+ "ea79e307__views.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "eae18dec__math.py": {
+  "ok": true,
+  "findings": 3,
+  "high_crit": 1
+ },
+ "eb4fa4d8__base_model.py": {
+  "ok": true,
+  "findings": 3,
+  "high_crit": 1
+ },
+ "ee76e0c9____init__.py": {
+  "ok": true,
+  "findings": 2,
+  "high_crit": 0
+ },
+ "fffb4fce__tokenization_nougat_fast.py": {
+  "ok": true,
+  "findings": 0,
+  "high_crit": 0
+ }
+}
