@@ -57,6 +57,18 @@
 - **教训**：切片级评测无法体现 codeql 价值——仓库级才是 token 节省主场；
   S1 候选高 FP 是特性不是 bug（AI 验证 = SAST-Genius -91% FP 模式）；B101 类噪声按 severity 过滤。
 
+## 仓库级 cascade 实测（2026-08-15，9 pairs）——硬检测底座的价值实锤
+
+- **CodeQL（security-only 套件）硬确认 2 个 AI 曾漏检的样本**：
+  - `d873de7f`（CVE-2022-1430 XSS，深 CPG 实验 0/0 漏检）→ codeql py/path-injection + url-redirection；
+  - `ee76e0c9`（CVE-2022-3068）→ py/path-injection。
+- **硬层必须 security-only**：`security-and-quality` 混入 mixed-returns/empty-except 质量查询，
+  会把非漏洞文件误判为硬检出（6e68fb86/8c57d15f 的"12 条命中"全是质量类）→ 用
+  `python-code-scanning.qls`。
+- **结论**：硬检测底座不仅省 token（确认文件免 AI），还能检出 AI 漏掉的跨函数污点漏洞——
+  "硬检测定论 + AI 补盲"是双向增益。C1 污点门（InputTracer is_exploitable）再过滤硬层 FP。
+- 复现：`python hosls-eval/repo_cascade.py`（需完整权限建库）。
+
 ## 根因诊断方法（复用）
 
 Agent 级信号链诊断：直接调用 pipeline 逐 Agent 看输出（`bench-tmp/trace_agent0.py` 模式）：

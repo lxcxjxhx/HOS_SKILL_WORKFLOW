@@ -70,6 +70,10 @@ python hosls-eval/opt_eval.py ledger <results.json> <tag>
 | sast_prefilter.mode | cascade | cascade（默认）：semgrep/bandit S1 → codeql S2 确认 → AI 盲区 S3 |
 | sast_prefilter.codeql_pack_dir | envs/codeql-packs | 查询包缓存（--search-path） |
 | sast_prefilter.semgrep_rules_dir | envs/semgrep-rules/python | 社区规则集（337 条 python） |
+| ai.compaction_enabled | false | [OPT-COMPACT] Agent-0 函数骨架摘要（省 token 实验门） |
+| ai.temperature | 0.0 | [OPT-DETERMINISM] 评测口径可复现 |
+| ai.tiered_architecture.agent_overrides | {} | [OPT-TRIAGE] per-agent 模型映射（大小模型协同，独立成本实验） |
+| HOSLS_SCHEDULE=offpeak | — | [OPT-OFFPEAK] 21:00-9:00 才允许批量（DeepSeek 峰谷价） |
 
 工具链环境：`hos-ls/envs/`（sast-venv: semgrep/bandit；codeql/；codeql-packs/；semgrep-rules/）。见 `envs/README.md`。环境事实：semgrep 沙箱内 X509 崩溃（需完整权限），bandit 纯 Python 沙箱可用；codeql analyze 沙箱可跑，database create 需完整权限（命名管道）。
 
