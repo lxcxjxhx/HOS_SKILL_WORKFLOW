@@ -68,6 +68,16 @@
   命中全是 mixed-returns 等）→ 用 python-code-scanning.qls，质量命中归零回 AI。
 - 复现：`python hosls-eval/repo_cascade.py`（完整权限建库；worktree 残留清理 + depth-2 取父）。
 
+## OPT-DEDUP：检出去重归属（2026-08-15，已推送 PR #34）
+
+- **逻辑**：SAST 候选（S1 semgrep/bandit + S2 codeql 的 file:line）经 AI 二次核验后打标
+  `metadata.sast_verified=True, sast_source=semgrep/codeql`（匹配：同文件 basename + 行号 ±3）。
+- **效果**：AI 检出只保留真正的新发现（盲区）；SAST 候选的核验不重复占位；报表可区分两类来源。
+- **实测模拟**：21 子集 2/10 AI-CONFIRMED（193c77fa/1a1914c0）命中 bandit 候选行 → 归属 SAST 层；
+  其余 8 个为 AI 独立发现。
+- **注意**：打标不丢 finding（保留在结果中，仅改变来源归属）；评测如需"AI 新发现"口径按
+  `sast_verified=False` 过滤。
+
 ## 根因诊断方法（复用）
 
 Agent 级信号链诊断：直接调用 pipeline 逐 Agent 看输出（`bench-tmp/trace_agent0.py` 模式）：
