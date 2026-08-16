@@ -43,18 +43,19 @@
   保留盲区检出能力同时控成本。
 - 复算命令：`python hosls-eval/opt_eval.py static-gate <static-results.json> <ai-results.json>`
 
-## OPT-SASTR：SAST 深度前置过滤（2026-08-15，代码已合入）
+## OPT-SASTR2：三级 cascade 流水线 + 项目内环境（2026-08-15，代码已合入）
 
-- **动机**：`--pure-ai` 原绕过外部 SAST 工具链（scanner 仅非 pure-ai 启用）；用户指令要求
-  AI 前必做深度过滤（CodeQL 为仓库级底座）。
-- **实现**：`src/analyzers/sast_prefilter.py`（codeql > semgrep > builtin 自动探测）+ scanner
-  pure-ai 批量前置 + SAST 证据注入 Agent-3。
-- **实测**：21 子集预过滤命中 18/21、与静态层判定一致 20/21；硬门控零命中文件
-  `08926a1a` 扫描 150s→**11.7s、0 token**（不调 AI）。
-- **环境事实**：本机 codeql 未装（GitHub 下载被墙）、semgrep X509 崩溃——本地生效后端为
-  builtin（AST+CST）；CodeQL 需部署环境安装，代码就位后自动启用。
-- **教训**：硬门控的召回 = 过滤层召回（丢 06fdf927/08926a1a 类），默认必须软门控；
-  省 token 与保检出的平衡点由 `skip_ai_if_no_hits` 显式选择。
+- **架构**：semgrep/bandit(S1 快扫) → codeql(S2 确认，官方安全套件) → pure-AI(S3 盲区)。
+  codeql 确认文件 → 硬 findings（0 AI token）；其余（候选验证+盲区）→ AI。
+- **环境**：`hos-ls/envs/` 独立可维护环境（sast-venv semgrep1.159/bandit1.9.4；codeql2.26.3；
+  codeql-packs python-queries@1.8.8；semgrep-rules 337 条）；依赖分组入 requirements.txt/-sast。
+- **实测（21 子集，松散函数切片）**：codeql 确认 **0/21**（污点分析需真实代码结构→价值在仓库级）；
+  bandit 候选 5/21（193c77fa/1a1914c0 与 AI 检出正相关）；AI 覆盖 21/21（盲区保留，检出不倒退）。
+- **环境事实**：semgrep OCaml X509 需完整权限访问系统证书库（沙箱拦 Windows 证书库，
+  与 curl SEC_E_NO_CREDENTIALS 同源）；bandit 纯 Python 沙箱可用；codeql analyze 沙箱可跑，
+  database create 需完整权限（multiprocessing 命名管道）；查询包下载/网络走 7897 代理。
+- **教训**：切片级评测无法体现 codeql 价值——仓库级才是 token 节省主场；
+  S1 候选高 FP 是特性不是 bug（AI 验证 = SAST-Genius -91% FP 模式）；B101 类噪声按 severity 过滤。
 
 ## 根因诊断方法（复用）
 

@@ -66,11 +66,21 @@ python hosls-eval/opt_eval.py ledger <results.json> <tag>
 | cpg_context_enabled | true | 深 CPG 注入（仓库级收益） |
 | ast_evidence_enabled | false | M4 AST 证据（有扰动，A/B 后开） |
 | cwe_guidance_enabled | false | M7 CWE 指引（+1K token） |
-| sast_prefilter.enabled | true | [OPT-SASTR] SAST 深度前置过滤（pure-ai 不再绕过静态过滤） |
-| sast_prefilter.skip_ai_if_no_hits | false | false=软门控（默认，保留盲区检出）；true=硬门控（hos-ls-opt-sast.yaml，零命中完全跳过 AI） |
-| sast_prefilter.inject_evidence | true | SAST 候选命中注入 Agent-3 证据块 |
+| sast_prefilter.enabled | true | [OPT-SASTR2] 三级 cascade 前置过滤（pure-ai 不再绕过静态过滤） |
+| sast_prefilter.mode | cascade | cascade（默认）：semgrep/bandit S1 → codeql S2 确认 → AI 盲区 S3 |
+| sast_prefilter.codeql_pack_dir | envs/codeql-packs | 查询包缓存（--search-path） |
+| sast_prefilter.semgrep_rules_dir | envs/semgrep-rules/python | 社区规则集（337 条 python） |
 
-后端自动探测：codeql（仓库级底座，装好即用）> semgrep（功能探测，本机 X509 异常会跳过）> builtin（AST+CST，与静态层同源，始终可用）。
+工具链环境：`hos-ls/envs/`（sast-venv: semgrep/bandit；codeql/；codeql-packs/；semgrep-rules/）。见 `envs/README.md`。环境事实：semgrep 沙箱内 X509 崩溃（需完整权限），bandit 纯 Python 沙箱可用；codeql analyze 沙箱可跑，database create 需完整权限（命名管道）。
+
+## 8. 三级 cascade 分层测量
+
+```bash
+# 目录级分层（S1+S2 硬层，0 AI token；输出 hard_files/ai_files 划分）
+python hosls-eval/opt_eval.py cascade <dir> <out.json>
+# 切片级实测（21 子集）：codeql 确认 0/21、bandit 候选 5/21、AI 覆盖 21/21
+# 仓库级才是 token 节省主场：codeql 确认文件直接剔除 AI 工作集
+```
 
 ## 8. 缓存纪律
 
