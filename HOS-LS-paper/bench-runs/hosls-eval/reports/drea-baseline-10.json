@@ -1,0 +1,182 @@
+[
+ {
+  "item": "00c73b6e",
+  "type": "vul",
+  "exit": 0,
+  "secs": 2.8,
+  "stdout_tail": "Skipping completed task: logs-baseline\\gradio_00c73b6e\\vul\\deepseek-v4-flash\\function-only\\20260816_151750.jsonl\n",
+  "logfile": "20260816_152005.jsonl",
+  "verdict_tail": "   file_data = encryptor.decrypt(\\n        app.interface.encryption_key, encrypted_data)\\n    return send_file(io.BytesIO(file_data), attachment_filename=os.path.basename(path))\\nelse:\\n    return send_file(safe_join(app.cwd, path))\\n```\\n\\nThe security check is performed on the unnormalized string `path`, but the file access is performed on the normalized `safe_join(app.cwd, path)`. A path such as `examples/../secret.db` passes `path.startswith(app.interface.examples)` yet resolves to a file outside the examples directory. Therefore the intended access restriction is bypassed.\\n</evidence>'}]"
+ },
+ {
+  "item": "00c73b6e",
+  "type": "sec",
+  "exit": 0,
+  "secs": 2.9,
+  "stdout_tail": "Skipping completed task: logs-baseline\\gradio_00c73b6e\\sec\\deepseek-v4-flash\\function-only\\20260816_152005.jsonl\n",
+  "logfile": "20260816_152005.jsonl",
+  "verdict_tail": "   file_data = encryptor.decrypt(\\n        app.interface.encryption_key, encrypted_data)\\n    return send_file(io.BytesIO(file_data), attachment_filename=os.path.basename(path))\\nelse:\\n    return send_file(safe_join(app.cwd, path))\\n```\\n\\nThe security check is performed on the unnormalized string `path`, but the file access is performed on the normalized `safe_join(app.cwd, path)`. A path such as `examples/../secret.db` passes `path.startswith(app.interface.examples)` yet resolves to a file outside the examples directory. Therefore the intended access restriction is bypassed.\\n</evidence>'}]"
+ },
+ {
+  "item": "0294b9f1",
+  "type": "vul",
+  "exit": 0,
+  "secs": 79.3,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0294b9f1\nProject: fonttools\nLanguage tag: python\nLog root: fonttools_0294b9f1\nJSONL file: logs-baseline\\fonttools_0294b9f1\\vul\\deepseek-v4-flash\\function-only\\20260816_152423.jsonl\n",
+  "logfile": "20260816_152423.jsonl",
+  "verdict_tail": "         # dangling tail text after removing an element when pretty_print=True\\n          remove_blank_text=True,\\n      ),\\n  )\\n  ```\\n\\n  This protection is insufficient. It intentionally disables libxml2 security restrictions with `huge_tree=True`, and no parameter such as `resolve_entities=False` or `load_dtd=False` is set to prevent XML entity attacks. A malicious font can supply an SVG document with an entity payload such as a local-file external entity or a billion-laughs entity cascade; when the subsetter parses that document, the entity is expanded during XML parsing.\\n</evidence>'}]"
+ },
+ {
+  "item": "0294b9f1",
+  "type": "sec",
+  "exit": 0,
+  "secs": 76.6,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0294b9f1\nProject: fonttools\nLanguage tag: python\nLog root: fonttools_0294b9f1\nJSONL file: logs-baseline\\fonttools_0294b9f1\\sec\\deepseek-v4-flash\\function-only\\20260816_152542.jsonl\n",
+  "logfile": "20260816_152542.jsonl",
+  "verdict_tail": " external entities.\\n\\n    The only non-default relaxation, `huge_tree=True`, relaxes libxml2’s depth/size limits to support large OT-SVG fonts. It does not re-enable entity resolution or external resource loading. Therefore, the intended protection against XXE remains effective.\\n\\n    The remaining operations in the function manipulate the parsed DOM tree and serialize it back to a string; they do not evaluate, execute, or fetch attacker-controlled content. No concrete attack path from untrusted input to a dangerous sink exists in this code.\\n  </validation_evidence>\\n</security_analysis>\"}]"
+ },
+ {
+  "item": "03e97308",
+  "type": "vul",
+  "exit": 0,
+  "secs": 17.3,
+  "stdout_tail": "Processing RepoPairBench baseline item: 03e97308\nProject: cyberpanel\nLanguage tag: python\nLog root: cyberpanel_03e97308\nJSONL file: logs-baseline\\cyberpanel_03e97308\\vul\\deepseek-v4-flash\\function-only\\20260816_152659.jsonl\n",
+  "logfile": "20260816_152659.jsonl",
+  "verdict_tail": "stallStatus = ProcessUtilities.outputExecutioner(\"sudo cat \" + statusfile)\\n...\\ncommand = \\'sudo rm -f \\' + statusfile\\nProcessUtilities.executioner(command)\\n```\\n\\nAn attacker can supply `statusfile` as, for example, `/etc/passwd; id` or `/tmp/x$(id)` to cause arbitrary command execution. The output of the injected command may also be reflected in the JSON response via `requestStatus`, making the vulnerability directly observable. There is no check that `statusfile` is a safe path, and no escaping or validation is applied before the value is inserted into the shell commands.\\n</evidence>'}]"
+ },
+ {
+  "item": "03e97308",
+  "type": "sec",
+  "exit": 0,
+  "secs": 80.5,
+  "stdout_tail": "Processing RepoPairBench baseline item: 03e97308\nProject: cyberpanel\nLanguage tag: python\nLog root: cyberpanel_03e97308\nJSONL file: logs-baseline\\cyberpanel_03e97308\\sec\\deepseek-v4-flash\\function-only\\20260816_152716.jsonl\n",
+  "logfile": "20260816_152716.jsonl",
+  "verdict_tail": "n `statusfile`. It does not prevent an admin-level user from supplying an arbitrary path such as `/etc/shadow`, or from injecting shell syntax such as `;`, backticks, or `$()` into the constructed command string. The output of the command is also reflected in `requestStatus` in the HTTP response, making file content or command output directly observable.\\n\\nThis is sufficient to allow an authenticated admin user to escape the intended status-file operation and execute unauthorized OS commands or read/delete arbitrary files with the privileges available to the `sudo` invocation.\\n</evidence>'}]"
+ },
+ {
+  "item": "06fdf927",
+  "type": "vul",
+  "exit": 0,
+  "secs": 52.1,
+  "stdout_tail": "Processing RepoPairBench baseline item: 06fdf927\nProject: kiwi\nLanguage tag: python\nLog root: kiwi_06fdf927\nJSONL file: logs-baseline\\kiwi_06fdf927\\vul\\deepseek-v4-flash\\function-only\\20260816_152837.jsonl\n",
+  "logfile": "20260816_152837.jsonl",
+  "verdict_tail": "{active_class}\" style=\"border: none\">\\n        ...\\n        <a href=\"{test_plan.get_absolute_url()}\">\\n            TP-{test_plan.pk}: {test_plan.name}\\n        </a>\\n        ...\\n\"\"\"\\n```\\n\\n`test_plan.name` is inserted without `escape()` or `format_html()`. A malicious name such as:\\n\\n```html\\n</a><script>alert(document.cookie)</script>\\n```\\n\\nwould close the anchor element and inject a script that executes in the context of the page. The HTML sanity checks at the end only compare counts of `begin-node`/`end-node` comments; they do not sanitize or validate the injected data.\\n</evidence>'}]"
+ },
+ {
+  "item": "06fdf927",
+  "type": "sec",
+  "exit": 0,
+  "secs": 72.6,
+  "stdout_tail": "Processing RepoPairBench baseline item: 06fdf927\nProject: kiwi\nLanguage tag: python\nLog root: kiwi_06fdf927\nJSONL file: logs-baseline\\kiwi_06fdf927\\sec\\deepseek-v4-flash\\function-only\\20260816_152928.jsonl\n",
+  "logfile": "20260816_152928.jsonl",
+  "verdict_tail": ":\\n\\n    ```python\\n    <a href=\"{test_plan.get_absolute_url()}\">\\n        TP-{test_plan.pk}: {plan_name}\\n    </a>\\n    ```\\n\\n    `get_absolute_url()` in this Django model returns a URL built from primary-key identifiers, not from arbitrary user input.  \\n    The `active_class` value is either the literal string `\"active\"` or an empty string depending on `test_plan.pk == self.pk`, so it cannot carry injected attributes.\\n\\n    No unsanitized attacker-controlled data reaches an HTML, JavaScript, SQL, or other dangerous sink in this code path.\\n  </validation_evidence>\\n</security_analysis>'}]"
+ },
+ {
+  "item": "08926a1a",
+  "type": "vul",
+  "exit": 0,
+  "secs": 55.0,
+  "stdout_tail": "Processing RepoPairBench baseline item: 08926a1a\nProject: Mobile-Security-Framework-MobSF\nLanguage tag: python\nLog root: Mobile-Security-Framework-MobSF_08926a1a\nJSONL file: logs-baseline\\Mobile-Security-Framework-MobSF_08926a1a\\vul\\deepseek-v4-flash\\function-only\\20260816_153041.jsonl\n",
+  "logfile": "20260816_153041.jsonl",
+  "verdict_tail": "ive member is named `/tmp/pwned`, then:\\n\\n```python\\nfiltered = \\'/tmp/pwned\\'\\nout = Path(dst) / \\'/tmp/pwned\\'\\n```\\n\\nPython `pathlib` treats the right-hand side as absolute, so `out` becomes `Path(\\'/tmp/pwned\\')`, completely ignoring `dst`. The subsequent `write_bytes()` call then writes outside the intended extraction directory.\\n\\nThe existing sanitizer is insufficient because it only strips exact `../` and `..\\\\\\\\` sequences. It does not reject absolute paths, does not normalize the resulting path, and does not verify that the final resolved path is still inside `dst`.\\n</evidence>'}]"
+ },
+ {
+  "item": "08926a1a",
+  "type": "sec",
+  "exit": 0,
+  "secs": 137.8,
+  "stdout_tail": "Processing RepoPairBench baseline item: 08926a1a\nProject: Mobile-Security-Framework-MobSF\nLanguage tag: python\nLog root: Mobile-Security-Framework-MobSF_08926a1a\nJSONL file: logs-baseline\\Mobile-Security-Framework-MobSF_08926a1a\\sec\\deepseek-v4-flash\\function-only\\20260816_153136.jsonl\n",
+  "logfile": "20260816_153136.jsonl",
+  "verdict_tail": "status(checksum, msg)\\n        continue\\n    out = Path(dst) / filtered\\n    out.write_bytes(val.read())\\nexcept Exception:\\n    ...\\n    msg = 'Using OS ar utility to handle archive'\\n    logger.info(msg)\\n    append_scan_status(checksum, msg)\\n    exp = ar_os(src, dst)\\n```\\n\\nThe `is_path_traversal` check is sufficient only for the normal `arpy` path. The `except` fallback calls `ar_os(src, dst)` with no equivalent validation. Because `ar_os` extracts the original archive directly, the traversal entries that were skipped by the `arpy` loop can still be written outside `dst`.\\n</evidence>\"}]"
+ },
+ {
+  "item": "0a06f338",
+  "type": "vul",
+  "exit": 0,
+  "secs": 11.8,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0a06f338\nProject: Calendarinho\nLanguage tag: python\nLog root: Calendarinho_0a06f338\nJSONL file: logs-baseline\\Calendarinho_0a06f338\\vul\\deepseek-v4-flash\\function-only\\20260816_153354.jsonl\n",
+  "logfile": "20260816_153354.jsonl",
+  "verdict_tail": "ker's external site.\\n  </sink>\\n</trigger_path>\\n\\n<evidence>\\n\\n```python\\nnext_url = request.POST.get('next', '')\\nif next_url and next_url.startswith('/'):\\n    return HttpResponseRedirect(next_url)\\n```\\n\\nThe check `startswith('/')` is insufficient. It correctly blocks absolute URLs such as `https://evil.com`, but it fails to block protocol-relative URLs such as `//evil.com`. Because `//evil.com` begins with `/`, the check passes, and the resulting `Location` header causes the browser to redirect to `https://evil.com` (or `http://evil.com`) rather than an internal path.\\n\\n</evidence>\"}]"
+ },
+ {
+  "item": "0a06f338",
+  "type": "sec",
+  "exit": 0,
+  "secs": 260.9,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0a06f338\nProject: Calendarinho\nLanguage tag: python\nLog root: Calendarinho_0a06f338\nJSONL file: logs-baseline\\Calendarinho_0a06f338\\sec\\deepseek-v4-flash\\function-only\\20260816_153406.jsonl\n",
+  "logfile": "20260816_153406.jsonl",
+  "verdict_tail": "\\n            return HttpResponseRedirect(next_url)\\n        else:\\n            return HttpResponseRedirect(reverse('CalendarinhoApp:Dashboard'))\\n    ```\\n\\n    The `user and user.is_active` check ensures only valid active users are logged in.  \\n    The `url_has_allowed_host_and_scheme(next_url, settings.ALLOWED_HOSTS)` check rejects redirects to hosts not present in `ALLOWED_HOSTS`, and the fallback redirects to the application's own dashboard. This addresses the primary security-sensitive operation in the code: unsafe post-login redirects.\\n  </validation_evidence>\\n</security_analysis>\"}]"
+ },
+ {
+  "item": "0bb1aef8",
+  "type": "vul",
+  "exit": 0,
+  "secs": 19.0,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0bb1aef8\nProject: tensorflow\nLanguage tag: python\nLog root: tensorflow_0bb1aef8\nJSONL file: logs-baseline\\tensorflow_0bb1aef8\\vul\\deepseek-v4-flash\\function-only\\20260816_153827.jsonl\n",
+  "logfile": "20260816_153827.jsonl",
+  "verdict_tail": "stant_op.constant(\\n        value=[[1.0], [2.0], [4.0]], dtype=dtypes.float32)\\n    ```\\n\\n    The invalid `min`/`max` values are also literals:\\n\\n    ```python\\n    min=0.0, max=[[1.0], [2.0], [4.0]]\\n    min=[[1.0], [2.0], [4.0]], max=1.0\\n    ```\\n\\n    These values are not attacker-controlled. The test explicitly expects TensorFlow’s existing rank validation to reject the invalid shapes with `\"must be rank 0\"`. There is no unguarded dangerous sink, no injection path, no unsafe memory access, and no business logic bypass in this test code.\\n  </validation_evidence>\\n</security_analysis>'}]"
+ },
+ {
+  "item": "0bb1aef8",
+  "type": "sec",
+  "exit": 0,
+  "secs": 9.9,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0bb1aef8\nProject: tensorflow\nLanguage tag: python\nLog root: tensorflow_0bb1aef8\nJSONL file: logs-baseline\\tensorflow_0bb1aef8\\sec\\deepseek-v4-flash\\function-only\\20260816_153846.jsonl\n",
+  "logfile": "20260816_153846.jsonl",
+  "verdict_tail": ",\\n              max_x=1.0,\\n              min_y=0.0,\\n              max_y=1.0,\\n              Toutput=dtypes.qint32))\\n    ```\\n    This is a negative test: it confirms the TensorFlow operator’s validation logic rejects an invalid empty `min_x` shape. The test does not introduce any dangerous sink, does not pass untrusted data, and does not alter control flow or memory safety in a way that could be exploited. The `assertRaisesRegex` guard is sufficient to ensure the invalid input is handled as expected, making the test logic sound and secure.\\n  </validation_evidence>\\n</security_analysis>'}]"
+ },
+ {
+  "item": "0c8d2aef",
+  "type": "vul",
+  "exit": 0,
+  "secs": 238.5,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0c8d2aef\nProject: fides\nLanguage tag: python\nLog root: fides_0c8d2aef\nJSONL file: logs-baseline\\fides_0c8d2aef\\vul\\deepseek-v4-flash\\function-only\\20260816_153856.jsonl\n",
+  "logfile": "20260816_153856.jsonl",
+  "verdict_tail": "can\\'t be decoded with UTF-8\\n        logger.debug(f\"Unable to decode the file: {info.filename}\")\\n        continue\\n```\\n\\nThe only exception handling is for `UnicodeDecodeError`, which occurs only after the entry has already been fully read and decompressed. There is no validation such as:\\n\\n```python\\nif info.file_size > MAX_TEMPLATE_FILE_SIZE:\\n    raise ValidationError(...)\\n```\\n\\nBecause the filename extension checks occur after `zip_file.read(info)`, even a non-matching file such as a large `data.bin` entry can be used as a decompression bomb and exhaust server memory.\\n</evidence>'}]"
+ },
+ {
+  "item": "0c8d2aef",
+  "type": "sec",
+  "exit": 0,
+  "secs": 129.4,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0c8d2aef\nProject: fides\nLanguage tag: python\nLog root: fides_0c8d2aef\nJSONL file: logs-baseline\\fides_0c8d2aef\\sec\\deepseek-v4-flash\\function-only\\20260816_154254.jsonl\n",
+  "logfile": "20260816_154254.jsonl",
+  "verdict_tail": " not contain a config.yml file.\")\\n\\n    if not dataset_contents:\\n        raise ValidationError(\"Zip file does not contain a dataset.yml file.\")\\n    ```\\n\\n    Uploaded config/dataset content is validated before persistence:\\n\\n    ```python\\n    saas_config = SaaSConfig(**load_config_from_string(config_contents))\\n    Dataset(**load_dataset_from_string(dataset_contents))\\n    ```\\n\\n    No dangerous sink is reached in this code path. The uploaded Python file content is only stored as template data, not executed or written to the filesystem.\\n  </validation_evidence>\\n</security_analysis>'}]"
+ },
+ {
+  "item": "0dc2e99d",
+  "type": "vul",
+  "exit": 0,
+  "secs": 163.2,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0dc2e99d\nProject: bot\nLanguage tag: python\nLog root: bot_0dc2e99d\nJSONL file: logs-baseline\\bot_0dc2e99d\\vul\\deepseek-v4-flash\\function-only\\20260816_154504.jsonl\n",
+  "logfile": "20260816_154504.jsonl",
+  "verdict_tail": ".search(text): return False, None` bypasses the filter\\'s token watchlist.\\n  </sink>\\n</trigger_path>\\n\\n<evidence>\\n```python\\n# Make sure it\\'s not a URL\\nif URL_RE.search(text):\\n    return False, None\\n```\\n\\n`re.search()` returns a match for any substring, not only for the whole input. Therefore a text such as `\"https://example.com buy counterfeit\"` is treated as “just a URL” and skips the watchlist matching even though it contains the blacklisted phrase. The check should use `URL_RE.fullmatch(text)` or exclude the URL portion while still checking the rest of the message.\\n</evidence>'}]"
+ },
+ {
+  "item": "0dc2e99d",
+  "type": "sec",
+  "exit": 0,
+  "secs": 79.4,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0dc2e99d\nProject: bot\nLanguage tag: python\nLog root: bot_0dc2e99d\nJSONL file: logs-baseline\\bot_0dc2e99d\\sec\\deepseek-v4-flash\\function-only\\20260816_154748.jsonl\n",
+  "logfile": "20260816_154748.jsonl",
+  "verdict_tail": "=False)`. This is a trusted configuration source, not derived from `text` or any other attacker-controlled input. The attacker can only control the string being searched, not the regular expression. No dangerous regex is constructed from user input in the provided code.\\n\\n    Additionally, no evidence is provided that the configured watchlist patterns contain catastrophic backtracking behavior. Without an unsafe pattern or a way for the attacker to control the pattern, there is no concrete, demonstrable ReDoS or regex-injection vulnerability.\\n  </validation_evidence>\\n</security_analysis>\"}]"
+ },
+ {
+  "item": "0f0215bf",
+  "type": "vul",
+  "exit": 0,
+  "secs": 21.0,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0f0215bf\nProject: calibre-web\nLanguage tag: python\nLog root: calibre-web_0f0215bf\nJSONL file: logs-baseline\\calibre-web_0f0215bf\\vul\\deepseek-v4-flash\\function-only\\20260816_154907.jsonl\n",
+  "logfile": "20260816_154907.jsonl",
+  "verdict_tail": "e not allowed to access localhost for cover uploads\")\\nimg = requests.get(url, timeout=(10, 200))      # ToDo: Error Handling\\n```\\n\\nThe check only verifies the DNS result of the original URL hostname before the actual request. It does not prevent DNS rebinding, where a second resolution during `requests.get(url)` returns a localhost address, nor does it prevent HTTP redirects to localhost because `requests.get()` follows redirects by default and the redirected URL is never re-checked. Thus, the existing validation is insufficient to enforce the intended localhost restriction.\\n</evidence>'}]"
+ },
+ {
+  "item": "0f0215bf",
+  "type": "sec",
+  "exit": 0,
+  "secs": 99.0,
+  "stdout_tail": "Processing RepoPairBench baseline item: 0f0215bf\nProject: calibre-web\nLanguage tag: python\nLog root: calibre-web_0f0215bf\nJSONL file: logs-baseline\\calibre-web_0f0215bf\\sec\\deepseek-v4-flash\\function-only\\20260816_154928.jsonl\n",
+  "logfile": "20260816_154928.jsonl",
+  "verdict_tail": "Localhost was accessed for cover upload\")\\n    return False, _(\"You are not allowed to access localhost for cover uploads\")\\n...\\nimg = requests.get(url, timeout=(10, 200), allow_redirects=False)\\n```\\nThe validation only inspects the result of the first `getaddrinfo` call. It does not force `requests.get` to use that validated IP. Since `requests.get(url)` resolves the hostname independently, the localhost check can be bypassed with DNS rebinding. `allow_redirects=False` does not mitigate this, because the request itself goes directly to the rebinding hostname, not a redirect.\\n</evidence>'}]"
+ }
+]
