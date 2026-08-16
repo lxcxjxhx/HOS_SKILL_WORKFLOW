@@ -57,17 +57,16 @@
 - **教训**：切片级评测无法体现 codeql 价值——仓库级才是 token 节省主场；
   S1 候选高 FP 是特性不是 bug（AI 验证 = SAST-Genius -91% FP 模式）；B101 类噪声按 severity 过滤。
 
-## 仓库级 cascade 实测（2026-08-15，9 pairs）——硬检测底座的价值实锤
+## 仓库级 cascade 实测（2026-08-15，9 pairs，security-only 套件）——最终账
 
-- **CodeQL（security-only 套件）硬确认 2 个 AI 曾漏检的样本**：
-  - `d873de7f`（CVE-2022-1430 XSS，深 CPG 实验 0/0 漏检）→ codeql py/path-injection + url-redirection；
-  - `ee76e0c9`（CVE-2022-3068）→ py/path-injection。
-- **硬层必须 security-only**：`security-and-quality` 混入 mixed-returns/empty-except 质量查询，
-  会把非漏洞文件误判为硬检出（6e68fb86/8c57d15f 的"12 条命中"全是质量类）→ 用
-  `python-code-scanning.qls`。
-- **结论**：硬检测底座不仅省 token（确认文件免 AI），还能检出 AI 漏掉的跨函数污点漏洞——
-  "硬检测定论 + AI 补盲"是双向增益。C1 污点门（InputTracer is_exploitable）再过滤硬层 FP。
-- 复现：`python hosls-eval/repo_cascade.py`（需完整权限建库）。
+- **CodeQL 硬确认 5/9（免 AI ≈ 55% AI 文件量）**：0f0215bf（path-injection）、966c6ef1/ad9c9cd4
+  （url-redirection ×4）、d873de7f（path-injection ×3 + url-redirection）、ee76e0c9（path-injection）。
+- **盲区 4/9 仍 AI**：06fdf927、6e68fb86、7c167feb、8c57d15f。
+- **双向增益实锤**：d873de7f（CVE-2022-1430 XSS）、ee76e0c9（CVE-2022-3068）为此前 AI 函数级
+  漏检样本 → CodeQL 跨函数污点路径直接确认（省 token + 提升检出）。
+- **硬层必须 security-only**：security-and-quality 混入质量查询（6e68fb86/8c57d15f 的 12 条
+  命中全是 mixed-returns 等）→ 用 python-code-scanning.qls，质量命中归零回 AI。
+- 复现：`python hosls-eval/repo_cascade.py`（完整权限建库；worktree 残留清理 + depth-2 取父）。
 
 ## 根因诊断方法（复用）
 
