@@ -1,0 +1,2656 @@
+{
+ "meta": {
+  "date": "2026-08-17 01:09",
+  "api_calls": 0
+ },
+ "static": {
+  "06fdf927": {
+   "file": "06fdf927__models.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "0294b9f1": {
+   "file": "0294b9f1__svg.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "00c73b6e": {
+   "file": "00c73b6e__networking.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "03e97308": {
+   "file": "03e97308__views.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "0bb1aef8": {
+   "file": "0bb1aef8__quantization_ops_test.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "0a06f338": {
+   "file": "0a06f338__authentication.py",
+   "static": {
+    "vuln": {
+     "semgrep": 3,
+     "bandit": 0,
+     "semgrep_findings": [
+      {
+       "line": 8,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 9,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 13,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      }
+     ],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 3,
+     "bandit": 0,
+     "semgrep_findings": [
+      {
+       "line": 8,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 9,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 13,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      }
+     ],
+     "bandit_findings": []
+    }
+   },
+   "class": "V+P+ (残留, 误报风险)"
+  },
+  "08926a1a": {
+   "file": "08926a1a__shared_func.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "0c8d2aef": {
+   "file": "0c8d2aef__connector_registry_service.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "0dc2e99d": {
+   "file": "0dc2e99d__filtering.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "0f0215bf": {
+   "file": "0f0215bf__helper.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "18e78647": {
+   "file": "18e78647__open_actions.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "193c77fa": {
+   "file": "193c77fa__apkleaks.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "1b48a788": {
+   "file": "1b48a788__parallel.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "1bdfa375": {
+   "file": "1bdfa375__app.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "1a1914c0": {
+   "file": "1a1914c0__package_scanner.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "233c9513": {
+   "file": "233c9513__app.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "2082c6c6": {
+   "file": "2082c6c6__test_crypto_connect.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "24e78349": {
+   "file": "24e78349__log.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "256a7c28": {
+   "file": "256a7c28__main.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "2b5e4ebf": {
+   "file": "2b5e4ebf__array_ops_test.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "28f88073": {
+   "file": "28f88073___dir_browser.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "2d8d5c4c": {
+   "file": "2d8d5c4c__quantization_ops_test.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "306f60dc": {
+   "file": "306f60dc__accounts.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "3b525f26": {
+   "file": "3b525f26____init__.py",
+   "static": {
+    "vuln": {
+     "semgrep": 1,
+     "bandit": 0,
+     "semgrep_findings": [
+      {
+       "line": 9,
+       "check": "python.jinja2.security.audit.missing-autoescape-disabled.missing-autoescape-disabled",
+       "msg": "Detected a Jinja2 environment without autoescaping. Jinja2 does not autoescape b"
+      }
+     ],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V+P- (消失模式, DEP 信号可用)"
+  },
+  "36b71012": {
+   "file": "36b71012__test_flask_session_captcha.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "3eff03b7": {
+   "file": "3eff03b7__web_utils.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "3f154463": {
+   "file": "3f154463__controllers.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "491d4e03": {
+   "file": "491d4e03__utils.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "439a5d03": {
+   "file": "439a5d03__views.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "4b250f6b": {
+   "file": "4b250f6b__package_index.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "4f4ba85c": {
+   "file": "4f4ba85c__settings.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "533999b4": {
+   "file": "533999b4__report.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "53090cd1": {
+   "file": "53090cd1__matrix_solve_op_test.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "54d21eb5": {
+   "file": "54d21eb5__default.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "56b539a7": {
+   "file": "56b539a7__lib.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "5b054edf": {
+   "file": "5b054edf__views.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "5b0e19c8": {
+   "file": "5b0e19c8__authentication.py",
+   "static": {
+    "vuln": {
+     "semgrep": 3,
+     "bandit": 0,
+     "semgrep_findings": [
+      {
+       "line": 8,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 9,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 14,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      }
+     ],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 3,
+     "bandit": 0,
+     "semgrep_findings": [
+      {
+       "line": 8,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 9,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 13,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      }
+     ],
+     "bandit_findings": []
+    }
+   },
+   "class": "V+P+ (残留, 误报风险)"
+  },
+  "5eab33ca": {
+   "file": "5eab33ca__common_func.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "619844db": {
+   "file": "619844db__models.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "6738d628": {
+   "file": "6738d628__welcome.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "6cd43b15": {
+   "file": "6cd43b15__core.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "6e3699a1": {
+   "file": "6e3699a1__settings.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "6e68fb86": {
+   "file": "6e68fb86____init__.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "6fed39f6": {
+   "file": "6fed39f6__exec.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "713bbf1f": {
+   "file": "713bbf1f__messageboxhandler.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "73794b9d": {
+   "file": "73794b9d__quantization_ops_test.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "754852b3": {
+   "file": "754852b3__manifest_analysis.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "75c21415": {
+   "file": "75c21415__app_blueprint.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "7b3646c3": {
+   "file": "7b3646c3__routes.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "7be615b2": {
+   "file": "7be615b2__common_gui.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "7c167feb": {
+   "file": "7c167feb__history.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "83b7fdcf": {
+   "file": "83b7fdcf__files.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "7fbe4838": {
+   "file": "7fbe4838__repositories.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "8670411d": {
+   "file": "8670411d__formparser.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "8678968f": {
+   "file": "8678968f__cmapdb.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "87529501": {
+   "file": "87529501__template_helper.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "8adb9061": {
+   "file": "8adb9061__fickle.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "8d15590f": {
+   "file": "8d15590f__repoproviders.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "8c57d15f": {
+   "file": "8c57d15f__access.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "8d5ac5ae": {
+   "file": "8d5ac5ae__omr-admin.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "8e50b867": {
+   "file": "8e50b867__httpcli.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "8e9ae6c4": {
+   "file": "8e9ae6c4__course_chapter.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "95115f47": {
+   "file": "95115f47__static.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "966c6ef1": {
+   "file": "966c6ef1__shelf.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "9c2f5562": {
+   "file": "9c2f5562__model_chat_blueprint.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "a4d29a63": {
+   "file": "a4d29a63__api.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "a5989d14": {
+   "file": "a5989d14__manager.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "a922f662": {
+   "file": "a922f662__test_http_api.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "aa9144ae": {
+   "file": "aa9144ae__secure_mount.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "ab67c389": {
+   "file": "ab67c389__config.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "ad9c9cd4": {
+   "file": "ad9c9cd4__shelf.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "af00c050": {
+   "file": "af00c050__utils.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "b12e328f": {
+   "file": "b12e328f__functions.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "b2044909": {
+   "file": "b2044909__shm_broadcast.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "b2079dad": {
+   "file": "b2079dad__processing_donut.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "b256eb15": {
+   "file": "b256eb15__service.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "b35811c3": {
+   "file": "b35811c3____init__.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "b6d52172": {
+   "file": "b6d52172__authentication.py",
+   "static": {
+    "vuln": {
+     "semgrep": 3,
+     "bandit": 0,
+     "semgrep_findings": [
+      {
+       "line": 8,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 9,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 13,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      }
+     ],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 3,
+     "bandit": 0,
+     "semgrep_findings": [
+      {
+       "line": 8,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 9,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      },
+      {
+       "line": 13,
+       "check": "python.django.security.django-using-request-post-after-is-valid.django-using-request-post-after-is-valid",
+       "msg": "Use form.cleaned_data[] instead of request.POST[] after form.is_valid() has been"
+      }
+     ],
+     "bandit_findings": []
+    }
+   },
+   "class": "V+P+ (残留, 误报风险)"
+  },
+  "b886d117": {
+   "file": "b886d117__emailutils.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "babe7119": {
+   "file": "babe7119__cache_handler.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "c0261fa4": {
+   "file": "c0261fa4__testing_utils.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "c29af17b": {
+   "file": "c29af17b__token.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "c1e78bce": {
+   "file": "c1e78bce__views.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "c9c8c36c": {
+   "file": "c9c8c36c__modeling_tf_utils.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "cbe8607b": {
+   "file": "cbe8607b__utils.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "cd33186d": {
+   "file": "cd33186d__dremio_handler.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "d09de727": {
+   "file": "d09de727__hub.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "d29b94d5": {
+   "file": "d29b94d5__table.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "d2b7d775": {
+   "file": "d2b7d775__tables.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "e5222224": {
+   "file": "e5222224__notifier.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "d873de7f": {
+   "file": "d873de7f__views.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "e6872b1d": {
+   "file": "e6872b1d__argparse.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "e5dfeaaa": {
+   "file": "e5dfeaaa__validate_translation_files.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "e6aacb53": {
+   "file": "e6aacb53__widgets.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "e7fbb94a": {
+   "file": "e7fbb94a__executor.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "eae18dec": {
+   "file": "eae18dec__math.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "ea79e307": {
+   "file": "ea79e307__views.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "eb4fa4d8": {
+   "file": "eb4fa4d8__base_model.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "ee76e0c9": {
+   "file": "ee76e0c9____init__.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  },
+  "fffb4fce": {
+   "file": "fffb4fce__tokenization_nougat_fast.py",
+   "static": {
+    "vuln": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    },
+    "patched": {
+     "semgrep": 0,
+     "bandit": 0,
+     "semgrep_findings": [],
+     "bandit_findings": []
+    }
+   },
+   "class": "V-P- (静态不可见, 需 AI)"
+  }
+ },
+ "ai_dep": {
+  "n": 50,
+  "pair_correct_cur": 13,
+  "pair_correct_dep": 7,
+  "dep_修正样本数(vuln确认但patched有finding)": 6,
+  "rows": [
+   {
+    "file": "00c73b6e__networking.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "UNCERTAIN"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "0294b9f1__svg.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": true,
+    "pair_correct_dep": true,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "03e97308__views.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED",
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "06fdf927__models.py",
+    "vuln_confirmed": false,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "WEAK"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "08926a1a__shared_func.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": true,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "WEAK"
+    ]
+   },
+   {
+    "file": "0a06f338__authentication.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": true,
+    "pair_correct_dep": true,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "0bb1aef8__quantization_ops_test.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "0c8d2aef__connector_registry_service.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "0dc2e99d__filtering.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": true,
+    "pair_correct_dep": true,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "0f0215bf__helper.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "18e78647__open_actions.py",
+    "vuln_confirmed": false,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "WEAK"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "193c77fa__apkleaks.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "1a1914c0__package_scanner.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": true,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "WEAK",
+     "WEAK"
+    ]
+   },
+   {
+    "file": "1b48a788__parallel.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "WEAK"
+    ],
+    "patched_statuses": [
+     "WEAK"
+    ]
+   },
+   {
+    "file": "1bdfa375__app.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": true,
+    "pair_correct_cur": true,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "WEAK"
+    ]
+   },
+   {
+    "file": "2082c6c6__test_crypto_connect.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "233c9513__app.py",
+    "vuln_confirmed": false,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "WEAK"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "24e78349__log.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": [
+     "WEAK"
+    ]
+   },
+   {
+    "file": "256a7c28__main.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "28f88073___dir_browser.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": [
+     "WEAK"
+    ]
+   },
+   {
+    "file": "2b5e4ebf__array_ops_test.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "2d8d5c4c__quantization_ops_test.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "306f60dc__accounts.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "36b71012__test_flask_session_captcha.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "3b525f26____init__.py",
+    "vuln_confirmed": false,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "WEAK"
+    ],
+    "patched_statuses": [
+     "WEAK"
+    ]
+   },
+   {
+    "file": "3eff03b7__web_utils.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "WEAK"
+    ],
+    "patched_statuses": [
+     "WEAK"
+    ]
+   },
+   {
+    "file": "3f154463__controllers.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED",
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "439a5d03__views.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": true,
+    "pair_correct_dep": true,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "491d4e03__utils.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "4b250f6b__package_index.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": true,
+    "pair_correct_dep": true,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "4f4ba85c__settings.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "WEAK"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "53090cd1__matrix_solve_op_test.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "533999b4__report.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": [
+     "CONFIRMED",
+     "WEAK"
+    ]
+   },
+   {
+    "file": "54d21eb5__default.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": true,
+    "pair_correct_cur": true,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "WEAK"
+    ]
+   },
+   {
+    "file": "56b539a7__lib.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "CONFIRMED",
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "5b054edf__views.py",
+    "vuln_confirmed": false,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "UNCERTAIN",
+     "UNCERTAIN",
+     "UNCERTAIN"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "5b0e19c8__authentication.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "5eab33ca__common_func.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": true,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "UNCERTAIN",
+     "UNCERTAIN"
+    ]
+   },
+   {
+    "file": "619844db__models.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "VALID"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "6738d628__welcome.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "WEAK"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "6cd43b15__core.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "UNCERTAIN"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "6e3699a1__settings.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": true,
+    "pair_correct_dep": true,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "6e68fb86____init__.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "UNCERTAIN",
+     "UNCERTAIN",
+     "UNCERTAIN"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "6fed39f6__exec.py",
+    "vuln_confirmed": false,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "WEAK"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "713bbf1f__messageboxhandler.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": true,
+    "pair_correct_dep": true,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": []
+   },
+   {
+    "file": "73794b9d__quantization_ops_test.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "754852b3__manifest_analysis.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": true,
+    "pair_correct_cur": true,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "WEAK"
+    ]
+   },
+   {
+    "file": "75c21415__app_blueprint.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": false,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": []
+   },
+   {
+    "file": "7b3646c3__routes.py",
+    "vuln_confirmed": true,
+    "vuln_recog": true,
+    "patched_confirmed": true,
+    "patched_recog": true,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [
+     "CONFIRMED",
+     "CONFIRMED"
+    ],
+    "patched_statuses": [
+     "CONFIRMED"
+    ]
+   },
+   {
+    "file": "7be615b2__common_gui.py",
+    "vuln_confirmed": false,
+    "vuln_recog": false,
+    "patched_confirmed": false,
+    "patched_recog": false,
+    "patched_findings": true,
+    "pair_correct_cur": false,
+    "pair_correct_dep": false,
+    "vuln_statuses": [],
+    "patched_statuses": [
+     "WEAK"
+    ]
+   }
+  ]
+ },
+ "static_summary": {
+  "V-P- (静态不可见, 需 AI)": 96,
+  "V+P+ (残留, 误报风险)": 3,
+  "V+P- (消失模式, DEP 信号可用)": 1
+ }
+}

@@ -1,0 +1,1726 @@
+{
+ "meta": {
+  "date": "2026-08-17 01:19",
+  "api_calls": 0
+ },
+ "stats": {
+  "n": 100,
+  "vuln_hit": 52,
+  "patched_hit": 58,
+  "vuln_only": 1,
+  "both": 51,
+  "neither": 32,
+  "no_cwe_map": 9
+ },
+ "rows": [
+  {
+   "item_id": "00c73b6e",
+   "cwes": [
+    "CWE-22"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-22",
+     "pattern": "open\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "send_file\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "os\\.path\\.join",
+     "vuln": true,
+     "patched": false
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "0294b9f1",
+   "cwes": [
+    "CWE-611"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-611",
+     "pattern": "fromstring\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-611",
+     "pattern": "resolve_entities",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "03e97308",
+   "cwes": [
+    "CWE-306"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "06fdf927",
+   "cwes": [
+    "CWE-434",
+    "CWE-79"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "08926a1a",
+   "cwes": [
+    "CWE-22",
+    "CWE-23"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-22",
+     "pattern": "Path\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-23",
+     "pattern": "Path\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "0a06f338",
+   "cwes": [
+    "CWE-601"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-601",
+     "pattern": "redirect\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-601",
+     "pattern": "next\\s*=|url\\s*=",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "0bb1aef8",
+   "cwes": [
+    "CWE-20"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-20",
+     "pattern": "assert",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "0c8d2aef",
+   "cwes": [
+    "CWE-400"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-400",
+     "pattern": "for\\s+",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-400",
+     "pattern": "\\.read\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "0dc2e99d",
+   "cwes": [
+    "CWE-20"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-20",
+     "pattern": "re\\.(match|search|findall)",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "0f0215bf",
+   "cwes": [
+    "CWE-918"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-918",
+     "pattern": "requests\\.(get|post|put|request)\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "18e78647",
+   "cwes": [
+    "CWE-346"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "193c77fa",
+   "cwes": [
+    "CWE-78",
+    "CWE-88"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-78",
+     "pattern": "os\\.system\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-88",
+     "pattern": "os\\.system\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "1a1914c0",
+   "cwes": [
+    "CWE-22"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-22",
+     "pattern": "open\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "Path\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "1b48a788",
+   "cwes": [
+    "CWE-94"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-94",
+     "pattern": "eval\\s*\\(",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": false,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "1bdfa375",
+   "cwes": [
+    "CWE-20",
+    "CWE-77"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-20",
+     "pattern": "len\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-77",
+     "pattern": "subprocess\\s*\\.",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-77",
+     "pattern": "Popen\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "2082c6c6",
+   "cwes": [
+    "CWE-287"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "233c9513",
+   "cwes": [
+    "CWE-284"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "24e78349",
+   "cwes": [
+    "CWE-79"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "256a7c28",
+   "cwes": [
+    "CWE-200"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-200",
+     "pattern": "open\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-200",
+     "pattern": "read\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-200",
+     "pattern": "logging",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-200",
+     "pattern": "print\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "28f88073",
+   "cwes": [
+    "CWE-79"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-79",
+     "pattern": "format\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "2b5e4ebf",
+   "cwes": [
+    "CWE-369"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-369",
+     "pattern": "zero",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "2d8d5c4c",
+   "cwes": [
+    "CWE-617"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-617",
+     "pattern": "assert",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-617",
+     "pattern": "\\[-?\\d",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "306f60dc",
+   "cwes": [
+    "CWE-200"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-200",
+     "pattern": "print\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "36b71012",
+   "cwes": [
+    "CWE-253",
+    "CWE-394",
+    "CWE-754"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "3b525f26",
+   "cwes": [
+    "CWE-1336"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "3eff03b7",
+   "cwes": [
+    "CWE-918"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "3f154463",
+   "cwes": [
+    "CWE-116"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "439a5d03",
+   "cwes": [
+    "CWE-601"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-601",
+     "pattern": "redirect\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-601",
+     "pattern": "next\\s*=|url\\s*=",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "491d4e03",
+   "cwes": [
+    "CWE-79"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "4b250f6b",
+   "cwes": [
+    "CWE-22"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-22",
+     "pattern": "os\\.path\\.join",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "Path\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "4f4ba85c",
+   "cwes": [
+    "CWE-502"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "53090cd1",
+   "cwes": [
+    "CWE-354"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "533999b4",
+   "cwes": [
+    "CWE-707"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "54d21eb5",
+   "cwes": [
+    "CWE-601"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-601",
+     "pattern": "redirect\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "56b539a7",
+   "cwes": [
+    "CWE-79"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "5b054edf",
+   "cwes": [
+    "CWE-116",
+    "CWE-79"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "5b0e19c8",
+   "cwes": [
+    "CWE-601"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-601",
+     "pattern": "redirect\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-601",
+     "pattern": "next\\s*=|url\\s*=",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "5eab33ca",
+   "cwes": [
+    "CWE-78"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-78",
+     "pattern": "subprocess\\s*\\.",
+     "vuln": false,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-78",
+     "pattern": "os\\.system\\s*\\(",
+     "vuln": true,
+     "patched": false
+    },
+    {
+     "cwe": "CWE-78",
+     "pattern": "Popen\\s*\\(",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "619844db",
+   "cwes": [
+    "CWE-79"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-79",
+     "pattern": "mark_safe",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "6738d628",
+   "cwes": [
+    "CWE-306"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-306",
+     "pattern": "permission",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "6cd43b15",
+   "cwes": [
+    "CWE-79"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "6e3699a1",
+   "cwes": [
+    "CWE-77"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "6e68fb86",
+   "cwes": [
+    "CWE-307"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "6fed39f6",
+   "cwes": [
+    "CWE-78"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "713bbf1f",
+   "cwes": [
+    "CWE-78"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-78",
+     "pattern": "subprocess\\s*\\.",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": false,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "73794b9d",
+   "cwes": [
+    "CWE-20"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-20",
+     "pattern": "assert",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "754852b3",
+   "cwes": [
+    "CWE-918"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-918",
+     "pattern": "requests\\.(get|post|put|request)\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "75c21415",
+   "cwes": [
+    "CWE-284"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "7b3646c3",
+   "cwes": [
+    "CWE-22"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-22",
+     "pattern": "send_file\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "os\\.path\\.join",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "7be615b2",
+   "cwes": [
+    "CWE-22"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-22",
+     "pattern": "open\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "os\\.path\\.join",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "7c167feb",
+   "cwes": [
+    "CWE-79"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "7fbe4838",
+   "cwes": [
+    "CWE-20"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "83b7fdcf",
+   "cwes": [
+    "CWE-79"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-79",
+     "pattern": "Response\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "8670411d",
+   "cwes": [
+    "CWE-400",
+    "CWE-770"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-400",
+     "pattern": "while\\s+",
+     "vuln": false,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-400",
+     "pattern": "for\\s+",
+     "vuln": false,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-400",
+     "pattern": "max_",
+     "vuln": false,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-770",
+     "pattern": "while\\s+",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": false,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "8678968f",
+   "cwes": [
+    "CWE-502"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-502",
+     "pattern": "pickle\\.loads",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "87529501",
+   "cwes": [
+    "CWE-1336",
+    "CWE-94"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-1336",
+     "pattern": "Template\\s*\\(",
+     "vuln": true,
+     "patched": false
+    },
+    {
+     "cwe": "CWE-1336",
+     "pattern": "f['\\\"]",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "8adb9061",
+   "cwes": [
+    "CWE-184",
+    "CWE-502"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "8c57d15f",
+   "cwes": [
+    "CWE-620"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "8d15590f",
+   "cwes": [
+    "CWE-78",
+    "CWE-94"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-78",
+     "pattern": "subprocess\\s*\\.",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": false,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "8d5ac5ae",
+   "cwes": [
+    "CWE-287"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-287",
+     "pattern": "password",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "8e50b867",
+   "cwes": [
+    "CWE-22"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-22",
+     "pattern": "os\\.path\\.join",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "8e9ae6c4",
+   "cwes": [
+    "CWE-425"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "95115f47",
+   "cwes": [
+    "CWE-22"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-22",
+     "pattern": "os\\.path\\.join",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "Path\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "966c6ef1",
+   "cwes": [
+    "CWE-284",
+    "CWE-863"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "9c2f5562",
+   "cwes": [
+    "CWE-502"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "a4d29a63",
+   "cwes": [
+    "CWE-20"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-20",
+     "pattern": "int\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "a5989d14",
+   "cwes": [
+    "CWE-203"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "a922f662",
+   "cwes": [
+    "CWE-200",
+    "CWE-284"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "aa9144ae",
+   "cwes": [
+    "CWE-200"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-200",
+     "pattern": "open\\s*\\(",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": false,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "ab67c389",
+   "cwes": [
+    "CWE-502"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-502",
+     "pattern": "yaml\\.load",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "ad9c9cd4",
+   "cwes": [
+    "CWE-284",
+    "CWE-862"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "af00c050",
+   "cwes": [
+    "CWE-502"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "b12e328f",
+   "cwes": [
+    "CWE-706"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-706",
+     "pattern": "filename",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "b2044909",
+   "cwes": [
+    "CWE-770"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-770",
+     "pattern": "chunk",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "b2079dad",
+   "cwes": [
+    "CWE-1333"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-1333",
+     "pattern": "re\\.(match|search|findall|compile)",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-1333",
+     "pattern": "\\.group\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "b256eb15",
+   "cwes": [
+    "CWE-862",
+    "CWE-863"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-862",
+     "pattern": "permission",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-863",
+     "pattern": "permission",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "b35811c3",
+   "cwes": [
+    "CWE-20"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-20",
+     "pattern": "int\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-20",
+     "pattern": "len\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-20",
+     "pattern": "\\[.*:.*\\]",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "b6d52172",
+   "cwes": [
+    "CWE-601"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-601",
+     "pattern": "redirect\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-601",
+     "pattern": "next\\s*=|url\\s*=",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "b886d117",
+   "cwes": [
+    "CWE-295"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "babe7119",
+   "cwes": [
+    "CWE-276"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-276",
+     "pattern": "chmod",
+     "vuln": false,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-276",
+     "pattern": "open\\s*\\(",
+     "vuln": false,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-276",
+     "pattern": "permissions",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": false,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "c0261fa4",
+   "cwes": [
+    "CWE-1333"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "c1e78bce",
+   "cwes": [
+    "CWE-209"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-209",
+     "pattern": "traceback",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-209",
+     "pattern": "error\\s*=",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "c29af17b",
+   "cwes": [
+    "CWE-287"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-287",
+     "pattern": "token",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "c9c8c36c",
+   "cwes": [
+    "CWE-502"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-502",
+     "pattern": "pickle\\.load\\s*\\(",
+     "vuln": true,
+     "patched": false
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": false,
+   "vuln_only": true
+  },
+  {
+   "item_id": "cbe8607b",
+   "cwes": [
+    "CWE-22",
+    "CWE-29"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-22",
+     "pattern": "open\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "os\\.path\\.join",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "Path\\s*\\(",
+     "vuln": false,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-29",
+     "pattern": "open\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-29",
+     "pattern": "Path\\s*\\(",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "cd33186d",
+   "cwes": [
+    "CWE-311"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-311",
+     "pattern": "password",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-311",
+     "pattern": "token",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "d09de727",
+   "cwes": [
+    "CWE-377"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-377",
+     "pattern": "mktemp",
+     "vuln": true,
+     "patched": false
+    },
+    {
+     "cwe": "CWE-377",
+     "pattern": "tempfile",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-377",
+     "pattern": "open\\s*\\([^)]*['\\\"][wa]",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "d29b94d5",
+   "cwes": [
+    "CWE-79"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "d2b7d775",
+   "cwes": [
+    "CWE-203",
+    "CWE-204"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "d873de7f",
+   "cwes": [
+    "CWE-79"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-79",
+     "pattern": "render_template",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "e5222224",
+   "cwes": [
+    "CWE-94"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "e5dfeaaa",
+   "cwes": [
+    "CWE-74"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "e6872b1d",
+   "cwes": [
+    "CWE-94"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-94",
+     "pattern": "eval\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "e6aacb53",
+   "cwes": [
+    "CWE-707",
+    "CWE-79"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-707",
+     "pattern": "escape",
+     "vuln": false,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-707",
+     "pattern": "quote",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": false,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "e7fbb94a",
+   "cwes": [
+    "CWE-77",
+    "CWE-94"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "ea79e307",
+   "cwes": [
+    "CWE-862"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "eae18dec",
+   "cwes": [
+    "CWE-94",
+    "CWE-95"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-94",
+     "pattern": "eval\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-94",
+     "pattern": "compile\\s*\\(",
+     "vuln": false,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-95",
+     "pattern": "eval\\s*\\(",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "eb4fa4d8",
+   "cwes": [
+    "CWE-22"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-22",
+     "pattern": "open\\s*\\(",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "os\\.path\\.join",
+     "vuln": true,
+     "patched": true
+    },
+    {
+     "cwe": "CWE-22",
+     "pattern": "Path\\s*\\(",
+     "vuln": false,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  },
+  {
+   "item_id": "ee76e0c9",
+   "cwes": [
+    "CWE-269"
+   ],
+   "mapped": [],
+   "vuln_hit": false,
+   "patched_hit": false,
+   "vuln_only": false
+  },
+  {
+   "item_id": "fffb4fce",
+   "cwes": [
+    "CWE-1333"
+   ],
+   "mapped": [
+    {
+     "cwe": "CWE-1333",
+     "pattern": "re\\.(match|search|findall|compile)",
+     "vuln": true,
+     "patched": true
+    }
+   ],
+   "vuln_hit": true,
+   "patched_hit": true,
+   "vuln_only": false
+  }
+ ]
+}
