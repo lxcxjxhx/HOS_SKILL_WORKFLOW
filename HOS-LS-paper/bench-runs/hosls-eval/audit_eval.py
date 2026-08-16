@@ -173,15 +173,15 @@ def sal_candidates(repo_dir, lang, cwes, max_files=50):
             pats.extend(entry)
     if not pats:
         return []
-    exts = {"java": ".java", "python": ".py", "javascript": ".js",
-            "typescript": ".ts", "go": ".go"}
-    ext = exts.get(lang, ".py")
+    exts = {"java": (".java",), "python": (".py",), "javascript": (".js", ".jsx", ".svelte"),
+            "typescript": (".ts", ".tsx", ".vue"), "go": (".go",)}
+    exts_ok = exts.get(lang, (".py",))
     cand = {}
     for root, _, files in os.walk(repo_dir):
         if ".git" in root:
             continue
         for f in files:
-            if not f.endswith(ext):
+            if not f.endswith(exts_ok):
                 continue
             fp = os.path.join(root, f)
             try:

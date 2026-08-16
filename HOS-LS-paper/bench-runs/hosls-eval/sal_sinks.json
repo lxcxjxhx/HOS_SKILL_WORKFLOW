@@ -60,7 +60,7 @@
     "CWE-200": ["console\\.log", "sendFile", "res\\.send\\s*\\(", "toString\\(\\)"]
   },
   "go": {
-    "CWE-78": ["exec\\.Command", "exec\\.CommandContext", "os/exec"],
+    "CWE-78": ["exec\\.Command", "exec\\.CommandContext", "os/exec", "StdioMCPClient", "NewStdioMCPClient", "NewStdio.*Options", "\\bstdio\\b.*client"],
     "CWE-94": ["plugin\\.Open", "go\\.run", "eval"],
     "CWE-502": ["json\\.Unmarshal", "gob\\.Decode", "msgpack\\.Unmarshal", "yaml\\.Unmarshal"],
     "CWE-89": ["db\\.Query", "db\\.Exec", "db\\.QueryRow", "Sprintf\\([^)]*\\bSELECT|INSERT|UPDATE|DELETE", "gorm\\.(Raw|Exec)"],
