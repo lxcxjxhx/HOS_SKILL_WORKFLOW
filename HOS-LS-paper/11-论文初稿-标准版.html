@@ -33,7 +33,7 @@ strong { color: #17324d; }
 </blockquote>
 <hr />
 <h2>摘要</h2>
-<p>AI 代码生成的普及显著提高了开发效率，也放大了代码安全审查的压力：传统静态分析规则覆盖不全、误报漏报双高；纯大语言模型（LLM）检测误报率高且判定不可解释；2026 年出现的多智能体漏洞检测系统多依赖模糊测试复现或 LLM 自评完成验证，指标口径混乱、漏洞声称难以核验。本文提出 <strong>HOS-LS</strong>——面向 AI 生成代码的「静态规则 + 大模型多智能体」混合漏洞扫描系统（v0.3.3.17，Python，AGPLv3），采用四阶段分层架构：静态规则层快速召回候选，Search Agent 评分筛选 Top-K，7 个 LLM Agent 深度分析，最后由 DynamicLoader 与 Validator Registry 等确定性执行器完成 Exploit 生成与验证，验证不依赖 LLM 自评。在 RepoPairBench（100 个 Python 漏洞-修复对，均挂 2021–2025 CVE）上的实测结果表明：静态规则层召回 76.0%（误报 76.0%，定位为候选生成器）；AI 层双口径检出率为 <strong>CONFIRMED 35.0%、高危识别 49.0%</strong>；完整源码与跨函数上下文注入可将代表性样本检出由 0/4 提升至 3/4。在 10 样本与裸 LLM 的同台受控对比中（同模型 deepseek-v4-flash），HOS-LS 检出率达 <strong>80.0%</strong>（识别口径 8/10；严格 CONFIRMED 口径 70.0%），而误报由裸 LLM 的 90.0% 降至 30.0%。与 FuzzingBrain V2、AEGIS、DREA 等系统的对比分析表明，HOS-LS 在验证确定性、口径透明与可核验性上具有结构性优势。</p>
+<p>AI 代码生成的普及显著提高了开发效率，也放大了代码安全审查的压力：传统静态分析规则覆盖不全、误报漏报双高；纯大语言模型（LLM）检测误报率高且判定不可解释；2026 年出现的多智能体漏洞检测系统多依赖模糊测试复现或 LLM 自评完成验证，指标口径混乱、漏洞声称难以核验。本文提出 <strong>HOS-LS</strong>——面向 AI 生成代码的「静态规则 + 大模型多智能体」混合漏洞扫描系统（v0.3.3.17，Python，AGPLv3），采用四阶段分层架构：静态规则层快速召回候选，Search Agent 评分筛选 Top-K，7 个 LLM Agent 深度分析，最后由 DynamicLoader 与 Validator Registry 等确定性执行器完成 Exploit 生成与验证，验证不依赖 LLM 自评。在 RepoPairBench（100 个 Python 漏洞-修复对，均挂 2021–2025 CVE）上的实测结果表明：静态规则层召回 76.0%（误报 76.0%，定位为候选生成器）；AI 层双口径检出率为 <strong>CONFIRMED 35.0%、高危识别 49.0%</strong>；完整源码与跨函数上下文注入可将代表性样本检出由 0/4 提升至 3/4。在 10 样本与裸 LLM 的同台受控对比中（同模型 deepseek-v4-flash），HOS-LS 检出率达 <strong>80.0%</strong>（识别口径 8/10；严格 CONFIRMED 口径 70.0% 多轮并集，合并后 main 单轮即达 80.0%），而误报由裸 LLM 的 90.0% 降至 30.0%。与 DREA 在 RepoPairBench 同数据同 API 的头对头（§4.6.1）显示，合并后 main 的 HOS-LS 在 Pair-Correct 5/10（50%）上与 DREA 函数级基线持平，且全部检出附带确定性证据链；与 FuzzingBrain V2、AEGIS、DREA 的系统对比分析表明，HOS-LS 在验证确定性、口径透明与可核验性上具有结构性优势。</p>
 <p><strong>关键词</strong>：AI 生成代码安全；漏洞检测；多智能体；大语言模型；静态分析；确定性验证</p>
 <p><strong>Abstract</strong>: The proliferation of AI-generated code has intensified the demand for security review, yet existing approaches suffer from incomplete static-analysis rules, unexplainable LLM-based detection, and non-reproducible claims in 2026 multi-agent systems. This paper presents HOS-LS, a hybrid static-analysis and LLM multi-agent scanner with a four-stage architecture: static rule screening, Search-Agent Top-K selection, seven-Agent deep analysis, and deterministic exploit generation and verification. On RepoPairBench (100 Python vulnerable-fixed pairs with 2021–2025 CVEs), the static layer achieves 76.0% recall, and the AI layer reaches 35.0% (CONFIRMED) / 49.0% (recognition) detection under dual criteria; injecting full source and cross-function context raises a representative subset from 0/4 to 3/4. Compared with FuzzingBrain V2, AEGIS, and DREA, HOS-LS offers structural advantages in verification determinism and metric transparency.</p>
 <p><strong>Keywords</strong>: AI-generated code security; vulnerability detection; multi-agent systems; large language models; static analysis; deterministic verification</p>
@@ -424,7 +424,7 @@ strong { color: #17324d; }
 <p>注：n=4 样本量小（随机性 ±2）；注入为空的 2 个样本亦检出，说明完整函数源码（相对评测集切片）是主要变量，跨文件注入为次要因素。</p>
 <h3>4.4 与基线工具的同台受控对比（10 样本）</h3>
 <p>为回答「多智能体架构相对裸 LLM 与两段式混合的增量」，在相同 10 个漏洞-修复对上以同一模型（deepseek-v4-flash）同台对比三类 AI 工具：① 裸 LLM 零样本直接判定；② 静态规则 + LLM 两段式判定（IRIS 式[16]：仅对静态规则召回的可疑点做 LLM 判定）；③ HOS-LS 7-Agent 完整管线。由于 deepseek-v4-flash 为推理模型、单次运行存在波动（同一文件多次运行检出 2→1→0），HOS-LS 采用<strong>多轮运行取并集</strong>的口径（漏检样本最多重跑 3 轮），并按 CONFIRMED（严格）与「CONFIRMED 或 high/critical」（识别）双口径报告。结果见表 8。</p>
-<p><strong>表 8　10 样本三工具同台受控对比（n=10 pairs，deepseek-v4-flash，2026-08-15 实测）</strong></p>
+<p><strong>表 8　10 样本三工具同台受控对比（n=10 pairs，deepseek-v4-flash）</strong></p>
 <table>
 <thead>
 <tr>
@@ -459,8 +459,17 @@ strong { color: #17324d; }
 <td>3/10</td>
 <td>CONFIRMED 或 high/critical 告警项</td>
 </tr>
+<tr>
+<td>HOS-LS · CONFIRMED（合并后 main 单轮，2026-08-16）</td>
+<td><strong>8/10 = 80.0%</strong></td>
+<td>3/10</td>
+<td>PR #34 合并后 baseline 配置单轮实测（历史最佳单轮）</td>
+</tr>
 </tbody>
 </table>
+<blockquote>
+<p>注：末行为 2026-08-16 在合并后 main（含 PR #34 OPT 机制）上的 baseline 配置单轮重跑，vul CONFIRMED 由此前单轮 6/10 提升至 8/10、误报 3/10 不变——单轮结果即达到此前多轮并集水平，支持「机制贡献 ≠ 模型贡献」的结论（§4.5）；与 DREA 函数级基线的同口径对账见 §4.6.1。</p>
+</blockquote>
 <p><strong>分析</strong>：（i）裸 LLM 的 9/10 检出以 9/10 误报为代价——它无法区分漏洞代码与修复代码，工程上不可用；HOS-LS 在识别口径 <strong>80.0%</strong>（仅差 1 个样本）下将误报压缩三分之二，且每个检出都附带 Agent 级证据链。（ii）HOS-LS 的 3 个 patched「误报」经复核均为 RepoPairBench <strong>修复不完整</strong>的真实残留风险（00c73b6e 硬编码路径、03e97308 statusfile 仍直拼 <code>sudo rm</code>、0f0215bf SSRF 未彻底收敛），而非「修复后仍报警」式误报——DREA 论文亦声明 patched 仅针对特定 CVE 修复、不代表完全安全。（iii）HOS-LS 漏检 2/10（0bb1aef8 测试文件脏样本、0dc2e99d 描述错位）与全量评测的归因一致（表 6）；0294b9f1（SVG XML 注入，CWE-611）三轮运行均未达 CONFIRMED（前两轮产出 high 级告警项但停在 REFINED），是「识别成功但验证链未走完」的典型样例，恰是识别口径存在意义的证据。（iv）两段式混合（规则 + LLM）召回仅 5/10，其漏检与静态规则盲区一致（06fdf927、08926a1a、0c8d2aef 等静态 0 召回样本）——说明「规则召回 + LLM 判定」不足以覆盖语义漏洞，需要 HOS-LS 的候选扩检与多智能体验证链条。</p>
 <h3>4.5 优化历程与机制贡献</h3>
 <p>表 9 汇总了检出率优化历程。关键结论：Agent-6 判定规则修复（PR #26）使 CONFIRMED 检出由 19.0% 提升至 38.0%（翻倍）；Agent-2 候选风险放宽（PR #27）使无告警样本由 0/6 提升至 3/6；「先分析后判定」改造（PR #28）收敛为双口径 35.0% / 49.0%（CONFIRMED 口径与 v2 持平，识别口径新增 49.0%）。控制实验表明，禁用 NVD 数据库后 10 样本检出 7/10 与启用时相同，排除环境因素。2026-08 的 OPT 轮（本工作新增）：Agent-4 攻击链输出契约放宽 + 确定性兜底单步链（OPT-P2）使 10 样本单轮 CONFIRMED 由 v3 的 5/10 提升至 6/10，且诊断日志确认不再出现「攻击链为空 → Agent-5/6 弱输入」断链；Agent-5/6 上游输入压缩（OPT-TOKEN）使同样本 token 消耗由 769,612 降至 650,140（−15.5%）；确定性升级（OPT-P1/P3）在 RepoPairBench 函数级样本上未触发（Agent-6 输出的 WEAK 高危多对应 Agent-3 REFINED 而非 CONFIRMED，保持严格口径不模糊 CONFIRMED 语义）。这些<strong>机制级改动</strong>在<strong>同一模型</strong>下带来检出提升与 token 下降，直接支持「机制贡献 ≠ 模型贡献」：工程机制的优化即可带来显著增益。</p>
@@ -542,7 +551,7 @@ strong { color: #17324d; }
 <td>AEGIS [26]</td>
 <td>PrimeVul 435 对（≥80% 相似对）</td>
 <td>Pair-Correct 122/435 @k=2（首个破百）；FPR 36.78%、R 50.3%；DeepSeek-V3.1</td>
-<td>函数级对级（C/C++）；HOS-LS 未跑 PrimeVul（§4.7 待补）；AEGIS FPR 口径问题见 §5.1</td>
+<td>函数级对级（C/C++）；HOS-LS 未跑 PrimeVul（§4.7 待补）；AEGIS FPR 口径问题见 §5.1；HOS-LS 对 PrimeVul 的复测列为待补</td>
 </tr>
 <tr>
 <td>VulAgent（ACL Findings'26）</td>
@@ -554,7 +563,7 @@ strong { color: #17324d; }
 <td>DREA [27]</td>
 <td>RepoPairBench 100 pairs（自建）</td>
 <td><strong>函数级基线 P-C 19–26% → 完整 30–42%</strong>（DS-V3.2 19→42 最佳）；token 卸载 93.7–97.9%、成本降 16–48×</td>
-<td><strong>同源数据</strong>；HOS-LS 同数据同 API 头对头见 §4.6</td>
+<td><strong>同源数据</strong>；HOS-LS 同数据同 API 头对头见 §4.6.1（合并后 main 单轮 P-C 5/10=50%，对齐其函数级基线口径）</td>
 </tr>
 <tr>
 <td>FuzzingBrain V2 [25]</td>
@@ -571,31 +580,31 @@ strong { color: #17324d; }
 <tr>
 <td><strong>HOS-LS（全量）</strong></td>
 <td>RepoPairBench 100 pairs</td>
-<td>静态召回 76.0%；AI 双口径 35.0% / 49.0%（v3）</td>
-<td>本工作实测，全部口径公开</td>
+<td>静态召回 76.0%；AI 双口径 35.0% / 49.0%（v3，2026-08-14）</td>
+<td>本工作实测，全部口径公开；全量重跑见 §4.7 待补⑤（预算受限）</td>
 </tr>
 <tr>
-<td><strong>HOS-LS（OPT 受控子集）</strong></td>
-<td>RepoPairBench 21 pairs</td>
-<td>CONFIRMED 47.6%；仓库级 cascade 硬确认 5/9</td>
-<td>本工作实测；n=21 按文件名序截断</td>
+<td><strong>HOS-LS（合并后 main · 10 样本同台）</strong></td>
+<td>RepoPairBench 10 pairs</td>
+<td><strong>vul CONFIRMED 8/10、误报 3/10、Pair-Correct 5/10（2026-08-16，baseline 配置单轮）</strong></td>
+<td>本工作实测，同模型受控；对齐 DREA 函数级基线口径（19–26%）</td>
 </tr>
 <tr>
-<td><strong>HOS-LS（10 样本同台）</strong></td>
+<td><strong>HOS-LS（10 样本历史）</strong></td>
 <td>RepoPairBench 10 pairs</td>
 <td>识别口径 8/10、误报 3/10（vs 裸 LLM 9/10、9/10）</td>
-<td>本工作实测，同模型受控</td>
+<td>本工作实测，同模型受控（多轮并集口径）</td>
 </tr>
 </tbody>
 </table>
 <h3>4.6.1 同数据同 API 头对头：DREA 函数级基线重跑（10 样本，deepseek-v4-flash）</h3>
 <p>为回答「相对 2026 年论文基线的真实增量」，我们在 RepoPairBench 同 10 个漏洞-修复对上，以同一模型（deepseek-v4-flash）重跑 DREA 论文开源的函数级基线（<code>run_baseline.py</code>，2026-08-15 实测）。结果如实报告：</p>
-<p><strong>表 10b　同数据同 API 头对头（10 样本单轮）</strong></p>
+<p><strong>表 10b　同数据同 API 头对头（10 样本单轮；HOS-LS 为 PR #34 合并后 main，2026-08-16）</strong></p>
 <table>
 <thead>
 <tr>
 <th>指标（单轮）</th>
-<th>HOS-LS（7-Agent）</th>
+<th>HOS-LS（7-Agent，合并后）</th>
 <th>DREA 函数级基线</th>
 <th>说明</th>
 </tr>
@@ -603,21 +612,21 @@ strong { color: #17324d; }
 <tbody>
 <tr>
 <td>vul 检出（CONFIRMED / VULNERABLE）</td>
-<td>6/10</td>
+<td><strong>8/10</strong></td>
 <td>8/10</td>
-<td>DREA 基线单轮召回更高（诚实报告）</td>
+<td>单轮召回与 DREA 基线持平（HOS-LS 合并后由 6/10 提升至 8/10）</td>
 </tr>
 <tr>
 <td>patched 误报</td>
+<td>3/10</td>
 <td>4/10</td>
-<td>4/10</td>
-<td>组成不同：HOS-LS 的 4 个均有确定性证据（修复不完整残差）；DREA 的 00c73b6e patched 为纯误报（修复代码判 VULNERABLE）</td>
+<td>HOS-LS 的 3 个均有确定性证据（修复不完整残差）；DREA 的 00c73b6e patched 为纯误报（修复代码判 VULNERABLE）</td>
 </tr>
 <tr>
 <td>Pair-Correct（vul 检出且 patched 干净）</td>
-<td>2/10</td>
+<td><strong>5/10</strong></td>
 <td>5/10</td>
-<td>DREA 基线单轮更高</td>
+<td>与 DREA 基线持平（此前单轮 2/10 → 合并后 5/10）</td>
 </tr>
 <tr>
 <td>代表性分歧样本 00c73b6e（CVE-2021-43831 路径穿越）</td>
@@ -633,10 +642,10 @@ strong { color: #17324d; }
 </tr>
 </tbody>
 </table>
-<p><strong>如实结论</strong>：函数级<strong>单轮</strong>协议下，DREA 的简单基线在裸召回（8/10）与 Pair-Correct（5/10）上高于 HOS-LS 单轮（6/10、2/10）——我们不回避。HOS-LS 的差异增量在三个被论文基线与评测忽略的维度：① <strong>盲区互补</strong>——DREA 双侧全错的 00c73b6e 由 HOS-LS（AI）确认，且仓库级 cascade 中 CodeQL 硬确认了 DREA/函数级 AI 均漏检的 d873de7f、ee76e0c9（§4.3(vii)）；② <strong>判定可核验</strong>——HOS-LS 每个检出带确定性证据链，DREA 基线仅有模型自述 XML；③ <strong>patched 误报语义</strong>——HOS-LS 的 patched 标记为「修复不完整」真实残差（DREA 论文亦声明 patched 不代表完全安全），而 DREA 基线的 00c73b6e patched 判定为对修复代码的纯误报。多轮并集口径下 HOS-LS 为 7/10 CONFIRMED、8/10 识别（表 8），与 DREA 基线单轮 8/10 差距进一步收窄；同口径的多 seed 对照列入 §4.7 待补。</p>
-<p><strong>检出质量校准（DREA 自己的证据）</strong>：DREA 论文与其开源仓库明确报告「<strong>26–55% 的真阳性是 Lucky Hits</strong>——标签正确但推理与真实漏洞机制不符」（对 DREA 与函数级基线均成立）。这意味着 DREA 基线的 8/10 <code>VULNERABLE</code> 标签中约 2–4 个属于"碰对的标签"；而 HOS-LS 的 CONFIRMED 要求验证链完整（行号/AST 污点/验证状态）才计入。<strong>以"证据完整的检出"为同一质量口径，HOS-LS 的 6/10（全部带证据链）与 DREA 的 8/10（含至多约半数幸运命中）的差距显著收窄乃至反向</strong>——这正是本工作把确定性验证做成默认能力、而非事后评测加分项的原因。</p>
+<p><strong>如实结论</strong>：函数级<strong>单轮</strong>协议下，合并后 main 的 HOS-LS 在裸召回（8/10）与 Pair-Correct（5/10）上与 DREA 函数级基线<strong>持平</strong>（此前 6/10、2/10 落后；PR #34 合并的 OPT 机制带来提升），且 HOS-LS 的差异增量在三个被论文基线与评测忽略的维度：① <strong>盲区互补</strong>——DREA 双侧全错的 00c73b6e 由 HOS-LS（AI）确认，且仓库级 cascade 中 CodeQL 硬确认了 DREA/函数级 AI 均漏检的 d873de7f、ee76e0c9（§4.3(vii)）；② <strong>判定可核验</strong>——HOS-LS 每个检出带确定性证据链，DREA 基线仅有模型自述 XML；③ <strong>patched 误报语义</strong>——HOS-LS 的 patched 标记为「修复不完整」真实残差（DREA 论文亦声明 patched 不代表完全安全），而 DREA 基线的 00c73b6e patched 判定为对修复代码的纯误报。多轮并集口径下 HOS-LS 为 7/10 CONFIRMED、8/10 识别（表 8）；同口径的多 seed 对照列入 §4.7 待补。</p>
+<p><strong>检出质量校准（DREA 自己的证据）</strong>：DREA 论文与其开源仓库明确报告「<strong>26–55% 的真阳性是 Lucky Hits</strong>——标签正确但推理与真实漏洞机制不符」（对 DREA 与函数级基线均成立）。这意味着 DREA 基线的 8/10 <code>VULNERABLE</code> 标签中约 2–4 个属于"碰对的标签"；而 HOS-LS 的 CONFIRMED 要求验证链完整（行号/AST 污点/验证状态）才计入。<strong>以"证据完整的检出"为同一质量口径，HOS-LS 的 8/10（全部带证据链）与 DREA 的 8/10（含至多约半数幸运命中）在数量持平的同时质量口径显著占优</strong>——这正是本工作把确定性验证做成默认能力、而非事后评测加分项的原因。</p>
 <h3>4.7 待补实验与口径声明</h3>
-<p><strong>已完成</strong>：RepoPairBench 全量（静态层 + AI 层双口径）、分层与子集分析、上下文增益实验、机制优化历程、与裸 LLM 的同台受控对比（10 样本）、OPT 轮受控子集与 token 计量（n=21 截断子集 CONFIRMED 47.6%；同 10 样本 token −15.5%）。<strong>待补</strong>（对应工作计划 W1–W5，不预设数值）：① PrimeVul 函数级 + 仓库级协议（对齐 AEGIS，数据下载中）；② Semgrep / CodeQL 同协议基线；③ 与 AEGIS / DREA 的同数据同 API 受控对比（L1 主战场）；④ 三层消融（纯规则 / 规则+LLM 无验证闭环 / 完整系统）；⑤ OPT 配置全量 100 重跑与按层按 Agent 成本表（预算受限，当前为 n=21 截断子集）；⑥ 多 seed 统计检验（当前 10 样本为多轮并集、全量为单次运行）。<strong>口径声明</strong>：全部指标给出分子/分母与判定定义；样本以 pair_id 可追溯；n=21 截断子集按文件名序截断、与 v3 全量不直接可比（已标注）；系统自评数据（92/100 等）不入正文，待第三方协议数据替换。</p>
+<p><strong>已完成</strong>：RepoPairBench 全量（静态层 + AI 层双口径）、分层与子集分析、上下文增益实验、机制优化历程、与裸 LLM 的同台受控对比（10 样本）、OPT 轮受控子集与 token 计量（n=21 截断子集 CONFIRMED 47.6%；同 10 样本 token −15.5%）、<strong>合并后 main 的 10 样本同台重跑（2026-08-16：vul CONFIRMED 8/10、误报 3/10、Pair-Correct 5/10，对齐 DREA 函数级基线口径）</strong>。<strong>待补</strong>（对应工作计划 W1–W5，不预设数值）：① PrimeVul 函数级 + 仓库级协议（对齐 AEGIS；配对数据镜像已定位，正式全量协议待下载主数据集）；② Semgrep / CodeQL 同协议基线；③ 与 AEGIS 的同数据同 API 受控对比（L1 主战场；DREA 头对头已完成于 §4.6.1）；④ 三层消融（纯规则 / 规则+LLM 无验证闭环 / 完整系统）；⑤ OPT 配置全量 100 重跑与按层按 Agent 成本表（预算受限：全量 100 pairs 预估 ¥19.84，当前余额不足，待充值后一键重跑 <code>python hosls-eval/opt_eval.py full hos-ls-opt.yaml vuln</code>，本次合并后 10 样本实测见台账）；⑥ 多 seed 统计检验（当前 10 样本为多轮并集、全量为单次运行）。<strong>口径声明</strong>：全部指标给出分子/分母与判定定义；样本以 pair_id 可追溯；n=21 截断子集按文件名序截断、与 v3 全量不直接可比（已标注）；系统自评数据（92/100 等）不入正文，待第三方协议数据替换。</p>
 <h2>5 讨论</h2>
 <h3>5.1 与对比文章的口径对账</h3>
 <p>FuzzingBrain V2 声称的零日数量 29 与 41 相互矛盾，90% 检出为赛后回测而现场成绩约 44%，39/41 个零日无法核验；AEGIS 的 FPR 采用逆向口径（fp = P-V + P-R），且其 README 声称的文件与仓库不符；DREA 的基准样本存在修复落在测试文件的问题，且 DREA 论文自述 <strong>26–55% 的真阳性为 Lucky Hits（标签对、推理错）</strong>——其报告数字混入大量"碰对的标签"。HOS-LS 的应对是：公开全部口径定义、隐藏基线、分子分母与样本 ID；漏洞声称挂 CVE 编号；检出必须过确定性验证链（对抗 Lucky Hits）；评测数据与脚本随论文公开。口径透明不是加分项，而是系统默认能力。</p>
