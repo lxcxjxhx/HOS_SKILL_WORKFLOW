@@ -1,0 +1,18 @@
+[
+ {
+  "item": "00c73b6e",
+  "type": "vul",
+  "exit": 0,
+  "secs": 137.8,
+  "stdout_tail": "Processing RepoPairBench baseline item: 00c73b6e\nProject: gradio\nLanguage tag: python\nLog root: gradio_00c73b6e\nJSONL file: logs-baseline\\gradio_00c73b6e\\vul\\deepseek-v4-flash\\function-only\\20260816_151750.jsonl\n",
+  "verdict_tail": null
+ },
+ {
+  "item": "00c73b6e",
+  "type": "sec",
+  "exit": 0,
+  "secs": 203.7,
+  "stdout_tail": "Processing RepoPairBench baseline item: 00c73b6e\nProject: gradio\nLanguage tag: python\nLog root: gradio_00c73b6e\nJSONL file: logs-baseline\\gradio_00c73b6e\\sec\\deepseek-v4-flash\\function-only\\20260816_152005.jsonl\n",
+  "verdict_tail": null
+ }
+]
