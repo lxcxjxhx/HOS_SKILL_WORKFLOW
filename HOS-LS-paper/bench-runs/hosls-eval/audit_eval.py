@@ -154,7 +154,7 @@ SAL_SINKS = None
 def load_sal_sinks():
     global SAL_SINKS
     if SAL_SINKS is None:
-        p = os.path.join(EVAL, "sal_java_sinks.json")
+        p = os.path.join(EVAL, "sal_sinks.json")
         if os.path.exists(p):
             SAL_SINKS = json.load(open(p, encoding="utf-8-sig"))
         else:
@@ -163,23 +163,25 @@ def load_sal_sinks():
 
 
 def sal_candidates(repo_dir, lang, cwes, max_files=50):
-    """Sink 锚定候选生成：在目录内用 CWE→sink 正则找候选文件（0 API）。"""
+    """Sink 锚定候选生成：按语言 + CWE 的 sink 正则扫描仓库（0 API）。"""
     sinks = load_sal_sinks()
-    if lang != "java":
-        return []  # Java 优先；python/ts 候选生成待扩展
+    lang_table = sinks.get(lang, {})
     pats = []
     for cwe in cwes or []:
-        entry = sinks.get(cwe)
+        entry = lang_table.get(cwe)
         if entry:
-            pats.extend(entry["sinks"])
+            pats.extend(entry)
     if not pats:
         return []
+    exts = {"java": ".java", "python": ".py", "javascript": ".js",
+            "typescript": ".ts", "go": ".go"}
+    ext = exts.get(lang, ".py")
     cand = {}
     for root, _, files in os.walk(repo_dir):
         if ".git" in root:
             continue
         for f in files:
-            if not f.endswith(".java"):
+            if not f.endswith(ext):
                 continue
             fp = os.path.join(root, f)
             try:
