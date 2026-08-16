@@ -1,0 +1,75 @@
+{
+  "_comment": "SAL Java sink 模式库（CWE→sink 锚定）。供 audit_eval.py 生成候选文件集。regex 为 Java 源码模式，大小写不敏感。",
+  "CWE-78": {
+    "name": "OS Command Injection",
+    "sinks": ["Runtime\\s*\\.\\s*getRuntime\\s*\\(.*\\bexec\\s*\\(", "new\\s+ProcessBuilder", "ProcessBuilder\\s*\\(.*\\bstart\\s*\\(", "GroovyShell\\s*\\(.*\\.evaluate", "ScriptEngineManager.*eval\\s*\\("]
+  },
+  "CWE-94": {
+    "name": "Code Injection",
+    "sinks": ["ScriptEngine.*\\.eval\\s*\\(", "GroovyShell", "javax\\.script", "BeanShell", "Rhino", "Nashorn"]
+  },
+  "CWE-502": {
+    "name": "Deserialization",
+    "sinks": ["ObjectInputStream", "readObject\\s*\\(", "Hessian2Input", "HessianInput", "fastjson.*parseObject", "JSON\\.parseObject", "XStream\\.fromXML", "XMLDecoder", "Kryo\\.readObject", "readUnshared"]
+  },
+  "CWE-89": {
+    "name": "SQL Injection",
+    "sinks": ["Statement\\.execute", "createStatement", "PreparedStatement.*\\+", "JdbcTemplate\\.(query|update|execute)", "MyBatis.*\\$\\{", "\\$\\{[^}]+\\}.*(select|insert|update|delete|from|where)", "sqlSession.*select", "Query\\.createNativeQuery"]
+  },
+  "CWE-79": {
+    "name": "XSS",
+    "sinks": ["response\\.getWriter\\(\\)\\.write", "getWriter\\(\\)\\.print", "innerHTML", "v-html", "dangerouslySetInnerHTML", "ModelAndView.*\\baddObject"]
+  },
+  "CWE-22": {
+    "name": "Path Traversal",
+    "sinks": ["new\\s+File\\s*\\(", "Paths\\.get\\s*\\(", "FileInputStream", "FileOutputStream", "Files\\.(read|write|copy|newInputStream|newOutputStream|newDirectoryStream)", "getResourceAsStream.*\\+"]
+  },
+  "CWE-918": {
+    "name": "SSRF",
+    "sinks": ["URL\\([^)]*\\).*openConnection", "openStream\\s*\\(", "HttpClient.*\\.send", "RestTemplate\\.(getForObject|postForObject|exchange|execute)", "OkHttpClient.*newCall", "HttpURLConnection"]
+  },
+  "CWE-601": {
+    "name": "Open Redirect",
+    "sinks": ["sendRedirect\\s*\\(", "RedirectView", "new\\s+ModelAndView\\(\"redirect:", "forward\\s*\\("]
+  },
+  "CWE-611": {
+    "name": "XXE",
+    "sinks": ["DocumentBuilderFactory", "SAXParserFactory", "XMLInputFactory", "TransformerFactory", "XMLReader", "SAXReader", "DocumentHelper\\.parse"]
+  },
+  "CWE-306": {
+    "name": "Missing Auth",
+    "sinks": ["@RequestMapping", "@GetMapping", "@PostMapping", "class\\s+\\w+Controller"]
+  },
+  "CWE-287": {
+    "name": "Auth Bypass",
+    "sinks": ["SecurityContextHolder", "isAuthenticated\\s*\\(\\s*\\)", "@PreAuthorize", "UserDetailsService", "login\\s*\\("]
+  },
+  "CWE-200": {
+    "name": "Information Disclosure",
+    "sinks": ["printStackTrace", "e\\.getMessage\\(\\)", "@ResponseBody", "getWriter\\(\\)\\.write"]
+  },
+  "CWE-863": {
+    "name": "Incorrect Authorization",
+    "sinks": ["hasRole", "hasAuthority", "@PreAuthorize", "isAdmin", "checkPermission"]
+  },
+  "CWE-434": {
+    "name": "Unrestricted Upload",
+    "sinks": ["MultipartFile", "transferTo\\s*\\(", "getOriginalFilename", "uploadFile"]
+  },
+  "CWE-20": {
+    "name": "Improper Input Validation",
+    "sinks": ["Integer\\.parseInt", "Long\\.parseLong", "new\\s+String\\([^)]*getBytes", "substring\\s*\\(", "charAt\\s*\\(", "\\[\\d+\\]"]
+  },
+  "CWE-400": {
+    "name": "Resource Exhaustion",
+    "sinks": ["while\\s*\\(true\\)", "for\\s*\\(;;\\)", "newFixedThreadPool", "unbounded", "readAllBytes", "new\\s+byte\\[\\s*\\d+\\s*\\]"]
+  },
+  "CWE-352": {
+    "name": "CSRF",
+    "sinks": ["csrf", "withCredentials", "@CrossOrigin"]
+  },
+  "CWE-770": {
+    "name": "Allocation Without Limits",
+    "sinks": ["new\\s+byte\\[", "new\\s+char\\[", "readNBytes", "readFully", "new\\s+ArrayList\\s*\\(\\s*\\)"]
+  }
+}

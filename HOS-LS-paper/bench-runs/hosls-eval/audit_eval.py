@@ -69,9 +69,22 @@ def ensure_commit(repo, sha):
     return rc == 0
 
 
+def load_json(path):
+    """Windows 兼容读取（容忍 UTF-8 BOM）。"""
+    return json.load(open(path, encoding="utf-8-sig"))
+
+
+def load_pairs(path):
+    """读取 manifest，兼容单对象/数组两种形态。"""
+    d = load_json(path)
+    if isinstance(d, dict):
+        return [d]
+    return d
+
+
 def verify_manifest(manifest_path):
     """三重校验：fix commit 存在 / fix~1 存在 / fix~1 下 file_paths 全部存在。"""
-    pairs = json.load(open(manifest_path, encoding="utf-8"))
+    pairs = load_pairs(manifest_path)
     out = []
     for p in pairs:
         repo = ensure_repo(p["repo_url"])
@@ -135,6 +148,57 @@ def worktree_add(repo, commit, wt_path):
     return rc == 0, err[:200]
 
 
+SAL_SINKS = None
+
+
+def load_sal_sinks():
+    global SAL_SINKS
+    if SAL_SINKS is None:
+        p = os.path.join(EVAL, "sal_java_sinks.json")
+        if os.path.exists(p):
+            SAL_SINKS = json.load(open(p, encoding="utf-8-sig"))
+        else:
+            SAL_SINKS = {}
+    return SAL_SINKS
+
+
+def sal_candidates(repo_dir, lang, cwes, max_files=50):
+    """Sink 锚定候选生成：在目录内用 CWE→sink 正则找候选文件（0 API）。"""
+    sinks = load_sal_sinks()
+    if lang != "java":
+        return []  # Java 优先；python/ts 候选生成待扩展
+    pats = []
+    for cwe in cwes or []:
+        entry = sinks.get(cwe)
+        if entry:
+            pats.extend(entry["sinks"])
+    if not pats:
+        return []
+    cand = {}
+    for root, _, files in os.walk(repo_dir):
+        if ".git" in root:
+            continue
+        for f in files:
+            if not f.endswith(".java"):
+                continue
+            fp = os.path.join(root, f)
+            try:
+                text = open(fp, encoding="utf-8", errors="replace").read()
+            except Exception:
+                continue
+            hits = []
+            for pat in pats:
+                m = re.search(pat, text, re.IGNORECASE)
+                if m:
+                    hits.append({"pattern": pat, "line": text[:m.start()].count("\n") + 1})
+            if hits:
+                rel = os.path.relpath(fp, repo_dir).replace("\\", "/")
+                cand[rel] = hits[:5]
+    # 按命中数排序，取前 max_files
+    ranked = sorted(cand.items(), key=lambda kv: -len(kv[1]))[:max_files]
+    return [{"file": f, "hits": h} for f, h in ranked]
+
+
 def static_diff(pairs, n=0):
     """静态双端差分：vuln 快照（fix~1）vs patched 快照（fix）。"""
     results = {}
@@ -166,13 +230,18 @@ def static_diff(pairs, n=0):
             hit = sorted(gt & v_files)
             gone = [f for f in hit if f not in p_files]  # vuln 命中且 patched 消失
             resid = [f for f in hit if f in p_files]      # 残留（误报风险）
+            sal = sal_candidates(vuln_wt, p.get("language", "python"), p.get("cwe_ids", []))
+            sal_hit_gt = [c["file"] for c in sal if c["file"] in gt]
             results[pid] = {
                 "ok": True, "framework": p["framework"], "cve": p.get("cve_ids", []),
                 "vuln_files_found": len(v_files), "patched_files_found": len(p_files),
                 "gt_hit": hit, "dep_gone": gone, "dep_residual": resid,
-                "locate_static": len(hit) > 0, "secs": round(time.time() - t0, 1),
+                "locate_static": len(hit) > 0,
+                "sal_candidates": len(sal), "sal_top_hit_gt": sal_hit_gt[:10],
+                "secs": round(time.time() - t0, 1),
             }
-            print(f"[static] {pid} {p['framework']}: gt_hit={len(hit)} gone={len(gone)} resid={len(resid)} ({results[pid]['secs']}s)", flush=True)
+            print(f"[static] {pid} {p['framework']}: gt_hit={len(hit)} gone={len(gone)} resid={len(resid)} "
+                  f"sal={len(sal)} sal_gt={len(sal_hit_gt)} ({results[pid]['secs']}s)", flush=True)
         finally:
             for wt in (vuln_wt, patch_wt):
                 if os.path.isdir(wt):
@@ -210,7 +279,7 @@ def main():
         json.dump(out, open(dst, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print(f"-> {dst}")
     elif cmd == "static":
-        pairs = json.load(open(sys.argv[2], encoding="utf-8"))
+        pairs = load_pairs(sys.argv[2])
         n = int(sys.argv[3]) if len(sys.argv) > 3 else 0
         r = static_diff(pairs, n)
         dst = os.path.join(REPORTS, "audit-static-diff.json")
@@ -218,7 +287,7 @@ def main():
         report(r, "static")
         print(f"-> {dst}")
     elif cmd == "ai":
-        pairs = json.load(open(sys.argv[2], encoding="utf-8"))
+        pairs = load_pairs(sys.argv[2])
         n = int(sys.argv[3]) if len(sys.argv) > 3 else 5
         workers = int(sys.argv[4]) if len(sys.argv) > 4 else 2
         r = ai_run(pairs, n, workers)
