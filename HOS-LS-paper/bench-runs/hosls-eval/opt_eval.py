@@ -152,6 +152,29 @@ def main():
         print(f"静态命中: {len(flagged)}/{len(s_ok)} | 静态0召回: {len(miss)}")
         print(f"AI 层 token 合计: {toks:,} | 硬门控后: {gate_toks:,} | 节省 {save:.1f}%")
         print(f"AI-CONFIRMED 但静态0召回（硬门控会丢的真阳性）: {len(lost)} {lost}")
+    elif cmd == "cascade":
+        """三级 cascade 分层测量（S1 semgrep/bandit + S2 codeql → AI 盲区划分，0 AI token）：
+        python opt_eval.py cascade <dir> <out.json>
+        产出：按文件三层命中表 + hard_files（codeql 确认，免 AI）+ ai_files（需 AI）。"""
+        import sys as _s
+        _s.path.insert(0, os.path.join(BASE, "hos-ls"))
+        from src.analyzers.sast_prefilter import SastPrefilter
+
+        src = sys.argv[2]
+        out = os.path.join(REPORTS, sys.argv[3] if len(sys.argv) > 3 else "cascade-report.json")
+        files = sorted(str(f) for f in Path(src).rglob("*.py"))
+        sast = SastPrefilter({"enabled": True, "mode": "cascade",
+                              "codeql_pack_dir": os.path.join(BASE, "hos-ls", "envs", "codeql-packs"),
+                              "semgrep_rules_dir": os.path.join(BASE, "hos-ls", "envs", "semgrep-rules", "python")})
+        c = sast.cascade(src, files)
+        s1 = {k: len(v) for k, v in c["s1_by_file"].items()}
+        s2 = {k: len(v) for k, v in c["s2_by_file"].items()}
+        print(f"[cascade] 文件 {len(files)} | S1 命中 {len(s1)} | S2 codeql 确认 {len(c['hard_files'])} | AI 盲区 {len(c['ai_files'])}")
+        print("[cascade] 硬检出（免 AI）:", c["hard_files"][:10])
+        json.dump({"files": files, "s1_by_file": s1, "s2_by_file": s2,
+                   "hard_files": c["hard_files"], "ai_files": c["ai_files"], "note": c["note"]},
+                  open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        print(f"[cascade] -> {out}")
     elif cmd == "ledger":
         d = json.load(open(sys.argv[2], encoding="utf-8"))
         tag = sys.argv[3]
