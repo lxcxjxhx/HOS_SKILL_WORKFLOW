@@ -20,7 +20,7 @@
   ],
   "sal_locate": true,
   "gt_in_commit": true,
-  "secs": 11.1
+  "secs": 10.4
  },
  "entry-00062": {
   "ok": true,
@@ -36,13 +36,13 @@
   ],
   "sink_file": "backend/open_webui/retrieval/web/utils.py",
   "semgrep_hit_gt": [],
-  "sal_candidates": 38,
+  "sal_candidates": 20,
   "sal_top_hit_gt": [
    "backend/open_webui/routers/retrieval.py"
   ],
   "sal_locate": true,
   "gt_in_commit": true,
-  "secs": 0.6
+  "secs": 0.4
  },
  "entry-00080": {
   "ok": true,
@@ -64,7 +64,7 @@
   ],
   "sal_locate": true,
   "gt_in_commit": true,
-  "secs": 5.3
+  "secs": 3.5
  },
  "entry-00081": {
   "ok": true,
@@ -88,11 +88,11 @@
   ],
   "sal_locate": true,
   "gt_in_commit": true,
-  "secs": 4.0
+  "secs": 2.8
  },
  "entry-00325": {
   "ok": false,
-  "err": "worktree vuln (retry): Preparing worktree (detached HEAD 198fab1dc7)\nUpdating files:  38% (1903/4908)\nUpdating files:  39% (1915/4908)\nUpdating files:  40% (1964/4908)\nUpdating files:  41% (2013/4908)\nUpdating files:  42% ("
+  "err": "worktree vuln (retry): Preparing worktree (detached HEAD 198fab1dc7)\nUpdating files:  25% (1248/4908)\nUpdating files:  26% (1277/4908)\nUpdating files:  27% (1326/4908)\nUpdating files:  28% (1375/4908)\nUpdating files:  29% ("
  },
  "entry-00389": {
   "ok": true,
@@ -107,13 +107,13 @@
   ],
   "sink_file": "mlflow/pyfunc/backend.py",
   "semgrep_hit_gt": [],
-  "sal_candidates": 50,
+  "sal_candidates": 20,
   "sal_top_hit_gt": [
    "mlflow/pyfunc/backend.py"
   ],
   "sal_locate": true,
   "gt_in_commit": true,
-  "secs": 3.7
+  "secs": 4.8
  },
  "entry-00392": {
   "ok": true,
@@ -127,13 +127,11 @@
   ],
   "sink_file": "src/fastmcp/server/providers/openapi/components.py",
   "semgrep_hit_gt": [],
-  "sal_candidates": 50,
-  "sal_top_hit_gt": [
-   "src/fastmcp/server/providers/openapi/components.py"
-  ],
-  "sal_locate": true,
+  "sal_candidates": 20,
+  "sal_top_hit_gt": [],
+  "sal_locate": false,
   "gt_in_commit": true,
-  "secs": 1.2
+  "secs": 1.3
  },
  "entry-00394": {
   "ok": true,
@@ -148,14 +146,14 @@
   ],
   "sink_file": "src/fastmcp/server/providers/openapi/components.py",
   "semgrep_hit_gt": [],
-  "sal_candidates": 50,
+  "sal_candidates": 20,
   "sal_top_hit_gt": [
    "src/fastmcp/utilities/openapi/director.py",
    "src/fastmcp/server/providers/openapi/components.py"
   ],
   "sal_locate": true,
   "gt_in_commit": true,
-  "secs": 1.2
+  "secs": 1.4
  },
  "entry-00430": {
   "ok": true,
@@ -170,13 +168,13 @@
   ],
   "sink_file": "src/google/adk/cli/utils/agent_loader.py",
   "semgrep_hit_gt": [],
-  "sal_candidates": 40,
+  "sal_candidates": 20,
   "sal_top_hit_gt": [
    "src/google/adk/cli/adk_web_server.py"
   ],
   "sal_locate": true,
   "gt_in_commit": true,
-  "secs": 2.2
+  "secs": 2.4
  },
  "entry-00446": {
   "ok": true,
@@ -196,6 +194,6 @@
   ],
   "sal_locate": true,
   "gt_in_commit": true,
-  "secs": 22.1
+  "secs": 23.8
  }
 }

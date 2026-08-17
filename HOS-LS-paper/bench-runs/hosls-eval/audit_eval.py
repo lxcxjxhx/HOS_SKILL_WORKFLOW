@@ -157,8 +157,12 @@ def load_sal_sinks():
     return SAL_SINKS
 
 
-def sal_candidates(repo_dir, lang, cwes, max_files=50):
-    """Sink 锚定候选生成：按语言 + CWE 的 sink 正则扫描仓库（0 API）。"""
+def sal_candidates(repo_dir, lang, cwes, description="", max_files=20):
+    """Sink 锚定候选生成：按语言 + CWE 的 sink 正则扫描仓库（0 API）。
+
+    精化：候选按 (sink 命中数 + CVE 描述关键词命中数) 排序，取 top max_files。
+    关键词来自 description（英文分词），提升候选与漏洞描述的相关性、压缩候选集。
+    """
     sinks = load_sal_sinks()
     lang_table = sinks.get(lang, {})
     pats = []
@@ -168,6 +172,12 @@ def sal_candidates(repo_dir, lang, cwes, max_files=50):
             pats.extend(entry)
     if not pats:
         return []
+    kws = []
+    if description:
+        for w in re.findall(r"[A-Za-z][A-Za-z0-9]{2,}", description.lower()):
+            if w not in ("the", "and", "via", "for", "with", "that", "this", "from",
+                         "into", "through", "using", "when", "after", "before", "during"):
+                kws.append(w)
     exts = {"java": (".java",), "python": (".py",), "javascript": (".js", ".jsx", ".svelte"),
             "typescript": (".ts", ".tsx", ".vue"), "go": (".go",)}
     exts_ok = exts.get(lang, (".py",))
@@ -190,10 +200,14 @@ def sal_candidates(repo_dir, lang, cwes, max_files=50):
                     hits.append({"pattern": pat, "line": text[:m.start()].count("\n") + 1})
             if hits:
                 rel = os.path.relpath(fp, repo_dir).replace("\\", "/")
-                cand[rel] = hits[:5]
-    # 按命中数排序，取前 max_files
-    ranked = sorted(cand.items(), key=lambda kv: -len(kv[1]))[:max_files]
-    return [{"file": f, "hits": h} for f, h in ranked]
+                score = len(hits) * 2
+                if kws:
+                    low = text.lower()
+                    score += sum(1 for kw in kws if kw in low)
+                cand[rel] = {"hits": hits[:5], "score": score}
+    # 按 score 排序（sink 命中为主，描述关键词为辅），取前 max_files
+    ranked = sorted(cand.items(), key=lambda kv: -kv[1]["score"])[:max_files]
+    return [{"file": f, "hits": h["hits"], "score": h["score"]} for f, h in ranked]
 
 
 def static_diff(pairs, n=0, sal_only=False):
@@ -228,7 +242,8 @@ def static_diff(pairs, n=0, sal_only=False):
             v_files = set(v)
             gt = set(p.get("file_paths", []))
             semgrep_hit_gt = sorted(gt & v_files)
-            sal = sal_candidates(vuln_wt, p.get("language", "python"), p.get("cwe_ids", []))
+            sal = sal_candidates(vuln_wt, p.get("language", "python"), p.get("cwe_ids", []),
+                                 p.get("description", ""))
             sal_hit_gt = [c["file"] for c in sal if c["file"] in gt]
             results[pid] = {
                 "ok": True, "framework": p["framework"], "cve": p.get("cve_ids", []),
