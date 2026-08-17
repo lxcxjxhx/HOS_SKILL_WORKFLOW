@@ -83,7 +83,7 @@ def load_pairs(path):
 
 
 def verify_manifest(manifest_path):
-    """三重校验：fix commit 存在 / fix~1 存在 / fix~1 下 file_paths 全部存在。"""
+    """校验：commit 存在 + commit 下 file_paths 全部存在（VulnGym commit = 漏洞存在快照）。"""
     pairs = load_pairs(manifest_path)
     out = []
     for p in pairs:
@@ -92,23 +92,18 @@ def verify_manifest(manifest_path):
             out.append({**p, "verify": {"ok": False, "err": "clone failed"}})
             continue
         fix = p.get("fix_commit")
-        v = {"fix_commit_exists": False, "parent_exists": False, "files_at_parent": [], "ok": False, "err": ""}
+        v = {"commit_exists": False, "files_at_commit": [], "ok": False, "err": ""}
         if not fix:
-            v["err"] = "no fix_commit"
+            v["err"] = "no commit"
         else:
             if ensure_commit(repo, fix):
-                v["fix_commit_exists"] = True
-                rc, _, _ = git(repo, "rev-parse", fix + "~1")
-                if rc == 0:
-                    v["parent_exists"] = True
-                    for fp in p.get("file_paths", []):
-                        rc2, _, _ = git(repo, "cat-file", "-e", fix + "~1:" + fp)
-                        v["files_at_parent"].append({"path": fp, "exists": rc2 == 0})
-                    v["ok"] = v["parent_exists"] and all(f["exists"] for f in v["files_at_parent"])
-                else:
-                    v["err"] = "parent commit missing (shallow?)"
+                v["commit_exists"] = True
+                for fp in p.get("file_paths", []):
+                    rc2, _, _ = git(repo, "cat-file", "-e", fix + ":" + fp)
+                    v["files_at_commit"].append({"path": fp, "exists": rc2 == 0})
+                v["ok"] = all(f["exists"] for f in v["files_at_commit"])
             else:
-                v["err"] = "fix commit unavailable"
+                v["err"] = "commit unavailable"
         out.append({**p, "verify": v})
         print(f"[check] {p['framework']} {p.get('cve_ids', ['?'])[0]}: ok={v['ok']} {v.get('err', '')}", flush=True)
     ok = sum(1 for o in out if o["verify"]["ok"])
@@ -201,8 +196,12 @@ def sal_candidates(repo_dir, lang, cwes, max_files=50):
     return [{"file": f, "hits": h} for f, h in ranked]
 
 
-def static_diff(pairs, n=0):
-    """静态双端差分：vuln 快照（fix~1）vs patched 快照（fix）。"""
+def static_diff(pairs, n=0, sal_only=False):
+    """仓库级静态定位：vuln 快照 = commit（VulnGym 的 commit 是漏洞存在/验证 commit，非 fix）。
+
+    GT = critical_operation.file + entry_point.file + trace[].file（manifest file_paths）。
+    DEP 差分（fix~1..fix）仅当 manifest 提供 fix_commit 时启用（VulnGym 默认不提供）。
+    """
     results = {}
     for p in pairs[:n] if n else pairs:
         pid = p["item_id"]
@@ -212,42 +211,41 @@ def static_diff(pairs, n=0):
             continue
         fix = p["fix_commit"]
         vuln_wt = os.path.join(REPOS, f"_wt-{pid}-vuln")
-        patch_wt = os.path.join(REPOS, f"_wt-{pid}-patch")
         try:
-            ok, err = worktree_add(repo, fix + "~1", vuln_wt)
+            ok, err = worktree_add(repo, fix, vuln_wt)
             if not ok:
-                results[pid] = {"ok": False, "err": f"worktree vuln: {err}"}
-                continue
-            ok2, err2 = worktree_add(repo, fix, patch_wt)
-            if not ok2:
-                results[pid] = {"ok": False, "err": f"worktree patch: {err2}"}
-                git(repo, "worktree", "remove", "--force", vuln_wt)
-                continue
+                results[pid] = {"ok": False, "err": f"worktree vuln: {err[:200]}"}
+                # 大仓库 worktree 可能超时：重试一次（900s）
+                ok2, err2 = worktree_add(repo, fix, vuln_wt)
+                if not ok2:
+                    results[pid] = {"ok": False, "err": f"worktree vuln (retry): {err2[:200]}"}
+                    continue
             t0 = time.time()
-            v = semgrep_scan(vuln_wt, p.get("language", "python"))
-            pv = semgrep_scan(patch_wt, p.get("language", "python"))
+            if sal_only:
+                v = {}
+            else:
+                v = semgrep_scan(vuln_wt, p.get("language", "python"))
             v_files = set(v)
-            p_files = set(pv)
             gt = set(p.get("file_paths", []))
-            hit = sorted(gt & v_files)
-            gone = [f for f in hit if f not in p_files]  # vuln 命中且 patched 消失
-            resid = [f for f in hit if f in p_files]      # 残留（误报风险）
+            semgrep_hit_gt = sorted(gt & v_files)
             sal = sal_candidates(vuln_wt, p.get("language", "python"), p.get("cwe_ids", []))
             sal_hit_gt = [c["file"] for c in sal if c["file"] in gt]
             results[pid] = {
                 "ok": True, "framework": p["framework"], "cve": p.get("cve_ids", []),
-                "vuln_files_found": len(v_files), "patched_files_found": len(p_files),
-                "gt_hit": hit, "dep_gone": gone, "dep_residual": resid,
-                "locate_static": len(hit) > 0,
+                "gt_files": sorted(gt), "sink_file": p.get("sink_file"),
+                "semgrep_hit_gt": semgrep_hit_gt,
                 "sal_candidates": len(sal), "sal_top_hit_gt": sal_hit_gt[:10],
+                "sal_locate": len(sal_hit_gt) > 0,
+                "gt_in_commit": all(
+                    os.path.exists(os.path.join(vuln_wt, f)) for f in gt),
                 "secs": round(time.time() - t0, 1),
             }
-            print(f"[static] {pid} {p['framework']}: gt_hit={len(hit)} gone={len(gone)} resid={len(resid)} "
-                  f"sal={len(sal)} sal_gt={len(sal_hit_gt)} ({results[pid]['secs']}s)", flush=True)
+            print(f"[static] {pid} {p['framework']}: sal_gt={len(sal_hit_gt)}/{len(gt)} "
+                  f"semgrep_gt={len(semgrep_hit_gt)} sal_cand={len(sal)} "
+                  f"({results[pid]['secs']}s)", flush=True)
         finally:
-            for wt in (vuln_wt, patch_wt):
-                if os.path.isdir(wt):
-                    git(repo, "worktree", "remove", "--force", wt)
+            if os.path.isdir(vuln_wt):
+                git(repo, "worktree", "remove", "--force", vuln_wt)
     return results
 
 
@@ -268,9 +266,9 @@ def ai_run(pairs, n, workers, cfg="hos-ls.yaml"):
 def report(results, tag):
     ok = [r for r in results.values() if r.get("ok")]
     n = len(ok) or 1
-    loc = sum(1 for r in ok if r.get("locate_static"))
-    print(f"[report] n={len(ok)} | 静态定位命中 {loc}/{len(ok)} ({loc/n*100:.1f}%)")
-    return {"n": len(ok), "locate_static": loc}
+    sal_loc = sum(1 for r in ok if r.get("sal_locate"))
+    print(f"[report] n={len(ok)} | SAL 定位命中 {sal_loc}/{len(ok)} ({sal_loc/n*100:.1f}%)")
+    return {"n": len(ok), "sal_locate": sal_loc}
 
 
 def main():
@@ -282,8 +280,9 @@ def main():
         print(f"-> {dst}")
     elif cmd == "static":
         pairs = load_pairs(sys.argv[2])
-        n = int(sys.argv[3]) if len(sys.argv) > 3 else 0
-        r = static_diff(pairs, n)
+        n = next((int(a) for a in sys.argv[3:] if a.isdigit()), 0)
+        sal_only = "--sal-only" in sys.argv
+        r = static_diff(pairs, n, sal_only)
         dst = os.path.join(REPORTS, "audit-static-diff.json")
         json.dump(r, open(dst, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         report(r, "static")

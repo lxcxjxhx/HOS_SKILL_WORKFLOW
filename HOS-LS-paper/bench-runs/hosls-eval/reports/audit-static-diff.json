@@ -1,0 +1,201 @@
+{
+ "entry-00057": {
+  "ok": true,
+  "framework": "open-webui",
+  "cve": [
+   "CVE-2025-64495",
+   "GHSA-W7XJ-8FX7-WFCH"
+  ],
+  "gt_files": [
+   "backend/open_webui/routers/prompts.py",
+   "src/lib/components/chat/MessageInput.svelte",
+   "src/lib/components/chat/MessageInput/CommandSuggestionList.svelte",
+   "src/lib/components/common/RichTextInput.svelte"
+  ],
+  "sink_file": "src/lib/components/common/RichTextInput.svelte",
+  "semgrep_hit_gt": [],
+  "sal_candidates": 6,
+  "sal_top_hit_gt": [
+   "src/lib/components/common/RichTextInput.svelte"
+  ],
+  "sal_locate": true,
+  "gt_in_commit": true,
+  "secs": 11.1
+ },
+ "entry-00062": {
+  "ok": true,
+  "framework": "open-webui",
+  "cve": [
+   "CVE-2025-65958",
+   "GHSA-C6XV-RCVW-V685"
+  ],
+  "gt_files": [
+   "backend/open_webui/retrieval/utils.py",
+   "backend/open_webui/retrieval/web/utils.py",
+   "backend/open_webui/routers/retrieval.py"
+  ],
+  "sink_file": "backend/open_webui/retrieval/web/utils.py",
+  "semgrep_hit_gt": [],
+  "sal_candidates": 38,
+  "sal_top_hit_gt": [
+   "backend/open_webui/routers/retrieval.py"
+  ],
+  "sal_locate": true,
+  "gt_in_commit": true,
+  "secs": 0.6
+ },
+ "entry-00080": {
+  "ok": true,
+  "framework": "Tencent/WeKnora",
+  "cve": [
+   "CVE-2026-22688",
+   "GHSA-78H3-63C4-5FQC"
+  ],
+  "gt_files": [
+   "internal/application/service/mcp_service.go",
+   "internal/handler/mcp_service.go",
+   "internal/mcp/client.go"
+  ],
+  "sink_file": "internal/mcp/client.go",
+  "semgrep_hit_gt": [],
+  "sal_candidates": 3,
+  "sal_top_hit_gt": [
+   "internal/mcp/client.go"
+  ],
+  "sal_locate": true,
+  "gt_in_commit": true,
+  "secs": 5.3
+ },
+ "entry-00081": {
+  "ok": true,
+  "framework": "Tencent/WeKnora",
+  "cve": [
+   "CVE-2026-22688",
+   "GHSA-78H3-63C4-5FQC"
+  ],
+  "gt_files": [
+   "internal/application/service/mcp_service.go",
+   "internal/handler/mcp_service.go",
+   "internal/mcp/client.go",
+   "internal/mcp/manager.go"
+  ],
+  "sink_file": "internal/mcp/client.go",
+  "semgrep_hit_gt": [],
+  "sal_candidates": 3,
+  "sal_top_hit_gt": [
+   "internal/mcp/client.go",
+   "internal/mcp/manager.go"
+  ],
+  "sal_locate": true,
+  "gt_in_commit": true,
+  "secs": 4.0
+ },
+ "entry-00325": {
+  "ok": false,
+  "err": "worktree vuln (retry): Preparing worktree (detached HEAD 198fab1dc7)\nUpdating files:  38% (1903/4908)\nUpdating files:  39% (1915/4908)\nUpdating files:  40% (1964/4908)\nUpdating files:  41% (2013/4908)\nUpdating files:  42% ("
+ },
+ "entry-00389": {
+  "ok": true,
+  "framework": "MLflow",
+  "cve": [
+   "CVE-2026-0596",
+   "GHSA-RVHJ-8CHJ-8V3C"
+  ],
+  "gt_files": [
+   "mlflow/pyfunc/backend.py",
+   "mlflow/pyfunc/mlserver.py"
+  ],
+  "sink_file": "mlflow/pyfunc/backend.py",
+  "semgrep_hit_gt": [],
+  "sal_candidates": 50,
+  "sal_top_hit_gt": [
+   "mlflow/pyfunc/backend.py"
+  ],
+  "sal_locate": true,
+  "gt_in_commit": true,
+  "secs": 3.7
+ },
+ "entry-00392": {
+  "ok": true,
+  "framework": "fastmcp",
+  "cve": [
+   "CVE-2026-32871",
+   "GHSA-VV7Q-7JX5-F767"
+  ],
+  "gt_files": [
+   "src/fastmcp/server/providers/openapi/components.py"
+  ],
+  "sink_file": "src/fastmcp/server/providers/openapi/components.py",
+  "semgrep_hit_gt": [],
+  "sal_candidates": 50,
+  "sal_top_hit_gt": [
+   "src/fastmcp/server/providers/openapi/components.py"
+  ],
+  "sal_locate": true,
+  "gt_in_commit": true,
+  "secs": 1.2
+ },
+ "entry-00394": {
+  "ok": true,
+  "framework": "fastmcp",
+  "cve": [
+   "CVE-2026-32871",
+   "GHSA-VV7Q-7JX5-F767"
+  ],
+  "gt_files": [
+   "src/fastmcp/server/providers/openapi/components.py",
+   "src/fastmcp/utilities/openapi/director.py"
+  ],
+  "sink_file": "src/fastmcp/server/providers/openapi/components.py",
+  "semgrep_hit_gt": [],
+  "sal_candidates": 50,
+  "sal_top_hit_gt": [
+   "src/fastmcp/utilities/openapi/director.py",
+   "src/fastmcp/server/providers/openapi/components.py"
+  ],
+  "sal_locate": true,
+  "gt_in_commit": true,
+  "secs": 1.2
+ },
+ "entry-00430": {
+  "ok": true,
+  "framework": "google/adk-python",
+  "cve": [
+   "CVE-2026-4810",
+   "GHSA-RG7C-G689-FR3X"
+  ],
+  "gt_files": [
+   "src/google/adk/cli/adk_web_server.py",
+   "src/google/adk/cli/utils/agent_loader.py"
+  ],
+  "sink_file": "src/google/adk/cli/utils/agent_loader.py",
+  "semgrep_hit_gt": [],
+  "sal_candidates": 40,
+  "sal_top_hit_gt": [
+   "src/google/adk/cli/adk_web_server.py"
+  ],
+  "sal_locate": true,
+  "gt_in_commit": true,
+  "secs": 2.2
+ },
+ "entry-00446": {
+  "ok": true,
+  "framework": "paperclipai/paperclip",
+  "cve": [
+   "GHSA-VR7G-88FQ-VHQ3"
+  ],
+  "gt_files": [
+   "server/src/routes/execution-workspaces.ts",
+   "server/src/services/workspace-runtime.ts"
+  ],
+  "sink_file": "server/src/services/workspace-runtime.ts",
+  "semgrep_hit_gt": [],
+  "sal_candidates": 18,
+  "sal_top_hit_gt": [
+   "server/src/services/workspace-runtime.ts"
+  ],
+  "sal_locate": true,
+  "gt_in_commit": true,
+  "secs": 22.1
+ }
+}

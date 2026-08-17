@@ -32,7 +32,7 @@
     "CWE-434": ["save\\s*\\(", "upload", "filename", "FileField"]
   },
   "javascript": {
-    "CWE-78": ["child_process\\.(exec|execSync|spawn|spawnSync|fork)", "require\\s*\\(['\"]child_process['\"]\\)"],
+    "CWE-78": ["child_process\\.(exec|execSync|spawn|spawnSync|fork)", "require\\s*\\(['\"]child_process['\"]\\)", "\\bspawn\\s*\\(", "\\bexec\\s*\\(", "\\bexecSync\\s*\\(", "\\bexecFile\\s*\\("],
     "CWE-94": ["eval\\s*\\(", "new\\s+Function", "Function\\s*\\(", "vm\\.runInNewContext", "node:vm"],
     "CWE-502": ["JSON\\.parse", "msgpack\\.decode", "serialize-javascript", "node-serialize"],
     "CWE-89": ["\\.query\\s*\\(", "execute\\s*\\(", "sql\\s*\\(", "knex\\.raw", "sequelize\\.query"],
@@ -46,7 +46,7 @@
     "CWE-200": ["console\\.log", "sendFile", "res\\.send\\s*\\(", "toString\\(\\)"]
   },
   "typescript": {
-    "CWE-78": ["child_process\\.(exec|execSync|spawn|spawnSync|fork)", "require\\s*\\(['\"]child_process['\"]\\)"],
+    "CWE-78": ["child_process\\.(exec|execSync|spawn|spawnSync|fork)", "require\\s*\\(['\"]child_process['\"]\\)", "\\bspawn\\s*\\(", "\\bexec\\s*\\(", "\\bexecSync\\s*\\(", "\\bexecFile\\s*\\("],
     "CWE-94": ["eval\\s*\\(", "new\\s+Function", "Function\\s*\\(", "vm\\.runInNewContext", "node:vm"],
     "CWE-502": ["JSON\\.parse", "msgpack\\.decode", "serialize-javascript"],
     "CWE-89": ["\\.query\\s*\\(", "execute\\s*\\(", "sql\\s*\\(", "knex\\.raw", "sequelize\\.query", "typeorm.*query"],
