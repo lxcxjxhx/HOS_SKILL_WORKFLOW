@@ -167,6 +167,16 @@ node dist/src/examples/process-guidance.js
 
 覆盖 IAM 权限分析、云元数据安全、S3/OSS 配置错误检测等云安全场景。
 
+### CN-SRC 漏洞赏金流水线
+
+**文件：** `src/playbooks/process-templates/cn-src-hunter.yaml`
+
+**工具：** `scripts/cn-src-hunter/`（项目评分、情报采集、CSV 数据模型）
+
+覆盖国内 SRC 漏洞赏金全流程：合规红线检查 → 项目情报收集与评分 → 资产发现 → 漏洞扫描与挖掘 → AI 验证 → 报告生成 → 提交。配合 Python 工具脚本实现项目自动评分和情报采集。
+
+详细使用说明请参考 [`docs/cn-src-hunter-integration.md`](./docs/cn-src-hunter-integration.md)。
+
 > 流程模板为 YAML 格式，可直接编辑以扩展或修改测试阶段。引擎启动时动态加载，无需重新编译。
 
 ---
@@ -211,12 +221,22 @@ S-00-HOS-Sec-Engine/
 │   │   └── process-templates/
 │   │       ├── web-pentest.yaml        # Web 渗透测试
 │   │       ├── api-security-audit.yaml # API 安全审计
-│   │       └── cloud-config-audit.yaml # 云配置审计
+│   │       ├── cloud-config-audit.yaml # 云配置审计
+│   │       └── cn-src-hunter.yaml      # CN-SRC 漏洞赏金流水线
 │   ├── agents/                     # Agent 系统
 │   │   ├── coordinator.ts          # Agent 协调器
 │   │   ├── ensemble.ts             # 多 Agent 集成
 │   │   └── sub-agent.ts            # 子 Agent 实现
 │   └── examples/                   # 示例入口
+├── scripts/                        # 辅助工具脚本
+│   └── cn-src-hunter/              # CN-SRC-Hunter 工具集
+│       ├── target_score.py         # 项目评分工具
+│       ├── fetch_intel.py          # 情报采集工具
+│       ├── build_programs.py       # 评分构建器
+│       ├── templates/              # CSV 数据模型模板
+│       └── README.md               # 工具使用说明
+├── docs/                           # 文档
+│   └── cn-src-hunter-integration.md # CN-SRC-Hunter 集成指南
 ├── config/                         # 配置文件
 │   └── mcp-servers.json            # MCP 服务器配置
 ├── tests/                          # 测试套件

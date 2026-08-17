@@ -82,6 +82,7 @@ src/
 - `cloud/cloud-config-audit.ts` — 云配置审计
 - `intranet/domain-pentest.ts` — 域渗透测试
 - `audit/code-review-java.ts` — Java 代码审计
+- `cn-src-hunter.yaml` — 国内 SRC 漏洞赏金流水线（项目情报→资产发现→漏洞挖掘→AI 验证→报告生成→提交）
 
 ## 文档
 
