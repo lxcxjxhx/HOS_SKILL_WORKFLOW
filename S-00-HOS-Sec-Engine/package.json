@@ -19,7 +19,11 @@
     "test:loop": "node tests/loop/engine-loop-runner.js",
     "pack": "node scripts/package.js",
     "pack:quick": "node scripts/package.js --quick",
-    "install:global": "scripts/install-global.bat"
+    "install:global": "scripts/install-global.bat",
+    "drill:web": "node drill/web-pentest-drill.js",
+    "drill:api": "node drill/api-audit-drill.js",
+    "drill:src": "node drill/cn-src-hunter-drill.js",
+    "drill:all": "echo 'Running all drills...' && npm run drill:web && npm run drill:api && npm run drill:src"
   },
   "keywords": [
     "security",

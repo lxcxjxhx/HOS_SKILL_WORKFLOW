@@ -25,6 +25,7 @@
 - [🔌 MCP 管理层](#-mcp-管理层)
 - [🧭 使用指南](#-使用指南)
 - [📋 流程模板](#-流程模板)
+- [🧪 演练脚本](#-演练脚本)
 - [🧪 测试与维护](#-测试与维护)
 - [🏗 项目架构](#-项目架构)
 - [📊 测试结果](#-测试结果)
@@ -181,6 +182,47 @@ node dist/src/examples/process-guidance.js
 
 ---
 
+## 🧪 演练脚本
+
+内置 3 个演练脚本，用于快速验证引擎功能和演示完整工作流：
+
+```bash
+# Web 渗透测试流程演练
+npm run drill:web
+# 默认目标: http://www.dvwa.co.uk/
+# 输出: reports/web-pentest-drill-{timestamp}.html
+
+# API 安全审计流程演练
+npm run drill:api
+# 默认目标: https://jsonplaceholder.typicode.com
+# 输出: reports/api-audit-drill-{timestamp}.html
+
+# CN-SRC 漏洞赏金流程演练
+npm run drill:src
+# 默认平台: demo-src-platform
+# 输出: reports/cn-src-hunter-drill-{timestamp}.html
+
+# 一键运行所有演练
+npm run drill:all
+```
+
+每个演练脚本会：
+- 加载对应流程模板（web-pentest.yaml / api-security-audit.yaml / cn-src-hunter.yaml）
+- 执行完整阶段流程，展示决策树编排过程
+- 生成 HTML 格式的结构化报告
+- 验证 MCP 管理层、CVE 集成等核心功能
+
+### 演练脚本位置
+
+```
+drill/
+├── web-pentest-drill.js      ← Web 渗透测试演练
+├── api-audit-drill.js        ← API 安全审计演练
+└── cn-src-hunter-drill.js    ← CN-SRC 赏金流程演练
+```
+
+---
+
 ## 🧪 测试与维护
 
 ```bash
@@ -235,8 +277,18 @@ S-00-HOS-Sec-Engine/
 │       ├── build_programs.py       # 评分构建器
 │       ├── templates/              # CSV 数据模型模板
 │       └── README.md               # 工具使用说明
+├── drill/                          # 演练脚本
+│   ├── web-pentest-drill.js        # Web 渗透测试演练
+│   ├── api-audit-drill.js          # API 安全审计演练
+│   └── cn-src-hunter-drill.js      # CN-SRC 赏金流程演练
+├── dist-pkg/                       # 可分发安装包
+│   ├── hos-sec-engine-0.5.1.tgz    # npm 打包产物
+│   ├── hos-sec-engine-v0.5.1.zip   # 完整压缩包
+│   ├── package-manifest.json       # 构建清单
+│   └── README.md                   # 安装说明
 ├── docs/                           # 文档
-│   └── cn-src-hunter-integration.md # CN-SRC-Hunter 集成指南
+│   ├── cn-src-hunter-integration.md # CN-SRC-Hunter 集成指南
+│   └── mcp-integration.md          # MCP 集成说明
 ├── config/                         # 配置文件
 │   └── mcp-servers.json            # MCP 服务器配置
 ├── tests/                          # 测试套件
@@ -244,8 +296,9 @@ S-00-HOS-Sec-Engine/
 │   │   └── engine-test.js          # 核心引擎测试
 │   ├── integration/
 │   │   └── full-verification.js    # 完整集成验证
-│   └── loop/
-│       └── engine-loop-runner.js   # 循环保护测试
+│   ├── loop/
+│   │   └── engine-loop-runner.js   # 循环保护测试
+│   └── verification-report.json    # 自动化验证报告
 └── package.json
 ```
 
