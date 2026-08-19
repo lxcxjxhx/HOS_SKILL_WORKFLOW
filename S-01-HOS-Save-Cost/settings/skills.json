@@ -109,6 +109,30 @@
       "applicableWhen": ["large-codebases", "100k-plus-lines"],
       "keywords": ["context-compression", "maps", "memory-structure"],
       "prerequisites": ["tfe", "anpe"]
+    },
+    {
+      "id": "ponytail",
+      "name": "Ponytail Restraint (Code Generation)",
+      "file": "ponytail-restraint.skill",
+      "priority": 14,
+      "enabled": true,
+      "autoActivate": false,
+      "applicableWhen": ["writing-code", "over-engineering-risk"],
+      "keywords": ["yagni", "restraint", "no-over-engineering", "minimal-code"],
+      "loadCommand": "/skill load ponytail",
+      "prerequisites": ["tfe"]
+    },
+    {
+      "id": "router",
+      "name": "Token Router (Layer & Model)",
+      "file": "token-router.skill",
+      "priority": 15,
+      "enabled": true,
+      "autoActivate": false,
+      "applicableWhen": ["planning", "model-selection", "cost-routing"],
+      "keywords": ["routing", "model-selection", "tool-selection", "cheap-first"],
+      "loadCommand": "/skill load router",
+      "prerequisites": ["token-monitor"]
     }
   ],
   "activationRules": {

@@ -56,12 +56,14 @@ metadata:
 
 ## 方法层（按需加载，不常驻）
 
-以下四技能是"具体怎么省 Token"的工程方法，**由 skill-handler 按需加载**，不占常驻上下文：
+以下四~六技能是"具体怎么省 Token"的工程方法，**由 skill-handler 按需加载**，不占常驻上下文：
 
 - `TFE` — Token First Engineering（每个任务）
 - `ANPE` — AI Native Product Engineering（新项目/架构）
 - `MRA` — Minimal Refactor Architecture（遗留系统重构）
 - `CCE` — Context Compression Engineering（100K+ LOC 大项目）
+- `ponytail` — Ponytail Restraint（代码生成克制，少写无用代码）
+- `router` — Token Router（任务类型 → 最省工具/模型）
 
 ## 快速开始（skill-handler 工作流）
 
@@ -87,7 +89,9 @@ metadata:
 | Token 监控协议 | [`skills/workflow/token-monitor.skill`](./skills/workflow/token-monitor.skill) |
 | Skill 加载/卸载管理（常驻入口） | [`skills/handlers/skill-handler.skill`](./skills/handlers/skill-handler.skill) |
 | 输出精简层（穴居人模式） | [`skills/style/caveman.skill`](./skills/style/caveman.skill) |
-| 技能系统概览（含方法层四技能详解） | [`skills/README.md`](./skills/README.md) |
+| 代码生成克制（少写） | [`skills/ponytail-restraint.skill`](./skills/ponytail-restraint.skill) |
+| 工具/模型路由（走最省路） | [`skills/token-router.skill`](./skills/token-router.skill) |
+| 技能系统概览（含方法层技能详解） | [`skills/README.md`](./skills/README.md) |
 | 方法层 v1 文档（已归档到 `skills/docs/`，按需阅读） | [`skills/docs/GETTING-STARTED.md`](./skills/docs/GETTING-STARTED.md) · [`skills/docs/OVERVIEW.md`](./skills/docs/OVERVIEW.md) · [`skills/docs/QUICK-REFERENCE.md`](./skills/docs/QUICK-REFERENCE.md) · [`skills/docs/IMPLEMENTATION-GUIDE.md`](./skills/docs/IMPLEMENTATION-GUIDE.md) · [`skills/docs/CCE-FIVE-RULES.md`](./skills/docs/CCE-FIVE-RULES.md) · [`skills/docs/CCE-REINFORCEMENT.md`](./skills/docs/CCE-REINFORCEMENT.md) · [`skills/docs/FINAL-UPDATE.md`](./skills/docs/FINAL-UPDATE.md) |
 
 ## 许可证

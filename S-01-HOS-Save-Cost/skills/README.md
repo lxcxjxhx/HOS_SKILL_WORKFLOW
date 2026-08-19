@@ -27,13 +27,15 @@
 | [`handlers/skill-handler.skill`](handlers/skill-handler.skill) | 唯一常驻入口，`/skill load\|unload\|list\|status` | 常驻（~50 tokens） |
 | [`style/caveman.skill`](style/caveman.skill) | 输出精简层 | `/caveman` 触发时 |
 
-### 方法层四技能（按需加载，不用不读）
+### 方法层六技能（按需加载，不用不读）
 | 文件 | 用途 | 大小 |
 |------|------|------|
 | [`tfe-token-first-engineering.skill`](tfe-token-first-engineering.skill) | Token First Engineering（每个任务） | ~6KB |
 | [`anpe-ai-native-product-engineering.skill`](anpe-ai-native-product-engineering.skill) | AI Native Product Engineering（新项目） | ~12KB |
 | [`mra-minimal-refactor-architecture.skill`](mra-minimal-refactor-architecture.skill) | Minimal Refactor Architecture（遗留系统） | ~14KB |
 | [`cce-context-compression-engineering.skill`](cce-context-compression-engineering.skill) | Context Compression Engineering（100K+ LOC） | ~20KB 核心 |
+| [`ponytail-restraint.skill`](ponytail-restraint.skill) | Ponytail Restraint（代码生成克制 / 少写） | ~2KB |
+| [`token-router.skill`](token-router.skill) | Token Router（工具/模型路由） | ~2KB |
 
 > **CCE 提示**：三张地图完整模板已外置到 [`docs/cce-map-templates.md`](docs/cce-map-templates.md)（~12KB），仅在创建/维护地图时加载。
 
@@ -52,8 +54,10 @@
 ```text
 1. skill-handler（常驻，~50 tokens）→ 需要时才 /skill load <name>
 2. 大任务 → /skill load hos（读 SKILL.md + workflow/task-split）
-3. 子任务执行 → /skill load tfe（读 tfe-*.skill）
-4. 完成 → /skill unload 已加载项
+3. 会话规划 → /skill load router（决定工具/模型走最省路）
+4. 子任务执行 → /skill load tfe（读 tfe-*.skill）+ /skill load ponytail（少写）
+5. 子任务完成 → 输出 handoff 交接文档
+6. 完成 → /skill unload 已加载项
 ```
 
 ## 关联文档

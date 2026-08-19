@@ -29,7 +29,10 @@ HOS-Save-Cost 的核心不是"压缩工具"，而是 **"任务拆分 + 交接文
 
 ### 3.1 reasonix.toml（MCP 层面）
 
-见 [`reasonix.toml`](./reasonix.toml)。使用 **Reasonix 原生 `[[plugins]]` 语法**（stdio 直连），只启用真正需要的 MCP server，避免 40+ 工具 schema 全量进上下文。
+见 [`reasonix.toml.example`](./reasonix.toml.example)（可跟踪模板）与本地 `reasonix.toml`。因真实文件含环境相关配置（API 地址、代理开关）已被 `.gitignore` 忽略（`# Reasonix local tool config`），**仓库内只提交模板**，部署时复制为本地文件：
+`cp integration/reasonix.toml.example <部署根>/.kiro/integration/reasonix.toml`
+
+使用 **Reasonix 原生 `[[plugins]]` 语法**（stdio 直连），只启用真正需要的 MCP server，避免 40+ 工具 schema 全量进上下文。
 
 > ⚠️ **关于工具定义压缩**：原方案中的 `mcp-compressor` 在 npm registry 上**不存在**（E404），不能直接 `npx mcp-compressor`。请勿照抄该命令。MCP 层的节省改为：**只配置用得到的 server（原生直连）**；若后续安装到可用的 MCP 压缩/网关代理，再用 `args` 包装（`reasonix.toml` 内有完整示例注释）。
 

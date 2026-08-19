@@ -49,6 +49,8 @@
 | `token-monitor` | skills/workflow/token-monitor.skill | Token 监控 |
 | `caveman` | skills/style/caveman.skill | 输出精简 |
 | `tfe` / `anpe` / `mra` / `cce` | skills/*.skill | 方法层四技能 |
+| `ponytail` | skills/ponytail-restraint.skill | 代码生成克制（少写） |
+| `router` | skills/token-router.skill | 工具/模型路由（走最省路） |
 
 ## 反模式
 
