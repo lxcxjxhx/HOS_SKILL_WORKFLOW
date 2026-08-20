@@ -1,0 +1,32 @@
+{
+  "name": "magical_girl_transform",
+  "frames": 100,
+  "template": "anime style, 2D illustration, high quality anime art, cel shading, magical girl anime aesthetic, full body character portrait, standing upright facing viewer, neutral expression, soft studio lighting, plain light grey background, whole body visible head to feet, centered, masterpiece, best quality, {subject}",
+  "unique_suffix": "percent",
+  "features": {
+    "outfit": [
+      "plain school uniform", "school uniform, first sparkles on collar", "school uniform with faint magical ribbons",
+      "uniform partially transformed, glowing ribbon sash", "magical ribbon dress forming", "magical girl dress, short skirt",
+      "magical girl dress, ribbons and frills", "full magical girl outfit, bow and ribbons", "elegant magical girl outfit, flowing skirt",
+      "grand magical girl outfit, layered frills, star motifs", "legendary magical girl outfit, glowing accents", "ultimate magical girl outfit, divine radiance"
+    ],
+    "hair": [
+      "plain dark hair", "dark hair with faint pink sheen", "hair color beginning to shift pink",
+      "light pink hair", "pink hair", "bright pink hair",
+      "vivid pink hair, glowing", "shimmering pink hair", "radiant pink hair with sparkles",
+      "glowing pink hair, magical particles", "luminous pink hair, star glitter", "divine pink hair, brilliant magical glow"
+    ],
+    "aura": [
+      "ordinary girl, no magic", "faint magical sparkle", "small floating sparkles",
+      "growing magical glow", "visible magical aura", "bright magical aura",
+      "strong magical aura, floating particles", "radiant magical aura", "blazing magical aura",
+      "powerful magical aura, glowing sigils", "overwhelming magical aura", "divine magical aura, light pillar"
+    ],
+    "eyes": [
+      "plain dark eyes", "dark eyes, faint glow", "eyes slightly glowing",
+      "glowing eyes", "bright glowing eyes", "magical glowing eyes",
+      "radiant magical eyes", "star-shaped magical eyes", "glowing star eyes",
+      "brilliant star eyes", "divine glowing eyes", "legendary magical eyes"
+    ]
+  }
+}

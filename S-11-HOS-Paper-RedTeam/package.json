@@ -1,0 +1,19 @@
+{
+  "name": "hos-paper-redteam",
+  "version": "1.1.0",
+  "description": "HOS-Paper-RedTeam — ghfind 式论文评分卡渲染器",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node src/index.ts",
+    "example": "node src/index.ts src/example-review.json",
+    "build": "tsc"
+  },
+  "engines": {
+    "node": ">=23.6"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT"
+}

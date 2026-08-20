@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "total_debt": 0.0,
+  "limit": 1.0,
+  "in_clean_mode": false,
+  "clean_cycles_completed": 0,
+  "breakdown": {
+    "new_files": 0,
+    "new_abstractions": 0,
+    "new_dependencies": 0
+  },
+  "history": [],
+  "last_updated": null
+}

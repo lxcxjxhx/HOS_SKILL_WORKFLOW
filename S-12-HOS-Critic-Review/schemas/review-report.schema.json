@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hos.local/schemas/review-report.schema.json",
+  "title": "HOS-CRITIC-REVIEW ReviewReport",
+  "description": "流水线最终产物：人类报告 + 机器 JSON 的统一契约（schema_version 1.0）",
+  "type": "object",
+  "required": ["schema_version", "report_id", "target", "score", "findings", "critiques", "meta"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0" },
+    "report_id": { "type": "string", "pattern": "^rr-[0-9]{8}-[a-z0-9]{6}$" },
+    "target": { "$ref": "#/$defs/ObjectProfile" },
+    "score": { "$ref": "#/$defs/SixDimScore" },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/Finding" } },
+    "critiques": { "type": "array", "items": { "$ref": "#/$defs/Critique" } },
+    "degradations": { "type": "array", "items": { "type": "string" } },
+    "meta": {
+      "type": "object",
+      "required": ["duration_seconds", "toolchain", "output_mode"],
+      "properties": {
+        "duration_seconds": { "type": "number" },
+        "toolchain": { "type": "object" },
+        "output_mode": { "enum": ["quick", "expert", "academic"] },
+        "store_status": { "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "ObjectProfile": {
+      "type": "object",
+      "required": ["object_id", "type", "domain", "complexity", "confidence"],
+      "properties": {
+        "object_id": { "type": "string" },
+        "type": { "enum": ["repo", "paper", "article", "dataset", "license", "proposal", "unknown"] },
+        "domain": { "type": "string" },
+        "complexity": { "enum": ["low", "medium", "high"] },
+        "size_estimate": { "type": "object" },
+        "source": { "type": "object" },
+        "meta": { "type": "object" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "degradations": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "SixDimScore": {
+      "type": "object",
+      "required": ["score", "grade", "grade_label", "dimensions", "verdict", "one_liner", "decision", "rationale"],
+      "properties": {
+        "score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "grade": { "enum": ["S", "A", "B", "C", "D", "F"] },
+        "grade_label": { "type": "string" },
+        "dimensions": {
+          "type": "object",
+          "required": ["technical", "innovation", "engineering", "ecosystem", "risk", "strategic"],
+          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 10 }
+        },
+        "verdict": { "type": "string" },
+        "one_liner": { "type": "string", "maxLength": 40 },
+        "decision": {
+          "type": "object",
+          "required": ["learn", "contribute", "invest", "research"],
+          "additionalProperties": { "type": "boolean" }
+        },
+        "rationale": { "type": "string" },
+        "risk_flags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "Finding": {
+      "type": "object",
+      "required": ["finding_id", "class", "severity", "title", "claim", "evidence_draft", "unit_refs"],
+      "properties": {
+        "finding_id": { "type": "string", "pattern": "^finding-[0-9]{3}$" },
+        "hcr_id": { "type": "string", "pattern": "^HCR-(ARCH|DATA|EVAL|SEC|REPRO|LIC|ECO|CLAIM)-[0-9]{4}-[0-9]{4}$" },
+        "class": { "enum": ["ARCH", "DATA", "EVAL", "SEC", "REPRO", "LIC", "ECO", "CLAIM"] },
+        "severity": { "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"] },
+        "title": { "type": "string" },
+        "claim": { "type": "string" },
+        "evidence_draft": { "type": "string" },
+        "unit_refs": { "type": "array", "items": { "type": "string" } },
+        "analyzer": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "evidence_status": { "enum": ["verified", "refuted", "partial", "unverifiable"] },
+        "patch": { "type": "string" }
+      }
+    },
+    "Critique": {
+      "type": "object",
+      "required": ["crit_id", "role", "attack_vector", "thesis", "reasoning"],
+      "properties": {
+        "crit_id": { "type": "string", "pattern": "^crit-[0-9]{3}$" },
+        "role": {
+          "enum": [
+            "reviewer2", "experiment-auditor", "principal-engineer", "security-auditor",
+            "product-mind", "legal-mind", "business-mind", "data-scientist",
+            "skeptic", "domain-expert", "architect", "generalist"
+          ]
+        },
+        "attack_vector": {
+          "enum": [
+            "hidden-assumption", "counterexample", "hidden-cost", "overclaim",
+            "missing-baseline", "scaling-doubt", "survivorship", "recognition"
+          ]
+        },
+        "thesis": { "type": "string" },
+        "reasoning": { "type": "string" },
+        "unit_refs": { "type": "array", "items": { "type": "string" } },
+        "finding_refs": { "type": "array", "items": { "type": "string" } },
+        "spiciness": { "type": "number", "minimum": 0, "maximum": 5 }
+      }
+    }
+  }
+}

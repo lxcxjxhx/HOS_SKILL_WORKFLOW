@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>课设毕设代做 - HOS技术深度服务</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hos-violet-deep:#5B2C91; --hos-violet:#7C3AED; --hos-violet-light:#A78BFA; --hos-violet-glow:#C4B5FD;
+  --hos-burgundy:#8B1A3C; --hos-burgundy-soft:#B91C5C;
+  --hos-bronze-green:#3D5A4C; --hos-bronze-light:#6B8E7A;
+  --hos-forge:#2563EB; --hos-ls:#7C3AED; --hos-workflow:#059669;
+  --bg-darkest:#0F0A1F; --bg-dark:#1A1129; --bg-card:#241638; --bg-elevated:#2E1F47;
+  --ink-primary:#F5F0FF; --ink-secondary:#C4B5E0; --ink-muted:#8B7DAA;
+  --price-anchor:#FFB347;
+  --font-display:'Noto Serif SC',serif; --font-body:'Noto Sans SC',sans-serif; --font-mono:'JetBrains Mono',monospace;
+  --brand-band-gradient:linear-gradient(90deg,#7C3AED 0%,#7C3AED 33%,#8B1A3C 33%,#8B1A3C 66%,#3D5A4C 66%,#3D5A4C 100%);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-darkest);
+  color: var(--ink-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--bg-dark);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Brand band strip */
+.brand-band {
+  height: 4px;
+  background: var(--brand-band-gradient);
+  width: 100%;
+}
+
+/* Section base */
+section {
+  padding: 24px;
+  margin-bottom: 24px;
+  background: var(--bg-dark);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--ink-primary);
+  margin-bottom: 16px;
+  font-weight: 700;
+  position: relative;
+  padding-left: 12px;
+}
+
+.section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 18px;
+  background: var(--hos-violet);
+  border-radius: 2px;
+}
+
+/* ===== Module 1: KV Hero ===== */
+.hero {
+  text-align: center;
+  padding-bottom: 28px;
+}
+
+.hero-logo {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--ink-primary);
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-top: 8px;
+}
+
+.hero-tagline {
+  font-size: 13px;
+  color: var(--ink-secondary);
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.hero-kv {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 20px 0;
+  border-radius: 12px;
+  border: 1px solid var(--bg-elevated);
+}
+
+.hero-h1 {
+  font-family: var(--font-display);
+  font-size: 36px;
+  color: var(--ink-primary);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.hero-subline {
+  font-size: 14px;
+  color: var(--ink-secondary);
+  margin-bottom: 16px;
+}
+
+.hos-tag--red {
+  display: inline-block;
+  padding: 6px 14px;
+  background: rgba(139, 26, 60, 0.2);
+  border: 1px solid var(--hos-burgundy-soft);
+  color: var(--hos-burgundy-soft);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ===== Module 2: 卖点提炼 ===== */
+.selling-points {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.sp-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.sp-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--hos-bronze-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.sp-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--ink-primary);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.sp-desc {
+  font-size: 12px;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+}
+
+/* ===== Module 3: 服务清单 ===== */
+.price-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.price-table th,
+.price-table td {
+  padding: 14px 12px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid var(--bg-elevated);
+}
+
+.price-table th {
+  background: var(--bg-elevated);
+  color: var(--ink-secondary);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.price-table td:first-child {
+  color: var(--ink-primary);
+  font-weight: 500;
+}
+
+.price-table td.price {
+  font-family: var(--font-mono);
+  color: var(--price-anchor);
+  font-weight: 600;
+}
+
+.price-table td.cycle {
+  color: var(--ink-secondary);
+  font-size: 13px;
+}
+
+.price-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== Module 4: 案例展示 ===== */
+.case-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.case-card {
+  background: var(--bg-elevated);
+  border-left: 4px solid var(--hos-violet);
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+}
+
+.case-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(124, 58, 237, 0.25);
+  color: var(--hos-violet-light);
+  font-size: 11px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.case-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--ink-primary);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.case-desc {
+  font-size: 13px;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+}
+
+.case-anon {
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* ===== Module 5: 服务流程 ===== */
+.flow-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  padding-left: 4px;
+}
+
+.flow-step {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.flow-step:last-child { padding-bottom: 0; }
+
+.flow-step::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--hos-violet);
+}
+
+.flow-step:last-child::before { display: none; }
+
+.flow-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--hos-bronze-green);
+  color: var(--ink-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-right: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.flow-name {
+  font-size: 15px;
+  color: var(--ink-primary);
+  font-weight: 500;
+  padding-top: 6px;
+}
+
+/* ===== Module 6: 价格锚定 ===== */
+.tier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tier-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--bg-elevated);
+}
+
+.tier-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tier-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.tier-tag--burgundy {
+  background: rgba(139, 26, 60, 0.25);
+  color: var(--hos-burgundy-soft);
+}
+
+.tier-tag--violet {
+  background: rgba(124, 58, 237, 0.25);
+  color: var(--hos-violet-light);
+}
+
+.tier-tag--bronze {
+  background: rgba(61, 90, 76, 0.4);
+  color: var(--hos-bronze-light);
+}
+
+.tier-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--ink-primary);
+  font-weight: 600;
+}
+
+.tier-desc {
+  font-size: 12px;
+  color: var(--ink-secondary);
+}
+
+.tier-price {
+  font-family: var(--font-mono);
+  color: var(--price-anchor);
+  font-size: 18px;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tier-note {
+  font-size: 12px;
+  color: var(--ink-muted);
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: var(--bg-card);
+  border-radius: 8px;
+  border-left: 3px solid var(--hos-violet);
+}
+
+/* ===== Module 7: 保障承诺 ===== */
+.commit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.commit-item {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.commit-item--redline {
+  border: 1px solid rgba(139, 26, 60, 0.4);
+}
+
+.commit-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--hos-bronze-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  color: var(--ink-primary);
+}
+
+.commit-icon--redline {
+  background: var(--hos-burgundy);
+}
+
+.commit-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--ink-primary);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.commit-title--redline {
+  color: var(--hos-burgundy-soft);
+}
+
+.commit-desc {
+  font-size: 13px;
+  color: var(--ink-secondary);
+  line-height: 1.5;
+}
+
+.commit-desc--redline {
+  color: var(--ink-secondary);
+}
+
+/* ===== Module 8: FAQ + 引流 ===== */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.faq-item {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--bg-elevated);
+}
+
+.faq-item summary {
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--ink-primary);
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+  padding-right: 20px;
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+
+.faq-item summary::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: var(--hos-violet-light);
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.faq-item[open] summary::after { content: "−"; }
+
+.faq-answer {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--bg-elevated);
+  font-size: 13px;
+  color: var(--ink-secondary);
+  line-height: 1.6;
+}
+
+.cta-section {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.cta-btn {
+  display: inline-block;
+  width: 100%;
+  background: var(--hos-violet);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 999px;
+  min-height: 44px;
+  padding: 12px 24px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  margin-bottom: 24px;
+  transition: background 0.2s;
+}
+
+.cta-btn:active {
+  background: var(--hos-violet-deep);
+}
+
+.qr-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.qr-placeholder {
+  width: 120px;
+  height: 120px;
+  border: 2px solid var(--hos-violet);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-secondary);
+  padding: 8px;
+  background: var(--bg-card);
+  line-height: 1.4;
+}
+
+.qr-caption {
+  font-size: 13px;
+  color: var(--ink-secondary);
+}
+
+/* Footer */
+.footer-note {
+  text-align: center;
+  padding: 24px;
+  font-size: 11px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Brand band top -->
+  <div class="brand-band"></div>
+
+  <!-- ===== Module 1: KV Hero ===== -->
+  <section class="hero">
+    <div class="hero-logo">HOS</div>
+    <div class="hero-tagline">技术深度 · 微商可信</div>
+    <img class="hero-kv" src="kv-course-project.jpg" alt="课设毕设代做">
+    <h1 class="hero-h1">课设毕设代做</h1>
+    <p class="hero-subline">计算机硕士背景 · 代码讲解不忽悠 · 修改到满意</p>
+    <span class="hos-tag--red">不代写论文 / 不代考</span>
+  </section>
+
+  <!-- ===== Module 2: 卖点提炼 ===== -->
+  <section>
+    <h2 class="section-title">卖点提炼</h2>
+    <div class="selling-points">
+      <div class="sp-card">
+        <div class="sp-icon">🎓</div>
+        <div class="sp-title">硕士背景</div>
+        <div class="sp-desc">计算机科班，安全方向</div>
+      </div>
+      <div class="sp-card">
+        <div class="sp-icon">💻</div>
+        <div class="sp-title">代码讲解</div>
+        <div class="sp-desc">含1小时逐行讲解，不忽悠</div>
+      </div>
+      <div class="sp-card">
+        <div class="sp-icon">🎯</div>
+        <div class="sp-title">答辩辅导</div>
+        <div class="sp-desc">预演答辩问题，从容应对</div>
+      </div>
+      <div class="sp-card">
+        <div class="sp-icon">✅</div>
+        <div class="sp-title">修改到满意</div>
+        <div class="sp-desc">7天免费修改，售后无忧</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Module 3: 服务清单 ===== -->
+  <section>
+    <h2 class="section-title">服务清单</h2>
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>服务项</th>
+          <th>起步价</th>
+          <th>交付周期</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>代码调试</td>
+          <td class="price">¥30起</td>
+          <td class="cycle">1-24h</td>
+        </tr>
+        <tr>
+          <td>课设辅导</td>
+          <td class="price">¥200起</td>
+          <td class="cycle">3-7天</td>
+        </tr>
+        <tr>
+          <td>毕设全程</td>
+          <td class="price">¥800起</td>
+          <td class="cycle">2-8周</td>
+        </tr>
+        <tr>
+          <td>脚本/工具</td>
+          <td class="price">¥100起</td>
+          <td class="cycle">1-3天</td>
+        </tr>
+        <tr>
+          <td>网站开发</td>
+          <td class="price">¥500起</td>
+          <td class="cycle">3-14天</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== Module 4: 案例展示 ===== -->
+  <section>
+    <h2 class="section-title">案例展示</h2>
+    <div class="case-list">
+      <div class="case-card">
+        <span class="case-tag">案例</span>
+        <div class="case-title">Python数据可视化课设</div>
+        <div class="case-desc">答辩通过，老师评价"完成度高"。</div>
+        <div class="case-anon">匿名校友</div>
+      </div>
+      <div class="case-card">
+        <span class="case-tag">案例</span>
+        <div class="case-title">Java SpringBoot毕设</div>
+        <div class="case-desc">从选题到答辩全程辅导，交付2周。</div>
+        <div class="case-anon">匿名校友</div>
+      </div>
+      <div class="case-card">
+        <span class="case-tag">案例</span>
+        <div class="case-title">操作系统实验合集</div>
+        <div class="case-desc">4个实验打包，附实验报告。</div>
+        <div class="case-anon">匿名校友</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Module 5: 服务流程 ===== -->
+  <section>
+    <h2 class="section-title">服务流程</h2>
+    <div class="flow-timeline">
+      <div class="flow-step">
+        <div class="flow-circle">1</div>
+        <div class="flow-name">咨询</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-circle">2</div>
+        <div class="flow-name">报价</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-circle">3</div>
+        <div class="flow-name">定金50%</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-circle">4</div>
+        <div class="flow-name">交付</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-circle">5</div>
+        <div class="flow-name">售后7天</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Module 6: 价格锚定 ===== -->
+  <section>
+    <h2 class="section-title">价格锚定</h2>
+    <div class="tier-list">
+      <div class="tier-card">
+        <div class="tier-left">
+          <span class="tier-tag tier-tag--burgundy">引流</span>
+          <span class="tier-name">引流品</span>
+          <span class="tier-desc">环境配置教程</span>
+        </div>
+        <div class="tier-price">9.9元</div>
+      </div>
+      <div class="tier-card">
+        <div class="tier-left">
+          <span class="tier-tag tier-tag--violet">标品</span>
+          <span class="tier-name">标品</span>
+          <span class="tier-desc">课设辅导</span>
+        </div>
+        <div class="tier-price">200元</div>
+      </div>
+      <div class="tier-card">
+        <div class="tier-left">
+          <span class="tier-tag tier-tag--violet">利润品</span>
+          <span class="tier-name">利润品</span>
+          <span class="tier-desc">毕设全程</span>
+        </div>
+        <div class="tier-price">800元</div>
+      </div>
+      <div class="tier-card">
+        <div class="tier-left">
+          <span class="tier-tag tier-tag--bronze">形象品</span>
+          <span class="tier-name">形象品</span>
+          <span class="tier-desc">企业级项目</span>
+        </div>
+        <div class="tier-price">面议</div>
+      </div>
+    </div>
+    <div class="tier-note">先咨询后报价，急单1.5-2倍</div>
+  </section>
+
+  <!-- ===== Module 7: 保障承诺 ===== -->
+  <section>
+    <h2 class="section-title">保障承诺</h2>
+    <div class="commit-list">
+      <div class="commit-item">
+        <div class="commit-icon">✓</div>
+        <div>
+          <div class="commit-title">7天免费修改</div>
+          <div class="commit-desc">交付后7天内小修改免费。</div>
+        </div>
+      </div>
+      <div class="commit-item">
+        <div class="commit-icon">✓</div>
+        <div>
+          <div class="commit-title">50%定金制度</div>
+          <div class="commit-desc">确认需求后付定金，验收付尾款。</div>
+        </div>
+      </div>
+      <div class="commit-item">
+        <div class="commit-icon">✓</div>
+        <div>
+          <div class="commit-title">售后答疑</div>
+          <div class="commit-desc">微信群答疑，含1小时代码讲解。</div>
+        </div>
+      </div>
+      <div class="commit-item commit-item--redline">
+        <div class="commit-icon commit-icon--redline">!</div>
+        <div>
+          <div class="commit-title commit-title--redline">红线拒绝</div>
+          <div class="commit-desc commit-desc--redline">不代写论文、不代考、不接违法违规。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Module 8: FAQ + 引流 ===== -->
+  <section>
+    <h2 class="section-title">常见问题</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>1. 是否代写论文？</summary>
+        <div class="faq-answer">否，仅提供代码辅导与讲解，论文请自行撰写。</div>
+      </details>
+      <details class="faq-item">
+        <summary>2. 能讲解代码吗？</summary>
+        <div class="faq-answer">含1小时逐行讲解，确保你理解每一行。</div>
+      </details>
+      <details class="faq-item">
+        <summary>3. 售后多久？</summary>
+        <div class="faq-answer">7天免费修改，超出可协商。</div>
+      </details>
+      <details class="faq-item">
+        <summary>4. 急单怎么算？</summary>
+        <div class="faq-answer">加急1.5-2倍系数，需提前确认。</div>
+      </details>
+      <details class="faq-item">
+        <summary>5. 付款方式？</summary>
+        <div class="faq-answer">50%定金+尾款，支持微信/支付宝。</div>
+      </details>
+    </div>
+
+    <div class="cta-section">
+      <button class="cta-btn" type="button">免费咨询5分钟</button>
+      <div class="qr-wrap">
+        <div class="qr-placeholder">微信咨询<br>二维码</div>
+        <div class="qr-caption">扫码添加微信咨询</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer note -->
+  <div class="footer-note">
+    HOS · 技术深度服务 · 课设毕设代做<br>仅供学习交流，请遵守学术诚信规范
+  </div>
+
+  <!-- Brand band bottom -->
+  <div class="brand-band"></div>
+
+</div>
+</body>
+</html>

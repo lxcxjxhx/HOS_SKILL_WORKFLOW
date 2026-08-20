@@ -1,0 +1,17 @@
+{
+  "meta": {
+    "lastUpdate": "2026-06-30T00:00:00Z",
+    "totalProjects": 0,
+    "activeProjects": 0,
+    "staleProjects": 0,
+    "archivedProjects": 0
+  },
+  "seq": {
+    "course": 0,
+    "demo": 0,
+    "short": 0,
+    "value": 0,
+    "audiobook": 0
+  },
+  "projects": []
+}

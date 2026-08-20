@@ -1,0 +1,63 @@
+{
+  "name": "hos-sec-engine",
+  "version": "0.5.1",
+  "description": "HOS攻防实战规则引擎 - 将实战经验转化为标准化、可执行的攻防规则",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "bin": {
+    "hos-sec-engine": "dist/src/cli/index.js",
+    "hos-process": "dist/src/examples/process-guidance.js"
+  },
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "start": "node dist/src/examples/process-guidance.js",
+    "dev": "tsc --watch",
+    "clean": "node -e \"const fs=require('fs');fs.rmSync('dist',{recursive:true,force:true});console.log('Cleaned dist/');\"",
+    "test": "node tests/core/engine-test.js",
+    "test:integration": "node tests/integration/full-verification.js",
+    "test:core": "node tests/core/engine-test.js",
+    "test:loop": "node tests/loop/engine-loop-runner.js",
+    "pack": "node scripts/package.js",
+    "pack:quick": "node scripts/package.js --quick",
+    "install:global": "scripts/install-global.bat",
+    "drill:web": "node drill/web-pentest-drill.js",
+    "drill:api": "node drill/api-audit-drill.js",
+    "drill:src": "node drill/cn-src-hunter-drill.js",
+    "drill:all": "echo 'Running all drills...' && npm run drill:web && npm run drill:api && npm run drill:src"
+  },
+  "keywords": [
+    "security",
+    "offense-defense",
+    "rule-engine",
+    "waf-bypass",
+    "vulnerability",
+    "skill",
+    "claude-code",
+    "penetration-testing"
+  ],
+  "author": "HOS-Sec",
+  "license": "MIT",
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "README.md",
+    "tsconfig.json"
+  ],
+  "dependencies": {
+    "@inquirer/checkbox": "^2.3.0",
+    "@inquirer/confirm": "^3.1.0",
+    "@inquirer/input": "^2.1.0",
+    "@inquirer/prompts": "^5.0.0",
+    "@inquirer/select": "^2.3.0",
+    "chalk": "^4.1.2",
+    "js-yaml": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

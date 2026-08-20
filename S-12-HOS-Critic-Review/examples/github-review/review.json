@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0",
+  "report_id": "rr-20260802-b1c2d3",
+  "target": {
+    "object_id": "obj-67bdd4",
+    "type": "repo",
+    "domain": "frontend / ui-library",
+    "complexity": "high",
+    "size_estimate": { "bytes": null, "files": null, "pages": null, "tokens": null },
+    "source": { "kind": "url", "url": "https://github.com/facebook/react" },
+    "meta": { "title": "facebook/react", "description": "The library for web and native user interfaces.", "license": "MIT" },
+    "signals": ["github-url", "high-activity"],
+    "confidence": 0.95,
+    "degradations": []
+  },
+  "score": {
+    "score": 87,
+    "grade": "A",
+    "grade_label": "优秀",
+    "dimensions": { "technical": 9, "innovation": 8, "engineering": 9, "ecosystem": 10, "risk": 7, "strategic": 9 },
+    "verdict": "顶级生态与工程，风险藏在升级迁移成本与单组织治理集中。",
+    "one_liner": "生态工程顶级，风险藏在升级成本。",
+    "decision": { "learn": true, "contribute": true, "invest": true, "research": true },
+    "rationale": "technical 9：Fiber 架构与并发渲染为真实技术创新，代码质量顶级（无 ARCH/EVAL 类实质发现）；innovation 8：历史创新强，React 19 的 Actions/useOptimistic/Server Components 是实质新能力但为增量演进（finding-002 影响 -0.3）；engineering 9：release 节奏 5/年、文档与升级指南完善（finding-002 LOW verified 部分扣分）；ecosystem 10：246,852 star / 51,179 fork / 贡献者高度分散（top100 口径 bus factor 32%），PR 合并中位 22.9h；risk 7：major 升级迁移成本（finding-002 verified -0.5）+ XSS 防护责任在应用层（finding-003 partial -0.25）+ 治理依赖 Meta 核心团队（crit-004）；strategic 9：学习价值与生态杠杆极高。",
+    "risk_flags": ["major 升级迁移成本（React 19 弃用项）", "安全边界依赖应用层正确使用 API", "治理集中（Meta 核心团队主导决策）"]
+  },
+  "findings": [
+    {
+      "finding_id": "finding-001",
+      "hcr_id": "HCR-ECO-2026-0001",
+      "class": "ECO",
+      "severity": "INFO",
+      "title": "GitHub 生态指标全面健康",
+      "claim": "仓库活跃度高、协作高效、发布稳定，未发现 ECO 类问题",
+      "evidence_draft": "GitHub API（2026-08-01 抓取）：最近提交 1 天前；PR 合并中位 22.9h；release 5/年；bus factor（top100 口径）32%；issue 相对规模 0.5‰",
+      "unit_refs": ["unit-000"],
+      "analyzer": "github-analyzer",
+      "confidence": 0.95,
+      "evidence_status": "verified",
+      "patch": null
+    },
+    {
+      "finding_id": "finding-002",
+      "hcr_id": "HCR-REPRO-2026-0002",
+      "class": "REPRO",
+      "severity": "LOW",
+      "title": "React 19 升级存在隐藏迁移成本",
+      "claim": "React 19 引入一批弃用与破坏性变更，生态迁移是未计入的隐藏成本",
+      "evidence_draft": "react.dev 官方发布说明（2024-12-05）：forwardRef 与 Context.Provider 将在未来版本弃用移除；ref 回调 null 调用将弃用；React Server Components 底层 API 不遵循 semver、可能在 19.x minor 间破坏",
+      "unit_refs": ["unit-000"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.85,
+      "evidence_status": "verified",
+      "patch": "官方已提供升级指南与 codemod；建议对升级成本做量化披露（受影响包清单/迁移时长估算）"
+    },
+    {
+      "finding_id": "finding-003",
+      "hcr_id": "HCR-SEC-2026-0003",
+      "class": "SEC",
+      "severity": "LOW",
+      "title": "XSS 防护依赖应用层正确使用 API",
+      "claim": "框架默认转义受控内容，但 dangerouslySetInnerHTML 等逃生舱口的安全责任在开发者，框架层不兜底",
+      "evidence_draft": "React 文档事实：dangerouslySetInnerHTML 不转义传入内容，误用即 XSS 面；无框架级默认防护（host 知识，未在本评审中重新抓取文档页）",
+      "unit_refs": ["unit-000"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.6,
+      "evidence_status": "partial",
+      "patch": "在文档显著位置补充安全反模式清单；生态层可考虑 lint 规则强制审查逃生舱口使用"
+    }
+  ],
+  "critiques": [
+    {
+      "crit_id": "crit-001",
+      "role": "principal-engineer",
+      "attack_vector": "hidden-cost",
+      "thesis": "major 升级的迁移成本被低估",
+      "reasoning": "React 19 官方说明明确 forwardRef/Context.Provider 未来弃用、RSC 底层 API 不保证 semver；对大型存量代码库，每次 major 升级都要面对 codemod + 依赖矩阵重构，这是路线图里不写的隐性人力成本",
+      "unit_refs": ["unit-000"],
+      "finding_refs": ["finding-002"],
+      "spiciness": 2
+    },
+    {
+      "crit_id": "crit-002",
+      "role": "security-auditor",
+      "attack_vector": "hidden-assumption",
+      "thesis": "「React 安全」是个伪命题——安全边界在应用层",
+      "reasoning": "默认转义只覆盖受控路径；dangerouslySetInnerHTML 一用即裸奔，框架无强制护栏。安全审计视角下，框架的责任边界必须写清楚，否则开发者误以为框架兜底",
+      "unit_refs": ["unit-000"],
+      "finding_refs": ["finding-003"],
+      "spiciness": 2
+    },
+    {
+      "crit_id": "crit-003",
+      "role": "principal-engineer",
+      "attack_vector": "scaling-doubt",
+      "thesis": "并发特性（Actions/useOptimistic/Server Components）对中小项目是复杂度税",
+      "reasoning": "React 19 的新能力面向大型全栈应用；对中小项目，引入 Server Components 与 Actions 意味着同时维护服务端/客户端心智模型，复杂度收益在规模不足时不成立",
+      "unit_refs": ["unit-000"],
+      "finding_refs": [],
+      "spiciness": 1
+    },
+    {
+      "crit_id": "crit-004",
+      "role": "principal-engineer",
+      "attack_vector": "recognition",
+      "thesis": "Fiber 架构与并发渲染是真实技术创新，非拼接物",
+      "reasoning": "可中断渲染、并发优先级、Suspense 数据加载模型均为框架级原创设计；React 19 的 Actions 把异步数据流收进运行时，是有实质增量的演进而非概念包装",
+      "unit_refs": ["unit-000"],
+      "finding_refs": [],
+      "spiciness": 0
+    }
+  ],
+  "degradations": [
+    "Chunk 阶段：代码级切片（Tree-sitter）未启用（M3 落地），按仓库整体 + 元数据评审",
+    "Bus factor 按 top-100 贡献者近似口径计算"
+  ],
+  "meta": {
+    "duration_seconds": 210,
+    "toolchain": { "network": true, "github_api": true, "tools": [] },
+    "output_mode": "expert",
+    "store_status": "pending"
+  }
+}

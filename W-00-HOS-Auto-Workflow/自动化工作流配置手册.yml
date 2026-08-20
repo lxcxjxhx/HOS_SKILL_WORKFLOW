@@ -1,0 +1,2294 @@
+app:
+  description: 自动化工作流配置手册
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: 自动化工作流配置手册
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: bowenliang123/md_exporter:3.2.0@b3075f474341eaf9f98ff773d684dc779c0b228f5da09b55eb773dcb5421d947
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/deepseek:0.0.9@8cc65e3d2ce11b03d377ee008dc699c7016601c2646a09c983fcf7c1fd7827ee
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.2.8@aae2be0913b8c6f0b80cff58e08d7a8b4c214569b41778413fcaea204561ff16
+    version: null
+kind: app
+version: 0.5.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      - .MD
+      - .TXT
+      - .DOCX
+      - .PDF
+      allowed_file_types:
+      - image
+      - document
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: true
+      fileUploadConfig:
+        attachment_image_file_size_limit: 2
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        file_upload_limit: 50
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        single_chunk_attachment_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: document-extractor
+      id: 1769050927522-source-1769052674744-target
+      selected: false
+      source: '1769050927522'
+      sourceHandle: source
+      target: '1769052674744'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: tool
+        targetType: end
+      id: 1769053963253-source-1769052218754-target
+      selected: false
+      source: '1769053963253'
+      sourceHandle: source
+      target: '1769052218754'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1769052162508-source-1769068037267-target
+      selected: false
+      source: '1769052162508'
+      sourceHandle: source
+      target: '1769068037267'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1769053676751-source-1769068500001-target
+      selected: false
+      source: '1769053676751'
+      sourceHandle: source
+      target: '1769068500001'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: llm
+      id: 1769068500001-source-1769053793268-target
+      selected: false
+      source: '1769068500001'
+      sourceHandle: source
+      target: '1769053793268'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1769053793268-source-17690724131850-target
+      selected: false
+      source: '1769053793268'
+      sourceHandle: source
+      target: '17690724131850'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 17690724131850-source-1769073297193-target
+      source: '17690724131850'
+      sourceHandle: source
+      target: '1769073297193'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1769073297193-true-1769053833970-target
+      selected: false
+      source: '1769073297193'
+      sourceHandle: 'true'
+      target: '1769053833970'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1769053833970-source-17690724163040-target
+      selected: false
+      source: '1769053833970'
+      sourceHandle: source
+      target: '17690724163040'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: llm
+      id: 17690724163040-source-1769053876253-target
+      selected: false
+      source: '17690724163040'
+      sourceHandle: source
+      target: '1769053876253'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1769053876253-source-17690724297200-target
+      selected: false
+      source: '1769053876253'
+      sourceHandle: source
+      target: '17690724297200'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        id: 17690724131850-source-1769053876253-target
+        isInLoop: false
+        source: '17690724131850'
+        sourceHandle: source
+        sourceType: code
+        target: '1769053876253'
+        targetHandle: target
+        targetType: llm
+        type: custom
+        zIndex: 0
+      sourceHandle: source
+      targetHandle: target
+      type: custom
+    - data:
+        id: 1769073297193-yaml-1769074567890-target
+        isInLoop: false
+        source: '1769073297193'
+        sourceHandle: yaml
+        sourceType: if-else
+        target: '1769074567890'
+        targetHandle: target
+        targetType: llm
+        type: custom
+        zIndex: 0
+      sourceHandle: source
+      targetHandle: target
+      type: custom
+    - data:
+        id: 1769074567890-source-1769075678901-target
+        isInLoop: false
+        source: '1769074567890'
+        sourceHandle: source
+        sourceType: llm
+        target: '1769075678901'
+        targetHandle: target
+        targetType: code
+        type: custom
+        zIndex: 0
+      sourceHandle: source
+      targetHandle: target
+      type: custom
+    - data:
+        id: 1769075678901-source-1769053963253-target
+        isInLoop: false
+        source: '1769075678901'
+        sourceHandle: source
+        sourceType: code
+        target: '1769053963253'
+        targetHandle: target
+        targetType: tool
+        type: custom
+        zIndex: 0
+      sourceHandle: source
+      targetHandle: target
+      type: custom
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: llm
+      id: 17690724131850-source-1769053876253-target
+      source: '17690724131850'
+      sourceHandle: source
+      target: '1769053876253'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: if-else
+      id: 1769050927522-source-1769073297193-target
+      source: '1769050927522'
+      sourceHandle: source
+      target: '1769073297193'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: if-else
+      id: 1769050927522-source-1769094201733-target
+      source: '1769050927522'
+      sourceHandle: source
+      target: '1769094201733'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 17690724297200-source-1769094201733-target
+      selected: false
+      source: '17690724297200'
+      sourceHandle: source
+      target: '1769094201733'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: 1769074567890-source-1769075678901-target
+      selected: false
+      source: '1769074567890'
+      sourceHandle: source
+      target: '1769075678901'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: 1769075678901-source-1769094370285-target
+      source: '1769075678901'
+      sourceHandle: source
+      target: '1769094370285'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: tool
+      id: 1769094201733-false-1769053963253-target
+      source: '1769094201733'
+      sourceHandle: 'false'
+      target: '1769053963253'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: knowledge-retrieval
+      id: 1769094201733-true-1769148240708-target
+      source: '1769094201733'
+      sourceHandle: 'true'
+      target: '1769148240708'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1769148240708-source-1769074567890-target
+      source: '1769148240708'
+      sourceHandle: source
+      target: '1769074567890'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: llm
+      id: 1769050927522-source-1769052162508-target
+      source: '1769050927522'
+      sourceHandle: source
+      target: '1769052162508'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: document-extractor
+        targetType: code
+      id: 1769052674744-source-1769150000001-target
+      source: '1769052674744'
+      sourceHandle: source
+      target: '1769150000001'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: llm
+      id: 1769150000001-source-1769052162508-target
+      source: '1769150000001'
+      sourceHandle: source
+      target: '1769052162508'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: knowledge-retrieval
+      id: 1769068037267-source-17691653957600-target
+      source: '1769068037267'
+      sourceHandle: source
+      target: '17691653957600'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 17691653957600-source-1769053676751-target
+      source: '17691653957600'
+      sourceHandle: source
+      target: '1769053676751'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: tool
+      id: 1769094201733-true-1769053963253-target
+      source: '1769094201733'
+      sourceHandle: 'true'
+      target: '1769053963253'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        selected: false
+        title: 用户输入
+        type: start
+        variables:
+        - hint: ''
+          label: MCP开关
+          max_length: 48
+          options:
+          - 启用MCP模式
+          - 禁用MCP模式
+          placeholder: ''
+          required: true
+          type: select
+          variable: mode_MCP
+        - hint: ''
+          label: YAML开关
+          max_length: 48
+          options:
+          - 启用YAML模式
+          - 禁用YAML模式
+          placeholder: ''
+          required: true
+          type: select
+          variable: mode_YAML
+        - default: ''
+          hint: ''
+          label: 需求段落
+          max_length: 256
+          options: []
+          placeholder: ''
+          required: false
+          type: text-input
+          variable: NEED_TEXT
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          default: ''
+          hint: ''
+          label: 需求文档
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: false
+          type: file
+          variable: NEED_FILE
+      height: 186
+      id: '1769050927522'
+      position:
+        x: -360.52070549758207
+        y: 732.3216377809192
+      positionAbsolute:
+        x: -360.52070549758207
+        y: 732.3216377809192
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769150000001'
+          - text
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        outputs:
+          ambiguities:
+            children:
+              type: string
+            type: array
+          conflicts:
+            children:
+              type: string
+            type: array
+          final_content:
+            children: null
+            type: string
+          has_enough_info:
+            children: null
+            type: boolean
+          is_clear:
+            children: null
+            type: boolean
+          is_complete:
+            children: null
+            type: boolean
+        prompt_template:
+        - id: d89962a0-8394-4a03-aec8-c0ff491d0a84
+          role: system
+          text: '你是一个专业的Dify Workflow需求分析师，请严格按照以下要求检查和完善需求内容：
+
+
+
+            1. **输入优先级**：优先使用需求文档内容，若为空则使用需求段落
+
+            2. **知识利用**：结合知识检索结果完善需求分析
+
+            3. **检查要点**：
+
+               - 需求完整性：是否包含工作流的核心功能、节点类型、连接关系
+
+               - 需求清晰度：是否存在歧义或模糊描述
+
+               - 生成可行性：是否包含足够信息生成符合1.11.x版本规范的Dify Workflow
+
+               - 矛盾检查：需求内容是否存在逻辑矛盾
+
+
+
+            4. **输入内容**：
+
+               - 需求文档：{{1769150000001.text || ''}}
+
+               - 需求段落：{{1769050927522.NEED_TEXT || ''}}
+
+               - 知识检索结果：
+
+
+
+            5. **输出要求**：
+
+               - 严格输出JSON格式，无其他解释
+
+               - 确保final_content字段非空，即使输入为空也需生成示例需求
+
+               - final_content需包含工作流名称、描述、模式、节点列表、连接关系等核心信息
+
+               - 输出结构：{"is_complete": boolean, "is_clear": boolean, "has_enough_info":
+            boolean, "ambiguities": [string], "conflicts": [string], "final_content":
+            string}'
+        selected: false
+        structured_output_enabled: true
+        title: 检查
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1769052162508'
+      position:
+        x: 38.072185119965866
+        y: 314.9317803611677
+      positionAbsolute:
+        x: 38.072185119965866
+        y: 314.9317803611677
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        outputs:
+        - value_selector:
+          - '1769053963253'
+          - files
+          value_type: array[file]
+          variable: END_FILE
+        selected: false
+        title: 手册输出
+        type: end
+      height: 87
+      id: '1769052218754'
+      position:
+        x: 1082.3958442910928
+        y: 1302.4243548915974
+      positionAbsolute:
+        x: 1082.3958442910928
+        y: 1302.4243548915974
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        is_array_file: false
+        selected: false
+        title: 文档提取器
+        type: document-extractor
+        variable_selector:
+        - '1769050927522'
+        - NEED_FILE
+      height: 103
+      id: '1769052674744'
+      position:
+        x: -360.52070549758207
+        y: 648.7371946917017
+      positionAbsolute:
+        x: -360.52070549758207
+        y: 648.7371946917017
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import json\n\ndef main(text: any) -> dict:\n    \"\"\"\n    将输入转换为字符串类型\n\
+          \    \"\"\"\n    # 确保text始终为字符串类型\n    if text is None:\n        string_text\
+          \ = \"\"\n    elif isinstance(text, str):\n        string_text = text\n\
+          \    else:\n        try:\n            # 尝试将非字符串类型转换为字符串\n            string_text\
+          \ = str(text)\n        except:\n            # 转换失败时使用空字符串\n            string_text\
+          \ = \"\"\n    \n    return {\"text\": string_text}\n"
+        code_language: python3
+        outputs:
+          text:
+            children: null
+            type: string
+        selected: false
+        title: 文本类型转换
+        type: code
+        variables:
+        - value_selector:
+          - '1769052674744'
+          - text
+          variable: text
+      height: 51
+      id: '1769150000001'
+      position:
+        x: -360.52070549758207
+        y: 550
+      positionAbsolute:
+        x: -360.52070549758207
+        y: 550
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769068037267'
+          - final_content
+        model:
+          completion_params: {}
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        outputs:
+          ascii_flowchart:
+            children: null
+            type: string
+          markdown_output:
+            children: null
+            type: string
+          mermaid_flowchart:
+            children: null
+            type: string
+        prompt_template:
+        - id: f71a017e-4765-494b-8dee-f1674554b20c
+          role: system
+          text: '你是专业的Dify Workflow可视化专家，根据以下需求生成清晰的工作流可视化结构：
+
+
+
+            1. **输入内容**：
+
+               - 需求内容：{{1769068037267.final_content || ''}}
+
+
+
+            2. **输出要求**：
+
+               - 生成三种可视化表示：
+
+                 - ASCII流程图：简洁的文本流程图，展示节点流转
+
+                 - Mermaid流程图：支持click跳转的结构化流程图
+
+                 - Markdown输出：包含可视化说明和节点关系描述
+
+               - 每个节点需包含：ID、类型、描述、连接关系
+
+               - 清晰展示工作流的开始、处理、判断、结束节点
+
+               - 支持并行流程和条件分支的可视化
+
+
+
+            3. **格式要求**：
+
+               - 输出JSON格式：{"ascii_flowchart": string, "markdown_output": string, "mermaid_flowchart":
+            string}
+
+               - 无其他解释性文本
+
+               - Mermaid流程图需支持节点点击跳转
+
+               - ASCII流程图需使用简洁的符号和连接线
+
+
+
+            4. **示例结构**：
+
+               - ASCII：使用ASCII字符绘制的流程图
+
+               - Mermaid：graph LR
+
+                         Start[开始节点] --> Node1[处理节点]
+
+                         Node1 --> Condition{条件判断}
+
+                         Condition -->|是| Node2[处理节点]
+
+                         Condition -->|否| Node3[处理节点]
+
+                         Node2 --> End[结束节点]
+
+                         Node3 --> End
+
+               - Markdown：详细的节点关系说明和可视化描述'
+        selected: false
+        structured_output_enabled: true
+        title: 可视化结构层
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1769053676751'
+      position:
+        x: 563.5879295396928
+        y: 355.39178469381335
+      positionAbsolute:
+        x: 563.5879295396928
+        y: 355.39178469381335
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import json\nimport re\n\ndef extract_json(text: str) -> dict:\n  \
+          \  \"\"\"\n    从 LLM 输出中提取 JSON 对象\n    支持：\n    - 纯 JSON 字符串\n    - 被转义的\
+          \ JSON\n    - 前后带杂质文本\n    \"\"\"\n\n    if not text:\n        return {}\n\
+          \    text = text.strip()\n\n    # 情况 1：已经是 JSON 对象字符串\n    try:\n      \
+          \  obj = json.loads(text)\n        if isinstance(obj, dict):\n         \
+          \   return obj\n    except Exception:\n        pass\n\n    # 情况 2：被转义的 JSON\
+          \ 字符串\n    try:\n        unescaped = bytes(text, \"utf-8\").decode(\"unicode_escape\"\
+          )\n        obj = json.loads(unescaped)\n        if isinstance(obj, dict):\n\
+          \            return obj\n    except Exception:\n        pass\n\n    # 情况\
+          \ 3：文本中包含 JSON（正则兜底）\n    match = re.search(r'\\{[\\s\\S]*\\}', text)\n\
+          \    if match:\n        candidate = match.group(0)\n        try:\n     \
+          \       return json.loads(candidate)\n        except Exception:\n      \
+          \      pass\n\n    return {}\n\n# Dify Python 节点需要 main 函数接收输入变量\ndef main(raw_text:\
+          \ str):\n    data = extract_json(raw_text)\n\n    # 强制字段兜底（防止下游炸）\n    result\
+          \ = {\n        \"markdown_output\": str(data.get(\"markdown_output\", \"\
+          \")),\n        \"ascii_flowchart\": str(data.get(\"ascii_flowchart\", \"\
+          \")),\n        \"mermaid_flowchart\": str(data.get(\"mermaid_flowchart\"\
+          , \"\")),\n    }\n\n    return result\n"
+        code_language: python3
+        is_team_authorization: true
+        outputs:
+          ascii_flowchart:
+            children: null
+            type: string
+          markdown_output:
+            children: null
+            type: string
+          mermaid_flowchart:
+            children: null
+            type: string
+        selected: false
+        title: 国内AI json 化处理模块
+        type: code
+        variables:
+        - value_selector:
+          - '1769053676751'
+          - text
+          variable: raw_text
+      height: 51
+      id: '1769068500001'
+      position:
+        x: 563.5879295396928
+        y: 438.0305053230396
+      positionAbsolute:
+        x: 563.5879295396928
+        y: 438.0305053230396
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769068037267'
+          - final_content
+          - '1769068500001'
+          - markdown_output
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        outputs:
+          markdown_output:
+            children: null
+            type: string
+        prompt_template:
+        - id: a45d3b45-1d5f-42e4-b8c0-466d7784835e
+          role: system
+          text: '你是一个专业的Dify Workflow节点配置专家，熟悉1.11.x版本规范，请根据以下输入生成详细的节点配置：
+
+
+
+            1. **输入内容**：
+
+               - 可视化结构：{{1769068500001.markdown_output || ''}}
+
+               - 需求内容：{{1769068037267.final_content || ''}}
+
+               - 1.11.x规范：包含dependencies配置、节点type字段、desc字段、selected状态、cases数组结构等
+
+
+
+            2. **配置要求**：
+
+               - 每个节点必须包含：type、desc、selected等核心字段
+
+               - 变量配置需使用variable字段，包含selector、max_length等
+
+               - 条件分支使用cases数组结构，包含case_id、conditions、logical_operator
+
+               - 输出配置使用outputs数组，包含value_selector和variable
+
+               - LLM节点需包含vision、completion_params配置
+
+               - 代码节点需包含code_language字段
+
+
+
+            3. **输出内容**：
+
+               - 节点目的：核心功能和作用
+
+               - 关键参数：1.11.x规范要求的必填字段
+
+               - 输入：接收的变量和数据类型
+
+               - 输出：产生的变量和数据类型
+
+               - 连接关系：输入来源和输出去向
+
+               - MCP标记：需自定义开发的特殊节点
+
+
+
+            4. **格式要求**：
+
+               - 清晰的层级结构
+
+               - 每个节点配置不少于200字
+
+               - 严格遵循1.11.x版本规范'
+        selected: false
+        structured_output_enabled: true
+        title: 节点配置层
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1769053793268'
+      position:
+        x: 563.5879295396928
+        y: 491.64216303195735
+      positionAbsolute:
+        x: 563.5879295396928
+        y: 491.64216303195735
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769068037267'
+          - final_content
+          - '1769053793268'
+          - markdown_output
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        outputs:
+          markdown_output:
+            children: null
+            type: string
+        prompt_template:
+        - id: cfb873bb-b03d-4f26-a83f-6b25cc42fdf3
+          role: system
+          text: '你是一个专业的Dify Workflow MCP节点开发专家，请根据以下输入生成工程级开发大纲：
+
+
+
+            1. **输入内容**：
+
+               - 节点配置：{{1769053793268.markdown_output || ''}}
+
+               - 需求内容：{{1769068037267.final_content || ''}}
+
+               - 模式选择：{{1769050927522.mode_MCP}}
+
+               - 1.11.x规范：包含节点结构、输入输出格式、依赖管理等
+
+
+
+            2. **开发大纲要求**：
+
+               - 节点概述：核心功能、定位、与其他节点的关系
+
+               - 技术架构：技术栈选择、模块划分、数据流设计
+
+               - API设计：严格遵循1.11.x规范的输入输出接口
+
+               - 实现步骤：详细的开发里程碑和代码实现要点
+
+               - 测试策略：单元测试、集成测试、性能测试方案
+
+               - 部署方案：Dify集成方式、依赖管理、版本控制
+
+               - 维护建议：监控指标、日志设计、升级策略
+
+
+
+            3. **输出要求**：
+
+               - 每个MCP节点大纲不少于1000字
+
+               - 技术细节具体，可直接指导开发
+
+               - 严格遵循1.11.x版本规范
+
+               - 考虑可扩展性和维护性'
+        selected: false
+        structured_output_enabled: true
+        title: MCP 开发层
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1769053833970'
+      position:
+        x: 563.5879295396928
+        y: 799.6461968374359
+      positionAbsolute:
+        x: 563.5879295396928
+        y: 799.6461968374359
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769068500001'
+          - final_markdown
+          - '1769053793268'
+          - final_markdown
+          - '1769053833970'
+          - final_markdown
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        outputs:
+          final_markdown:
+            children: null
+            type: string
+        prompt_template:
+        - id: 2cdf4682-e9e3-402b-b7d3-3b0a2d0f4ffb
+          role: system
+          text: '你是一个专业的Dify Workflow文档生成专家，请根据以下输入生成符合1.11.x规范的完整工作流配置文档：
+
+
+
+            1. **输入内容**：
+
+               - 可视化结构：{{1769068500001.markdown_output || ''}}
+
+               - 节点配置：{{1769053793268.markdown_output || ''}}
+
+               - MCP开发大纲：{{1769053833970.markdown_output || ''}}
+
+               - 模式选择：{{1769050927522.mode_MCP}}
+
+               - 1.11.x规范：包含工作流结构、节点配置、输出格式等
+
+
+
+            2. **文档结构要求**：
+
+               - Layer 1｜Workflow 可视化结构：
+
+                 - 解决问题：展示工作流整体架构和连接关系
+
+                 - 包含：ASCII流程图、Mermaid流程图、节点关系说明
+
+               - Layer 2｜节点参数与连接配置：
+
+                 - 解决问题：详细定义每个节点的配置参数和连接关系
+
+                 - 包含：每个节点的type、desc、参数配置、输入输出、连接关系
+
+               - Layer 3｜MCP / 自定义节点开发大纲：
+
+                 - 解决问题：提供MCP节点的详细开发指南
+
+                 - 包含：节点概述、技术架构、API设计、实现步骤、测试策略、部署方案
+
+               - 整体部署与演进建议：
+
+                 - 解决问题：指导工作流的部署和长期维护
+
+                 - 包含：部署方式、版本管理、性能优化、扩展建议
+
+
+
+            3. **写作标准**：
+
+               - 每节点描述不少于200字
+
+               - 每MCP大纲不少于1000字
+
+               - 总字数不少于5000字
+
+               - 所有抽象点必须给出示例
+
+               - 避免营销语言与空泛总结
+
+               - 严格遵循1.11.x版本规范
+
+
+
+            4. **输出要求**：
+
+               - 输出格式：Markdown
+
+               - 输出结构：{"final_markdown": string}
+
+               - 无其他解释性文本
+
+               - 确保内容完整、结构清晰、技术准确'
+        selected: false
+        structured_output_enabled: true
+        title: 写作标准 & 输出结构控制
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1769053876253'
+      position:
+        x: 977.1232375653808
+        y: 462.9091927572484
+      positionAbsolute:
+        x: 977.1232375653808
+        y: 462.9091927572484
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        is_team_authorization: true
+        params:
+          docx_template_file: ''
+          md_text: '{{17690724297200.final_markdown}}'
+          output_filename: dify_workflow_config
+        plugin_id: bowenliang123/md_exporter
+        plugin_unique_identifier: bowenliang123/md_exporter:3.2.0@b3075f474341eaf9f98ff773d684dc779c0b228f5da09b55eb773dcb5421d947
+        provider_icon: http://localhost/console/api/workspaces/current/plugin/icon?tenant_id=a633b69c-9b5d-4769-b682-a66b28423d93&filename=f0bad95cda1671b4e49f0e05df6122ef9ec5d554e138f128795d11d3806c00ef.svg
+        provider_id: bowenliang123/md_exporter/md_exporter
+        provider_name: bowenliang123/md_exporter/md_exporter
+        provider_type: builtin
+        selected: false
+        title: Markdown ⮕ DOCX
+        tool_configurations: {}
+        tool_description: 将 Markdown 转换为 DOCX 文件的工具
+        tool_label: Markdown ⮕ DOCX
+        tool_name: md_to_docx
+        tool_node_version: '2'
+        tool_parameters:
+          docx_template_file:
+            type: constant
+            value: null
+          md_text:
+            type: mixed
+            value: '{{17690724297200.final_markdown}}'
+          output_filename:
+            type: mixed
+            value: dify_workflow_config
+        type: tool
+      height: 51
+      id: '1769053963253'
+      position:
+        x: 1082.3958442910928
+        y: 1249.3742750637334
+      positionAbsolute:
+        x: 1082.3958442910928
+        y: 1249.3742750637334
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import json\nimport re\n\ndef extract_json(text: str) -> dict:\n  \
+          \  \"\"\"\n    从 LLM 输出中提取 JSON 对象\n    支持：\n    - 纯 JSON 字符串\n    - 被转义的\
+          \ JSON\n    - 前后带杂质文本\n    \"\"\"\n\n    if not text:\n        return {}\n\
+          \    text = text.strip()\n\n    # 情况 1：已经是 JSON 对象字符串\n    try:\n      \
+          \  obj = json.loads(text)\n        if isinstance(obj, dict):\n         \
+          \   return obj\n    except Exception:\n        pass\n\n    # 情况 2：被转义的 JSON\
+          \ 字符串\n    try:\n        unescaped = bytes(text, \"utf-8\").decode(\"unicode_escape\"\
+          )\n        obj = json.loads(unescaped)\n        if isinstance(obj, dict):\n\
+          \            return obj\n    except Exception:\n        pass\n\n    # 情况\
+          \ 3：文本中包含 JSON（正则兜底）\n    match = re.search(r'\\{[\\s\\S]*\\}', text)\n\
+          \    if match:\n        candidate = match.group(0)\n        try:\n     \
+          \       return json.loads(candidate)\n        except Exception:\n      \
+          \      pass\n\n    return {}\n\n# Dify Python 节点需要 main 函数接收输入变量\ndef main(raw_text:\
+          \ str):\n    data = extract_json(raw_text)\n\n    # 强制字段兜底（防止下游炸）\n    result\
+          \ = {\n        \"is_complete\": bool(data.get(\"is_complete\", False)),\n\
+          \        \"is_clear\": bool(data.get(\"is_clear\", False)),\n        \"\
+          has_enough_info\": bool(data.get(\"has_enough_info\", False)),\n       \
+          \ \"ambiguities\": list(data.get(\"ambiguities\", [])),\n        \"conflicts\"\
+          : list(data.get(\"conflicts\", [])),\n        \"final_content\": str(data.get(\"\
+          final_content\", \"\")),\n    }\n\n    return result\n\n# Dify 会自动调用 main\
+          \ 函数并传入输入变量\n"
+        code_language: python3
+        outputs:
+          ambiguities:
+            children: null
+            type: array[string]
+          conflicts:
+            children: null
+            type: array[string]
+          final_content:
+            children: null
+            type: string
+          has_enough_info:
+            children: null
+            type: boolean
+          is_clear:
+            children: null
+            type: boolean
+          is_complete:
+            children: null
+            type: boolean
+        selected: false
+        title: 国内AI json 化处理模块
+        type: code
+        variables:
+        - value_selector:
+          - '1769052162508'
+          - text
+          variable: raw_text
+      height: 51
+      id: '1769068037267'
+      position:
+        x: 38.072185119965866
+        y: 405.85196396552215
+      positionAbsolute:
+        x: 38.072185119965866
+        y: 405.85196396552215
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import json\nimport re\n\ndef extract_json(text: str) -> dict:\n  \
+          \  \"\"\"\n    从 LLM 输出中提取 JSON 对象\n    支持：\n    - 纯 JSON 字符串\n    - 被转义的\
+          \ JSON\n    - 前后带杂质文本\n    \"\"\"\n\n    if not text:\n        return {}\n\
+          \    text = text.strip()\n\n    # 情况 1：已经是 JSON 对象字符串\n    try:\n      \
+          \  obj = json.loads(text)\n        if isinstance(obj, dict):\n         \
+          \   return obj\n    except Exception:\n        pass\n\n    # 情况 2：被转义的 JSON\
+          \ 字符串\n    try:\n        unescaped = bytes(text, \"utf-8\").decode(\"unicode_escape\"\
+          )\n        obj = json.loads(unescaped)\n        if isinstance(obj, dict):\n\
+          \            return obj\n    except Exception:\n        pass\n\n    # 情况\
+          \ 3：文本中包含 JSON（正则兜底）\n    match = re.search(r'\\{[\\s\\S]*\\}', text)\n\
+          \    if match:\n        candidate = match.group(0)\n        try:\n     \
+          \       return json.loads(candidate)\n        except Exception:\n      \
+          \      pass\n\n    return {}\n\n# Dify Python 节点需要 main 函数接收输入变量\ndef main(raw_text:\
+          \ str):\n    data = extract_json(raw_text)\n\n    # 强制字段兜底（防止下游炸）\n    final_markdown\
+          \ = str(data.get(\"markdown_output\", \"\"))\n    \n    # 添加默认值，确保 md_text\
+          \ 不为空\n    if not final_markdown:\n        final_markdown = \"# Dify Workflow\
+          \ 报告\\n\\n## 报告内容\\n\\n由于输入内容过于简单，无法生成详细报告。请提供更详细的需求描述以获取完整报告。\\n\\n## 生成信息\\\
+          n\\n- 生成时间：自动生成\\n- 报告类型：默认模板\\n- 输入内容：简化输入\" \n    \n    result = {\n \
+          \       \"final_markdown\": final_markdown,\n    }\n\n    return result\n"
+        code_language: python3
+        is_team_authorization: true
+        outputs:
+          final_markdown:
+            children: null
+            type: string
+        selected: false
+        title: 国内AI json 化处理模块
+        type: code
+        variables:
+        - value_selector:
+          - '1769053876253'
+          - text
+          variable: raw_text
+      height: 51
+      id: '17690724131850'
+      position:
+        x: 563.5879295396928
+        y: 578.1116105581626
+      positionAbsolute:
+        x: 563.5879295396928
+        y: 578.1116105581626
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import json\nimport re\n\ndef extract_json(text: str) -> dict:\n  \
+          \  \"\"\"\n    从 LLM 输出中提取 JSON 对象\n    支持：\n    - 纯 JSON 字符串\n    - 被转义的\
+          \ JSON\n    - 前后带杂质文本\n    \"\"\"\n\n    if not text:\n        return {}\n\
+          \    text = text.strip()\n\n    # 情况 1：已经是 JSON 对象字符串\n    try:\n      \
+          \  obj = json.loads(text)\n        if isinstance(obj, dict):\n         \
+          \   return obj\n    except Exception:\n        pass\n\n    # 情况 2：被转义的 JSON\
+          \ 字符串\n    try:\n        unescaped = bytes(text, \"utf-8\").decode(\"unicode_escape\"\
+          )\n        obj = json.loads(unescaped)\n        if isinstance(obj, dict):\n\
+          \            return obj\n    except Exception:\n        pass\n\n    # 情况\
+          \ 3：文本中包含 JSON（正则兜底）\n    match = re.search(r'\\{[\\s\\S]*\\}', text)\n\
+          \    if match:\n        candidate = match.group(0)\n        try:\n     \
+          \       return json.loads(candidate)\n        except Exception:\n      \
+          \      pass\n\n    return {}\n\n# Dify Python 节点需要 main 函数接收输入变量\ndef main(raw_text:\
+          \ str):\n    data = extract_json(raw_text)\n\n    # 强制字段兜底（防止下游炸）\n    final_markdown\
+          \ = str(data.get(\"markdown_output\", \"\"))\n    \n    # 添加默认值，确保 md_text\
+          \ 不为空\n    if not final_markdown:\n        final_markdown = \"# Dify Workflow\
+          \ 报告\\n\\n## 报告内容\\n\\n由于输入内容或LLM输出问题，无法生成详细报告。请提供更详细的需求描述以获取完整报告。\\n\\\
+          n## 生成信息\\n\\n- 生成时间：自动生成\\n- 报告类型：默认模板\\n- 处理状态：已处理\\n- 输入情况：已接收\\n\\n##\
+          \ 解决建议\\n\\n1. 提供更详细的需求描述\\n2. 确保输入格式符合要求\\n3. 检查LLM模型配置\\n4. 重试生成报告\" \n\
+          \    \n    result = {\n        \"final_markdown\": final_markdown,\n   \
+          \ }\n\n    return result\n"
+        code_language: python3
+        is_team_authorization: true
+        outputs:
+          final_markdown:
+            children: null
+            type: string
+        selected: false
+        title: 国内AI json 化处理模块
+        type: code
+        variables:
+        - value_selector:
+          - '1769053676751'
+          - text
+          variable: raw_text
+      height: 51
+      id: '17690724163040'
+      position:
+        x: 563.5879295396928
+        y: 890.5481111786644
+      positionAbsolute:
+        x: 563.5879295396928
+        y: 890.5481111786644
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import json\nimport re\n\ndef extract_json(text: str) -> dict:\n  \
+          \  \"\"\"\n    从 LLM 输出中提取 JSON 对象\n    支持：\n    - 纯 JSON 字符串\n    - 被转义的\
+          \ JSON\n    - 前后带杂质文本\n    \"\"\"\n\n    if not text:\n        return {}\n\
+          \    text = text.strip()\n\n    # 情况 1：已经是 JSON 对象字符串\n    try:\n      \
+          \  obj = json.loads(text)\n        if isinstance(obj, dict):\n         \
+          \   return obj\n    except Exception:\n        pass\n\n    # 情况 2：被转义的 JSON\
+          \ 字符串\n    try:\n        unescaped = bytes(text, \"utf-8\").decode(\"unicode_escape\"\
+          )\n        obj = json.loads(unescaped)\n        if isinstance(obj, dict):\n\
+          \            return obj\n    except Exception:\n        pass\n\n    # 情况\
+          \ 3：文本中包含 JSON（正则兜底）\n    match = re.search(r'\\{[\\s\\S]*\\}', text)\n\
+          \    if match:\n        candidate = match.group(0)\n        try:\n     \
+          \       return json.loads(candidate)\n        except Exception:\n      \
+          \      pass\n\n    return {}\n\n# Dify Python 节点需要 main 函数接收输入变量\ndef main(raw_text:\
+          \ str):\n    data = extract_json(raw_text)\n\n    # 强制字段兜底（防止下游炸）\n    final_markdown\
+          \ = str(data.get(\"final_markdown\", \"\"))\n    \n    # 添加默认值，确保 md_text\
+          \ 不为空\n    if not final_markdown:\n        final_markdown = \"# Dify Workflow\
+          \ 报告\\n\\n## 报告内容\\n\\n由于输入内容或LLM输出问题，无法生成详细报告。请提供更详细的需求描述以获取完整报告。\\n\\\
+          n## 生成信息\\n\\n- 生成时间：自动生成\\n- 报告类型：默认模板\\n- 处理状态：已处理\\n- 输入情况：已接收\\n\\n##\
+          \ 解决建议\\n\\n1. 提供更详细的需求描述\\n2. 确保输入格式符合要求\\n3. 检查LLM模型配置\\n4. 重试生成报告\" \n\
+          \    \n    result = {\n        \"final_markdown\": final_markdown,\n   \
+          \ }\n\n    return result\n"
+        code_language: python3
+        is_team_authorization: true
+        outputs:
+          final_markdown:
+            children: null
+            type: string
+        selected: false
+        title: 国内AI json 化处理模块
+        type: code
+        variables:
+        - value_selector:
+          - '1769053876253'
+          - text
+          variable: raw_text
+      height: 51
+      id: '17690724297200'
+      position:
+        x: 977.1232375653808
+        y: 549.11322133593
+      positionAbsolute:
+        x: 977.1232375653808
+        y: 549.11322133593
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            value: 启用MCP模式
+            variable_selector:
+            - '1769050927522'
+            - mode_MCP
+          id: 'true'
+          logical_operator: and
+        - case_id: 'false'
+          conditions:
+          - comparison_operator: is
+            value: 禁用MCP模式
+            variable_selector:
+            - '1769050927522'
+            - mode_MCP
+          id: 'false'
+          logical_operator: and
+        default_next_node_id: '1769052218754'
+        selected: false
+        title: MCP模式
+        type: if-else
+      height: 171
+      id: '1769073297193'
+      position:
+        x: 563.5879295396928
+        y: 629.1376528313453
+      positionAbsolute:
+        x: 563.5879295396928
+        y: 629.1376528313453
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1769068500001'
+          - final_markdown
+          - '1769053793268'
+          - final_markdown
+          - '1769053833970'
+          - final_markdown
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        outputs:
+          yaml_output:
+            children: null
+            type: string
+        prompt_template:
+        - id: 3c4a2b1d-5e6f-7g8h-9i0j-1k2l3m4n5o6p
+          role: system
+          text: '你是一个专业的YAML工作流配置生成器，严格按照Dify Workflow 1.11.x规范生成YAML文件。请根据用户需求，生成完整的、符合规范的YAML配置，确保可以直接导入Dify系统。
+
+
+
+            ### 核心结构要求
+
+
+
+            #### 1. 基础元数据（所有模式必须包含）
+
+            ```yaml
+
+            app:
+
+              description: ''''
+
+              icon: 🤖
+
+              icon_background: ''#FEF7C3''  # 可选颜色
+
+              mode: workflow  # 或 chat, completion, agent-chat, advanced-chat
+
+              name: 工作流名称
+
+              use_icon_as_answer_icon: false
+
+            dependencies: []  # 或依赖列表
+
+            kind: app
+
+            version: 0.5.0
+
+            ```
+
+
+
+            #### 2. 模式特定配置
+
+
+
+            ##### 2.1 workflow 和 advanced-chat 模式
+
+            必须包含完整的 workflow 配置：
+
+            ```yaml
+
+            workflow:
+
+              conversation_variables: []  # 会话变量定义
+
+              environment_variables: []  # 环境变量定义
+
+              features:  # 功能配置
+
+                file_upload:  # 文件上传配置
+
+                  allowed_file_extensions: []
+
+                  allowed_file_types: []
+
+                  allowed_file_upload_methods: []
+
+                  enabled: false
+
+                  image:
+
+                    enabled: false
+
+                    number_limits: 3
+
+                    transfer_methods: []
+
+                  number_limits: 3
+
+                opening_statement: ''''  # 开场白
+
+                retriever_resource:  # 检索资源配置
+
+                  enabled: false
+
+                sensitive_word_avoidance:  # 敏感词过滤
+
+                  enabled: false
+
+                speech_to_text:  # 语音转文字
+
+                  enabled: false
+
+                suggested_questions: []  # 建议问题
+
+                suggested_questions_after_answer:  # 回答后建议问题
+
+                  enabled: false
+
+                text_to_speech:  # 文字转语音
+
+                  enabled: false
+
+                  language: ''''
+
+                  voice: ''''
+
+              graph:  # 工作流图结构
+
+                edges:  # 边定义
+
+                - data:
+
+                    isInIteration: false
+
+                    sourceType: start
+
+                    targetType: llm
+
+                  id: edge-id-1
+
+                  selected: false
+
+                  source: ''start-node-id''
+
+                  sourceHandle: source
+
+                  target: ''llm-node-id''
+
+                  targetHandle: target
+
+                  type: custom
+
+                  zIndex: 0
+
+                nodes:  # 节点定义
+
+                - data:
+
+                    desc: ''''
+
+                    selected: false
+
+                    title: 开始
+
+                    type: start
+
+                    variables: []
+
+                  height: 53
+
+                  id: ''start-node-id''
+
+                  position:
+
+                    x: 30
+
+                    y: 266
+
+                  positionAbsolute:
+
+                    x: 30
+
+                    y: 266
+
+                  selected: false
+
+                  sourcePosition: right
+
+                  targetPosition: left
+
+                  type: custom
+
+                  width: 244
+
+                # 其他节点...
+
+              rag_pipeline_variables: []  # RAG管道变量
+
+            ```
+
+
+
+            ##### 2.2 chat, completion, agent-chat 模式
+
+            必须包含完整的 model_config 配置：
+
+            ```yaml
+
+            model_config:
+
+              agent_mode:  # 智能体模式配置
+
+                enabled: false
+
+                max_iteration: 5
+
+                strategy: react  # 或 function_call, router
+
+                tools: []  # 工具列表
+
+              annotation_reply:  # 注释回复
+
+                enabled: false
+
+              chat_prompt_config: {}  # 聊天提示词配置
+
+              completion_prompt_config: {}  # 补全提示词配置
+
+              dataset_configs:  # 数据集配置
+
+                datasets:
+
+                  datasets: []
+
+                retrieval_model: single  # 或 multi
+
+              dataset_query_variable: ''''  # 数据集查询变量
+
+              external_data_tools: []  # 外部数据工具
+
+              file_upload:  # 文件上传配置（同workflow）
+
+                image:
+
+                  detail: high
+
+                  enabled: false
+
+                  number_limits: 3
+
+                  transfer_methods: []
+
+              model:  # 模型配置
+
+                completion_params:
+
+                  frequency_penalty: 0
+
+                  max_tokens: 512
+
+                  presence_penalty: 0
+
+                  stop: []
+
+                  temperature: 0.7
+
+                  top_p: 1
+
+                mode: chat  # 或 completion
+
+                name: model-name
+
+                provider: provider-name
+
+              more_like_this:  # 相似问题
+
+                enabled: false
+
+              opening_statement: ''''  # 开场白
+
+              pre_prompt: ''''  # 前置提示词
+
+              prompt_type: simple  # 或 complex
+
+              retriever_resource:  # 检索资源
+
+                enabled: false
+
+              sensitive_word_avoidance:  # 敏感词过滤
+
+                enabled: false
+
+                words: ''''
+
+              speech_to_text:  # 语音转文字
+
+                enabled: false
+
+              suggested_questions: []  # 建议问题
+
+              suggested_questions_after_answer:  # 回答后建议问题
+
+                enabled: false
+
+              text_to_speech:  # 文字转语音
+
+                enabled: false
+
+              user_input_form: []  # 用户输入表单
+
+            ```
+
+
+
+            ### 3. 节点类型及配置
+
+
+
+            #### 3.1 开始节点 (start)
+
+            ```yaml
+
+            - data:
+
+                desc: ''''
+
+                selected: false
+
+                title: 开始
+
+                type: start
+
+                variables:  # 输入变量定义
+
+                - label: 变量名称
+
+                  max_length: 256
+
+                  options: []
+
+                  required: true
+
+                  type: text-input  # 或 paragraph, select, file, etc.
+
+                  variable: variable_name
+
+              height: 89
+
+              id: ''start-node-id''
+
+              position:
+
+                x: 80
+
+                y: 282
+
+              positionAbsolute:
+
+                x: 80
+
+                y: 282
+
+              selected: false
+
+              sourcePosition: right
+
+              targetPosition: left
+
+              type: custom
+
+              width: 244
+
+            ```
+
+
+
+            #### 3.2 LLM节点 (llm)
+
+            ```yaml
+
+            - data:
+
+                context:
+
+                  enabled: false
+
+                  variable_selector: []
+
+                desc: ''''
+
+                model:
+
+                  completion_params:
+
+                    temperature: 0.7
+
+                  mode: chat
+
+                  name: model-name
+
+                  provider: provider-name
+
+                prompt_template:
+
+                - id: prompt-id
+
+                  role: system
+
+                  text: 系统提示词
+
+                - id: prompt-id-2
+
+                  role: user
+
+                  text: 用户提示词
+
+                selected: false
+
+                title: LLM节点名称
+
+                type: llm
+
+                variables: []
+
+                vision:
+
+                  enabled: false
+
+              height: 97
+
+              id: ''llm-node-id''
+
+              position:
+
+                x: 334
+
+                y: 266
+
+              positionAbsolute:
+
+                x: 334
+
+                y: 266
+
+              selected: false
+
+              sourcePosition: right
+
+              targetPosition: left
+
+              type: custom
+
+              width: 244
+
+            ```
+
+
+
+            #### 3.3 条件分支节点 (if-else)
+
+            ```yaml
+
+            - data:
+
+                cases:
+
+                - case_id: ''true''
+
+                  conditions:
+
+                  - comparison_operator: ''=''
+
+                    id: condition-id
+
+                    value: ''1''
+
+                    varType: number
+
+                    variable_selector:
+
+                    - sys
+
+                    - dialogue_count
+
+                  id: ''true''
+
+                  logical_operator: and
+
+                desc: ''''
+
+                selected: false
+
+                title: 条件分支
+
+                type: if-else
+
+              height: 173
+
+              id: ''if-else-node-id''
+
+              position:
+
+                x: 638
+
+                y: 286.5
+
+              positionAbsolute:
+
+                x: 638
+
+                y: 286.5
+
+              selected: false
+
+              sourcePosition: right
+
+              targetPosition: left
+
+              type: custom
+
+              width: 244
+
+            ```
+
+
+
+            #### 3.4 代码节点 (code)
+
+            ```yaml
+
+            - data:
+
+                code: "def main(arg1):\n    return {}"
+
+                code_language: python3
+
+                desc: ''''
+
+                outputs:
+
+                  result:
+
+                    children: null
+
+                    type: string
+
+                selected: false
+
+                title: 代码节点
+
+                type: code
+
+                variables:
+
+                - value_selector:
+
+                  - ''node-id''
+
+                  - field
+
+                  variable: arg1
+
+              height: 53
+
+              id: ''code-node-id''
+
+              position:
+
+                x: 942
+
+                y: 266
+
+              positionAbsolute:
+
+                x: 942
+
+                y: 266
+
+              selected: false
+
+              sourcePosition: right
+
+              targetPosition: left
+
+              type: custom
+
+              width: 244
+
+            ```
+
+
+
+            #### 3.5 结束节点 (end)
+
+            ```yaml
+
+            - data:
+
+                desc: ''''
+
+                outputs:
+
+                - value_selector:
+
+                  - ''node-id''
+
+                  - field
+
+                  variable: output
+
+                selected: false
+
+                title: 结束
+
+                type: end
+
+              height: 89
+
+              id: ''end-node-id''
+
+              position:
+
+                x: 1256
+
+                y: 280
+
+              positionAbsolute:
+
+                x: 1256
+
+                y: 280
+
+              selected: false
+
+              sourcePosition: right
+
+              targetPosition: left
+
+              type: custom
+
+              width: 244
+
+            ```
+
+
+
+
+
+
+            ### 5. 生成规则
+
+
+
+            1. **严格遵循YAML语法**：正确的缩进、冒号、引号使用
+
+            2. **完整结构**：确保所有必填字段都包含
+
+            3. **模式匹配**：根据app.mode生成对应的配置结构
+
+            4. **节点完整性**：每个节点都有唯一ID、位置信息、类型等
+
+            5. **边连接正确**：确保边的source和target指向有效节点
+
+            6. **变量一致性**：变量引用与定义匹配
+
+            7. **符合1.11.x规范**：不要使用旧版本或自定义字段
+
+
+
+            ### 6. 示例输出
+
+
+
+            根据以上规则，生成完整的YAML配置，确保可以直接导入Dify系统。'
+        selected: false
+        structured_output_enabled: true
+        title: YAML工作流生成器
+        type: llm
+        vision:
+          enabled: false
+      height: 87
+      id: '1769074567890'
+      position:
+        x: 1082.3958442910928
+        y: 925.0105780532404
+      positionAbsolute:
+        x: 1082.3958442910928
+        y: 925.0105780532404
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        code: "import json\nimport re\n\n\ndef extract_yaml(text: str) -> str:\n \
+          \   \"\"\"\n    从文本中提取YAML内容\n    支持：\n    - 纯YAML字符串\n    - 带标记的YAML块（如```yaml\
+          \ ... ```）\n    - 前后带杂质文本\n    \"\"\"\n    \n    if not text:\n        return\
+          \ \"\"\n    text = text.strip()\n    \n    # 情况1：已经是纯YAML\n    try:\n  \
+          \      True\n        return text\n    except:\n        pass\n    \n    #\
+          \ 情况2：带有yaml标记\n    yaml_match = re.search(r'```yaml\\s*([\\s\\S]*?)\\s*```',\
+          \ text, re.IGNORECASE)\n    if yaml_match:\n        yaml_content = yaml_match.group(1).strip()\n\
+          \        try:\n            True\n            return yaml_content\n     \
+          \   except:\n            pass\n    \n    # 情况3：前后有杂质，尝试提取yaml结构\n    yaml_start\
+          \ = text.find('app:')\n    if yaml_start != -1:\n        yaml_candidate\
+          \ = text[yaml_start:]\n        try:\n            True\n            return\
+          \ yaml_candidate\n        except:\n            pass\n    \n    return text\n\
+          \ndef main(raw_text: str):\n    \"\"\"\n    处理LLM生成的YAML，确保格式正确\n    \"\"\
+          \"\n    # 提取YAML\n    yaml_content = extract_yaml(raw_text)\n    \n    #\
+          \ 基本验证和修复\n    if not yaml_content:\n        # 生成默认YAML模板\n        yaml_content\
+          \ = \"\"\"\napp:\n  description: 自动生成的Dify工作流\n  icon: \U0001F916\n  icon_background:\
+          \ '#FFEAD5'\n  mode: workflow\n  name: 自动生成工作流\n  use_icon_as_answer_icon:\
+          \ false\ndependencies: []\nkind: app\nversion: 0.5.0\nworkflow:\n  conversation_variables:\
+          \ []\n  environment_variables: []\n  features:\n    file_upload:\n     \
+          \ allowed_file_extensions:\n      - .JPG\n      - .JPEG\n      - .PNG\n\
+          \      - .GIF\n      - .WEBP\n      - .SVG\n      allowed_file_types:\n\
+          \      - image\n      allowed_file_upload_methods:\n      - local_file\n\
+          \      - remote_url\n      enabled: false\n      image:\n        enabled:\
+          \ false\n        number_limits: 3\n        transfer_methods:\n        -\
+          \ local_file\n        - remote_url\n      number_limits: 3\n    opening_statement:\
+          \ ''\n    retriever_resource:\n      enabled: false\n    sensitive_word_avoidance:\n\
+          \      enabled: false\n    speech_to_text:\n      enabled: false\n    suggested_questions:\
+          \ []\n    suggested_questions_after_answer:\n      enabled: false\n    text_to_speech:\n\
+          \      enabled: false\n      language: ''\n      voice: ''\n  graph:\n \
+          \   edges: []\n    nodes: []\n    viewport:\n      x: 0\n      y: 0\n  \
+          \    zoom: 1\n  rag_pipeline_variables: []\n            \"\"\"\n    \n \
+          \   result = {\n        \"final_yaml\": yaml_content\n    }\n    return\
+          \ result\n"
+        code_language: python3
+        is_team_authorization: true
+        outputs:
+          final_yaml:
+            children: null
+            type: string
+        selected: false
+        title: YAML后处理器
+        type: code
+        variables:
+        - value_selector:
+          - '1769074567890'
+          - text
+          variable: raw_text
+      height: 51
+      id: '1769075678901'
+      position:
+        x: 1082.3958442910928
+        y: 870.7043707060124
+      positionAbsolute:
+        x: 1082.3958442910928
+        y: 870.7043707060124
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            value: 启用YAML模式
+            variable_selector:
+            - '1769050927522'
+            - mode_YAML
+          id: 'true'
+          logical_operator: and
+        - case_id: 'false'
+          conditions:
+          - comparison_operator: is
+            value: 禁用YAML模式
+            variable_selector:
+            - '1769050927522'
+            - mode_YAML
+          id: 'false'
+          logical_operator: and
+        default_next_node_id: '1769052218754'
+        selected: false
+        title: YAML模式
+        type: if-else
+      height: 171
+      id: '1769094201733'
+      position:
+        x: 743.9582009544303
+        y: 1123.1937865344998
+      positionAbsolute:
+        x: 743.9582009544303
+        y: 1123.1937865344998
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        outputs:
+        - value_selector:
+          - '1769075678901'
+          - final_yaml
+          value_type: string
+          variable: YAML_OUTPUT
+        selected: false
+        title: YAML文件输出
+        type: end
+      height: 87
+      id: '1769094370285'
+      position:
+        x: 1082.3958442910928
+        y: 777.1804087047515
+      positionAbsolute:
+        x: 1082.3958442910928
+        y: 777.1804087047515
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        dataset_ids:
+        - CHiqEMjxow1iqexS8Vsv++eqVZ8IELOGXos5fodI7JXT1bgNUdJHu4hgSsQtkCN5
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: weighted_score
+          top_k: 4
+          weights:
+            keyword_setting:
+              keyword_weight: 0
+            vector_setting:
+              embedding_model_name: text-embedding-3-large
+              embedding_provider_name: langgenius/openai/openai
+              vector_weight: 1
+            weight_type: customized
+        query_attachment_selector: []
+        query_variable_selector:
+        - '17690724297200'
+        - final_markdown
+        retrieval_mode: multiple
+        selected: false
+        title: 工作流数据集
+        type: knowledge-retrieval
+      height: 89
+      id: '1769148240708'
+      position:
+        x: 1082.3958442910928
+        y: 1014.6921292180828
+      positionAbsolute:
+        x: 1082.3958442910928
+        y: 1014.6921292180828
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        dataset_ids:
+        - CHiqEMjxow1iqexS8Vsv++eqVZ8IELOGXos5fodI7JXT1bgNUdJHu4hgSsQtkCN5
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: weighted_score
+          top_k: 4
+          weights:
+            keyword_setting:
+              keyword_weight: 0
+            vector_setting:
+              embedding_model_name: text-embedding-3-large
+              embedding_provider_name: langgenius/openai/openai
+              vector_weight: 1
+            weight_type: customized
+        query_attachment_selector: []
+        query_variable_selector:
+        - '1769052162508'
+        - reasoning_content
+        retrieval_mode: multiple
+        selected: false
+        title: 工作流数据集
+        type: knowledge-retrieval
+      height: 89
+      id: '17691653957600'
+      position:
+        x: 38.072185119965866
+        y: 455.1785007080214
+      positionAbsolute:
+        x: 38.072185119965866
+        y: 455.1785007080214
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    viewport:
+      x: -793.5158042062262
+      y: -496.90253713427785
+      zoom: 1.007581670481627
+  rag_pipeline_variables: []

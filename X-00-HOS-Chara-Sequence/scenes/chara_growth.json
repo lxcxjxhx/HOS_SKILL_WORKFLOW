@@ -1,0 +1,78 @@
+{
+  "name": "chara_growth",
+  "frames": 100,
+  "template": "anime style, 2D illustration, high quality anime art, cel shading, full body character portrait, standing upright facing viewer, wearing plain dark grey tank top and shorts, neutral expression, soft studio lighting, plain light grey background, whole body visible head to feet, centered, masterpiece, best quality, {subject}",
+  "unique_suffix": "percent",
+  "features": {
+    "height": [
+      "very short small child, about half adult height",
+      "short child, below adult waist height",
+      "small child, growing taller",
+      "tall child, approaching adult shoulder height",
+      "young teenager, adult shoulder height",
+      "teenager, medium height",
+      "older teenager, taller",
+      "young adult, full height",
+      "adult, average height",
+      "tall adult",
+      "very tall adult",
+      "towering adult, imposing height"
+    ],
+    "face": [
+      "round baby face, large innocent eyes",
+      "childish face, soft cheeks",
+      "young face, still soft features",
+      "youthful face, features firming",
+      "teenage face, slight angularity",
+      "mature teenage face",
+      "young adult face, defined features",
+      "adult face, clear definition",
+      "mature adult face, strong features",
+      "seasoned adult face, weathered character",
+      "veteran face, sharp gaze",
+      "heroic adult face, commanding presence"
+    ],
+    "build": [
+      "chubby soft baby body",
+      "soft round child body",
+      "growing lean child body",
+      "lean child body, losing baby fat",
+      "slender teenage body",
+      "lean teenage body, gaining muscle",
+      "athletic young adult body",
+      "fit adult body",
+      "toned muscular adult body",
+      "strong adult body",
+      "powerful muscular body",
+      "heroic muscular body, peak condition"
+    ],
+    "hair": [
+      "messy short baby hair",
+      "short messy hair",
+      "short hair, neatly trimmed",
+      "short styled hair",
+      "medium length hair, stylish",
+      "medium length hair, well groomed",
+      "shoulder-length hair",
+      "longer hair, flowing",
+      "long hair",
+      "long flowing hair",
+      "very long flowing hair",
+      "distinctive long hair, heroic style"
+    ],
+    "aura": [
+      "innocent, carefree child",
+      "curious young child",
+      "playful child",
+      "energetic youth",
+      "determined teenager",
+      "confident teenager",
+      "ambitious young adult",
+      "steady adult",
+      "capable adult",
+      "respected adult",
+      "renowned veteran",
+      "legendary hero, commanding aura"
+    ]
+  }
+}
