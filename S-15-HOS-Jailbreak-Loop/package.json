@@ -1,0 +1,27 @@
+{
+  "name": "hos-jailbreak-loop",
+  "version": "1.0.0",
+  "description": "Jailbreak 循环优化系统 — 多维度攻防技术库 + 自动化迭代评估引擎 + 便捷开关控制",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "jailbreak",
+    "red-teaming",
+    "ai-safety",
+    "prompt-engineering",
+    "adversarial",
+    "defense",
+    "sillytavern",
+    "hos"
+  ],
+  "author": "lxcxjxhx",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
