@@ -1,0 +1,180 @@
+/* ============================================================
+ * HOS 对外获客视觉系统 — Colors & Type Tokens
+ * 基于风信子特写参考图提炼：深紫罗兰 + 勃艮第红 + 青铜绿 + 暗背景高对比
+ * 与 HOS-LS 品牌色 #7C3AED 对齐；仅用于对外电商获客资产
+ * 配色占比校验：暗背景≥55% / 紫系25-30% / 红≤10% / 绿≤10% / 金≤3%
+ * ============================================================ */
+
+:root {
+  /* ---------- 主色：风信子深紫罗兰 ---------- */
+  --hos-violet-deep:  #5B2C91;   /* 最深紫，用于页头/页脚背景 */
+  --hos-violet:       #7C3AED;   /* HOS-LS 品牌色，主色调 */
+  --hos-violet-light: #A78BFA;   /* 辅助浅紫，hover/高亮 */
+  --hos-violet-glow:  #C4B5FD;   /* 极浅紫，发光/描边 */
+
+  /* ---------- 辅色：勃艮第红（信任/警示/价格锚前缀） ---------- */
+  --hos-burgundy:      #8B1A3C;  /* 主红，警示/红线声明 */
+  --hos-burgundy-soft: #B91C5C;  /* 软红，标签底色 */
+
+  /* ---------- 辅色：青铜绿（生态/技术/流程/安全） ---------- */
+  --hos-bronze-green:  #3D5A4C;  /* 主绿，流程节点/信任徽章 */
+  --hos-bronze-light:  #6B8E7A;  /* 浅绿，图标描边 */
+
+  /* ---------- HOS 品牌色（来自 brand-guard，生态图用） ---------- */
+  --hos-forge:    #2563EB;       /* HOS-Forge 蓝 */
+  --hos-ls:       #7C3AED;       /* HOS-LS 紫（同主色） */
+  --hos-workflow: #059669;       /* HOS-Workflow 绿 */
+
+  /* ---------- 暗背景高对比体系 ---------- */
+  --bg-darkest:   #0F0A1F;       /* 最深背景，落地页 body */
+  --bg-dark:      #1A1129;       /* 主背景，详情页/主图底 */
+  --bg-card:      #241638;       /* 卡片背景 */
+  --bg-elevated:  #2E1F47;       /* 浮起卡片/Modal */
+  --bg-overlay:   rgba(15,10,31,0.85); /* 遮罩层 */
+
+  /* ---------- 文字色 ---------- */
+  --ink-primary:    #F5F0FF;     /* 主文字，近白偏紫 */
+  --ink-secondary:  #C4B5E0;     /* 次级文字 */
+  --ink-muted:      #8B7DAA;     /* 弱化文字/占位符 */
+  --ink-on-violet:  #FFFFFF;     /* 紫底文字 */
+  --ink-on-burgundy:#FFE8EE;     /* 红底文字 */
+
+  /* ---------- 语义色 ---------- */
+  --price-anchor: #FFB347;       /* 价格锚定金，唯一暖色例外 */
+  --price-anchor-glow: rgba(255,179,71,0.25);
+  --trust-badge:  #3D5A4C;       /* 信任徽章底 */
+  --alert:        #8B1A3C;       /* 警示/红线 */
+  --success:      #059669;       /* 成功/通过 */
+  --info:         #2563EB;       /* 信息/链接 */
+
+  /* ---------- 间距阶 ---------- */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+
+  /* ---------- 圆角阶 ---------- */
+  --radius-sm:    4px;
+  --radius-md:    8px;
+  --radius-lg:    16px;
+  --radius-xl:    24px;
+  --radius-pill:  999px;
+
+  /* ---------- 阴影阶 ---------- */
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,0.5);
+  --shadow-glow-violet: 0 0 24px rgba(124,58,237,0.35);
+  --shadow-glow-gold:   0 0 16px rgba(255,179,71,0.30);
+
+  /* ---------- 字体族 ---------- */
+  --font-display: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', serif;
+  --font-body:    'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  /* ---------- 字号阶（移动端基准） ---------- */
+  --fs-hero:    48px;   /* 落地页 Hero 主标题 */
+  --fs-h1:      36px;   /* 详情页 KV 标题 */
+  --fs-h2:      28px;   /* 区块标题 */
+  --fs-h3:      22px;   /* 卡片标题 */
+  --fs-body-lg: 18px;   /* 大正文 */
+  --fs-body:    16px;   /* 正文 */
+  --fs-body-sm: 14px;   /* 小正文（移动端最小） */
+  --fs-caption: 12px;   /* 说明文字 */
+  --fs-price:   32px;   /* 价格数字（等宽金色） */
+
+  /* ---------- 行高 ---------- */
+  --lh-tight:   1.2;    /* 标题 */
+  --lh-snug:    1.4;    /* 卡片标题 */
+  --lh-normal:  1.6;    /* 正文紧凑 */
+  --lh-relaxed: 1.7;    /* 正文宽松 */
+
+  /* ---------- 品牌三色色带（页头页脚识别符） ---------- */
+  --brand-band-gradient: linear-gradient(
+    90deg,
+    var(--hos-violet) 0%,
+    var(--hos-violet) 33%,
+    var(--hos-burgundy) 33%,
+    var(--hos-burgundy) 66%,
+    var(--hos-bronze-green) 66%,
+    var(--hos-bronze-green) 100%
+  );
+  --brand-band-height: 4px;
+
+  /* ---------- 渐变 ---------- */
+  --grad-violet-deep: linear-gradient(135deg, #5B2C91 0%, #7C3AED 100%);
+  --grad-dark-violet: linear-gradient(180deg, #0F0A1F 0%, #1A1129 50%, #241638 100%);
+  --grad-card-premium: linear-gradient(145deg, #241638 0%, #2E1F47 100%);
+  --grad-price-gold: linear-gradient(135deg, #FFB347 0%, #FF8C42 100%);
+}
+
+/* ============================================================
+ * 通用工具类（落地页复用）
+ * ============================================================ */
+
+.hos-band {                  /* 三色色带 */
+  height: var(--brand-band-height);
+  background: var(--brand-band-gradient);
+  width: 100%;
+}
+
+.hos-card {                  /* 标准卡片 */
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(124,58,237,0.15);
+}
+
+.hos-card--elevated {        /* 浮起卡片 */
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-lg);
+}
+
+.hos-price {                 /* 价格锚定样式 */
+  font-family: var(--font-mono);
+  color: var(--price-anchor);
+  font-size: var(--fs-price);
+  font-weight: 700;
+  text-shadow: 0 0 12px var(--price-anchor-glow);
+}
+
+.hos-tag--red {              /* 红色标签 */
+  background: var(--hos-burgundy);
+  color: var(--ink-on-burgundy);
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-caption);
+}
+
+.hos-tag--green {            /* 绿色信任标签 */
+  background: var(--hos-bronze-green);
+  color: var(--ink-primary);
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-caption);
+}
+
+.hos-tag--violet {           /* 紫色主标签 */
+  background: var(--hos-violet);
+  color: var(--ink-on-violet);
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-caption);
+}
+
+.hos-divider {               /* 分隔线 */
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--hos-violet) 50%, transparent);
+  margin: var(--space-lg) 0;
+}
+
+/* 移动端字号下限保护 */
+@media (max-width: 414px) {
+  :root {
+    --fs-body-sm: 14px; /* 不再缩小 */
+  }
+}

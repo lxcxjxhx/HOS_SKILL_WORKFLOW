@@ -1,0 +1,227 @@
+# 云配置审计方法论框架
+# 本模板提供方法论指导，而非固定操作步骤
+# AI 根据模板的阶段目标、思路指导和决策规则，动态决定执行策略
+id: cloud-config-audit
+name: 云配置审计方法论
+description: |
+  指导 AI 如何进行云服务配置安全审计的方法论框架。
+  覆盖云资产发现、存储配置、IAM 权限、元数据服务和安全最佳实践五个核心维度。
+  每个阶段提供目标、思路指导和成功标准，AI 根据实际回显动态调整执行策略。
+category: cloud
+version: 3.0.0
+
+# ============================================================
+# 阶段定义 — 方法论指导
+# ============================================================
+phases:
+  # ==================== Phase 1: 云资产发现 ====================
+  - id: cloud-asset-discovery
+    name: 云资产发现与枚举
+    description: |
+      方法论指导：
+      1. 识别目标使用的云服务提供商（AWS/Azure/GCP/阿里云/腾讯云等）
+      2. 发现云资源资产（存储桶、CDN、负载均衡、数据库、计算实例）
+      3. 分析云资源的公开暴露面（DNS 记录、证书透明度日志、搜索引擎）
+      4. 识别云服务的配置入口和管理界面
+      5. 绘制云资产拓扑图和攻击面
+    objectives:
+      - 识别云服务提供商类型
+      - 发现所有云资源资产
+      - 分析云资源的公开暴露面
+      - 绘制云资产拓扑图
+    approach: |
+      AI 应该：
+      - 通过 DNS 记录识别云服务（CNAME 指向云服务商域名）
+      - 通过响应头识别 CDN 和云服务商（CloudFront、CloudFlare、Azure CDN）
+      - 通过搜索引擎发现公开的云资源（存储桶、API 端点）
+      - 通过证书透明度日志发现子域名和云服务
+      - 分析页面资源引用，发现云存储和 CDN 资源
+      - 根据发现动态调整后续测试方向
+    successCriteria:
+      - 已识别云服务提供商
+      - 已发现至少 1 个云资源资产
+      - 已分析云资源暴露面
+      - 已绘制云资产拓扑
+    maxRetries: 2
+    timeout: 600
+
+  # ==================== Phase 2: 云存储配置安全评估 ====================
+  - id: storage-config-testing
+    name: 云存储配置安全评估
+    description: |
+      方法论指导：
+      1. 识别云存储类型（S3/OSS/COS/Blob Storage/GCS）
+      2. 评估存储桶的访问控制配置（公开/私有/认证访问）
+      3. 测试存储桶的权限配置（读取/写入/列出/删除）
+      4. 检查存储桶策略和 ACL 配置
+      5. 评估存储加密和数据保护机制
+    objectives:
+      - 识别云存储类型和配置
+      - 评估存储桶访问控制
+      - 测试存储桶权限配置
+      - 评估数据加密和保护机制
+    approach: |
+      AI 应该：
+      - 分析存储桶 URL 格式，识别云服务商
+      - 测试存储桶的公开访问（列表、读取、写入）
+      - 检查存储桶策略和 ACL 配置
+      - 测试未授权访问和权限提升
+      - 评估存储加密配置（服务端加密、客户端加密）
+      - 检查版本控制和删除保护配置
+      - 根据实际回显动态调整测试策略
+    successCriteria:
+      - 已识别云存储类型
+      - 已评估访问控制配置
+      - 已测试权限配置
+      - 已评估数据加密机制
+    maxRetries: 2
+    timeout: 600
+
+  # ==================== Phase 3: IAM 权限配置审计 ====================
+  - id: iam-permission-audit
+    name: IAM 权限配置审计
+    description: |
+      方法论指导：
+      1. 识别 IAM 用户、角色和策略配置
+      2. 评估权限分配的最小权限原则
+      3. 测试权限提升路径（PassRole、策略继承、角色链）
+      4. 检查服务角色和实例配置文件的权限范围
+      5. 评估 IAM 策略的细粒度控制
+    objectives:
+      - 识别 IAM 用户和角色配置
+      - 评估权限分配合理性
+      - 测试权限提升路径
+      - 评估服务角色权限范围
+    approach: |
+      AI 应该：
+      - 分析 IAM 用户和角色的权限策略
+      - 测试 PassRole 权限的滥用可能性
+      - 检查策略继承和角色链的权限提升路径
+      - 评估服务角色（Lambda、EC2、ECS）的权限范围
+      - 检查托管策略和内联策略的权限重叠
+      - 评估权限边界和服务控制策略
+      - 根据实际回显动态调整审计方向
+    successCriteria:
+      - 已识别 IAM 用户和角色
+      - 已评估权限分配合理性
+      - 已测试权限提升路径
+      - 已评估服务角色权限
+    maxRetries: 2
+    timeout: 600
+
+  # ==================== Phase 4: 元数据服务访问控制测试 ====================
+  - id: metadata-service-testing
+    name: 元数据服务访问控制测试
+    description: |
+      方法论指导：
+      1. 识别云实例元数据服务（IMDS）的访问方式
+      2. 测试 SSRF 到元数据服务的攻击路径
+      3. 评估 IMDSv1/v2 的配置安全性
+      4. 测试 IAM 临时凭证的获取可能性
+      5. 评估用户数据和实例配置信息的泄露风险
+    objectives:
+      - 识别元数据服务访问方式
+      - 测试 SSRF 到元数据的攻击路径
+      - 评估 IMDS 版本配置安全性
+      - 评估凭证和信息泄露风险
+    approach: |
+      AI 应该：
+      - 识别云实例的元数据服务端点
+      - 测试 SSRF 漏洞到元数据服务的利用
+      - 评估 IMDSv2 的 token 机制配置
+      - 测试 IAM 临时凭证的获取
+      - 检查用户数据中的敏感信息（启动脚本、环境变量）
+      - 评估实例配置信息的泄露风险
+      - 根据实际回显动态调整测试策略
+    successCriteria:
+      - 已识别元数据服务访问方式
+      - 已测试 SSRF 攻击路径
+      - 已评估 IMDS 配置安全性
+      - 已评估凭证泄露风险
+    maxRetries: 1
+    timeout: 600
+
+  # ==================== Phase 5: 云安全最佳实践检查 ====================
+  - id: cloud-security-best-practices
+    name: 云安全最佳实践检查
+    description: |
+      方法论指导：
+      1. 检查数据加密配置（传输加密、存储加密、密钥管理）
+      2. 评估日志记录和监控配置（访问日志、操作审计、告警配置）
+      3. 检查网络隔离配置（VPC、安全组、网络 ACL、私有端点）
+      4. 评估备份和恢复策略（快照、跨区域复制、灾难恢复）
+      5. 检查合规性配置（标签策略、配置规则、安全基线）
+    objectives:
+      - 检查数据加密配置
+      - 评估日志和监控配置
+      - 检查网络隔离配置
+      - 评估备份和恢复策略
+      - 检查合规性配置
+    approach: |
+      AI 应该：
+      - 检查存储和传输的加密配置
+      - 评估密钥管理服务（KMS）的配置
+      - 检查访问日志和操作审计的配置
+      - 评估监控告警和事件响应的配置
+      - 检查 VPC、安全组、网络 ACL 的配置
+      - 评估私有端点和网络隔离的配置
+      - 检查备份策略和灾难恢复配置
+      - 评估标签策略和配置规则的合规性
+      - 根据实际发现动态调整检查重点
+    successCriteria:
+      - 已检查数据加密配置
+      - 已评估日志和监控配置
+      - 已检查网络隔离配置
+      - 已评估备份和恢复策略
+      - 已检查合规性配置
+    maxRetries: 1
+    timeout: 600
+
+# ============================================================
+# 自适应决策树
+# 根据每个阶段的执行结果动态决定下一步
+# ============================================================
+decisionTree:
+  - id: decide-after-assets
+    sourcePhase: cloud-asset-discovery
+    conditions:
+      - rule: "发现云存储资源"
+        nextPhase: storage-config-testing
+        description: "发现云存储，进入存储配置安全评估"
+      - rule: "未发现云存储资源"
+        nextPhase: iam-permission-audit
+        description: "未发现云存储，直接进入 IAM 审计"
+    defaultNext: storage-config-testing
+
+  - id: decide-after-storage
+    sourcePhase: storage-config-testing
+    conditions:
+      - rule: "发现存储配置问题"
+        nextPhase: iam-permission-audit
+        description: "发现存储配置问题，继续 IAM 权限审计"
+      - rule: "存储配置安全"
+        nextPhase: iam-permission-audit
+        description: "存储配置安全，继续 IAM 权限审计"
+    defaultNext: iam-permission-audit
+
+  - id: decide-after-iam
+    sourcePhase: iam-permission-audit
+    conditions:
+      - rule: "发现权限配置问题"
+        nextPhase: metadata-service-testing
+        description: "发现 IAM 配置问题，继续元数据服务测试"
+      - rule: "IAM 配置安全"
+        nextPhase: metadata-service-testing
+        description: "IAM 配置安全，继续元数据服务测试"
+    defaultNext: metadata-service-testing
+
+  - id: decide-after-metadata
+    sourcePhase: metadata-service-testing
+    conditions:
+      - rule: "发现元数据服务风险"
+        nextPhase: cloud-security-best-practices
+        description: "发现元数据风险，继续最佳实践检查"
+      - rule: "元数据服务安全"
+        nextPhase: cloud-security-best-practices
+        description: "元数据服务安全，继续最佳实践检查"
+    defaultNext: cloud-security-best-practices

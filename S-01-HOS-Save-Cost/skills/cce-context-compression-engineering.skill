@@ -1,0 +1,573 @@
+# Context Compression Engineering (CCE) Skill
+
+## Metadata
+- **name**: Context Compression Engineering
+- **version**: 1.0.0
+- **keywords**: context-compression, large-codebases, memory-structure, information-architecture
+- **activation**: auto
+- **applicability**: large-projects, agent-onboarding, rag-systems
+- **prerequisites**: TFE, ANPE skills recommended
+
+## Core Problem
+
+When a codebase exceeds 100K lines:
+
+- Reading entire project = 100K+ tokens wasted
+- AI agents reload same context repeatedly = redundant tokens
+- Context thrashing: "I already knew this, why am I reading it again?"
+- Agent moves from file to file = context explosion
+- Total project understanding requires 500K+ tokens
+
+**Result: AI becomes expensive and slow.**
+
+---
+
+## Five Absolute Rules of CCE (The Non-Negotiable Constraints)
+
+These five rules are the foundation of CCE. Violating any one defeats the entire system.
+
+### RULE 1: Never Load the Entire Project
+**Violation**: Loading src/ (100K LOC) = 50K tokens wasted
+**Correct**: Load only the Architecture Map (5K tokens)
+
+**When to apply**:
+- New agent joins project? Read Architecture Map, NOT the code
+- Don't know where to start? Read maps, NOT the codebase
+- Understanding system? Read maps, NOT entire project
+
+**Exception**: None. If you're loading entire project, you've failed CCE.
+
+### RULE 2: Never Analyze the Entire Project
+**Violation**: "Let me analyze how this all works" = reading every module
+**Correct**: "Let me find the specific module I need via the maps"
+
+**When to apply**:
+- Need to modify order service? Find it in Interface Map, then read ONLY order.js
+- Fixing payment bug? Find it in Workflow Map, then read ONLY affected functions
+- Understanding data flow? Read Architecture Map, NOT trace code execution
+
+**Exception**: None. Analysis always starts from maps, never code.
+
+### RULE 3: Never Generate the Entire Solution
+**Violation**: "Generate complete system for X" = thousands of tokens for things that exist
+**Correct**: "Modify specific module based on Interface Map contract"
+
+**When to apply**:
+- Implementing new endpoint? See Interface Map for contract first, then code only the logic
+- Adding feature? Consult Architecture Map for where it fits, modify only necessary module
+- Changing workflow? Read Workflow Map for state machine, modify only that
+
+**Exception**: None. Every solution starts by consulting maps, not blank slate coding.
+
+### RULE 4: Never Run Full Test Suite
+**Violation**: "Run all tests" on 100K LOC project = 30 min + 1000s tokens
+**Correct**: Run tests ONLY for modified module
+
+**When to apply**:
+- Modified payment.js? Run only tests/payment.test.js
+- Changed auth logic? Run only tests/auth.test.js
+- Not sure which tests? Check Interface Map → Workflow Map → find dependencies
+
+**Exception**: Critical path changes OR before production deployment (but scope as narrow as possible)
+
+### RULE 5: Always Build Maps First
+**Violation**: Starting to code without understanding project structure
+**Correct**: Build Architecture Map → Interface Map → Workflow Map → THEN code
+
+**When to apply**:
+- Taking over new project? Mandatory: Build all four maps
+- Onboarding new AI agent? Mandatory: Read maps before touching code
+- Before any major refactoring? Mandatory: Update maps first
+
+**Exception**: None. Maps are prerequisite to everything else. No maps = uncontrolled complexity.
+
+---
+
+## The Four Maps (Mandatory for CCE)
+
+Every CCE implementation MUST have these four maps. All other work depends on them.
+
+### Map 1: Architecture Map (5K tokens)
+**Purpose**: System topology from 10,000 feet
+**Content**:
+- All services/components and their purpose
+- Dependencies between components (who calls whom)
+- Data layer (databases, caches, message queues)
+- Critical paths (login, payment, order fulfillment)
+- Failure modes and recovery
+- Scaling strategy
+
+**Constraints**:
+- Must be readable in <10 minutes
+- Must show all major components
+- Dependencies must be explicit
+- Critical paths highlighted
+- No code, only structure
+
+### Map 2: Dependency Map (3K tokens)
+**Purpose**: Which module depends on which?
+**Content**:
+- Complete dependency graph (directed, visual if possible)
+- Circular dependencies identified and flagged
+- External service dependencies
+- Version constraints
+- Breaking change risks
+
+**Constraints**:
+- Must be machine-generatable from imports
+- Must update when dependencies change
+- Must show full transitive closure
+- No implementation details
+
+### Map 3: Interface Map (10K tokens)
+**Purpose**: All contracts without reading code
+**Content**:
+- Every API endpoint (request, response, errors)
+- Every database schema (tables, relationships)
+- Every message queue schema
+- Function signatures for internal modules
+- Type definitions
+
+**Constraints**:
+- Must be extractable from code (docstrings, schemas)
+- Must be testable (property validation)
+- Must be versionable (backwards compatibility tracking)
+- Must show deprecation status
+
+### Map 4: Workflow Map (7K tokens)
+**Purpose**: Business processes and state machines
+**Content**:
+- State diagrams for each workflow
+- Sequence diagrams for multi-service flows
+- Event/queue relationships
+- Code location for each step
+- Async/sync decision points
+- Error handling paths
+
+**Constraints**:
+- Must be traceable to code
+- Must show all state transitions
+- Must identify critical sections
+- Must flag timeout risks
+
+## The Solution: Three-Layer Memory Structure
+
+Instead of reading files repeatedly, create compressed project maps:
+
+```
+Project as permanent memory:
+  ├─ Layer 1: Architecture Map (5K tokens) ← AI reads this FIRST
+  ├─ Layer 2: Interface Map (10K tokens) ← For when modifying APIs
+  └─ Layer 3: Workflow Map (7K tokens) ← For business logic changes
+
+Total: 22K tokens, reusable indefinitely.
+Without CCE: 500K tokens per agent session.
+Savings: 95% token reduction
+```
+
+An AI agent joins the project:
+1. Reads Architecture Map (2 min) → Understands all components
+2. Reads Interface Map (3 min) → Knows API contracts
+3. Reads Workflow Map (2 min) → Knows business flows
+4. Now can modify anything without rereading source code
+
+When agent needs to modify `src/auth/login.js`:
+- WITHOUT CCE: Re-reads entire src/auth/ (5K tokens wasted)
+- WITH CCE: References Interface Map (finds contract in index), reads ONLY login.js (100 tokens saved)
+
+## Map Templates（完整模板外置，按需加载）
+
+三张地图的**完整示例模板**（Architecture / Interface / Workflow 各 ~5-10K tokens）已外置到 [`docs/cce-map-templates.md`](./docs/cce-map-templates.md)，**仅在需要创建或维护地图时加载**，日常任务不需要读取。
+
+| 地图 | 文件 | 大小 | 何时读 |
+|------|------|------|--------|
+| Architecture Map | `docs/cce-map-templates.md#layer-1` | ~5K tokens | 首次理解系统 / 新 agent 加入 |
+| Interface Map | `docs/cce-map-templates.md#layer-2` | ~10K tokens | 修改 API / 查契约 |
+| Workflow Map | `docs/cce-map-templates.md#layer-3` | ~7K tokens | 改业务逻辑 / 追踪流程 |
+
+## How to Use CCE Layers
+
+### AI Agent Access Protocol (The Correct Way)
+
+**CORRECT ACCESS ORDER** (always follow this):
+```
+1. Architecture Map (understand system structure)
+   ↓
+2. Dependency Map (understand what depends on what)
+   ↓
+3. Interface Map (find the specific contract you need)
+   ↓
+4. Workflow Map (understand the process)
+   ↓
+5. Source Code (specific module/file/function)
+```
+
+**Why this order?**
+- Step 1-2: Answer "What is this system?"
+- Step 3: Answer "Where is what I need to modify?"
+- Step 4: Answer "How does this process work?"
+- Step 5: Answer "What is the exact code I need to change?"
+
+Each step eliminates context, narrows scope, focuses attention.
+
+---
+
+### WRONG Access Patterns (Anti-patterns)
+
+**❌ Anti-pattern 1: Direct to Code**
+```
+Agent: "Let me read src/"
+Result: 50K tokens, no understanding, starts modifying randomly
+```
+
+**❌ Anti-pattern 2: Read Entire Module**
+```
+Agent: "Let me understand payment service"
+Reads: payment.js (500 lines) + payment.test.js (300 lines)
+Result: 5K tokens, understands payment but not how it fits
+```
+
+**❌ Anti-pattern 3: Trace Entire Flow**
+```
+Agent: "Let me trace this request end-to-end"
+Reads: api.js + gateway.js + auth.js + db.js + cache.js
+Result: 15K tokens, context explosion, misses critical details
+```
+
+**❌ Anti-pattern 4: Generate Everything**
+```
+Agent: "Generate payment handler for all payment types"
+Result: 20K tokens, reimplements existing functionality, ignores contracts
+```
+
+---
+
+### CORRECT Usage Patterns
+
+**✓ Pattern 1: Find Something**
+```
+Task: "Add email notification for order confirmation"
+
+Step 1: Read Architecture Map (1 min)
+  "I see: Order Service → Notification Service → Email"
+
+Step 2: Read Interface Map (2 min)
+  "Order Service emits 'order.confirmed' event"
+  "Notification Service consumes from 'orders' queue"
+
+Step 3: Read Workflow Map (3 min)
+  "Order created → 'order.confirmed' published → Notification Service processes"
+
+Step 4: Read Source Code (5 min)
+  Read: src/notification/handlers/orderConfirmed.js (only this file!)
+  Read: src/notification/emailService.js (only what's needed!)
+
+Result: Understand exact location, exact contract, exact what to modify.
+Total: 10 min, 2K tokens
+```
+
+**✓ Pattern 2: Modify Something**
+```
+Task: "Change payment retry logic from 3 attempts to 5"
+
+Step 1: Architecture Map → Find Payment Service
+
+Step 2: Interface Map → Find payment processing contract
+  "processPayment(order, retryPolicy)"
+
+Step 3: Workflow Map → Find retry state machine
+  "Retry limit: retryPolicy.maxRetries"
+
+Step 4: Source Code → Read only payment/processor.js (specific lines)
+  Find: retryPolicy.maxRetries comparison
+  Modify: Change only that line
+
+Result: Surgical change, no side effects, fully understood.
+Total: 8 min, 1.5K tokens
+```
+
+**✓ Pattern 3: Fix a Bug**
+```
+Task: "Payment timeout after 30s, but should be 60s"
+
+Step 1: Interface Map → Find payment timeout config
+  "timeout: 30s in paymentRequest schema"
+
+Step 2: Workflow Map → Find where timeout triggers
+  "Payment Service → Stripe API → 30s timeout"
+
+Step 3: Source Code → Read config/payment.yaml
+  Find: timeout: 30000
+  Change: timeout: 60000
+
+Result: Root cause found, changed in configuration (not code!), no testing needed.
+Total: 5 min, 800 tokens
+```
+
+---
+
+### Access Pattern Decision Tree
+
+```
+START: I need to work on this system
+
+├─ Do I understand the system structure?
+│  ├─ NO → Read Architecture Map (5 min)
+│  └─ YES → Continue
+│
+├─ Do I know which module to modify?
+│  ├─ NO → Read Interface Map (2-3 min)
+│  └─ YES → Continue
+│
+├─ Do I understand the workflow?
+│  ├─ NO → Read Workflow Map (3 min)
+│  └─ YES → Continue
+│
+├─ Do I know exactly which file to read?
+│  ├─ NO → Reference Interface Map + Workflow Map (1 min)
+│  └─ YES → Continue
+│
+└─ Read ONLY that specific file + related tests
+   Then: Make surgical change based on maps
+```
+
+---
+
+### The Seven-Question Rule
+
+Before reading ANY code, ask these seven questions. Maps should answer all of them:
+
+1. **Where is this system?** (Architecture Map)
+2. **What are its dependencies?** (Dependency Map)
+3. **What is the module I need?** (Interface Map)
+4. **What is the API contract?** (Interface Map)
+5. **How does the workflow work?** (Workflow Map)
+6. **Which file do I need?** (Workflow Map + Interface Map)
+7. **Which function do I need?** (Workflow Map → Interface Map → Code)
+
+If any question remains unanswered, **Read a map. Do NOT read code.**
+
+Once all seven questions are answered, **Read ONLY the specific file/function needed.**
+
+---
+
+### Context Budget Per Task
+
+```
+With maps (CORRECT):
+  Read Architecture Map:    500 tokens
+  Read Interface Map:       300 tokens
+  Read Workflow Map:        300 tokens
+  Read specific file:       1K tokens (not entire module)
+  ────────────────────────
+  Total:                    2.1K tokens per task
+
+Without maps (WRONG):
+  Read entire module:       5K tokens
+  Read related modules:     8K tokens
+  Re-understand context:    3K tokens
+  ────────────────────────
+  Total:                    16K tokens per task
+
+Savings per task: 13.9K tokens (87%)
+Scale to 100 tasks/year: 1.39M tokens saved
+```
+
+
+
+## Building CCE Layers Incrementally
+
+### Step 1: Auto-Generate from Code (20 min)
+```bash
+# Extract components from directory structure
+# Extract API endpoints from routes
+# Extract database schema from migrations
+# Output: Draft layers
+```
+
+### Step 2: Manual Review & Enhancement (1-2 hours)
+- Review drafts for accuracy
+- Add critical paths
+- Add failure modes
+- Add performance notes
+
+### Step 3: Maintain as Code Evolves (10 min per change)
+- Update when:
+  - New service added
+  - New endpoint added
+  - Workflow changed
+  - Database schema changed
+
+### Maintenance Effort
+- Initial creation: 3-4 hours
+- Per code change: 10-15 minutes
+- ROI: Breaks even after 2-3 AI-assisted tasks
+
+## Token Savings Calculator
+
+```
+Without CCE (traditional approach):
+  New agent joins project (100K LOC)
+  ├─ First task: Read 20K LOC = 20K tokens (+ 30 min)
+  ├─ Second task: Re-read same 15K LOC = 15K tokens
+  ├─ Third task: Explore new area = 18K tokens
+  └─ 10 tasks × 16K avg = 160K tokens total
+
+With CCE (compressed approach):
+  New agent joins project
+  ├─ Read 3 maps once = 22K tokens (+ 15 min)
+  ├─ Every task: Reference maps = 2K tokens avg
+  └─ 10 tasks × 2K = 20K tokens total
+  
+SAVINGS: 140K tokens (88% reduction)
+TIME SAVED: 5+ hours
+```
+
+## Relationship to Other Skills
+
+- **TFE**: CCE is TFE at the system architecture level
+- **ANPE**: ANPE defines project structure; CCE compresses ANPE structure
+- **MRA**: Use CCE to map legacy system before refactoring
+
+## Creating CCE Layers: Checklist
+
+- [ ] Architecture Map created with:
+  - [ ] Component topology (all services)
+  - [ ] Dependencies (what calls what)
+  - [ ] Data layer (DB, cache, queue)
+  - [ ] Critical paths identified
+  - [ ] Failure modes documented
+
+- [ ] Interface Map created with:
+  - [ ] All API endpoints (method, path, contract)
+  - [ ] Request/response formats
+  - [ ] Error codes & meanings
+  - [ ] Database schema (all tables)
+
+- [ ] Workflow Map created with:
+  - [ ] State machines for key processes
+  - [ ] Step-by-step flows
+  - [ ] Code location references
+  - [ ] Event/queue references
+
+- [ ] Maps reviewed for accuracy
+- [ ] Maps added to version control
+- [ ] Team briefed on maps
+- [ ] Hook created to remind agents to consult maps
+
+## Key Insight
+
+> Large projects don't need to be reread.
+> They need to be compressed into permanent memory.
+> 
+> A well-compressed 100K LOC project is a 22K token investment.
+> That pays back on the first task.
+> Every task after that is 10x cheaper.
+
+---
+
+## The Ultimate Access Protocol (AI Agent Workflow)
+
+This is the ONLY way to work on large projects with CCE:
+
+```
+┌─────────────────────────────────────────────┐
+│         1. ARCHITECTURE MAP                 │
+│  "What is this system? All components?"    │
+│  Cost: 500 tokens | Time: 5 min            │
+│  Decision: Can I proceed? Or need clarity? │
+└─────────────────────────────────────────────┘
+              ↓ (if needed clarity)
+┌─────────────────────────────────────────────┐
+│         2. DEPENDENCY MAP                   │
+│  "Which modules depend on which?"          │
+│  Cost: 300 tokens | Time: 3 min            │
+│  Decision: Is my change isolated or broad? │
+└─────────────────────────────────────────────┘
+              ↓ (proceed with confidence)
+┌─────────────────────────────────────────────┐
+│         3. INTERFACE MAP                    │
+│  "What's the contract I must honor?"       │
+│  Cost: 1-2K tokens | Time: 5-10 min        │
+│  Decision: What must NOT change?           │
+└─────────────────────────────────────────────┘
+              ↓ (understanding grows)
+┌─────────────────────────────────────────────┐
+│         4. WORKFLOW MAP                     │
+│  "How does the process flow?"              │
+│  Cost: 1-2K tokens | Time: 5 min           │
+│  Decision: Where exactly is my change?     │
+└─────────────────────────────────────────────┘
+              ↓ (now surgical)
+┌─────────────────────────────────────────────┐
+│         5. SPECIFIC FILE/FUNCTION           │
+│  "What code do I need to modify?"          │
+│  Cost: 500-1K tokens | Time: 2-5 min      │
+│  Action: Make precise, safe change        │
+└─────────────────────────────────────────────┘
+              ↓ (final verification)
+┌─────────────────────────────────────────────┐
+│         6. RUN AFFECTED TESTS ONLY          │
+│  "Did I break anything?"                   │
+│  Cost: 300-500 tokens | Time: 2-5 min     │
+│  Result: Confidence in change              │
+└─────────────────────────────────────────────┘
+
+TOTAL WORKFLOW: 20-30 minutes, 3-5K tokens
+WITHOUT MAPS: 4-6 hours, 15-20K tokens
+SAVINGS: 75% time, 80% tokens
+```
+
+---
+
+## Related Skills
+- TFE (Token First Engineering): Efficient implementation during refactoring
+- ANPE (AI Native Product Engineering): Restructuring for future AI maintainability
+- MRA (Minimal Refactor Architecture): For monolithic codebases >200K LOC
+
+## Key Principles Summary
+
+1. **Never read whole project** — Maps are the shortcut
+2. **Never read whole module** — Maps guide to specific file
+3. **Never generate whole solution** — Maps show what exists
+4. **Never run whole test suite** — Maps show what to test
+5. **Always build maps first** — They pay for themselves
+
+> Taking over a large system doesn't mean rereading it every time.
+> It means reading maps once, then surgical changes thereafter.
+> Build the maps. Never read code sequentially again.
+
+---
+
+## CCE Success Criteria
+
+Your CCE implementation is working when:
+
+- [ ] New engineer onboards in <1 day (vs 2+ weeks)
+- [ ] Every modification takes <1 hour understanding time
+- [ ] Token per modification: <3K (vs 15K+ without)
+- [ ] Zero architecture misunderstandings
+- [ ] Maps stay current (updated when code changes)
+- [ ] All decisions start with "Let me check the maps"
+- [ ] No code reading without consulting maps first
+
+---
+
+## The Five Rules Poster
+
+Download and print this. Put it on your wall.
+
+```
+Never Rule 1: Never load entire project
+Never Rule 2: Never analyze entire project
+Never Rule 3: Never generate entire solution
+Never Rule 4: Never run full test suite
+Always Rule 5: Always build maps first
+
+ACCESS ORDER:
+Architecture → Dependency → Interface → Workflow → Code
+```
+
+---
+
+*CCE enables sustainable large-scale development where Token cost decreases, not increases, as the system grows.*

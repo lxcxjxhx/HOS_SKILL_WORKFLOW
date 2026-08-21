@@ -1,0 +1,19 @@
+{
+  "$schema_note": "研究空白与论文机会池。Research Miner 每次审计后追加，星级>=4 的优先推荐。",
+  "gaps": [
+    {
+      "idea_id": "GAP-2026-001",
+      "source_paper": "2602.17875",
+      "source_rve": "HOS-RVE-2026-0001",
+      "problem": "多智能体漏洞检测系统普遍选择性报告指标，且无动态对抗评测环境",
+      "direction": "Dynamic Agent Security Evaluation：真实攻击环境下的多智能体系统评测框架",
+      "existing_work": "MultiVer (2602.17875) 用静态基准互测；Sifting the Noise (2601.22952) 用 post-cutoff 验证",
+      "gap": "无动态、对抗式、可复现的多智能体安全评测环境",
+      "opportunity": 5,
+      "target_venue": "CCF-A Security (IEEE S&P / USENIX Security)",
+      "feasible_3mo": true,
+      "status": "proposed",
+      "created": "2026-07-31"
+    }
+  ]
+}

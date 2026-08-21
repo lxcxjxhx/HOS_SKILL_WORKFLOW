@@ -1,0 +1,107 @@
+{
+  "version": "2.0.0",
+  "description": "HOS-Sec-Engine MCP Server Configuration — 支持自动发现、健康监控、工具路由",
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@anthropic/mcp-playwright"],
+      "description": "浏览器自动化 — 攻击验证、WAF行为测试、XSS/注入验证、登录态测试",
+      "env": {},
+      "autoStart": true,
+      "maxRestarts": 3,
+      "healthCheckIntervalMs": 30000,
+      "timeoutMs": 30000,
+      "tags": ["browser", "automation", "waf", "xss", "verification"]
+    },
+    "http-fetch": {
+      "command": "npx",
+      "args": ["@anthropic/mcp-fetch"],
+      "description": "HTTP 请求 — payload 注入、API fuzz、请求变形、WAF 绕过测试",
+      "env": {},
+      "autoStart": true,
+      "maxRestarts": 3,
+      "healthCheckIntervalMs": 30000,
+      "timeoutMs": 30000,
+      "tags": ["http", "network", "api", "fuzz", "injection"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["@anthropic/mcp-sequential-thinking"],
+      "description": "多步推理 — 自动生成攻击链、bypass 策略规划、复杂路径分析",
+      "env": {},
+      "autoStart": true,
+      "maxRestarts": 3,
+      "healthCheckIntervalMs": 60000,
+      "timeoutMs": 60000,
+      "tags": ["reasoning", "planning", "analysis", "strategy"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["@anthropic/mcp-memory"],
+      "description": "持久记忆 — WAF 指纹学习、payload 成功率记录、攻击模式知识库",
+      "env": {},
+      "autoStart": true,
+      "maxRestarts": 3,
+      "healthCheckIntervalMs": 60000,
+      "timeoutMs": 30000,
+      "tags": ["memory", "knowledge", "persistence", "learning"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@anthropic/mcp-filesystem", "--allowed-directories", "./payloads,./logs,./results,./data"],
+      "description": "文件系统 — payload 存储、日志分析、结果持久化、数据导出",
+      "env": {},
+      "autoStart": true,
+      "maxRestarts": 3,
+      "healthCheckIntervalMs": 60000,
+      "timeoutMs": 30000,
+      "tags": ["filesystem", "storage", "logs", "data"]
+    },
+    "github": {
+      "command": "npx",
+      "args": ["@anthropic/mcp-github"],
+      "description": "GitHub 集成 — payload 库管理、exploit 同步、知识更新、CVE 跟踪",
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "autoStart": false,
+      "maxRestarts": 2,
+      "healthCheckIntervalMs": 120000,
+      "timeoutMs": 30000,
+      "tags": ["github", "integration", "repository", "sync"]
+    },
+    "code-executor": {
+      "command": "npx",
+      "args": ["@anthropic/mcp-code-executor"],
+      "description": "代码执行沙箱 — JS/Python payload 测试验证、exploit 原型验证",
+      "env": {},
+      "autoStart": true,
+      "maxRestarts": 3,
+      "healthCheckIntervalMs": 30000,
+      "timeoutMs": 60000,
+      "tags": ["code", "sandbox", "execution", "testing"]
+    }
+  },
+  "autoDiscovery": {
+    "enabled": true,
+    "checkNpmGlobal": true,
+    "checkNodeModules": true,
+    "intervalMs": 60000,
+    "additionalPackages": [
+      "@anthropic/mcp-browserbase",
+      "@anthropic/mcp-http-server",
+      "@anthropic/mcp-git",
+      "@anthropic/mcp-slack",
+      "@anthropic/mcp-sqlite",
+      "@anthropic/mcp-postgres"
+    ]
+  },
+  "healthMonitoring": {
+    "enabled": true,
+    "fullCheckIntervalMs": 60000,
+    "quickCheckIntervalMs": 15000,
+    "autoRecovery": true,
+    "maxRecoveryAttempts": 3,
+    "recoveryCooldownMs": 30000
+  }
+}

@@ -1,0 +1,35 @@
+---
+name: hos-silly-mock-001
+version: 1.0.0
+status: stable
+releaseDate: 2026-06-30
+engine: HOS-Sec-Engine V2
+author: HOS-Sec-Engine
+license: MIT
+---
+
+# HOS-Silly-Mock v1.0.0
+
+**Anti-Fake Data & Anti-Regex Reality Enforcement Layer**
+
+## Version Summary
+
+This is the initial stable release of HOS-Silly-Mock, a 4-layer enforcement
+engine designed to prevent AI from generating fake/mock systems.
+
+## Release Artifacts
+
+| Artifact | Path |
+|----------|------|
+| Skill Definition | SKILL.md |
+| TypeScript Engine | src/ |
+| Compiled JS | dist/ |
+| Test Suite (22 tests) | tests/all.test.ts |
+
+## Checksums
+
+<!-- Generated at build time -->
+- Source files: 17 files
+- Test coverage: 6 groups, 22 tests
+- Reality Score calculation: 0-100 weighted
+- Dependencies: None (zero runtime deps)

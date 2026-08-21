@@ -1,18 +1,49 @@
+# Build and cache directories
 node_modules/
 dist/
-*.pyc
 __pycache__/
+*.py[cod]
+.cache/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# AI editor skill directories
+.trae/
+.claude/
+.agents/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Spec documents
+.trae/specs/
+
+# Reasonix local tool config
+reasonix.toml
+
+# Python environment
+python/venv/
 .env
 .env.local
+
+# CAD output files
 *.step
+*.stp
 *.stl
 *.3mf
 *.glb
 *.dxf
-*.stp
 *.gcode
+*.urdf
+*.srdf
+
+# Temp and logs
 temp/
 *.log
-.DS_Store
-Thumbs.db
-python/venv/
+output/

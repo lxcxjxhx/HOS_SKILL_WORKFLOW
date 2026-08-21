@@ -1,0 +1,455 @@
+{
+  "schemaVersion": "2.0.0",
+  "description": "HOS-Vibe-Guard 选题升级映射数据库",
+  "strategyFallback": ["add_domain", "add_dimension", "add_intelligence", "add_collaboration", "add_observability"],
+
+  "mappings": [
+    {
+      "fromPattern": "todo_app",
+      "upgrades": [
+        {
+          "title": "认知负载管理系统",
+          "description": "将 Task 概念升级为认知负载单元，引入精力预算调度",
+          "conceptMap": {
+            "Task → CognitiveLoadUnit": "包含预估消耗、上下文关联、依赖图",
+            "Priority → AttentionWeight": "基于精力模型而非简单数字",
+            "Status → StateMachine": "todo→doing→blocked→review→done 带条件转移",
+            "DueDate → EnergyBudget": "根据个人精力曲线智能分配"
+          },
+          "architecture": {
+            "core": ["EventStore", "EnergyBudgetScheduler", "CognitiveLoadModel"],
+            "optional": ["FocusAnalyzer", "InterruptionManager"]
+          },
+          "difficulty": "MEDIUM",
+          "tags": ["productivity", "cognitive-science", "state-machine"]
+        },
+        {
+          "title": "决策追溯系统",
+          "description": "不只是完成任务，记录每个决策背后的为什么",
+          "conceptMap": {
+            "Task → DecisionRecord": "包含决策上下文、备选方案、选择理由",
+            "Completion → OutcomeAnalysis": "事后分析决策质量",
+            "Tags → DecisionCategories": "基于决策类型分类而非随意标签"
+          },
+          "architecture": {
+            "core": ["DecisionLog", "OutcomeAnalyzer", "PatternDetector"],
+            "optional": ["RecommendationEngine"]
+          },
+          "difficulty": "MEDIUM",
+          "tags": ["decision-making", "analytics"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "pomodoro_timer",
+      "upgrades": [
+        {
+          "title": "行为状态建模系统",
+          "description": "将番茄钟升级为专注/疲劳/创造力状态分类与预测系统",
+          "conceptMap": {
+            "Timer → StateClassifier": "基于多维特征识别认知状态",
+            "Sessions → BehavioralTrace": "长期行为模式追踪",
+            "Statistics → PredictiveModel": "预测最佳工作时段和任务类型匹配"
+          },
+          "architecture": {
+            "core": ["StateClassifier", "TraceStore", "Predictor"],
+            "optional": ["RecommendationEngine", "Visualization"]
+          },
+          "difficulty": "HIGH",
+          "tags": ["cognitive-science", "ML", "behavioral"]
+        },
+        {
+          "title": "认知节律优化器",
+          "description": "个性化生物钟适配系统",
+          "conceptMap": {
+            "FocusTime → CircadianProfile": "构建个人昼夜节律画像",
+            "Break → RecoveryModel": "基于心率/活动数据优化休息策略",
+            "Settings → AdaptivePolicy": "根据实时状态动态调整"
+          },
+          "architecture": {
+            "core": ["CircadianProfiler", "AdaptiveScheduler"],
+            "optional": ["BioFeedbackIntegration"]
+          },
+          "difficulty": "HIGH",
+          "tags": ["chronobiology", "adaptive-systems"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "snake_game",
+      "upgrades": [
+        {
+          "title": "多智能体资源竞争模拟器",
+          "description": "从单蛇吃食物升级为多智能体在有限资源环境中的竞争博弈",
+          "conceptMap": {
+            "Snake → CompetitiveAgent": "每个蛇有不同的策略模型",
+            "Food → ScarceResource": "资源的再生/分布/消耗模型",
+            "Score → FitnessMetric": "基于博弈论的适应度评估",
+            "Collision → CompetitiveElimination": "竞争性交互机制"
+          },
+          "architecture": {
+            "core": ["AgentPool", "EnvironmentSimulator", "StrategyEvaluator"],
+            "optional": ["VisualizationEngine", "TournamentManager"]
+          },
+          "difficulty": "HIGH",
+          "tags": ["multi-agent", "game-theory", "simulation"]
+        },
+        {
+          "title": "搜索算法可视化平台",
+          "description": "将游戏地图重构为算法演示环境",
+          "conceptMap": {
+            "GameGrid → SearchSpace": "可配置的搜索问题空间",
+            "SnakeAI → AlgorithmPlugins": "BFS/DFS/A*/Dijkstra/MCTS 可插拔",
+            "Score → PerformanceMetrics": "节点访问数/路径长度/时间复杂度"
+          },
+          "architecture": {
+            "core": ["SearchSpaceBuilder", "AlgorithmRegistry", "MetricsCollector"],
+            "optional": ["StepVisualizer", "ComparisonEngine"]
+          },
+          "difficulty": "MEDIUM",
+          "tags": ["algorithms", "visualization", "education"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "flappy_bird",
+      "upgrades": [
+        {
+          "title": "强化学习训练沙盒",
+          "description": "用 Flappy Bird 环境训练和比较 RL 算法",
+          "conceptMap": {
+            "Game → RLEnvironment": "OpenAI Gym 兼容接口",
+            "Player → PolicyNetwork": "DQN/PPO/A2C 策略网络",
+            "Score → RewardFunction": "自定义奖励塑形",
+            "Difficulty → CurriculumLearning": "渐进式难度训练"
+          },
+          "architecture": {
+            "core": ["RLEnvironment", "PolicyNetwork", "Trainer"],
+            "optional": ["HyperparameterOptimizer", "ModelComparer"]
+          },
+          "difficulty": "HIGH",
+          "tags": ["reinforcement-learning", "AI", "education"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "game_2048",
+      "upgrades": [
+        {
+          "title": "对抗搜索与博弈树可视平台",
+          "description": "用 2048 演示 Minimax/Expectimax/MCTS 算法",
+          "conceptMap": {
+            "Game → AdversarialProblem": "可配置搜索深度和剪枝策略",
+            "Score → HeuristicFunctionDesign": "可插拔启发式评估函数",
+            "AI → SearchAlgorithmShowcase": "逐步可视化搜索树构建"
+          },
+          "architecture": {
+            "core": ["SearchEngine", "HeuristicRegistry", "TreeVisualizer"]
+          },
+          "difficulty": "MEDIUM",
+          "tags": ["algorithms", "AI", "education"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "crud_app",
+      "upgrades": [
+        {
+          "title": "权限驱动数据流引擎",
+          "description": "在 CRUD 之上叠加细粒度权限模型和数据流管控",
+          "conceptMap": {
+            "Create → PolicyEnforcedCreation": "基于 RBAC/ReBAC 的权限验证",
+            "Read → FilteredProjection": "数据按照权限自动过滤投影",
+            "Update → VersionedMutation": "所有变更版本化，可审计可回滚",
+            "Delete → SoftDelete+Retention": "软删除 + 保留策略 + 物理清理"
+          },
+          "architecture": {
+            "core": ["PolicyEngine", "AuditLog", "VersionManager", "DataFilter"],
+            "optional": ["DataLineage", "ComplianceReporter"]
+          },
+          "difficulty": "MEDIUM",
+          "tags": ["security", "architecture", "enterprise"]
+        },
+        {
+          "title": "事件溯源 + CQRS 系统",
+          "description": "从增删改查升级到事件驱动的架构",
+          "conceptMap": {
+            "Create → CommandHandler + EventStore": "命令验证 → 事件追加",
+            "Read → QueryModel (Materialized View)": "读模型与写模型分离",
+            "Update → NewEvent with Version": "不可变事件日志",
+            "Delete → Compensation Event": "补偿事件而非直接删除"
+          },
+          "architecture": {
+            "core": ["CommandBus", "EventStore", "ProjectionBuilder", "QueryHandler"],
+            "optional": ["SnapshotManager", "EventReplay"]
+          },
+          "difficulty": "HIGH",
+          "tags": ["DDD", "event-driven", "architecture"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "blog_cms",
+      "upgrades": [
+        {
+          "title": "知识演化追踪系统",
+          "description": "文章不再是静态页面，而是知识状态的版本快照",
+          "conceptMap": {
+            "Article → KnowledgeSnapshot": "每篇文章是特定时刻的知识状态",
+            "Update → VersionDiff": "细粒度词级差异追踪",
+            "Category → OntologyNode": "基于本体的分类而非随意标签",
+            "Search → SemanticQuery": "基于语义而非关键词匹配"
+          },
+          "architecture": {
+            "core": ["SnapshotStore", "DiffEngine", "OntologyManager", "SemanticSearch"],
+            "optional": ["KnowledgeGraph", "ChangeVisualizer"]
+          },
+          "difficulty": "HIGH",
+          "tags": ["knowledge-management", "semantic-web"]
+        },
+        {
+          "title": "语义知识图谱引擎",
+          "description": "从文档库升级为互联的知识网络",
+          "conceptMap": {
+            "Posts → Entities + Relations": "自动提取实体和关系",
+            "Tags → TypedEdges": "带类型的语义关系",
+            "Search → GraphTraversal": "图遍历查询而非全文搜索"
+          },
+          "architecture": {
+            "core": ["NERProcessor", "RelationExtractor", "GraphDB", "QueryEngine"],
+            "optional": ["Visualization", "AutoSummarizer"]
+          },
+          "difficulty": "HIGH",
+          "tags": ["knowledge-graph", "NLP", "semantic"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "weather_app",
+      "upgrades": [
+        {
+          "title": "气象数据管道与可视化系统",
+          "description": "从查天气到构建完整的数据管道",
+          "conceptMap": {
+            "WeatherAPI → DataIngestionPipeline": "多源数据聚合 + 清洗 + 归一化",
+            "Display → TimeSeriesVisualization": "交互式时间序列 + 地理空间数据",
+            "Forecast → EnsembleModelComparison": "多模型集合比较"
+          },
+          "architecture": {
+            "core": ["DataPipeline", "StorageLayer", "VisualizationEngine"],
+            "optional": ["AlertSystem", "HistoricalAnalyzer"]
+          },
+          "difficulty": "MEDIUM",
+          "tags": ["data-engineering", "visualization", "pipeline"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "auth_demo",
+      "upgrades": [
+        {
+          "title": "零信任身份安全框架",
+          "description": "从 JWT demo 到完整的安全身份架构",
+          "conceptMap": {
+            "Login → MultiFactorAuthentication": "密码 + TOTP + WebAuthn",
+            "JWT → Session + Refresh Rotation": "refresh token 轮换 + 设备指纹",
+            "Register → IdentityVerificationFlow": "邮箱验证 + KYC 可选",
+            "User → IdentityProvider": "可扩展的 IdP 抽象层"
+          },
+          "architecture": {
+            "core": ["MFAEngine", "SessionManager", "DeviceFingerprinter"],
+            "optional": ["OAuthProvider", "FederatedIdentity"]
+          },
+          "difficulty": "HIGH",
+          "tags": ["security", "identity", "zero-trust"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "chat_app",
+      "upgrades": [
+        {
+          "title": "去中心化 P2P 通信协议",
+          "description": "从中心化聊天到 P2P 通信协议实现",
+          "conceptMap": {
+            "Server → DHT + Relay": "分布式哈希表 + 中继网络",
+            "Message → Signed+Encrypted": "端到端加密 + 数字签名",
+            "Room → Swarm": "基于 gossip 协议的群组通信"
+          },
+          "architecture": {
+            "core": ["DHTNode", "EncryptionEngine", "GossipProtocol"],
+            "optional": ["NATTraversal", "RelayNetwork"]
+          },
+          "difficulty": "VERY_HIGH",
+          "tags": ["p2p", "distributed-systems", "cryptography"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "ecommerce",
+      "upgrades": [
+        {
+          "title": "供应链与库存优化引擎",
+          "description": "从购物车到供应链智能",
+          "conceptMap": {
+            "Cart → DemandAggregator": "需求聚合与预测",
+            "Inventory → SupplyOptimizer": "安全库存 + 动态补货",
+            "Order → FulfillmentPlanner": "多仓库最优配货路径"
+          },
+          "architecture": {
+            "core": ["DemandForecaster", "InventoryOptimizer", "FulfillmentEngine"],
+            "optional": ["SupplierPortal", "Analytics"]
+          },
+          "difficulty": "HIGH",
+          "tags": ["supply-chain", "optimization", "logistics"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "url_shortener",
+      "upgrades": [
+        {
+          "title": "链接健康与重定向分析引擎",
+          "description": "不仅仅是缩短，而是完整的链接生命周期管理",
+          "conceptMap": {
+            "ShortURL → LinkHealthMonitor": "定期检查链接可用性",
+            "Redirect → RuleBasedRouter": "AB测试/地域路由/条件跳转",
+            "Counter → AnalyticsPipeline": "点击流分析 + 归因模型"
+          },
+          "architecture": {
+            "core": ["HealthChecker", "RuleEngine", "AnalyticsPipeline"],
+            "optional": ["BotDetector", "FraudAnalyzer"]
+          },
+          "difficulty": "MEDIUM",
+          "tags": ["analytics", "link-management"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "expense_tracker",
+      "upgrades": [
+        {
+          "title": "消费行为异常检测系统",
+          "description": "从记账到智能金融监控",
+          "conceptMap": {
+            "Expense → TransactionEvent": "流式处理交易事件",
+            "Category → MLClassifier": "自动交易分类",
+            "Budget → AnomalyDetector": "基于统计/ML 的异常检测",
+            "Report → ForecastModel": "支出预测 + 趋势分析"
+          },
+          "architecture": {
+            "core": ["TransactionPipeline", "Classifier", "AnomalyDetector", "Forecaster"],
+            "optional": ["Dashboard", "AlertEngine"]
+          },
+          "difficulty": "HIGH",
+          "tags": ["fintech", "ML", "anomaly-detection"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "social_media_demo",
+      "upgrades": [
+        {
+          "title": "去中心化社交协议实现",
+          "description": "实现 ActivityPub 或其他联邦协议的最小实例",
+          "conceptMap": {
+            "Post → Activity": "标准 ActivityPub activity types",
+            "Feed → Inbox/Outbox": "联邦宇宙中继模型",
+            "Follow → Subscription": "基于 Activity 的订阅分发",
+            "Like → Activity with Reactions": "标准交互协议"
+          },
+          "architecture": {
+            "core": ["ActivityPubServer", "FederationProtocol", "InboxManager"],
+            "optional": ["Webfinger", "NodeInfo"]
+          },
+          "difficulty": "VERY_HIGH",
+          "tags": ["federation", "protocol", "decentralized"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "notes_app",
+      "upgrades": [
+        {
+          "title": "双向链接知识网络",
+          "description": "从简单笔记到互联的知识网络，类似 Roam Research 的核心理念",
+          "conceptMap": {
+            "Note → BlockReference": "基于块的引用而非文档级链接",
+            "Folder → GraphTraversal": "图结构组织而非树结构",
+            "Search → BacklinkExplorer": "反向链接 + 引用图谱",
+            "Tags → TypedRelations": "带语义类型的关联"
+          },
+          "architecture": {
+            "core": ["BlockStore", "GraphIndex", "QueryEngine"],
+            "optional": ["Visualizer", "DailyNotes"]
+          },
+          "difficulty": "MEDIUM",
+          "tags": ["knowledge-management", "graph-database"]
+        }
+      ]
+    },
+
+    {
+      "fromPattern": "calculator",
+      "upgrades": [
+        {
+          "title": "表达式解析器与符号数学引擎",
+          "description": "从简单计算到完整的表达式求值系统",
+          "conceptMap": {
+            "Numbers → AST": "抽象语法树构建",
+            "Operations → VisitorPattern": "基于 Visitor 的求值器",
+            "History → ExpressionStore": "表达式持久化与回放"
+          },
+          "architecture": {
+            "core": ["Lexer", "Parser", "Evaluator", "ExpressionStore"],
+            "optional": ["SymbolicDifferentiator", "Plotter"]
+          },
+          "difficulty": "MEDIUM",
+          "tags": ["compiler", "parsing", "education"]
+        }
+      ]
+    }
+  ],
+
+  "dynamicUpgradeStrategies": {
+    "add_domain": {
+      "name": "添加领域层",
+      "description": "在 CRUD 之上叠加真实业务领域逻辑",
+      "instructions": "识别项目潜在的业务领域，引入领域模型、领域事件、业务规则"
+    },
+    "add_dimension": {
+      "name": "添加维度层",
+      "description": "从单维度扩展到多维度系统",
+      "instructions": "识别可以增加的非功能性维度：权限、审计、版本、多租户"
+    },
+    "add_intelligence": {
+      "name": "添加智能层",
+      "description": "引入规则引擎/预测/推荐",
+      "instructions": "识别系统中可以自动化的决策点，引入确定性规则或 ML 模型"
+    },
+    "add_collaboration": {
+      "name": "添加协作层",
+      "description": "从单用户到多用户/多 Agent 协作",
+      "instructions": "识别可以协作的环节，添加实时协作、冲突解决、共享状态"
+    },
+    "add_observability": {
+      "name": "添加可观测层",
+      "description": "添加指标、追踪、可视化",
+      "instructions": "引入结构化日志、指标收集、分布式追踪、可视化面板"
+    }
+  }
+}

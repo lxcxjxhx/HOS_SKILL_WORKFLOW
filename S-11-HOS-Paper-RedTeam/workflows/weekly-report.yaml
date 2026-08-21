@@ -1,0 +1,37 @@
+# 每周漏洞周报工作流（HOS-Paper-RedTeam）
+# 说明：本文件是编排说明，供调度器/人工触发，不自行执行。
+
+name: hos-paper-redteam-weekly
+schedule: "0 9 * * 1"      # 每周一 09:00
+enabled: true
+
+steps:
+  - id: 1-agg
+    agent: "09-research-miner"
+    action: "聚合 database/vulnerability.json 本周新增 RVE，按 category 与 severity 统计"
+    output: "本周 RVE 统计表"
+
+  - id: 2-top10
+    agent: "08-paper-autopsy"
+    action: "生成《本周最大研究漏洞 TOP10》——按严重度 + 攻击模式频次排序"
+    output: "TOP10 清单"
+
+  - id: 3-insight
+    agent: "09-research-miner"
+    action: "标注高频攻击模式对应的研究空白，更新 research-gap.json"
+    output: "研究空白洞察"
+
+  - id: 4-article
+    agent: "10-blogger-agent"
+    action: "周报转公开版（辣度 1-2），发布到公众号/博客"
+    output: "周报文章 1 篇"
+
+  - id: 5-persist
+    action: "归档周报到 output/weekly/YYYY-Www.md"
+    output: "归档完成"
+
+report_structure:
+  - "本周概览：N 篇论文被审，M 条 RVE 发现"
+  - "TOP10 研究漏洞（编号 + 论文 + 一句话）"
+  - "按分类分布：RVE-DATA/BENCH/EVAL/SEC/REPRO"
+  - "研究机会：本周新增 GAP 及推荐"

@@ -1,0 +1,109 @@
+{
+  "report_title": "HOS-CRITIC-REVIEW · 8 篇 SAST + LLM 安全论文批判式评审汇总",
+  "report_subtitle": "ZeroFalse · Argus-SAST · CodeX-Verify · LLMPFA · MultiVer · SAST-Genius · Sifting-the-Noise · T2L-Agent —— 全部按 HOS-CRITIC-REVIEW 七步流水线（Discovery → Chunk → Analyzer → Evidence → Critic → Judge → Report）评审",
+  "stats": [
+    "8 篇论文",
+    "评审日期 2025-10 ~ 2026-08",
+    "联网核验 2026-08-03（arXiv / GitHub API / Zenodo 官方源）",
+    "辣度 3（毒舌但讲证据）"
+  ],
+  "verify_badge": "🌐 联网核验补充（2026-08-03 · 官方源 web_fetch）",
+  "papers": [
+    {
+      "file": "Argus-SAST-expert.md",
+      "title": "Argus: Reorchestrating Static Analysis via a Multi-Agent Ensemble for Full-Chain Security Vulnerability Detection",
+      "arxiv": "arXiv:2604.06633 (cs.CR)",
+      "verified": [
+        ["arXiv 元数据", "200 OK：标题/作者（10 人，Zi Liang 等）/提交 2026-04-08 均与报告 §1 一致；v1 唯一版本"],
+        ["CVE 真实性", "arXiv abs 页无 CVE 编号或代码链接佐证；报告 HCR-CLAIM-2026-0004「零日+CVE 无编号」维持"],
+        ["GitHub 仓库", "arXiv 页面 Code/Data 区无仓库链接；论文未提供可核验仓库，HCR-REPRO-2026-0009 维持"]
+      ],
+      "corrections": []
+    },
+    {
+      "file": "CodeX-Verify-expert-v2.md",
+      "title": "CodeX-Verify: Multi-Agent Code Verification via Information Theory",
+      "arxiv": "arXiv:2511.16708 (cs.SE)",
+      "verified": [
+        ["arXiv 元数据", "200 OK：已修订至 v3（2025-12-03）；v1 2025-11-20；作者 Shreshth Rajan，与报告一致"],
+        ["GitHub 仓库", "github.com/ShreshthRajan/codex-verify 存在（报告已核验：6,122 行，MIT License）"],
+        ["摘要数字", "arXiv 摘要（76.1% / +39.7pp / 300 patches / <200ms）与报告引用一致，进一步佐证正文数字自洽性争议来自论文自身"]
+      ],
+      "corrections": []
+    },
+    {
+      "file": "LLMPFA-expert.md",
+      "title": "Reducing False Positives in Static Bug Detection with LLMs: An Empirical Study in Industry",
+      "arxiv": "arXiv:2601.18844 (cs.SE)",
+      "verified": [
+        ["arXiv 元数据", "200 OK：标题/9 作者（Xueying Du 等，复旦+腾讯）/提交 2026-01-26 与报告 §1 一致"],
+        ["GitHub 仓库", "github.com/LLM4SFPR/static-bug-false-positives-reduction-in-practice 存在（报告已核验：3 stars / 7 commits / 无 LICENSE）"],
+        ["摘要口径", "arXiv 摘要同样宣称「eliminate 94-98% of false positives with high recall」，确认 overclaim 来自论文摘要本体（HCR-CLAIM-2026-0001）"]
+      ],
+      "corrections": []
+    },
+    {
+      "file": "MultiVer-expert.md",
+      "title": "MultiVer: Zero-Shot Multi-Agent Vulnerability Detection",
+      "arxiv": "arXiv:2602.17875 (cs.MA)",
+      "verified": [
+        ["arXiv 元数据", "200 OK：标题/作者 Shreshth Rajan/提交 2026-02-19 与报告 §1 一致；v1 唯一版本"],
+        ["出版状态", "arXiv abs 页无 journal-ref/venue 字段——报告「ICML 2026 / PMLR 306 无法验证」判定经官方源确认维持（HCR-CLAIM-2026-0007）"],
+        ["PyVul 基准", "PyVul（arXiv:2509.04260）abs 页 200 OK，基准存在性确认（报告已核验）"]
+      ],
+      "corrections": []
+    },
+    {
+      "file": "SAST-Genius-expert.md",
+      "title": "LLM-Driven SAST-Genius: A Hybrid Static Analysis Framework for Comprehensive and Actionable Security",
+      "arxiv": "arXiv:2509.15433 (cs.CR)",
+      "verified": [
+        ["arXiv 元数据", "200 OK：v1 2025-09-18 → v3 2025-11-04，与报告版本口径一致"],
+        ["发表状态", "**修正**：arXiv abs 页 `Journal reference: IEEE S&P 2025` 字段存在（作者提交时填写）；报告 HCR-CLAIM-2025-0003 称「IEEE S&P 2025 声明无佐证」需下调——佐证为作者自报字段，非 IEEE 官方收录页，OpenAlex is_accepted=false 仍成立，判定从「无佐证」改为「部分佐证，未经官方收录库确认」"],
+        ["GitHub 仓库", "github.com/In3tinct/sast-genius 存在（报告已核验，无 LICENSE 维持）"]
+      ],
+      "corrections": [
+        "HCR-CLAIM-2025-0003「IEEE S&P 2025 发表声明无佐证」→ 部分佐证（arXiv journal-ref 作者自报字段；官方收录仍未确认）"
+      ]
+    },
+    {
+      "file": "Sifting-the-Noise-expert.md",
+      "title": "Sifting the Noise: A Comparative Study of LLM Agents in Vulnerability False Positive Filtering",
+      "arxiv": "arXiv:2601.22952 (cs.SE)",
+      "verified": [
+        ["arXiv 元数据", "200 OK：v1 2026-01-30 → v3 2026-07-23；Comments 明确 `To appear in ISSTA 2026`（35th ACM SIGSOFT）——报告「ISSTA 2026 收录无法验证」的降级项现已解除"],
+        ["Zenodo artifact", "**修正**：Zenodo 记录 10.5281/zenodo.21282004 存在（ISSTA 2026 Artifact Package，Docker 离线核验 + 完整证据数据）；论文正文引用的 10.5281/zenodo.18420284 与真实记录不符——HCR-DATA-2026-0012「DOI 前后不一致」经官方源确认成立；同时证明 artifact 本身真实存在，报告「网络不可用无法验证」降级项解除"],
+        ["Related DOI", "ACM 10.1145/3832100 关联 DOI 存在，与 ISSTA 收录一致"]
+      ],
+      "corrections": [
+        "HCR-DATA-2026-0012「Zenodo DOI 不一致」→ verified（真实记录 21282004 ≠ 论文 18420284）",
+        "§6「ISSTA 2026 收录 / Zenodo artifact 无法验证」降级项 → 已联网核验解除"
+      ]
+    },
+    {
+      "file": "T2L-Agent-expert.md",
+      "title": "From Trace to Line: LLM Agent for Real-World OSS Vulnerability Localization",
+      "arxiv": "arXiv:2510.02389 (cs.SE)",
+      "verified": [
+        ["arXiv 元数据", "200 OK：v1 2025-09-30 → v3 2026-02-04；作者 Haoran Xi 等 5 人，与报告 §1 一致"],
+        ["GitHub 仓库", "**404 Not Found**：api.github.com/repos/haoranxi/T2LAgent 返回 404——报告 HCR-REPRO-2026-0010「publicly available 与 will release upon publish 自相矛盾」经官方源确认成立，且当前仓库不可访问（不存在/私有/已删除），证据缺口升级为 confirmed"],
+        ["T2L-ARVO", "arXiv 摘要确认 50-case / 5 crash families 基准自述，与正文一致"]
+      ],
+      "corrections": [
+        "HCR-REPRO-2026-0010「公开承诺自相矛盾」→ 强化（GitHub 仓库 404，公开承诺当前不可兑现）",
+        "§6「GitHub 仓库存在性未核验」降级项 → 已核验（404）"
+      ]
+    },
+    {
+      "file": "ZeroFalse-expert.md",
+      "title": "ZeroFalse: Improving Precision in Static Analysis with LLMs",
+      "arxiv": "arXiv:2510.02534 (cs.SE)",
+      "verified": [
+        ["arXiv 元数据", "200 OK：标题/7 作者/提交 2025-10-02 与报告 §1 一致；v1 唯一版本"],
+        ["GitHub 仓库", "github.com/mhsniranmanesh/ZeroFalse 存在（报告已核验：README 与 Table 1 数字冲突、citation 占位符）"],
+        ["摘要口径", "arXiv 摘要「consistently outperforms generic prompts」与正文 Table 4 负向反例并存——确认 HCR-CLAIM-2025-0003 反驳成立"]
+      ],
+      "corrections": []
+    }
+  ]
+}

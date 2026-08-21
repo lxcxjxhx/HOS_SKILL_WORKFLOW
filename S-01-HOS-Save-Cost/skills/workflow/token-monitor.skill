@@ -1,0 +1,62 @@
+# Token Monitor Protocol（Token 监控反馈协议）
+
+## Metadata
+- **name**: HOS Token Monitor
+- **version**: 2.0.0
+- **keywords**: token-monitoring, budget, threshold, model-switch, caching
+- **activation**: manual（HOS-Save-Cost 激活时随行监控）
+- **prerequisites**: HOS-Save-Cost
+
+## 目标
+
+持续监控 Token 消耗，超阈值时提醒用户**切换模型**或**开启缓存**，把成本控制在预算内。
+
+## 监控维度
+
+| 维度 | 指标 | 默认阈值 |
+|------|------|----------|
+| 单任务消耗 | 当前子任务已用 tokens | 15K |
+| 会话累计 | 本次会话总消耗 | 50K |
+| 单文件上下文 | 单次读取的文件体量 | 3K |
+| 输出冗余 | 回复中与任务无关的内容占比 | 20% |
+
+## 反馈动作（超阈值时）
+
+1. **提醒**：明确告知当前消耗 / 预算 / 超支幅度
+2. **建议切换模型**：如 `deepseek-v4-flash`（便宜快）↔ 推理模型（贵但准）
+3. **建议开启缓存**：提示启用 prompt caching / 缓存复用
+4. **建议拆分**：若单任务已超限，回到 task-split 重新拆分
+5. **建议精简输出**：加载 caveman 模式压缩回复
+
+## 输出格式（每次子任务完成时）
+
+```
+## Token Report
+
+- 本子任务消耗: [X tokens]
+- 会话累计: [X / 预算 Y tokens]
+- 状态: [正常 / 黄色预警 / 红色超支]
+- 建议: [无需操作 / 切换模型 / 开缓存 / 拆分 / 启用 caveman]
+```
+
+## 配置
+
+建议配合环境层（如 `reasonix.toml`）设置：
+
+```toml
+[context]
+max_context_chars = 100000
+max_tool_output_chars = 15000
+```
+
+## 与工具链配合
+
+- 输入压缩：RTK / CodeGraph 已压缩终端输出和代码探索 → 监控更省
+- 输出精简：caveman 降低输出 token → 监控更省
+- MCP 层：原生 `[[plugins]]` 只配置所需 server（见 integration/reasonix.toml）→ 工具 schema 最小化
+
+## 反模式
+
+- ❌ 只统计不提醒（监控无意义）
+- ❌ 频繁打断用户（只在阈值点提醒，不做实时刷屏）
+- ❌ 监控本身消耗大量 token（用极简格式输出）

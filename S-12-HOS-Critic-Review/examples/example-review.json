@@ -1,0 +1,175 @@
+{
+  "schema_version": "1.0",
+  "report_id": "rr-20260801-a1b2c3",
+  "target": {
+    "object_id": "obj-a1b2c3",
+    "type": "article",
+    "domain": "Enterprise AI / RAG",
+    "complexity": "low",
+    "size_estimate": { "bytes": 2212, "files": 1, "pages": null, "tokens": 1800 },
+    "source": { "kind": "path", "url": "examples/fixtures/sample-article.md" },
+    "meta": { "title": "HOS-RAG-Copilot：零代码企业知识库智能问答助手", "author": null, "lang_detect": ["markdown", "zh"] },
+    "signals": ["markdown-structure", "proposal-like"],
+    "confidence": 0.85,
+    "degradations": []
+  },
+  "score": {
+    "score": 62,
+    "grade": "C",
+    "grade_label": "及格",
+    "dimensions": { "technical": 7, "innovation": 6, "engineering": 6, "ecosystem": 5, "risk": 6, "strategic": 7 },
+    "verdict": "方案方向有价值，但核心卖点「零代码零依赖」与正文自相矛盾，营销浓度偏高。",
+    "one_liner": "宣称零依赖，正文却要五个外部组件，包装大于实质。",
+    "decision": { "learn": true, "contribute": false, "invest": false, "research": false },
+    "rationale": "technical 7：架构组件描述具体（Vespa/FAISS/reranker），但为常见组件组合（finding-002 partial -0.4）；innovation 6：『业界首创』无支撑、组合式方案（finding-001 verified -1.0, finding-002 partial -0.35）；engineering 6：Docker Compose/版本表/路线图齐全但文档缺口（finding-005 verified -1.0）；ecosystem 5：无任何生态信息可核验；risk 6：数据无口径（finding-003 verified -0.75）+ 权限依赖自建 SSO（finding-006 verified -0.5）；strategic 7：方向有市场价值（finding-001 verified 影响 -0.5）。",
+    "risk_flags": ["核心宣称与正文自相矛盾", "效果数据无样本量与口径", "隐藏部署成本"]
+  },
+  "findings": [
+    {
+      "finding_id": "finding-001",
+      "hcr_id": "HCR-CLAIM-2026-0001",
+      "class": "CLAIM",
+      "severity": "CRITICAL",
+      "title": "宣称「零代码零依赖」，正文依赖 5 类外部组件",
+      "claim": "标题与简介宣称「开箱即用、零代码、零依赖」，但架构组件与部署章节明确要求自备向量数据库、大模型 API Key、SSO 服务、8 核 16G 服务器等外部组件",
+      "evidence_draft": "unit-003『基于开源项目 Vespa』『基于 FAISS 二次封装』；unit-004『调用第三方大模型 API，需客户自备 Key』『需客户自行部署 SSO 服务』；unit-005『至少 8 核 16G 内存的服务器』",
+      "unit_refs": ["unit-003", "unit-004", "unit-005"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.95,
+      "evidence_status": "verified",
+      "patch": "将宣称改为『业务侧零代码接入』并给出完整前置依赖清单"
+    },
+    {
+      "finding_id": "finding-002",
+      "hcr_id": "HCR-CLAIM-2026-0002",
+      "class": "CLAIM",
+      "severity": "MEDIUM",
+      "title": "「业界首创三段式混合检索」实为常见组件组合",
+      "claim": "宣称业界首创的「三段式混合检索」，实际为 BM25 + 向量检索 + reranker 的常见组合（均基于开源项目）",
+      "evidence_draft": "unit-003 组件清单全部为 Vespa/FAISS/cross-encoder 等既有开源技术；正文未提供与任何方案的对比证据",
+      "unit_refs": ["unit-003"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.7,
+      "evidence_status": "partial",
+      "patch": "删除『业界首创』表述，或补充与 ≥2 个现有 RAG 方案的架构对比"
+    },
+    {
+      "finding_id": "finding-003",
+      "hcr_id": "HCR-DATA-2026-0003",
+      "class": "DATA",
+      "severity": "HIGH",
+      "title": "效果数据无样本量与口径，「23% 提升」无基线",
+      "claim": "『平均准确率 91.2%』基于 3 家客户测试，无评测集、样本量与判定标准；『优于纯向量检索 23%』未说明对比基线与复现方法",
+      "evidence_draft": "unit-006 仅提及『3 家客户的测试环境』『测试人员判定为可用』，无任何量化口径",
+      "unit_refs": ["unit-006"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.9,
+      "evidence_status": "verified",
+      "patch": "公开评测集、样本量、判定标准与对比基线配置"
+    },
+    {
+      "finding_id": "finding-004",
+      "hcr_id": "HCR-CLAIM-2026-0004",
+      "class": "CLAIM",
+      "severity": "MEDIUM",
+      "title": "「37% 时间找资料」来源标注「内部调研，未公开」",
+      "claim": "背景章节的关键统计数字来源不可核验",
+      "evidence_draft": "unit-002『数据来源：内部调研，未公开』",
+      "unit_refs": ["unit-002"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.8,
+      "evidence_status": "unverifiable",
+      "patch": "补充可核验来源或改为行业公开报告引用"
+    },
+    {
+      "finding_id": "finding-005",
+      "hcr_id": "HCR-REPRO-2026-0005",
+      "class": "REPRO",
+      "severity": "MEDIUM",
+      "title": "宣称开箱即用，实际需 8核16G+向量库+SSO 联调 2-4 周",
+      "claim": "『Docker Compose 一键启动』与『开箱即用』与实际前置条件（服务器规格、向量库、LLM Key、SSO 联调 2-4 周）不符，部署成本被低估",
+      "evidence_draft": "unit-005 部署方式章节列出的全部前置条件",
+      "unit_refs": ["unit-005"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.9,
+      "evidence_status": "verified",
+      "patch": "拆分『体验版一键启动』与『生产部署』两档说明，补齐前置清单与排障文档"
+    },
+    {
+      "finding_id": "finding-006",
+      "hcr_id": "HCR-SEC-2026-0006",
+      "class": "SEC",
+      "severity": "LOW",
+      "title": "权限过滤依赖客户自建 SSO，Community 版无权限功能",
+      "claim": "权限能力不是产品内置而是依赖客户基础设施，且免费版不含权限；安全边界未说明",
+      "evidence_draft": "unit-004『需客户自行部署 SSO 服务，本文档不展开』；unit-005 版本对比表 Community 权限为『无』",
+      "unit_refs": ["unit-004", "unit-005"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.85,
+      "evidence_status": "verified",
+      "patch": "补充默认安全基线说明与 Community 版能力边界"
+    }
+  ],
+  "critiques": [
+    {
+      "crit_id": "crit-001",
+      "role": "skeptic",
+      "attack_vector": "overclaim",
+      "thesis": "核心卖点『零依赖』与架构组件清单直接矛盾，营销浓度偏高",
+      "reasoning": "标题与简介押注『零依赖』，正文 unit-003/004 列了 5 类外部组件；这不是细节瑕疵，是卖点本身的虚假陈述",
+      "unit_refs": ["unit-003", "unit-004"],
+      "finding_refs": ["finding-001"],
+      "spiciness": 3
+    },
+    {
+      "crit_id": "crit-002",
+      "role": "domain-expert",
+      "attack_vector": "hidden-cost",
+      "thesis": "2-4 周联调与自备组件构成显著隐性成本，『开箱即用』不成立",
+      "reasoning": "unit-005 的真实交付路径是 8核16G + 向量库 + LLM Key + SSO 集成，至少 1-4 周；对排障、运维、容量规划只字未提",
+      "unit_refs": ["unit-005"],
+      "finding_refs": ["finding-005"],
+      "spiciness": 2
+    },
+    {
+      "crit_id": "crit-003",
+      "role": "domain-expert",
+      "attack_vector": "missing-baseline",
+      "thesis": "91.2% 与 23% 提升均无公开基线，无法判断真实水平",
+      "reasoning": "unit-006 未提供评测集、判定标准与对比系统配置；『业界首创』类表述在无基线情况下不可证伪",
+      "unit_refs": ["unit-006"],
+      "finding_refs": ["finding-003"],
+      "spiciness": 2
+    },
+    {
+      "crit_id": "crit-004",
+      "role": "skeptic",
+      "attack_vector": "scaling-doubt",
+      "thesis": "3 家客户测试环境不足以支撑普适性能宣称",
+      "reasoning": "unit-006 样本为 3 家客户测试环境，行业场景差异大（Wiki/工单/IM），外推到『企业知识库』整体存在幸存者偏差风险",
+      "unit_refs": ["unit-006"],
+      "finding_refs": ["finding-003"],
+      "spiciness": 2
+    },
+    {
+      "crit_id": "crit-005",
+      "role": "domain-expert",
+      "attack_vector": "recognition",
+      "thesis": "工程交付意识比纯 PPT 方案强：有 Docker 交付与明确版本区分",
+      "reasoning": "unit-005 提供 Docker Compose 与版本对比表（Community/Enterprise），路线图清晰；至少不是停留在概念层的方案",
+      "unit_refs": ["unit-005", "unit-006"],
+      "finding_refs": [],
+      "spiciness": 1
+    }
+  ],
+  "degradations": [
+    "外部分析器不可用，降级为文本启发式分析",
+    "无网络：效果数据与『业界首创』无法联网核验，标记 unverifiable/partial"
+  ],
+  "meta": {
+    "duration_seconds": 95,
+    "toolchain": { "network": false, "tools": [] },
+    "output_mode": "quick",
+    "store_status": "ok"
+  }
+}

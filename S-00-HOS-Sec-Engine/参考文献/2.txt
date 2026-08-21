@@ -1,0 +1,2475 @@
+AgenticSCR: An Autonomous Agentic Secure Code Review for
+Immature Vulnerabilities Detection
+Wachiraphan Charoenwet
+The University of Melbourne
+Australia.
+Kla Tantithamthavorn Monash University
+Australia.
+Patanamon Thongtanunam
+The University of Melbourne
+Australia.
+Hong Yi Lin
+The University of Melbourne
+Australia.
+Minwoo Jeong
+Atlassian
+USA.
+Ming Wu
+Atlassian
+USA.
+Abstract
+Secure code review is critical at the pre-commit stage, where vul nerabilities must be caught early under tight latency and limited context constraints. Existing SAST-based checks are noisy and often
+miss immature, context-dependent vulnerabilities, while standalone
+Large Language Models (LLMs) are constrained by context win dows and lack explicit tool use. Agentic AI, which combine LLMs
+with autonomous decision-making, tool invocation, and code nav igation, offer a promising alternative, but their effectiveness for
+pre-commit secure code review is not yet well understood.
+In this work, we introduce AgenticSCR, an agentic AI for secure
+code review for detecting immature vulnerabilities during the pre commit stage, augmented by security-focused semantic memories.
+Using our own curated benchmark of immature vulnerabilities,
+tailored to the pre-commit secure code review, we empirically eval uate how accurate is our AgenticSCR for localizing, detecting, and
+explaining immature vulnerabilities. Our results show that Agentic SCR achieves at least 153% relatively higher percentage of correct
+code review comments than the static LLM-based baseline, and
+also substantially surpasses SAST tools. Moreover, AgenticSCR
+generates more correct comments in four out of five vulnerability
+types, consistently and significantly outperforming all other base lines. These findings highlight the importance of Agentic Secure
+Code Review, paving the way towards an emerging research area
+of immature vulnerability detection.
+ACM Reference Format:
+Wachiraphan Charoenwet, Kla Tantithamthavorn, Patanamon Thongta nunam, Hong Yi Lin, Minwoo Jeong, and Ming Wu. 2026. AgenticSCR:
+An Autonomous Agentic Secure Code Review for Immature Vulnerabili ties Detection . In Proceedings of The ACM International Conference on the
+Foundations of Software Engineering (FSE ’26). ACM, New York, NY, USA,
+12 pages. https://doi.org/XXXXXXX.XXXXXXX
+1
+Introduction
+Secure code review is a fundamental practice for preventing vulner abilities before they reach production systems. Among the various
+Permission to make digital or hard copies of all or part of this work for personal or
+classroom use is granted without fee provided that copies are not made or distributed
+for profit or commercial advantage and that copies bear this notice and the full citation
+on the first page. Copyrights for components of this work owned by others than the
+author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or
+republish, to post on servers or to redistribute to lists, requires prior specific permission
+and/or a fee. Request permissions from permissions@acm.org.
+FSE ’26, Montreal, Canada
+©
+2026 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+ACM ISBN 978-x-xxxx-xxxx-x/YYYY/MM
+https://doi.org/XXXXXXX.XXXXXXX
+Pre-Commit Secure Code Review PR-based Secure Code Review
+Incremental code changes,
+Immature vulnerability,
+Harder to detect
+Security Analysis Tools
+Scan,
+Detect,
+Fix
+Pull Request
+Commit(s)
+More completed code changes,
+Mature vulnerability, Easier to detect
+AgenticSCR
+Shift-Left for Early Detection
+IDE Figure 1: A visual comparison of the pre-commit secure code
+review compared to the pull request-based secure code review
+practices. review stages (see Figure 1), pre-commit secure code review, where de velopers inspect their own code changes before they are committed
+to version control, offers an opportunity for early intervention with
+minimal coordination overhead in the review process [
+5
+]―which is
+common in the shift-left security practice. Many vulnerabilities at
+the pre-commit stage emerge as immature vulnerabilities―i.e., incomplete, latent, or context-dependent weaknesses introduced
+through small, incremental code changes [33, 47]. Such incremental code changes often appear benign in isolation, yet later evolve into
+exploitable vulnerabilities as surrounding code is added [34, 35].
+Despite the importance of such immature vulnerabilities, prior
+studies found that developers frequently overlook security-relevant
+issues during the pre-commit stage of secure code review, especially
+when changes are small and their broader security implications are
+difficult to reason about [8, 9, 17, 38, 41].
+Existing automated secure code review techniques struggle un der these conditions. Traditional Static Application Security Test ing (SAST) tools (e.g., SonarQube, Semgrep, Snyk) dominate pre commit security checks due to their low latency and rule-based
+design, but they are primarily tuned for detecting mature vulnera bilities in more complete code [10, 36]. When applied at pre-commit
+stage, these tools often generate noise (or false positives) while miss ing context-dependent weaknesses, leading developers to ignore or
+disregard them [10, 36]. Recent work on Large Language Models
+(LLMs)-based secure code review demonstrates promising reason ing capabilities for security-related tasks [19‒21, 30, 39, 46, 52], yet
+standalone LLMs lack contextual information within the repository
+to analyze such context-dependent weakness of an immature vulner ability, limiting their effectiveness in realistic pre-commit secure code
+review practices. In this paper, we introduce AgenticSCR, an autonomous Agen tic framework for secure code review designed to detect immature
+vulnerabilities at the pre-commit stage. To effectively analyze the
+AgenticSCR：⼀种针对不成熟漏洞检测的⾃主代理安全代码审查
+⽡奇拉潘·查伦⻙特
+墨尔本⼤学澳⼤利亚。
+克拉·坦蒂萨姆塔沃恩
+莫纳什⼤学
+澳⼤利亚。
+帕塔纳蒙·通塔努南
+墨尔本⼤学澳⼤利亚。
+洪毅林
+墨尔本⼤学澳⼤利亚。
+Jeong Minwoo
+Atlassian
+美国。
+明武
+Atlassian
+美国。
+摘要
+在提交前的阶段，安全代码审查⾄关重要，必须在严格的延迟和有限
+的上下⽂约束下尽早发现漏洞。现有的基于 SAST 的检查会产⽣⼤量
+噪⾳，并且经常错过不成熟、依赖于上下⽂的漏洞，⽽独⽴的通⽤语
+⾔模型（LLMs）则受到上下⽂窗⼝的限制，缺乏明确的⼯具使⽤。智
+能代理 AI，将 LLMs 与⾃主决策、⼯具调⽤和代码导航相结合，提供
+了⼀种有前景的替代⽅案，但它们在提交前安全代码审查⽅⾯的有效
+性尚未得到充分理解。
+在这项⼯作中，我们介绍了 AgenticSCR，⼀种⽤于安全代码审查的
+⾃主 AI，⽤于在提交前阶段检测不成熟的漏洞，并通过安全语义记忆
+进⾏增强。使⽤我们专⻔为提交前安全代码审查定制的、经过精⼼挑
+选的不成熟漏洞基准，我们实证评估了 AgenticSCR 在定位、检测和
+解释不成熟漏洞⽅⾯的准确性。我们的结果表明，AgenticSCR 在正
+确代码审查评论⽅⾯⽐静态的基于 LLM 的基线⾄少⾼ 153%，并且也
+⼤幅超越了 SAST ⼯具。此外，AgenticSCR 在五种漏洞类型中的四
+种⽣成了更多正确的评论，始终如⼀地、显著地超越了所有其他基
+线。这些发现突出了⾃主安全代码审查的重要性，为不成熟漏洞检测
+这⼀新兴研究领域铺平了道路。
+ACM 参考格式：
+Wachiraphan Charoenwet，Kla Tantithamthavorn，Patanamon
+Thongtanunam，Hong Yi Lin，Minwoo Jeong，和 Ming Wu。2026。
+AgenticSCR：⼀种⾃主代理安全代码审查，⽤于不成熟的漏洞
+关系检测。在 ACM 国际软件⼯程基础会议（FSE '26）论⽂集中。ACM，纽约，
+纽约州，美国，12 ⻚。https://doi.org/XXXXXXX.XXXXXXX
+1 简介
+安全代码审查是防⽌漏洞在⽣产系统出现之前的⼀项基本实践。在众多
+授权以数字或硬拷⻉形式复制本⽂的全部或部分内容供个⼈或课堂教学使⽤，但须免费提供，
+且复制件不得⽤于盈利或商业优势，并且复制件需包含本声明并在⾸⻚完整注明引⽤信息。本
+⽂中由⾮作者拥有的部分版权必须得到尊重。经注明出处后允许摘录。否则复制或再出版、在
+服务器上发布或重新分发到列表中，均需事先获得特定许可和/或付费。请通过
+permissions@acm.org 申请许可。
+FSE ‘26，蒙特利尔，加拿⼤
+© 2026 版权由所有者/作者持有。出版权许可给 ACM。ACM ISBN 978-x-xxxx-xxxx x/YYYY/MM https://doi.org/XXXXXXX.XXXXXXX
+预提交安全代码审查 基于 PR 的安全代码审查
+增量代码更改，不成熟的漏洞，
+更难检测
+安全
+分析⼯具
+Scan,
+Detect,
+Fix
+拉取请求
+提交(s)
+更多已完成的代码更改，成熟的漏洞，更容
+易检测
+AgenticSCR
+左移以实现早期检测
+集成开发环境
+图 1：预先提交安全代码审查与基于拉取请求的安全代码审查实践的可
+视化⽐较。
+审查阶段（⻅图 1），预提交安全代码审查，在开发者将代码更改提交
+到版本控制之前检查⾃⼰的代码更改，为审查过程中提供早期⼲预的
+机会，且协调开销最⼩[5]―这在左移安全实践中很常⻅。在预提交阶
+段出现的许多漏洞都是不成熟的漏洞——即不完整、潜伏或依赖于上
+下⽂的弱点，通过⼩的增量代码更改引⼊[33,47]。这些增量代码更改
+在单独看时通常看起来⽆害，但随着周围代码的添加，后来会演变成
+可利⽤的漏洞[34,35]。尽管这些不成熟的漏洞很重要，但先前研究发
+现，开发者在安全代码审查的预提交阶段经常忽略与安全相关的问
+题。尤其是在变化很⼩时，很难推理其更⼴泛的安全影响[8, 9, 17,
+38, 41]。
+现有⾃动安全代码审查技术在这些条件下难以发挥作⽤。传统的静态
+应⽤安全测试（SAST）⼯具（例如 SonarQube、Semgrep、Snyk）
+由于其低延迟和基于规则的架构，主导了提交前的安全检查，但它们
+主要针对更完整的代码中成熟的漏洞进⾏检测[10, 36]。在提交前阶
+段应⽤这些⼯具时，它们经常产⽣噪⾳（或误报），同时忽略依赖于
+上下⽂的弱点，导致开发⼈员忽视或忽略这些问题[10, 36]。基于⼤
+型语⾔模型（LLMs）的安全代码审查的最新研究表明，它们在安全相
+关任务中展现出有前景的推理能⼒[19‒21, 30, 39, 46, 52]，然⽽
+独⽴的 LLMs 在仓库中缺乏上下⽂信息来分析这种依赖上下⽂的未成熟
+漏洞弱点，限制了它们在现实中的预提交安全代码审查实践中的有效
+性。
+在本⽂中，我们介绍了 AgenticSCR，⼀个⽤于安全代码审查的⾃主代
+理框架，旨在检测预提交阶段的未成熟漏洞。为了有效地分析
+arX
+i
+v:2
+601.1
+9
+138v
+1
+[
+c
+s.C
+R
+]
+2
+7
+J
+a
+n
+2
+0
+2
+6
+a
+rX
+i
+v:2
+6
+0
+1.1
+9
+1
+3
+8
+v
+1
+[cs.C
+R
+]
+2
+0
+2
+6
+年
+1
+⽉
+2
+7
+⽇
+FSE ’26, July 05‒09, 2026, Montreal, Canada Wachiraphan Charoenwet, Kla Tantithamthavorn, Patanamon Thongtanunam, Hong Yi Lin, Minwoo Jeong, and Ming Wu
+immature vulnerability which is context-dependent, AgenticSCR
+leverages LLM reasoning with autonomous decision-making, tool
+invocation, repository navigation, and memory mechanism [44].
+AgenticSCR is orchrestrated as a chain of detector and validator sub agents, where the detector subagent performs localization, comment
+generation, and vulnerability type explanation, while the validator
+subagent performs validation to reduce noise. To enable the secu rity focus, the detector subagent is enhanced with the long-term
+semantic memory of Static Application Security Testing (SAST)
+rules, while the validator subagent is enhanced with a Common
+Weakness Enumeration (CWE)‒based validation framework.
+To evaluate the effectiveness of AgenticSCR, we curate SCR Bench, a repository-aware human-annotated line-level immature
+vulnerability benchmark dataset at the pre-commit stage. Our re sults show that 17.5% of AgenticSCR’
+s comments are localized,
+relevant, and correctly predicting the type of target vulnerabil ity, which is an absolute 10.6% higher than the static LLM-based
+technique [30], while generating only 32% of the comments. The
+ablation analysis shows that AgenticSCR’
+s security knowledge
+in detection and validation subagents is the optimal configuration.
+This configuration increases the absolute rate of localization and
+relevance among the generated comments from the base Vanilla
+Agentic by 10.2%, with 81% fewer comments. Collectively, these
+findings highlight the importance of security-augmented semantic
+memory of agentic AI for secure code review and point towards a
+new practical problem of detecting immature vulnerabilities, along
+with a promising direction for addressing it, such as developing
+project- or vulnerability-specific skill sets for agentic AI.
+Contributions. This paper makes the following contributions:
+·We introduce an Autonomous Agentic Secure Code Review
+(
+AgenticSCR), a security-focused Agentic method for secure
+code review for detecting immature vulnerabilities in the
+pre-commit stage.
+·We evaluate the effectiveness of AgenticSCR on three secure
+review tasks: line-level localization, secure review comment
+generation, and vulnerability type explanation.
+·We construct the SCRBench dataset―a repository-aware
+human-verified line-level vulnerability benchmark dataset
+at the pre-commit stage. The dataset will be publicly available
+upon the acceptance.
+2
+Background and Related work
+Secure code review is a cornerstone of modern secure software
+development lifecycles. In practice, it is embedded across multiple
+stages of development, supported by a growing ecosystem of auto mated tools. At Atlassian,
+1
+industrial secure code review practices
+typically follow a multi-stage pipeline that progressively increases
+review scope and cost (see Figure 1), e.g., Pre-commit secure code
+review
+⇒
+Pull Request (PR)-based secure code review.
+For pre-commit security code review, developers typically review
+their own code changes to identify any potential issues. They can leverage immediate warnings from Static Application Security Test ing (SAST) tools embedded in modern Integrated Development
+Environment (IDEs) or Command-Line environments (CLI). These
+SAST tools are designed for low latency and frequent execution
+1
+https://www.atlassian.com/blog/add-ons/code-review-best-practices
+Table 1: The key differences between our work and prior
+studies. Related Work Approach Security Focus Dataset Evaluation
+Granu- larity
+Additional
+Context/
+Knowledge
+Liu et al. [30] LLM Yes CodeReviewer Diff -
+Cihan et al. [13] LLM No HumanEval Block -
+Haider et al. [24] LLM No CodeReviewer Diff -
+Peng et al. [39] LLM Yes Private Line CWE
+Sun et al. [45] LLM Partially Private Line -
+Tang et al. [49] Multi Agents
+No TransReview,
+AutoTransform,
+T5-Review
+Diff -
+AgenticSCR Agentic
+AI
+Yes SCRBench Line Repository,
+SAST Rules,
+& CWE
+based on rules and patterns of vulnerabilities. However, prior stud ies [10, 36] and industry practitioners consistently report that SAST
+tools generate substantial noise, including false positives and low severity warnings. As a result, developers frequently ignore or
+disable SAST checks, undermining their preventive value.
+Recent work has begun to explore richer, Deep Learning (DL)-
+driven analyses within IDEs to bridge this gap. Prior work performs
+just-in-time vulnerability detection at the line [18, 39, 40, 45], com mit [13, 23, 24, 30], file [19], and pull-request levels [
+4
+], typically
+using monolithic LLM predictors or classifiers. These methods often
+rely on large proprietary fine-tuning datasets and licenses that hin der enterprise, on-premise adoption, and they operate on narrow
+views of code (e.g., only diffs or small blocks) without considering
+the full context within the repository. Consequently, commit- and
+PR-level analysis remains reactive, allowing insecure changes to be
+committed instead of intercepting them at the pre-commit stage.
+AIBugHunter [19] is a closely-relevant tool for shift-left secure
+checks. It integrates DL-based vulnerability detection directly into
+Visual Studio Code, providing real-time line-level vulnerability
+localization, classification, severity estimation, and even repair sug gestions within the IDE interface. However, AIBugHunter analyzes
+entire open files and is optimized for continuous file-level scan ning rather than focusing on the specific changes across multiple
+files within the repository. The real-time line-level detection of
+AIBugHunter is coupled with frequent model invocations which
+can lead to inefficiencies and noise that undermine its effectiveness
+as a true pre-commit secure code review.
+In addition, vulnerabilities at this pre-commit stage may be in complete, highly context-dependent, or only latent across multiple
+editing steps. For example, insecure API usage, missing validation
+logic, or flawed authorization checks may appear benign in isola- tion but evolve into exploitable weaknesses as surrounding code is
+added [34, 35]. These immature vulnerabilities are substantially
+harder to detect using techniques designed for post-hoc analysis
+of finalized code changes, where vulnerabilities are already fully
+manifested [33, 40, 46]. As a result, many immature vulnerabilities
+remain undetected and eventually propagate into main repositories.
+Related Work and Limitations. Despite rapid progress in
+LLM-based code review [13, 24, 30, 39, 45, 49], existing approaches
+still fall short of the requirements designed for the pre-commit
+secure code review practice. Table 1 shows a comparison of Agen ticSCR with respect to the existing work in LLM-based code review.
+Particularly, we identify the following limitations:
+FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤ Wachiraphan Charoenwet，Kla Tantithamthavorn，Patanamon Thongtanunam，Hong Yi Lin，Minwoo Jeong 和 Ming Wu
+上下⽂相关的幼稚漏洞，AgenticSCR 利⽤⼤型语⾔模型推理进⾏⾃
+主决策、⼯具调⽤、仓库导航和记忆机制 [44]。AgenticSCR 被编排
+为⼀系列检测器和验证器⼦代理的链，其中检测器⼦代理执⾏定位、
+评论⽣成和漏洞类型解释，⽽验证器⼦代理执⾏验证以减少噪声。为
+了实现安全重点，检测器⼦代理被增强了静态应⽤安全测试（SAST）
+规
+（
+则的⻓期语义记忆，⽽验证器⼦代理被增强了基于通⽤弱点枚举
+CWE）的验证框架。
+为了评估 AgenticSCR 的有效性，我们创建了 SCRBench，这是⼀个
+在提交前阶段、基于仓库的、⼈⼯标注的⾏级不成熟漏洞基准数据
+集。我们的结果显⽰，AgenticSCR 的 17.5%评论是本地化的、相关
+的，并且正确预测了⽬标漏洞的类型，这⽐静态基于 LLM 的技术[30]
+绝对⾼出 10.6%，⽽只⽣成了 32%的评论。消融分析表明，
+AgenticSCR 在检测和验证⼦代理中的安全知识是最佳配置。这种配
+置将基础 Vanilla Agentic ⽣成的评论中的本地化和相关性绝对率提⾼
+了 10.2%，评论数量减少了 81%。总⽽⾔之，这些发现突出了安全增
+强语义记忆对于智能 AI 进⾏安全代码审查的重要性，并指向了⼀个新
+的实际问题：检测不成熟漏洞。与解决它的⼀个有前景的⽅向⼀起，
+例如为⾃主 AI 开发项⽬或漏洞特定技能集。
+贡献。本⽂做出了以下贡献：
+·我们介绍了⼀种⾃主⾃主安全代码审查（AgenticSCR），这是⼀
+种以安全为重点的⾃主⽅法，⽤于在提交前阶段检测不成熟的
+漏洞。
+·我们在三个安全审查任务上评估了 AgenticSCR 的有效性：⾏级
+定位、安全审查评论⽣成和漏洞类型解释。
+·我们构建了 SCRBench 数据集——⼀个在提交前阶段、具有仓
+库感知的⼈类验证⾏级漏洞基准数据集。该数据集将在被接受
+后公开可⽤。
+2 背景和相关⼯作
+安全代码审查是现代安全软件开发⽣命周期的基础。在实践中，它嵌
+⼊到开发的多个阶段中，并得到⼀个不断增⻓的⾃动化⼯具⽣态系统
+的⽀持。在 Atlassian，⼯业安全代码审查实践通常遵循⼀个多阶段
+管道，逐步增加审查范围和成本（⻅图 1），例如：提交前安全代码审
+查 ⇒ 基于拉取请求（PR）的安全代码审查。
+对于预提交安全代码审查，开发者通常会审查⾃⼰的代码更改以识别
+任何潜在问题。他们可以利⽤现代集成开发环境（IDE）或命令⾏环
+境（CLI）中嵌⼊的静态应⽤安全测试（SAST）⼯具提供的即时警
+告。这些 SAST ⼯具专为低延迟和频繁执⾏⽽设计
+1https://www.atlassian.com/blog/add-ons/code-review-best-practices
+表 1：我们的⼯作与前⼈研究的关键区别。
+相关⼯作 ⽅法 安全-
+关注
+数据集 评估
+颗粒-
+清晰度
+附加
+上下⽂
+知识
+Liu 等⼈ [30] LLM 是 CodeReviewer 差异 -
+Cihan 等⼈ [13] LLM 否 HumanEval 块 -
+Haider 等⼈ [24] LLM 否 CodeReviewer 差异 -
+Peng 等⼈ [39] LLM 是 私有 ⾏ CWE Sun 等⼈ [45] LLM 部分私有 ⾏ Tang 等⼈ [49] 多
+代理
+不 TransReview，
+AutoTransform，
+T5-评审/评价
+差异 -
+AgenticSCR 能动性
+⼈⼯智能
+是 SCRBench ⾏ 仓库，
+SAST 规则，
+& CWE
+基于漏洞的规则和模式。然⽽，先前研究[10, 36]以及⾏业从业者⼀
+直报告说，SAST ⼯具会产⽣⼤量噪⾳，包括误报和低严重性警告。
+因此，开发⼈员经常忽略或禁⽤ SAST 检查，从⽽削弱了它们的预防
+价值。
+近期⼯作开始探索在集成开发环境（IDE）中进⾏更丰富、由深度学
+习（DL）驱动的分析，以弥合这⼀差距。先前⼯作仅在代码⾏[18,
+39, 40, 45]、提交[13, 23, 24, 30]、⽂件[19]和拉取请求级别[4]进⾏即
+时漏洞检测，通常使⽤整体的 LLM 预测器或分类器。这些⽅法通常依
+赖于⼤型专有微调数据集和许可证，阻碍了企业本地化部署，并且它
+们只基于代码的狭窄视图（例如，仅 diffs 或⼩块）⽽不考虑存储库
+内的完整上下⽂。因此，提交和 PR 级别的分析仍然是反应式的，允
+许不安全的更改被提交，⽽不是在提交前阶段拦截它们。
+AIBugHunter [19] 是⼀种与 shift-left 安全检查密切相关的⼯具。它
+将基于深度学习的漏洞检测直接集成到 Visual Studio Code 中，在
+IDE 界⾯内提供实时⾏级漏洞定位、分类、严重程度评估，甚⾄修复
+建议。然⽽，AIBugHunter 分析整个打开的⽂件，并针对⽂件级持续
+扫描进⾏了优化，⽽不是专注于仓库中多个⽂件之间的具体变更。
+AIBugHunter 的实时⾏级检测与频繁的模型调⽤相结合，这可能导致
+低效和噪声，从⽽削弱其作为真正预提交安全代码审查⼯具的有效
+性。
+此外，在此预提交阶段发现的漏洞可能是不完整的、⾼度依赖于上下
+⽂，或者是在多个编辑步骤中才显现的潜在问题。例如，不安全的
+API 使⽤、缺失的验证逻辑或存在缺陷的授权检查，在孤⽴状态下可
+能看似⽆害，但随着周围代码的添加会演变成可利⽤的弱点[34,
+35]。这些不成熟的漏洞使⽤针对最终化代码变更的事后分析技术进
+⾏检测将⼤⼤困难，因为此时漏洞已经完全显现[33, 40, 46]。因此，
+许多不成熟的漏洞未能被检测到，并最终传播到主仓库中。
+相关⼯作与局限性。尽管在
+基于 LLM 的代码审查[13, 24, 30, 39, 45, 49]，现有⽅法仍未能满⾜预
+提交安全代码审查实践的要求。表 1 展⽰了 AgenticSCR 与现有基于
+LLM 的代码审查⼯作的⽐较。特别是，我们确定了以下局限性：
+AgenticSCR: An Autonomous Agentic Secure Code Review for Immature Vulnerabilities Detection FSE ’26, July 05‒09, 2026, Montreal, Canada
+·Lack of contextual information within the repository:
+Most of existing work [13, 24, 30, 39, 45, 49] perform static
+LLM prompts (i.e., a fixed, pre-defined prompt that remains
+the same for every input) using only the information avail able in the PR, e.g., code diff or the textual description of CWE
+to perform secure code review. However, at the pre-commit
+stage, many vulnerabilities emerge as immature vulnerabilities
+with incomplete and context-dependent weaknesses. To iden tify such security weaknesses, LLMs are required to analyze
+the code together with its repository context and understand
+concrete patterns in order to reason about potential security
+implications that are not yet fully manifested, highlighting the
+need for a novel approach that effectively perform secure code
+review at the pre-commit stage.
+·Lack of Ground-Truths and Benchmark for Line-Level
+Secure Code Review. Existing vulnerability datasets [
+6, 15,
+16, 30, 51] target file- or function-level detection and fully man ifested vulnerabilities, mainly for prediction or classification.
+Existing code review benchmarks [13, 24, 30, 49] only focus
+on the code changes at the diff hunk (i.e., a small window of
+code that contains the modified lines). They lack high-quality,
+line-level annotations and do not capture immature vulnera- bilities in early code, making them unsuitable for evaluating
+line-level pre-commit secure code review generation. Despite
+the recent effort [39, 45] of line-level secure code review, their
+benchmark datasets are not public-available. On top of that,
+most datasets leave out rich repository-level context, such as the dependencies, configuration files, and other static assets,
+where additional information can help an agentic AI detect
+early traces of vulnerability.
+3
+AgenticSCR: an Autonomous Agentic Secure
+Code Review
+In this section, we present the detailed architecture of our Au tonomous Agentic Secure Code Review framework (AgenticSCR
+)
+for detecting immature vulnerabilities. Figure 2 presents an overview
+architecture of our Agentic Secure Code Review workflow.
+3.1 Overview
+Our Agentic Secure Code Review (AgenticSCR) framework is an autonomous, agentic-based system designed specifically for secure
+code review tasks, operating within the command-line environment
+(CLI), where developers typically make and refine code changes
+before committing to version control. Secure code review at the
+pre-commit stage frequently involves incomplete code changes and
+nuanced vulnerability patterns that require iterative reasoning and
+targeted exploration. To address this challenge, AgenticSCR adopts
+an agentic AI approach [42] to address the inherent limitations
+of traditional and monolithic code analysis tools and LLM-based
+secure code review, which often lack contextual awareness, adapt ability, and persistence across iterations. Therefore, AgenticSCR can
+dynamically decompose high-level security goals into specialized
+subtasks, coordinate multiple subagents, explore the repository level information in addition to code changes, and adapt its review
+strategy based on intermediate findings. The integration of explicit
+memory further enables continuity across analysis steps, allowing
+AgenticSCR to build cumulative understanding, reduce redundant
+effort, and progressively improve decision-making, and finally act ing as an autonomous security reviewer that more closely mirrors
+the iterative and intentional reasoning process of human security
+analysts. We formally defined AgenticSCR as follows,
+AgenticSCR = ⟨E,A ,G,M ,T ,Π⟩
+where:
+· E denotes the environment, comprising a CLI environment,
+a file system for a target code repository and their a set of
+pre-commit code changes, and toolchains.
+· A = {
+𝑎𝑑
+, 𝑎𝑣
+}
+is a set of coordinated specialist subagents, con sisting of detector subagent 𝑎𝑑 for localizing, detecting, and
+explaining immature vulnerabilities, and validator subagent
+𝑎𝑣 for validating the detected vulnerabilities.
+· G is a set of high-level goals, including the localization, de tection, and explanation of immature vulnerabilities.
+· M is a structured memory system. Inspired by cognitive
+architectures [44], AgenticSCR incorporates explicit memory
+mechanisms to support adaptive reasoning and continuity
+across iterations. · T is a set of executable tools available to the agents (e.g., code
+expansion, diff inspection, bash) that mediate interaction
+with the environment.
+·Π
+is a coordination and decision policy governing task de composition, agent collaboration, and tool selection.
+We describe each of the component below.
+3.2 Dynamic Context Building Environments
+for Input Perception (
+E)
+The environment (
+E
+) denotes the external operating context within
+which AgenticSCR functions, defining what the agent can observe,
+read, execute, and write. As AgenticSCR is designed to operate
+in a command-line interface (CLI), its environment comprises the
+following components:
+·CLI environment, which serves as the execution host for
+running AgenticSCR.
+·Filesystem scope, a read-only working directory correspond ing to the Git repository under review.
+·Toolchain, a constrained set of executable command-line
+tools that enable AgenticSCR to interact with the environ ment (e.g., git, grep, ls).
+In practice, the size of a Git repository may range from small to
+extremely large codebases, whereas the context window available
+to AgenticSCR is limited depending on Large Language Models
+(LLMs) (e.g., the maximum capacity for storing conversation his tory and generating new output from Claude is 200,000 tokens).
+2
+To
+ensure efficient and effective perception under this constraint, we
+de
+the
+siaggn
+e
+A
+n
+g
+t
+e
+le
+n
+v
+t
+e
+ic
+ragSC
+e
+R
+s v
+to
+er
+o
+sip
+o
+e
+n
+ra
+c
+t
+o
+e
+n
+in
+tr
+a
+ol
+d
+i
+i
+n
+ff
+t
+-
+r
+c
+o
+e
+s
+n
+p
+tr
+e
+i
+c
+c
+t
+m
+io
+an
+n (
+n
+e
+e
+.g
+r. .,
+S
+g
+p
+i
+e
+t
+cifi
+d
+c
+i
+alf
+l
+f
+y
+)
+,
+to extract only relevant modified files and their corresponding line
+ranges, rather than ingesting the entire repository. This diff-aware
+perception strategy prioritizes recent code modifications as the pri mary input context and is well aligned with prior empirical findings
+2
+https://platform.claude.com/docs/en/build-with-claude/context-windows
+AgenticSCR：⼀种⾃主代理安全代码审查技术，⽤于不成熟漏洞检测 FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤
+·仓库中缺乏上下⽂信息
+现有⼯作 [13, 24, 30 , 39 , 45 , 49 ] 主要使⽤ PR 中可⽤的信息（例
+如代码差异或 CWE 的⽂本描述）执⾏静态 LLM 提⽰（即固定、预
+定义的提⽰，对每个输⼊都保持不变），以进⾏安全代码审查。然
+⽽，在提交前阶段，许多漏洞表现为不成熟的漏洞，具有不完整和
+依赖于
+及
+上下⽂的弱点。为了识别此类安全弱点，LLM 需要结合代码
+其仓库上下⽂进⾏分析，并理解具体模式，以便推理出尚未完全
+显现的潜在安全影响，这凸显了需要⼀种新颖的⽅法，在提交前阶
+段有效执⾏安全代码审查的必要性。
+·缺乏⾏级标注和基准
+安全代码审查。现有的漏洞数据集[6, 15, 16, 30, 51]主要针对⽂件
+级或函数级的检测和完全显现的漏洞，主要⽤于预测或分类。现有
+的代码审查基准[13, 24, 30, 49]只关注 diff hunk（即包含修改⾏的
+⼀个⼩代码窗⼝）处的代码更改。它们缺乏⾼质量的⾏级注释，并
+且⽆法捕捉早期代码中的不成熟漏洞，因此不适合评估⾏级预提交
+安全代码⽣成。尽管最近有关于⾏级安全代码审查的努⼒[39,
+45]，但它们的基准数据集并未公开。此外，⼤多数数据集遗漏了
+丰富的仓库级上下⽂，例如依赖项、配置⽂件和其他静态资产，其
+中额外信息可以帮助智能代理检测漏洞的早期迹象。
+3 AgenticSCR：⼀个⾃主代理安全代码审查
+30 在本节中，我们介绍了⽤于检测不成熟漏洞的⾃主代理安全代码审
+查框架（AgenticSCR）的详细架构。图 2 展⽰了我们 Agentic Secure
+Code Review ⼯作流程的总体架构。
+3.1 概述
+我们的⾃主安全代码审查（AgenticSCR）框架是⼀个专为安全代码审
+查任务设计的⾃主、基于代理的系统，在命令⾏环境（CLI）中运⾏，
+开发者通常在此处进⾏和改进代码更改，然后再提交到版本控制。在提
+交前的安全代码审查阶段，经常涉及不完整的代码更改和微妙的漏洞模
+式，这些需要迭代推理和有针对性的探索。为了应对这⼀挑战，
+AgenticSCR 采⽤了⼀种基于代理的⼈⼯智能⽅法[ 42 ]，以解决传统和
+单体代码分析⼯具以及基于 LLM 的安全代码审查的固有局限性，这些
+⼯具通常缺乏上下⽂意识、适应性和跨迭代的⼀致性。因此，
+AgenticSCR 能够动态地将⾼级安全⽬标分解为专⻔的⼦任务，协调多
+个⼦代理，探索仓库级别的信息，除了代码变更之外，并根据中间发现
+调整其审查策略。显式内存的集成进⼀步实现了分析步骤之间的连续性
+允许 AgenticSCR 建⽴累积理解，减少冗余⼯作，并逐步改进决策，并
+最终作为⼀个更接近⼈类安全分析师的迭代和有意推理过程的⾃主安全
+审查者。我们正式定义 AgenticSCR 如下，
+AgenticSCR = ⟨E, A, G, M, T, Π⟩
+where: · E 表⽰环境，包括 CLI 环境、⽬标代码存储库的⽂件系统及
+其⼀组预提交代码更改和⼯具链。
+· A = {𝑎, 𝑎} 是⼀个协调的专业⼦代理集合，包括⽤于定位、检测
+和解释不成熟漏洞的检测⼦代理 𝑎，以及⽤于验证检测到的漏洞的
+验证⼦代理 𝑎。 · G 是⼀个⾼级⽬标集合，包括不成熟漏洞的定
+位、检测和解释。 · M 是⼀个结构化记忆系统。受认知架构 [44]
+的启发，AgenticSCR 结合了显式记忆机制，以⽀持⾃适应推理和
+迭代间的连续性。 · T 是⼀组可供代理使⽤的可执⾏⼯具（例
+如，代码扩展、差异检查、bash），⽤于调解与环境之间的交互。
+·Π 是⼀种协调和决策策略，⽤于管理任务分解、代理协作和⼯具
+选择。
+我们将在下⾯对每个组件进⾏描述。
+3.2 ⽤于输⼊感知的动态上下⽂构建环境（E）
+环境（E）表⽰ AgenticSCR 运⾏的外部操作上下⽂，定义了代理可以
+观察、读取、执⾏和写⼊的内容。由于 AgenticSCR 设计为在命令⾏界
+⾯（CLI）中运⾏，其环境包含以下组件：
+·CLI 环境，作为运⾏ AgenticSCR 的执⾏主机。
+·⽂件系统范围，⼀个只读的⼯作⽬录，对应于正在审查的 Git 仓
+库。
+·⼯具链，⼀组受约束的可执⾏命令⾏⼯具，使 AgenticSCR 能够
+与环境交互（例如，git，grep，ls）。
+在实际应⽤中，Git 仓库的⼤⼩可能从较⼩的代码库到极其庞⼤的代码
+库不等，⽽ AgenticSCR 可⽤的上下⽂窗⼝则受限于⼤型语⾔模型
+（LLMs）（例如，存储对话历史和从 Claude ⽣成新输出的最⼤容量为
+200,000 个 token）。为了在这种限制下确保⾼效和有效的感知，我们
+设计 AgenticSCR 以 diff-centric 的⽅式运⾏。具体来说，该代理利⽤
+版本控制内省（例如，git diff）来提取仅相关的已修改⽂件及其对应的
+⾏范
+码修
+围
+改
+，
+作
+⽽
+为
+不
+主
+是
+要
+摄
+输
+⼊
+⼊
+整
+上
+个
+下
+仓
+⽂
+库
+，
+。
+并
+这
+且
+种
+与先
+di
+前
+ff-
+的
+aw
+实
+a
+证
+re
+研
+感
+究
+知
+结
+策
+果
+略
+⾼
+将
+度
+最
+⼀
+近
+致
+的
+。
+代
+2https://platform.claude.com/docs/zh-cn/build-with-claude/context-windows
+FSE ’26, July 05‒09, 2026, Montreal, Canada Wachiraphan Charoenwet, Kla Tantithamthavorn, Patanamon Thongtanunam, Hong Yi Lin, Minwoo Jeong, and Ming Wu
+Summary Recall Learn Retrieve Learn Retrieve
+Working
+Temporary
+Generated
+Comments
+Action
+Observation
+Planning & Reasoning
+Planning &
+Reasoning
+Tool Calling
+Delegate
+Final Answer
+Input
+CLI Environment
+Code Repository
+& Files
+Pre-Commit
+Code Changes
+Output
+Line-Level
+Localization
+A Code Review
+Comment
+Vulnerability
+Type
+Learn Retrieve
+Agentic SCR
+Detector
+Subagent
+Validator
+Subagent
+- Task Decomposition
+- Agent Spawning
+- Context: 200k tokens
+- Result Aggregation
+Orchestrator
+Delegate
+Final Answer
+Semantic
+SAST Rules
+(For Detector
+Subagent Only)
+CWE Trees
+(For Validator
+Subagent Only)
+Episodic
+Reasoning &
+Trajectories History
+Summary Recall
+Figure 2: An overview architecture of Agentic Secure Code Review workflow.
+showing that vulnerability introduction is strongly correlated with
+recent code changes [18, 31]. Different from the static LLM prompt
+chaining that is commonly used in the literature [49], our Percep tion component is designed to continuously gather and integrate
+information from the environment, allowing the agent to develop
+deep domain-specific knowledge, such as a set of code changes, the
+repository context, and open files.
+3.3 Chain of Subagents and its Policy and Goals
+(A ,
+Π
+,G)
+AgenticSCR is structured as a sequential composition of specialized
+subagents, where each responsible for a distinct role. AgenticSCR
+adopts a detector‒validator design pattern (i.e., detector subagent
+(
+𝑎𝑑 ) and validator subagent (𝑎𝑣)). The detector subagent is respon sible for identifying potentially immature vulnerabilities, while
+the validator subagent assesses whether the detected patterns con stitute well-defined security weaknesses. The coordination and
+decision policy (
+Π
+) of AgenticSCR is orchestrated through an ex plicit instruction―“/agents Use the detector-subagent to
+find security issues, then use the validator-subagent
+to validate the code review comments”―which enforces a
+structured and disciplined security analysis process. This decompo sition enables AgenticSCR to manage the inherent complexity of
+secure code review, which requires both syntactic pattern recogni tion and semantic validation.
+3.3.1 Detector Subagent (
+G,𝑎𝑑
+). The ultimate goal (
+G
+) of our de tector subagent (𝑎𝑑 ) is to localize, detect, and explain immature vul nerabilities introduced during coding. Conventional large language
+models (LLMs) are predominantly trained on general-purpose cor pora and therefore lack systematic expertise in security-oriented
+code analysis. To address this limitation, we design the detector
+subagent as an experienced secure code reviewer that analyzes
+repository changes with an explicit security focus, guided by a cu rated set of Static Application Security Testing (SAST) rules stored
+as long-term knowledge.
+SASTs provide a rich source of rule-based knowledge for de tecting a wide range of coding issues. Prior studies have shown
+that SAST can meaningfully assist code review. For example, SAST
+warnings often overlap with developer comments, helping reduce
+review effort [43], and can prompt open-ended questions that lead to higher-quality code revisions [48]. However, SASTs exhibit well known limitations. Since rules are applied purely statically, without
+broader contextual reasoning, SASTs can generate substantial false
+positives [53]. Instead of relying on SASTs to execute these rules
+directly, subagents may benefit from using the rules as structured
+knowledge for reasoning. Providing SAST rule definitions should
+allow subagents to contextualize potential issues, improving pre cision while preserving broader reasoning capability. Therefore,
+our detector subagent operates through the following workflow:
+(1) load SAST rules into the semantic memory; (2) find a set of
+code changes to review via autonomous tool calling; (3) examine
+changes based on the SAST rules; and (4) apply SAST rules to the
+given code changes. Finally, the detector subagent will produce the
+following three outputs:
+·(i) line-level localization that pinpoints the relevant line
+range(s) and files within the staged diff that are related to im mature vulnerabilities, reducing developers
+’
+cognitive over head and accelerating remediation.
+·(ii) a secure code review comment that explains the poten tial issue, summarizes evidence gathered from code context
+and tool outputs, helping developers to reason about the
+security implications of the pre-commit code change.
+·(iii) a vulnerability type that is standardized using CWE
+identifiers and names when validation succeeds [32]. Correct
+vulnerability type explanation will help developers justify
+the severity and impact of the issues and identify potential fixes [12].
+FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤ Wachiraphan Charoenwet，Kla Tantithamthavorn，Patanamon Thongtanunam，Hong Yi Lin，Minwoo Jeong 和 Ming Wu
+摘要 回忆 学习 检索 学习 检索
+⼯作
+临时
+⽣成
+评论
+⾏动
+观察
+计划与推理
+计划与
+推理
+⼯具调⽤
+委派
+最终答案
+输⼊
+CLI 环境
+代码仓库
+& ⽂件
+提交前
+代码更改
+输出
+⾏级
+本地化
+代码审查
+评论
+漏洞
+类型
+学习 检索
+⾃主式 SCR
+检测器
+⼦代理
+验证器
+⼦代理
+- 任务分解
+- 智能体⽣成
+- 上下⽂：200k tokens
+- 结果聚合
+协调器
+代表
+最终答案
+语义
+SAST 规则
+（⽤于检测器
+仅限⼦代理）
+CWE 树
+（⽤于验证器）
+仅代理)
+情景
+推理与轨迹历史
+摘要 回忆
+图 2：Agentic Secure Code Review ⼯作流程的概述架构。
+显⽰漏洞引⼊与最近的代码更改密切相关[18, 31]。与⽂献中常⽤的静
+态 LLM 提⽰链[49]不同，我们的感知组件被设计为持续从环境中收集
+和整合信息，使代理能够发展深层特定领域的知识，例如⼀组代码更
+改、存储库上下⽂和打开的⽂件。
+3.3 ⼦代理链及其策略和⽬标
+(A, Π, G)
+AgenticSCR 由专⻔⼦代理的顺序组合构成，每个⼦代理负责⼀个不
+同的⻆⾊。AgenticSCR 采⽤检测器-验证器设计模式（即，检测器⼦
+代理（𝑎）和验证器⼦代理（𝑎））。检测器⼦代理负责识别潜在的未成
+熟漏洞，⽽验证器⼦代理评估检测到的模式是否构成明确的安全弱
+点。AgenticSCR 的协调和决策策略（Π）通过⼀个外部的协调机制来
+执⾏。
+显式指令——“/agents 使用检测器子代理查找安全问题，然后使用
+验证器子代理验证代码审查评论”——这强制执行了一个结构化和纪
+律性的安全分析流程。这种分解使 AgenticSCR 能够管理安全代码审
+查的固有复杂性，该过程需要句法模式识别和语义验证。
+3.3.1 检测⼦代理（G，𝑎）。我们的检测⼦代理（𝑎）的最终⽬标（G）
+是定位、检测和解释在编码过程中引⼊的不成熟漏洞。传统的通⽤⼤型
+语⾔模型（LLMs）主要在通⽤语料库上进⾏训练，因此缺乏在安全导
+向的代码分析⽅⾯的系统性专业知识。为了解决这个问题
+我们设计检测⼦代理作为⼀个经验丰富的安全代码审查员，以明确的
+安全为重点分析存储库更改，并由⼀组经过精⼼挑选的静态应⽤程序
+安全测试（SAST）规则指导，这些规则作为⻓期知识存储。
+SASTs 提供了丰富的基于规则的检测知识，⽤于识别⼴泛的编码问
+题。先前研究表明，SAST 可以有效地辅助代码审查。例如，SAST 警
+告经常与开发者注释重叠，有助于减少审查⼯作量 [43]，并且可以提
+⽰开放式问题，从⽽引导更⾼质量的代码修订 [48]。然⽽，SASTs 表
+现出众所周知局限性。由于规则完全是静态应⽤的，缺乏更⼴泛的上
+下⽂推理，SASTs 可能会产⽣⼤量的误报 [53]。与其依赖 SASTs 直接
+执⾏这些规则，⼦代理可以从将规则作为结构化知识⽤于推理中获
+益。提供 SAST 规则定义应该允许⼦代理将潜在问题置于上下⽂中，
+提⾼精确度同时保留更⼴泛的推理能⼒。因此，我们的检测⼦代理通
+过以下⼯作流程运⾏：(1) 将 SAST 规则加载到语义模型中 mory；(2)
+找到⼀个代码变更集，通过⾃主⼯具调⽤进⾏审查；(3)根据 SAST 规
+则检查变更；以及(4)将 SAST 规则应⽤于给定的代码变更。最后，检
+测⼦代理将产⽣以下三个输出：
+·(i)⾏级定位，精确指出与不成熟漏洞相关的⽂件和⾏范围，从⽽
+减少开发⼈员的认知负担并加速修复。
+·(ii) ⼀条安全的代码审查评论，解释潜在问题，总结从代码上下
+⽂和⼯具输出中收集的证据，帮助开发⼈员推理预提交代码更改
+的安全影响。
+·(iii) ⼀种使⽤ CWE 标识符和名称进⾏标准化的漏洞类型，在验
+证成功时 [ 32]。正确的漏洞类型解释将帮助开发⼈员说明问题
+的严重性和影响，并识别潜在的修复⽅案 [12].
+AgenticSCR: An Autonomous Agentic Secure Code Review for Immature Vulnerabilities Detection FSE ’26, July 05‒09, 2026, Montreal, Canada
+AgenticSCR’
+s Detector Subagent
+# Detector Subagent You are an experienced secure code reviewer
+using Static Application Security Testing (SAST) methodology. Your
+task is to conduct comprehensive security-focused code review by
+exploring the repo and generating actionable security comments
+following SAST tool rules and patterns.
+## Workflow
+1. Load SAST Rules Resource
+2. Find Diff Changes to Review
+3. Examine Changes with SAST Focus
+4. Apply SAST Rules to Changes
+## Tools
+## Output Format
+AgenticSCR’
+s Validator Subagent
+# Validation Code Review You are an experienced secure code
+reviewer using the Common Weakness Enumeration (CWE) method ology. You will read a code review comment file (JSON format) from
+<target_warning_path> and validate each review comment using the
+CWE knowledge base. Filter out comments that do not correspond
+to real security issues or are likely false positives.
+## Workflow
+1. Load CWE Tree Resource
+2. Input Processing
+3. CWE-Based Validation Process
+4. CWE-Specific Validation Criteria
+## Tools
+## Output Format
+3.3.2 Validator Subagent (𝑎𝑣
+). The ultimate goal (
+G
+) of our val idator subagent (𝑎𝑣) is to assess the correctness and security rel evancy of review comments generated by the detector subagent,
+filtering out false positives and retaining only substantiated vul nerabilities. While the detector subagent can surface a broad range
+of potential vulnerabilities, not all flagged vulnerabilities corre spond to genuine security weaknesses. If unchecked, such noise
+can reduce developer trust and increase vulnerability-fixing over head [12, 26]. To address this challenge, the validator subagent acts
+as a security expert that rigorously validates candidate findings
+using the Common Weakness Enumeration (CWE) methodology
+as its primary knowledge base.
+Coding weaknesses are a source of software vulnerabilities [
+2,
+11]. We hypothesize that supplying the validator subagent with
+concise, queryable descriptions of common coding weaknesses can improve their ability to recognize security-related issues in early stage code changes. We construct a lightweight knowledge base
+with a hierarchical organization inspired by the knowledge tree con cept [28]. The structure is derived from the Common Weakness
+Enumeration (CWE-1000) taxonomy [
+1
+], from which we extract
+relevant weakness categories, short descriptions, and representa- tive examples, providing agents with a lookup mechanism to relate
+observed code patterns to known classes of weaknesses. Therefore,
+the validator subagent operates according to the following work-
+flow: (1) load the CWE Tree resource into the semantic memory;
+(2) process input review comments; (3) perform a CWE-based vali dation process that maps each comment to one or more candidate
+CWE entries; and (4) apply CWE-specific validation criteria, such
+as required preconditions, exploitability assumptions, and environ mental dependencies. Comments that fail to satisfy these criteria are
+filtered out as likely false positives. Finally, the detector subagent
+will produce a refined set of validated security review comments,
+each explicitly associated with a confirmed CWE weakness.
+3.4 Memory Model (
+M )
+AgenticSCR is inspired by ideas from cognitive architectures, which
+emphasize explicit representations of memory and control during
+problem solving. While LLMs encode substantial knowledge im plicitly, prior work [44] shows that reasoning quality improves
+when memory and decision processes are made explicit rather than embedded entirely in prompts. Following Sumers et al. [44], we
+consider three types of memory mechanism in the AgenticSCR,
+i.e., semantic memory, working memory, and episodic memory,
+formally defined as
+M = ⟨
+𝑀𝑠
+, 𝑀𝑤
+, 𝑀𝑒
+⟩.
+3.4.1 Security-Focused Semantic Memory (𝑀𝑠
+). Semantic mem ory is a type of long-term memory that stores reusable general knowledge, concepts, facts, rules, and meanings, independent of
+the specific context or experience in which they were learned. Since
+LLMs are generally-purposed trained, their security knowledge may not be comprehensive. Thus, we augment the following security focused information to the semantic memory.
+Static Application Security Testing (SAST) rules, used by
+the detector-subagent to identify known vulnerability patterns.
+SAST rules encode well-established, empirically validated vulner ability patterns derived from decades of security research and in dustrial practice (e.g., CWE, CERT, OWASP). With SAST rules, the
+AgenticSCR is grounded in authoritative security knowledge rather
+than relying solely pretrained knowledge and probabilistic infer ence. This grounding reduces hallucinations and enforces alignment
+with accepted security definitions, which is critical in safety- and
+security-critical domains. To incorporate SAST rules, we curate the CodeQL query suites
+3
+into a structured and queryable document. We select CodeQL due
+to its permissive licensing and broad coverage of security-related
+issues. Each rule is represented as a JSON object containing rule
+identifier, a short description
+, and a high-level pattern sum marizing what the rule detects. When available, we also record
+the mapped cwe_id and cwe_name
+, a severity label,
+tags (includ ing CWE tags), structured remediation text, and paired examples
+showing vulnerable (bad) and secure (good) code. For instance,
+the rule py/timing-attack-against-hash
+, mapped to CWE-208:
+Observable Timing Discrepancy, includes examples contrasting
+insecure equality checks with constant-time comparisons using
+hmac.compare_digest
+. By exposing these rule definitions in a
+machine-readable format, linking them to CWE identifiers, cat egories shared with the guideline, and taxonomy knowledge bases,
+we enable the detector subagent to 1) cross-check tentative find ings against known rules, 2) reuse rule descriptions, and 3) fixes in
+natural-language review comments, while still exercising contex tual judgment rather than blindly surfacing every static warning.
+3
+https://github.com/github/codeql/
+AgenticSCR：⼀种⾃主代理安全代码审查技术，⽤于不成熟漏洞检测 FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤
+AgenticSCR 的检测⼦代理
+# 检测⼦代理 你是⼀位经验丰富的安全代码审查员，使⽤静态应⽤安全测
+试 (SAST) ⽅法论。你的任务是通过对仓库进⾏探索，并遵循 SAST ⼯具
+规则和模式⽣成可操作的安全评论，进⾏全⾯的、以安全为中⼼的代码审
+查。
+## ⼯作流程
+1. 加载 SAST 规则资源
+2. 查找待审核的差异变更
+3. 以 SAST 为重点审查变更
+4. 将 SAST 规则应⽤于变更
+## ⼯具
+## 输出格式
+AgenticSCR 的验证⼦代理
+# 验证代码审查 你是⼀位经验丰富的安全代码审查员，使⽤通⽤弱点枚举
+（CWE）⽅法。你将读取来⾃的代码审查评论⽂件（JSON 格式），并使⽤
+CWE 知识库验证每个评论。过滤掉那些不对应真实安全问题或可能是误报
+的评论。
+## ⼯作流程
+1. 加载 CWE 树资源
+2. 输⼊处理
+3. 基于 CWE 的验证过程
+4. CWE 特定的验证标准
+## ⼯具
+## 输出格式
+3.3.2 验证器⼦代理（𝑎）。我们的验证器⼦代理（𝑎）的最终⽬标（G）
+是评估检测器⼦代理⽣成的审查评论的正确性和安全相关性，过滤掉
+误报并仅保留经过证实的漏洞。虽然检测器⼦代理可以暴露⼴泛的各
+种潜在漏洞，但并⾮所有标记的漏洞都对应真实的安全弱点。如果不
+受控制，这种噪⾳会降低开发者的信任并增加漏洞修复的开销[ 12 ,
+26 ]。为了应对这⼀挑战，验证器⼦代理充当安全专家，使⽤通⽤弱
+点枚举（CWE）⽅法作为其主要知识库，严格验证候选发现。
+编码弱点是软件漏洞的来源[2, 11]。我们假设向验证⼦代理提供常⻅
+编码弱点的简洁、可查询的描述可以提升它们在早期代码变更中识别
+安全相关问题的能⼒。我们构建了⼀个具有层次结构的轻量级知识
+库，该结构灵感来源于知识树概念[28]。该结构源⾃通⽤弱点枚举
+（CWE-1000）分类法[1]，从中提取相关的弱点类别、简短描述和代
+表性⽰例，为代理提供查找机制，将观察到的代码模式与已知的弱点
+类别相关联。因此，验证⼦代理按照以下⼯作流程操作：(1) 将 CWE
+树资源加载到语义记忆中；(2) 处理输⼊的评审评论；(3) 执⾏基于
+CWE 的验证过程，将每个评论映射到⼀个或多个候选
+CWE 条⽬；以及（4）应⽤ CWE 特定的验证标准，如必需的先决条
+件、可利⽤性假设和环境依赖性。不符合这些标准的评论被过滤为可能
+的误报。最后，检测⼦代理将⽣成⼀组经过验证的安全评审评论，每条
+评论都明确关联到⼀个已确认的 CWE 弱点。
+3.4 内存模型（M）
+AgenticSCR 受到认知架构中思想的启发，这些架构强调在解决问题时
+对记忆和控制进⾏显式表⽰。虽然⼤型语⾔模型隐式地编码了⼤量知
+识，但先前⼯作 [44] 表明，当记忆和决策过程被显式地表⽰⽽不是完
+全嵌⼊提⽰中时，推理质量会提⾼。遵循 Sumers 等⼈ [44] 的研究，
+我们在 AgenticSCR 中考虑了三种类型的记忆机制，即语义记忆、⼯作
+记忆和情景记忆，形式上定义为 M = ⟨𝑀, 𝑀, 𝑀⟩。
+3.4.1 以安全为中⼼的语义记忆 (𝑀)。语义记忆
+语义记忆是⼀种⻓期记忆，存储可重⽤的通⽤知识、概念、事实、规则
+和含义，独⽴于学习时的具体上下⽂或经验。由于⼤型语⾔模型通常进
+⾏通⽤训练，其安全知识可能不全⾯。因此，我们将以下安全相关信息
+增强到语义记忆中。
+静态应⽤安全测试（SAST）规则，被
+⽤于识别已知漏洞模式的检测器-⼦代理。SAST 规则编码了经过⼏⼗
+年安全研究和⼯业实践验证的漏洞模式（例如，CWE、CERT、
+OWASP）。有了 SAST 规则，AgenticSCR 基于权威的安全知识，⽽不
+是仅仅依赖预训练知识和概率推理。这种基础减少了幻觉，并强制与
+公认的安全定义保持⼀致，这在安全和安全关键领域⾄关重要。
+为了整合 SAST 规则，我们将 CodeQL 查询套件整理成⼀个结构化且
+可查询的⽂档。我们选择 CodeQL 是因为其宽松的许可协议和⼴泛覆
+盖与安全相关的问题。每条规则都表⽰为⼀个包含规则标识符、简短
+描述以及⾼级别模式（总结规则检测的内容）的 JSON 对象。当可⽤
+时，我们还记录映射的 cwe_id 和 cwe_name、严重性标签、标签
+（包括 CWE 标签）、结构化的修复⽂本以及成对⽰例，展⽰易受攻击
+（坏）和安全的（好）代码。例如，规则 py/timing-attack-against hash 映射到 CWE-208：可观察的时序差异，包括对⽐不安全的等式
+检查与使⽤ hmac.compare_digest 进⾏常时⽐较的⽰例。通过以机
+器可读的格式暴露这些规则定义，并将其链接到 CWE 标识符、与指
+南共享的分类以及分类知识库，我们能够检测⼦代理⽤于 1) 将初步发
+现与已知规则进⾏交叉验证，2) 重⽤规则描述，以及 3) 在⾃然语⾔
+审查评论中进⾏修复，同时仍然进⾏上下⽂判断，⽽不是盲⽬显⽰每
+个静态警告。
+3https://github.com/github/codeql/
+FSE ’26, July 05‒09, 2026, Montreal, Canada Wachiraphan Charoenwet, Kla Tantithamthavorn, Patanamon Thongtanunam, Hong Yi Lin, Minwoo Jeong, and Ming Wu
+CWE (Common Weakness Enumeration) tree, used by the
+validator-subagent only to reason about vulnerability types and
+relationships. The CWE tree provides a canonical vulnerability tax onomy that enables the validator subagent to reason about security
+findings at multiple levels of abstraction. Rather than treating de tected issues as isolated code smells, the validator can situate each
+finding within a structured hierarchy of weaknesses (e.g., from high level classes such as Improper Input Validation to concrete instances
+such as CWE-89: SQL Injection). This hierarchical reasoning allows
+the agent to verify whether a detected pattern truly corresponds
+to a recognized security weakness, reducing misclassification and
+over-reporting.
+To incorporate CWE taxonomy, we encode this taxonomy as a
+JSON document with a set of high-level categories such as injection,
+auth, crypto, input
+, and path) and a list of weakness entries. Each entry includes a CWE identifier (e.g., CWE-89), name, cat egory and subcategory (e.g., SQL injection), an estimated sever ity, and a shortened description that preserves the core weakness
+semantics. To support retrieval from code context, we further at tach patterns and detection_indicators (e.g.,
+sql_injection,
+input_validation), relevant languages, and succinct examples
+with vulnerable and secure variants, plus remediation_steps and
+a short hint such as 
+"Look for: string concatenation in SQL
+queries"
+. As the CWE categories are aligned with the guideline
+categories, the agent can move from a general concern (e.g., input
+validation) to specific CWEs and reuse their standardized names,
+hints, and fixes when formulating review comments.
+3.4.2 Built-In Working Memory (𝑀𝑤) & Episodic Memory
+(
+𝑀𝑒
+). Both Working Memory (𝑀𝑤 ) and Episodic Memory (𝑀𝑒) are a
+standard, built-in memory mechanism within our agentic AI infras tructure. The primary purpose of working memory is to maintain
+short-term, transient, task-specific context during an active CLI
+session. On the other hand, episodic memory (𝑀𝑒 ) captures reason ing traces and execution trajectories from past review runs (aka.
+session logs). These logs are persisted via our agentic infrastruc ture to provide a high-fidelity record of how vulnerabilities were
+identified and validated.
+3.5 Tool Use (
+T )
+AgenticSCR enables subagents to invoke external tools during anal ysis. These tools include repository inspection utilities, diff an alyzers, and command-line interfaces. Tool calling ensures that
+reasoning is grounded in actual program artifacts rather than in ferred solely from natural language descriptions. The outputs of
+tool calls are stored in working memory (𝑀𝑤 ) and can be reused
+across reasoning steps. This interaction model enables the system
+to analyze realistic development contexts, such as incremental code
+changes, without overwhelming the language model with unneces sary information.
+·open_files: load source files and security resource files.
+·expand_code_chunks: selectively expand diff hunks and sur rounding context.
+·grep: locate security-relevant patterns in the repository.
+·expand_folder: inspect directory-level structure when needed.
+·bash execute controlled shell commands (e.g., git diff, git
+remote show origin, git diff <base>
+...HEAD).
+3.6 Implementation
+In this paper, we use Atlassian
+’
+s RovoDev CLI [
+3
+] as a scaffold for im plementing our AgenticSCR. We used claude-sonnet-4@20250514
+as a base reasoning model for our agent. Concretely, we implement
+the subagents (i.e., detector and validator), and the security-focused
+semantic memory (i.e., SAST rules and a CWE-based knowledge
+base). Then, we integrate them into RovoDev CLI, resulting in Agen ticSCR. During CLI invocation, AgenticSCR manages a transient
+working memory
+(
+𝑀𝑤) that contains the current diff, expanded code
+hunks, and intermediate hypotheses; this context is passed implic itly between tool calls and subagent steps and is discarded once the
+review completes. In parallel, AgenticSCR records reasoning traces
+and tool trajectories as episodic memory
+(
+𝑀𝑒 ), which we can use for
+offline inspection, debugging, and analysis of subagent behavior.
+4
+Experimental Setup
+4.1 SCRBench Dataset Creation
+Our AgenticSCR is designed to operate in a local desktop environ ment aligned with the pre-commit secure code review stage. Thus,
+to evaluate the AgenticSCR, it requires (1) a public, community reported CVE vulnerabilities
+4
+together with an actual vulnerability
+CWE type;
+5
+(2) a sandbox environment that simulates a local Git en vironment consisting a set of code changes prior to a commit for a
+given vulnerability; and (3) a human-verified line-level vulnerability
+ground-truths. Thus, we construct a new benchmark dataset called
+SCRBench. Our SCRBench dataset consists of the following infor mation: (1) a Git repository as a context information for AgenticSCR
+to operate; (2) a set of working code changes at the pre-commit
+stage as an input for AgenticSCR; (3) human-verified vulnerable
+lines as ground-truths for evaluating the localization capability;
+and (4) the CWE type and the CVE description as ground-truths for
+evaluating the secure code review comments and its vulnerability
+type. Below, we describe each step to curate the SCRBench dataset.
+4.1.1 Data Collection and Filtering Steps. We start from a collec tion of 3,256 CVE public vulnerabilities provided by Iannone et
+al [25]. For each CVE,
+6
+it contains a CVE ID, an actual bug de scription, a bug-fixing commit (or CVE patches) of the associated
+repositories, and the associated CWE vulnerability types. Following
+prior work [14], we define a commit 𝑐𝑛 (a commit 𝑐 at the time 𝑛
+)
+as a bug-fixing commit recorded in the public CVE, and a set of
+vulnerability-introducing commits (
+{
+𝑐𝑛−1
+, ..., 𝑐𝑛−𝑚
+}
+) that gradually
+introduced immature vulnerabilities over time. To ensure that each
+of the sandbox environments simulates a local working environ ment, we define the pre-commit code change (𝑐𝑛−𝑚−1
+) as a working
+code change that happen before the vulnerability is introduced
+in 𝑐𝑛−𝑚 and is fixed in 𝑐𝑛
+. To annotate which lines are actually
+vulnerable, prior studies [20, 49] often regard the bug-fixing lines
+as the actual vulnerable lines for a given vulnerability. However,
+in real-world scenarios, one bug-fixing commit may contain other
+4
+Common Vulnerabilities and Exposures (CVE) is a public, community-reported, ex ploitable vulnerabilities with unique identifiers and relevant information, including
+the type of CWE that the vulnerability exploits.
+5
+Common Weakness Enumeration (CWE) is a community-developed list and classifi cation of common software and hardware security weaknesses, used as a standard to
+describe, compare, and analyze vulnerabilities.
+6
+See an example: https://nvd.nist.gov/vuln/detail/CVE-2017-16016
+FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤ Wachiraphan Charoenwet，Kla Tantithamthavorn，Patanamon Thongtanunam，Hong Yi Lin，Minwoo Jeong 和 Ming Wu
+CWE（通⽤弱点枚举）树，被使⽤
+validator-subagent 仅⽤于推理漏洞类型和关系。CWE 树提供了⼀个
+标准的漏洞分类法，使 validator subagent 能够在多个抽象层次上推理
+安全发现。validator 不会将检测到的问题视为孤⽴的代码异味，⽽是
+可以将每个发现置于⼀个结构化的弱点层次结构中（例如，从
+Improper Input Validation 等⾼级类别到具体的 CWE-89: SQL 注⼊实
+例）。这种层次推理使代理能够验证检测到的模式是否真正对应于已知
+的⽹络安全弱点，从⽽减少误分类和过度报告。
+为了整合 CWE 分类法，我们将此分类法编码为⼀个 JSON ⽂档，其中包
+含⼀组⾼级类别（如注⼊、认证、加密、输⼊和路径）以及⼀个弱点条
+⽬列表。每个条⽬包括⼀个 CWE 标识符（例如，CWE-89）、名称、类别
+和⼦类别（例如，SQL 注⼊）、估计的严重性以及⼀个保留核⼼弱点语义
+的简短描述。为了⽀持从代码上下⽂中检索，我们进⼀步附加了模式和
+检测指⽰器（例如，sql_injection、input_validation）、相关语⾔以及
+包含易受攻击和安全的简短⽰例，以及修复步骤和
+一个简短的提示，例如“查找：SQL 中的字符串连接”
+查询”。由于 CWE 类别与指南类别⼀致，代理可以从⼀个通⽤问题（例
+如，输⼊验证）移动到特定的 CWE，并在制定审查评论时重⽤它们的
+标准化名称、提⽰和修复⽅案。
+3.4.2 内置⼯作记忆 (𝑀) & 事件记忆
+(𝑀). ⼯作记忆 (𝑀) 和情景记忆 (𝑀) 都是我们智能代理基础设施中的标准
+内置记忆机制。⼯作记忆的主要⽬的是在活动 CLI 会话期间维护短期、
+暂时性、任务特定的上下⽂。另⼀⽅⾯，情景记忆 (𝑀) 捕获过去审查运
+⾏（即会话⽇志）的推理痕迹和执⾏轨迹。这些⽇志通过我们的智能代
+理基础设施进⾏持久化，以提供⾼保真度的记录，说明漏洞是如何被识
+别和验证的。
+3.5 ⼯具使⽤ (T )
+AgenticSCR 使⼦代理能够在分析过程中调⽤外部⼯具。这些⼯具包括
+仓库检查⼯具、差异分析器和命令⾏界⾯。⼯具调⽤确保推理基于实际
+的程序⼯件，⽽不仅仅是从⾃然语⾔描述中推断。⼯具调⽤的输出存储
+在⼯作内存（𝑀）中，并可以在推理步骤之间重⽤。这种交互模型使系
+统能够分析现实世界的开发环境，例如增量代码更改，⽽不会⽤不必要
+的信息淹没语⾔模型。
+·open_files: 加载源⽂件和安全资源⽂件。
+·expand_code_chunks: 选择性地展开差异块和周围上下⽂。
+·grep：在仓库中定位与安全相关的模式。
+·expand_folder：在需要时检查⽬录级结构。
+·bash 执⾏受控的 shell 命令（例如，git diff，git remote show
+origin，git diff ...HEAD）。
+3.6 实现
+本⽂中，我们使⽤ Atlassian 的 RovoDev CLI [ 3 ] 作为实现我们的
+AgenticSCR 的基础框架。我们使⽤了 claude-sonnet-4@20250514 作
+为我们代理的基础推理模型。具体来说，我们实现了⼦代理（即检测器
+和验证器），以及以安全为中⼼的语义记忆（即 SAST 规则和基于 CWE
+的知识库）。然后，我们将它们集成到 RovoDev CLI 中，从⽽形成了
+AgenticSCR。在 CLI 调⽤时，AgenticSCR 管理⼀个临时的 working
+memory (𝑀)，其中包含当前的 diff、扩展的代码⽚段和中间假设；这
+个上下⽂在⼯具调⽤和⼦代理步骤之间隐式传递，并在审查完成后被丢
+弃。同时，AgenticSCR 将推理轨迹和⼯具轨迹记录为情景记忆 (𝑀)，
+我们可以使⽤它进⾏离线检查、调试和⼦代理⾏为的分析。
+4 实验设置
+4.1 SCRBench 数据集创建
+我们的 AgenticSCR 旨在在符合预提交安全代码审查阶段的本地桌⾯环
+境中运⾏。因此，为了评估 AgenticSCR，它需要：(1)⼀个公开的、社
+区报告的 CVE 漏洞，以及⼀个实际的 CWE 类型漏洞；(2)⼀个模拟本地
+Git 环境的沙盒环境，该环境包含针对给定漏洞提交前的⼀组代码更
+改；(3)⼈类验证的⾏级漏洞真实情况。因此，我们构建了⼀个新的基
+准数据集，称为 SCRBench。我们的 SCRBench 数据集包含以下信
+息：(1)⼀个 Git 仓库作为 AgenticSCR 运⾏的环境信息；(2)⼀组在预提
+交阶段的代码更改作为 AgenticSCR 的输⼊；(3)⼈类验证的漏洞⾏作为
+评估本地化能⼒真实情况。和（4）CWE 类型和 CVE 描述作为评估安全
+代码审查评论及其漏洞类型的基准。下⾯，我们描述了创建 SCRBench
+数据集的每个步骤。
+4.1.1 数据收集和过滤步骤。我们从收集开始。
+对 Iannone 等⼈提供的 3,256 个 CVE 公开漏洞进⾏分类[25]。对于每
+个 CVE，它包含⼀个 CVE ID、⼀个实际的错误描述、与相关存储库的
+修复提交（或 CVE 补丁）以及相关的 CWE 漏洞类型。遵循先前的⼯作
+[14]，我们将时间𝑛时的提交𝑐定义为记录在公开 CVE 中的修复提交，以
+及⼀组逐渐引⼊不成熟漏洞的漏洞引⼊提交({𝑐, ..., 𝑐})。为确保每个沙盒
+环境模拟本地⼯作环境，我们将预提交代码更改(𝑐)定义为⼀个在𝑐引⼊
+漏洞之前发⽣且在𝑐中修复的⼯作代码更改。为了标注哪些⾏实际上是
+易受攻击的，先前的研究[20,49]通常将修复⾏视为给定漏洞的实际易
+受攻击⾏。然⽽，在实际场景中，⼀个修复 bug 的提交可能包含其他
+4通⽤漏洞和暴露（CVE）是⼀个公开的、社区报告的、可利⽤的漏洞，具有唯⼀标识符和相关
+信息，包括该漏洞利⽤的 CWE 类型。5 通⽤弱点枚举（CWE）是⼀个社区开发的对常⻅软件和
+硬件安全弱点的列表和分类，⽤作描述、⽐较和分析漏洞的标准。6 查看⽰例：
+https://nvd.nist.gov/vuln/detail/CVE-2017-16016
+AgenticSCR: An Autonomous Agentic Secure Code Review for Immature Vulnerabilities Detection FSE ’26, July 05‒09, 2026, Montreal, Canada
+changes that are not related to the vulnerability, producing noises
+into the line-level ground-truths. To mitigate such noise in the
+dataset, we manually verify which lines are truly relevant to a
+given vulnerability. Given the large number of code changes, which
+makes manual verification infeasible, we select the data based on
+the following criteria: (1) CVE vulnerability that has a maximum of
+three associated the pre-commit code changes; (2) the pre-commit
+code changes is not larger than 112 changed lines (i.e., the median size of all commits), (3) the vulnerabilities affect Python, JavaScript,
+or TypeScript which are common programming languages at Atlas sian. Finally, we obtained a total number of 144 pre-commit code
+changes, spanning across 107 CVEs, 92 public GitHub repositories,
+33 CWE vulnerability types, and 3 programming languages.
+4.1.2 Sandbox Environment Creation. To create a sandbox environ ment, we clone a Git repository, then we checkout to the earliest
+vulnerability-introducing commit 𝑐𝑛−𝑚 labeled by Iannone et al [25].
+To obtain the pre-commit code change (𝑐𝑛−𝑚−1
+), we revert the com mit into the uncommitted and unstaged changes using the command ‘git reset HEAD~1’
+. Then, we execute
+‘git add .
+’ to convert
+all the unstaged changes (i.e., changed lines and files) into a Git
+staging area. We ensure that all the changes in such a commit are
+properly staged by executing
+‘git diff’.
+4.1.3 Human Verification of Line-Level Vulnerability Ground-Truths.
+In reality, not all changed lines in the bug-fixing commit are actually
+vulnerable. To mitigate such noises in our benchmark dataset, we
+manually verify which lines in the bug-fixing commit are actually
+associated with a given CVE vulnerability. To do so, we obtain the
+bug-fixing commit that is associated with each pre-commit code
+change. The actual vulnerable lines (1) must be the line(s) that
+are added or modified in the pre-commit code change (𝑐𝑛−𝑚−1
+),
+but are later modified or deleted in the bug-fixing commit (𝑐𝑛);
+and (2) must be associated with the given CVE description and
+CWE vulnerability type. The manual verification was conducted
+by the first and third authors, both of whom have experience in
+manually analyzing security issues in code reviews [10, 11]. Since
+the verification process requires human effort, is complex and time consuming, it takes 7 days to complete.
+4.2 Baselines
+We compare the performance of AgenticSCR with the following four
+baselines (i.e., a zero-shot static LLM prompt, CodeQL, Semgrep, and
+Snyk). Static LLM-based secure reviewer [30]: Prior studies proposed
+various DL- or LLM-based secure code reviews [13,24,30,39,45,49].
+However, most of the existing approaches required model fine tuning. Unfortunately, the pre-training data or model checkpoints
+are not available, making a comparison with such approaches impos sible. To address this challenge, we implement the static LLM-based
+secure code review approach using the same prompt provided by
+Liu et al. [30] together with Anthropic
+’
+s Claude 4.5. Finally, we con sider three Static Application Security Testing (SAST) tools, namely,
+CodeQL 2.23.3, Semgrep 1.140, and Snyk 1.130.
+4.3 Experimental Design
+To evaluate the performance of AgenticSCR and the baselines, we
+start from the 144 pre-commit code changes prepared in a sandbox
+environment. Each sandbox environment consists of a working
+directory that is checked out to the pre-commit code change stage.
+Given the same sandbox environment, we run AgenticSCR, static
+LLM-based secure reviewer, and three SAST tools to ensure a fair
+comparison. The AgenticSCR will automatically run tools to find a
+set of working code changes (i.e., Step 2 in the Detector Subagent)
+and perform secure code review. For SAST tools, we run three SAST
+tools through a bash command. Typically, SAST tools are executed
+at the repository level. Thus, we filter out the warnings that are not
+relevant to the set of working code changes, and only consider the
+ones that are relevant to it for further evaluation. Since SAST tools
+and AgenticSCR generate a different output format, we standardize
+the outputs of the SAST tools by considering (1) the warning line;
+(2) the warning content as a comment, and (3) the CWE type.
+4.4 Experimental Goals and Evaluation
+Measures
+The goal of our experiment is to evaluate the capability of a unified
+pre-commit secure code review approaches on the three common
+vulnerability analysis tasks: (1) the line-level localization task [18,
+19]; (2) the secure comment generation task [30]; and (3) the CWE
+type explanation task [17, 19]. Therefore, we operationalize the
+following four measures: % of Correct Localization (L). Localization correctness mea- sures the percentage of the generated comments that are within a
+close-proximity location of the actual vulnerable line (i.e., at exactly
+the same file and within a
+±5
+line range of the actual vulnerable
+line location) [50].
+% of Relevance Comments (R). Relevance correctness mea- sures the percentage of the generated comments that are seman tically highly similar (i.e., relevant) to the actual CWE type, CWE
+description, and CVE description. While pre-commit secure code
+reviews are likely to be practical and beneficial, they are difficult
+to implement in practice, which makes secure code review com ments unavailable. Therefore, we are unable to employ traditional human-alignment metrics commonly used in automated code re view studies, such as BLEU or SecureBLEU [30, 50]. To measure
+the degree of relevancy, we employ an LLM-as-a-Judge [27] in a
+zero-shot setting. The prompt explicitly asks if a given comment is
+relevant to the actual CWE-ID, CWE Name, CWE Description, and
+bug description of the actual CVE vulnerability, and only return
+True if relevant, or False otherwise.
+System Prompt for Comment Relevance Judge
+Is the code review comment below relevant to the given groundtruth
+CWE-ID, CWE Name, CWE Description, and CVE Description?
+[Code Review Comment]
+[CWE-ID]
+[CWE Name]
+[CWE Description]
+[CVE Description]
+Only respond with either
+‘True
+‘
+, when comment is relevant, or
+‘False
+‘
+when it is not, without any explanation.
+% of Type Correctness (T). Type correctness measures the
+percentage of the generated comments where the predicted CWE
+vulnerability type falls into the same high-level CWE category
+AgenticSCR：⼀种⾃主代理安全代码审查技术，⽤于不成熟漏洞检测 FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤
+与漏洞⽆关的更改，将噪声引⼊到⾏级真实数据中。为了减轻数据集中
+的噪声，我们⼿动验证哪些⾏真正与给定漏洞相关。鉴于代码更改数量
+庞⼤，⼿动验证不可⾏，我们根据以下标准选择数据：(1) 最多有三个
+预提交代码更改相关联的 CVE 漏洞；(2) 预提交代码更改的更改⾏数不
+超过 112 ⾏（即所有提交的中位数⼤⼩）；(3) 漏洞影响 Python、
+JavaScript 或 TypeScript，这些是 Atlassian 的常⽤编程语⾔。最后，
+我们获得了总共 144 个预提交代码更改，涵盖 107 个 CVE、92 个公共
+GitHub 仓库、33 个 CWE 漏洞类型和 3 种编程语⾔。
+4.1.2 沙盒环境创建。要创建沙盒环境。
+我们克隆⼀个 Git 仓库，然后切换到最早引⼊漏洞的提交 𝑐，该提交由
+Iannone 等⼈ [25] 标记。为了获取预提交代码变更 (𝑐)，我们使⽤命令
+‘git reset HEAD~1’ 将该提交回滚到未提交和未暂存的变更中。然
+后，我们执⾏ ‘git add .’ 将所有未暂存的变更（即更改的⾏和⽂件）
+转换为 Git 暂存区域。我们通过执⾏ ‘git diff’ 确保该提交中的所有变
+更都已正确暂存。
+4.1.3 ⼈⼯验证⾏级漏洞真实情况。
+实际上，并⾮所有在修复漏洞的提交中更改的⾏都真正存在漏洞。为了
+减少我们在基准数据集中的此类噪声，我们⼿动验证修复漏洞的提交中
+哪些⾏实际上与给定的 CVE 漏洞相关联。为此，我们获取与每个预提
+交代码更改相关联的修复漏洞的提交。实际存在漏洞的⾏（1）必须是
+预提交代码更改（𝑐）中添加或修改的⾏，但在修复漏洞的提交（𝑐）中
+后来被修改或删除的⾏；并且（2）必须与给定的 CVE 描述和 CWE 漏
+洞类型相关联。⼿动验证由第⼀和第三作者进⾏，他们都有在代码评审
+中⼿动分析安全问题的经验[10, 11]。由于验证过程需要⼈⼯操作，且
+复杂耗时，因此需要 7 天才能完成。
+4.2 基线
+我们⽐较了 AgenticSCR 与以下四个基线（即，零样本静态 LLM 提
+⽰、CodeQL、Semgrep 和
+Snyk）。基于静态 LLM 的安全审查器[30]：早期研究提出了
+各种基于 DL 或 LLM 的安全代码审查[13, 24, 30, 39, 45, 49]。然⽽，
+⼤多数现有⽅法需要模型微调。不幸的是，预训练数据或模型检查点
+不可⽤，使得与这些⽅法的⽐较不可能。为了应对这⼀挑战，我们使
+⽤ Liu 等⼈[30]提供的相同提⽰以及 Anthropic 的 Claude 4.5 实现了
+静态 LLM 安全代码审查⽅法。最后，我们
+考虑三个静态应⽤安全测试（SAST）⼯具，即 CodeQL 2.23.3、
+Semgrep 1.140 和 Snyk 1.130。
+4.3 实验设计
+为了评估 AgenticSCR 和基线的性能，我们从沙盒中准备的 144 个预提
+交代码变更开始
+环境。每个沙盒环境包含⼀个⼯作⽬录，该⽬录被检出⾄预提交代码变
+更阶段。对于相同的沙盒环境，我们运⾏ AgenticSCR、基于静态 LLM
+的安全审查器以及三种 SAST ⼯具，以确保公平⽐较。AgenticSCR 将
+⾃动运⾏⼯具以找到⼀组⼯作代码变更（即 Detector Subagent 中的
+步骤 2），并执⾏安全代码审查。对于 SAST ⼯具，我们通过 bash 命令
+运⾏三种 SAST ⼯具。通常，SAST ⼯具在仓库级别执⾏。因此，我们
+过滤掉与⼯作代码变更⽆关的警告，仅考虑与它相关的警告进⾏进⼀步
+评估。由于 SAST ⼯具和 AgenticSCR ⽣成不同的输出格式，我们通过
+考虑（1）警告⾏；（2）将警告内容作为注释；（3）CWE 类型来标准化
+SAST ⼯具的输出。
+4.4 实验⽬标和评估指标
+我们实验的⽬标是评估统⼀预提交安全代码审查⽅法在三个常⻅漏洞
+分析任务上的能⼒：(1) ⾏级定位任务[18, 19]；(2) 安全评论⽣成任务
+[30]；(3) CWE 类型解释任务[17, 19]。因此，我们制定了以下四个评
+估指标：
+% 的正确本地化 (L)。本地化正确性衡量⽣成的评论中，有多少百分
+⽐的评论位于实际漏洞⾏的近邻位置（即，在完全相同的⽂件中，且
+在实际上漏洞⾏位置的 ±5 ⾏范围内）[50]。
+% 的相关性评论 (R)。相关性正确性衡量
+确保⽣成的评论在语义上与实际 CWE 类型、CWE 描述和 CVE 描述⾼度
+相似（即相关）。虽然预提交安全代码审查可能具有实⽤性和益处，但
+在实践中难以实施，这使得安全代码审查评论⽆法提供。因此，我们⽆
+法采⽤⾃动化代码审查研究中常⽤的传统⼈类对⻬指标，例如 BLEU 或
+SecureBLEU [30, 50]。为了衡量相关性程度，我们在零样本设置中采
+⽤ LLM-as-a-Judge [27]。提⽰明确询问给定的评论是否与实际 CWE ID、CWE 名称、CWE 描述和实际 CVE 漏洞的 bug 描述相关，并且仅在
+相关时返回 True，否则返回 False。
+系统提⽰：评论相关性判断
+下⽅的代码审查评论是否与给定的 groundtruth CWE-ID、CWE 名称、
+CWE 描述和 CVE 描述相关？
+[代码审查评论] [CWE-ID] [CWE
+名称] [CWE 描述] [CVE 描述]
+仅当评论相关时回复“True”，不相关时回复“False”，⽆需任何解释。
+各类正确率（T）。类型正确率衡量的是⽣成评论中，预测的 CWE 漏洞
+类型是否属于同⼀⾼层 CWE 类别所占的百分⽐
+FSE ’26, July 05‒09, 2026, Montreal, Canada Wachiraphan Charoenwet, Kla Tantithamthavorn, Patanamon Thongtanunam, Hong Yi Lin, Minwoo Jeong, and Ming Wu
+of the actual vulnerability type. We use high-level CWE category
+instead of individual items in CWE taxonomy when determining
+type correctness the CWE taxonomy is strongly hierarchical and
+inter-related, meaning a vulnerability can be reasonably described
+by multiple CWE items. In particular, we apply the hierarchical grouping strategy from prior work [29] to determine whether a
+predicted CWE and the ground-truth CWE belong to the same type.
+% of Overvall Correctness (L&R&T). Ideally, a secure code
+review comment that is deemed correct should meet the following
+three conditions altogether: (1) the location of the generated com ment is at a close-proximity location of the actual vulnerable line; (2)
+the generated comment is semantically similar to the actual CWE
+vulnerability type and its CVE description; and (3) the predicted
+type falls into the same high-level CWE category of the actual vulnerability type. Therefore, we also measure the percentage of
+generated code review comments that meet the three conditions.
+5
+Experimental Results
+In this Section, we present the experimental results to answer the
+following three research questions.
+RQ1: How well does our AgenticSCR perform
+secure code review tasks?
+Results. 17.8% of AgenticSCR-generated comments are cor rectly localized, relevant, explaning the immature vulnera bilities, which is 10.6% and 13.8% higher than the static LLM
+and three SAST tools. Table 2 presents the performance of Agen ticSCR, static LLM, and SAST tools for secure code review tasks.
+We find that AgenticSCR achieves the highest performance when
+considering the overall correctness of three secure code review
+tasks (L&R&T), which is consistent to the individual measure of
+secure code review tasks (L, R, T). This result demonstrates that
+integrating security expertise with an agentic AI framework and
+LLM-based reasoning (i.e., Rules+Agentic+Reasoning) enables more
+effective pre-commit secure code reviews than traditional SAST
+tools that lack LLM reasoning (i.e., rules alone).
+In addition, AgenticSCR also produces 71.3% (
+606
+6
+−
+06
+174
+) ‒ 85%
+(
+108
+1
+5
+0
+−
+85
+174
+) relatively lower false positive comments when com pared to static LLM and SAST tools. Lower false positives are
+critically important in practice, especially, at Atlassian, because they
+directly influence the effectiveness and adoption of AgenticSCR in
+real-world development workflows. Excessive false positives will
+increase developer burden, disrupt development velocity, and lead to alert fatigue, causing genuine vulnerabilities to be overlooked or
+ignored.
+The lower false positives of AgenticSCR has to do with the
+detector-validator subagents design pattern. Figure 3 depicts an ex ample of the reasonsing process of our validator subagent that can
+remove the false positive warnings generated by detector subagent.
+Based on this example, the detector subagent generates six secure
+code review comments. However, after verifying by the validator
+subagent, two comments are marked as false positives (#1, #6), leav ing the remaining four comments (#2-#5) as final outputs.
+7
+When
+7
+Comment #5 is omitted in the paper due to the space limitation.
+Table 2: (RQ1) The performance of AgenticSCR, static LLM,
+and SAST tools for secure code review tasks.
+Approach #Cmt L&R&T
+L R T
+Agentic AI for Secure Code Review
+AgenticSCR 211 17.5% 30.8% 63.5% 70.1%
+Static LLM for Secure Code Review
+Static LLM 652 6.9% 28.4% 46.5% 44.0%
+Static Application Security Testing Tools
+CodeQL 2.23.3 1,092 0.6% 3.3% 7.2% 19.2%
+Semgrep 1.140 376 3.7% 5.1% 26.3% 74.7%
+Snyk 1.130 318 0.9% 1.6% 13.2% 39%
+Figure 3: (RQ1) An example output of AgenticSCR, demon strating the capability of the validator subagent filtering out
+irrelevant or invalid secure code review comments.
+comparing these outputs with the ground-truths (i.e., CVE-2012-
+3458
+8
+and the bug-fixing commit
+9
+) we found that AgenticSCR can generate comments that are correctly localized (i.e., comments are
+generated at Lines 21 and 23, where Line 21 is the actual vulnera ble line) and correctly relevant to the vulnerability. In particular,
+they describe the improper encryption configuration that can leave
+visible patterns, allowing an attacker to identify parts of the sen sitive information. The predicted vulnerability type of CWE-327
+(Use of a Broken or Risky Cryptographic Algorithm) is also closely
+related to, and falls into the same high-level category as, the actual vulnerability type of CWE-310 (Cryptographic Issues).
+8
+CVE-2012-3458: https://nvd.nist.gov/vuln/detail/CVE-2012-3458
+9
+The bug-fixing commit of CVE-2012-3458 https://github.com/bbangert/beaker/
+commit/c52d7b6ed1558d44acc96bd4f3468ffc4a8e5219
+FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤ Wachiraphan Charoenwet，Kla Tantithamthavorn，Patanamon Thongtanunam，Hong Yi Lin，Minwoo Jeong 和 Ming Wu
+关于实际漏洞类型的判断。在确定类型正确性时，我们使⽤ CWE 分类
+体系中的⾼层级 CWE 类别，⽽不是 CWE 分类体系中的单个项⽬。
+CWE 分类体系具有强层次性和相互关联性，这意味着⼀个漏洞可以合
+理地⽤多个 CWE 项⽬来描述。特别是，我们应⽤先前⼯作中的层次分
+组策略 [29] 来判断预测的 CWE 和真实 CWE 是否属于同⼀类型。
+%总体正确率（L&R&T）。理想情况下，代码应该是安全的
+被认为正确的评审评论应同时满⾜以下三个条件：(1) ⽣成的评论位置
+应靠近实际漏洞⾏；(2) ⽣成的评论在语义上应与实际 CWE 漏洞类型及
+其 CVE 描述相似；(3) 预测的类型应属于实际漏洞类型相同的⾼层次
+CWE 类别。因此，我们还测量了满⾜这三个条件的⽣成代码评审评论
+的百分⽐。
+5 实验结果
+在本节中，我们展⽰了实验结果，以回答以下三个研究问题。
+RQ1：我们的 AgenticSCR 在执⾏安全代码审查任务
+⽅⾯表现如何？
+结果。AgenticSCR ⽣成的评论中有 17.8%被正确本地化、相关且解释
+了不成熟的漏洞，这⽐静态 LLM 和三个 SAST ⼯具分别⾼ 10.6%和
+13.8%。表 2 展⽰了 AgenticSCR、静态 LLM 和 SAST ⼯具在安全代码
+审查任务中的性能。我们发现 AgenticSCR 在性能上表现最⾼时
+考虑到三个安全代码审查任务（L&R&T）的整体正确性，这与单独的
+安全代码审查任务（L、R、T）的度量结果⼀致。这⼀结果表明，将安
+全专业知识与⾃主 AI 框架和基于 LLM 的推理（即，规则+⾃主+推理）
+相结合，能够⽐缺乏 LLM 推理的传统 SAST ⼯具（即，仅规则）更有
+效地进⾏提交前的安全代码审查。
+此外，AgenticSCR 相⽐于静态 LLM 和 SAST ⼯具，产⽣的相对较低假
+阳性评论为 71.3%（606）‒ 85%（1085）。假阳性更少。
+在实践中⾄关重要，尤其是在 Atlassian，因为他们直接影响
+AgenticSCR 在实际开发⼯作流程中的有效性和采⽤。过多的误报会
+增加开发者的负担，扰乱开发速度，并导致警报疲劳，从⽽导致真正
+的漏洞被忽视或忽略。
+AgenticSCR 的低误报率得益于其检测器-验证器⼦代理设计模式。图
+3 展⽰了我们验证器⼦代理的推理过程⽰例，该过程可以消除检测器
+⼦代理⽣成的误报警告。基于此⽰例，检测器⼦代理⽣成了六个安全
+代码评审评论。然⽽，经过验证器⼦代理验证后，两个评论被标记为
+误报（#1，#6），其余四个评论（#2-#5）作为最终输出保留。当
+由于空间限制，论⽂中省略了第 7 条评论#5。
+表 2： (RQ1) AgenticSCR、静态 LLM 和 SAST ⼯具在安全代码审查任
+务中的性能。
+⽅法 #Cmt L&R&T L R T
+⽤于安全代码审查的代理式 AI
+AgenticSCR 211 17.5% 30.8% 63.5% 70.1%
+⽤于安全代码审查的静态 LLM
+静态 LLM 652 6.9% 28.4% 46.5% 44.0%
+静态应⽤安全测试⼯具
+CodeQL 2.23.3：1,092 次使⽤，占⽐ 0.6%；增⻓率 3.3%，累计使⽤率 7.2%，总体使⽤
+率 19.2%
+Semgrep 1.140：376 次使⽤，占⽐ 3.7%；增⻓率 5.1%，累计使⽤率 26.3%，总体使⽤
+率 74.7%
+Snyk 1.130：318 次使⽤，占⽐ 0.9%；增⻓率 1.6%，累计使⽤率 13.2%，总体使⽤率
+39%
+图 3：(RQ1) AgenticSCR 的⼀个⽰例输出，展⽰了验证器⼦代理过滤
+⽆关或⽆效安全代码审查评论的能⼒。
+将这些输出与真实情况（即 CVE-20123458 和修复漏洞的提交）进⾏⽐
+较时，我们发现 AgenticSCR 可以⽣成正确本地化的评论（即评论是在
+第 21 ⾏和第 23 ⾏⽣成的，其中第 21 ⾏是实际漏洞⾏）并且与漏洞正
+确相关。特别是，它们描述了不适当的加密配置，这可能会留下可⻅模
+式，允许攻击者识别敏感信息的⼀部分。预测的漏洞类型 CWE-327
+（使⽤有缺陷或⻛险加密算法）也与实际漏洞类型 CWE-310（加密问
+题）密切相关，并且属于同⼀⾼级类别。
+8
+CVE-2012-3458：https://nvd.nist.gov/vuln/detail/CVE-2012-3458
+9 CVE-2012-3458 的修复提交 https://github.com/bbangert/beaker/ 提
+交/c52d7b6ed1558d44acc96bd4f3468ffc4a8e5219
+AgenticSCR: An Autonomous Agentic Secure Code Review for Immature Vulnerabilities Detection FSE ’26, July 05‒09, 2026, Montreal, Canada
+RQ2: Which vulnerability types that AgenticSCR
+performs best?
+Table 3 presents the performance of AgenticSCR across the high level vulnerability types compared with other baselines. Following
+the security standards, we use CWE-1000 [
+1
+] as a standard taxon omy to describe the vulnerability categories. However, CWE-1000
+consists of 944 unique vulnerability types where some of them are
+overlapped, thus, we consider the following five high-level types.
+·Injection refers to Improper Neutralization (CWE-707) which
+covers missing sanitization of inputs, leading to injection
+cases. For example, CVE-2020-15141
+10
+is a vulnerability that
+the OpenAI Python client can write files to an arbitrary
+location due to incorrectly neutralized paths.
+·Authorization refers to Authentication (CWE-287) & Ac cess Control (CWE-284) which include broken authentica- tion that could lead to privilege escalation. For instance, CVE-
+2015-4082
+11
+in Attic, a data deduplicator, allows attacker to
+modify encryption due to insecure authorization.
+·Information refers to Information Exposure (CWE-200)
+which discloses sensitive data to unauthorized parties. For
+example, CVE-2018-1000089,
+12 where exposed logs allow at tacker to fabricate email tracking events in django-anymail.
+·Resource refers to Improper Control of a Resource (CWE-
+664) which is related to unbounded allocation of resource
+utilization, leading to system outages. For instance, CVE-
+2018-7889
+13
+in Calibre, an e-book manager, allows code exe cution due to improper loading of malicious binary file.
+·Control refers to Insufficient Control Flow Management
+(CWE-691) which covers mistakes in conditions and checks,
+which can lead to incorrect program behavior. For example,
+CVE-2020-11072
+14
+in slp-validate, a ledger protocol validator,
+can make false validation due to incorrect comparison.
+Results. Injection and Authentication are the top-two high level vulnerability types that AgenticSCR performs best. We
+find that AgenticSCR can generate 23.4% and 21.4% of correct se cure code review comments (L&R&T) for the Injection type and
+the Authentication type, respectively. For example, AgenticSCR
+correctly comments on a vulnerable line, as well as predicts the
+correct vulnerability type, of pre-commit changes that belongs to
+CVE-2015-1326.
+15 This vulnerability is related to code injection vul nerability caused by CWE-20 (Improper Input Validation), which is
+closely related to our Injection type.
+On the other hand, AgenticSCR is struggle to generate cor rect comments (L&R&T) for the Information (6.2%) and Con trol (0%) vulnerability types. For vulnerabilities in type Infor mation, AgenticSCR may recognize potential issues in the code
+changes, such as patterns where sensitive data flows into a risky
+sink, but still incorrectly pinpoint the vulnerable lines. For example,
+in the code changes contributing to CVE-2017-6200,
+16 AgenticSCR
+correctly predicts the vulnerability type and generates a relevant
+10CVE-2020-15141: https://nvd.nist.gov/vuln/detail/CVE-2020-15141
+11CVE-2015-4082: https://nvd.nist.gov/vuln/detail/CVE-2015-4082
+12CVE-2018-1000089: https://nvd.nist.gov/vuln/detail/CVE-2018-1000089
+13CVE-2018-7889: https://nvd.nist.gov/vuln/detail/CVE-2018-7889
+14CVE-2020-11072: https://nvd.nist.gov/vuln/detail/CVE-2020-11072
+15CVE-2015-1326: https://nvd.nist.gov/vuln/detail/CVE-2015-1326
+16CVE-2017-6200: https://nvd.nist.gov/vuln/detail/CVE-2017-6200
+Table 3: (RQ2) The performance of AgenticSCR across the five
+high-level vulnerability types compared with other baselines.
+Approach Inj. Auth. Inf. Res. Cont.
+Secure Code Review Agentic AI
+AgenticSCR 23.4% 21.4% 6.2% 16.7% 0.00%
+Baseline ‒ LLM-based Technique
+Static LLM 12.6% 3.3% 1.5% 5.0% 0.0%
+Static Application Security Testing Tools - recheck missing
+CodeQL 2.23.3 3.8% 0.0% ‒ 0.0% 0.0%
+Semgrep 1.140 4.2% 0.0% 0.0% 2.5% 0.0%
+Snyk 1.130 2.6% 0.0% 0.0% 0.0% 0.0%
+Table 4: (RQ3) An analysis of the contributions of the security focused components of our AgenticSCR.
+#Cmt L&R&T
+L R T
+An analysis of the contributions of the components in AgenticSCR
+Base + SAST Rules + CWE 211 17.5% 30.8% 63.5% 70.1%
+Base + SAST Rules 362 13.0% 27.3% 54.4% 57.7%
+Base 1,070 7.3% 23.4% 31.0% 49.6%
++ Adding Secure Code Review Guidelines
+Base + Guideline 757 10.3% 24.2% 49.3% 56.3%
+Base + Guideline + CWE 371 12.4% 26.7% 58.2% 61.5%
++ Adding Both SAST Rules and Secure Code Review Guidelines
+Base + SAST Rules + Guideline 604 12.6% 28.1% 51.2% 61.3%
+Base + SAST Rules + Guideline + CWE 338 14.8% 25.1% 54.7% 63.3%
+comment, but the commented line is not the actual cause of the
+vulnerability. In addition, we observe that Control is also notably
+difficult as neither AgenticSCR nor any baseline detects vulnera- bilities of this type. This may be because such vulnerabilities often
+require specific contextual information, such as business require ments or expected workflows, to identify, which is not available in
+the code artifacts accessible to AgenticSCR.
+RQ3: What is the contributions of the
+security-focused components in our AgenticSCR?
+Table 4 presents the analysis results of the contributions of the
+security-focused components (i.e., SAST Rules in the detector sub agent and CWE Trees in the validator subagent) of our AgenticSCR.
+Results. The SAST Rules contributes an absolute improve ment of 5.7% to our AgenticSCR when compared to the Base
+Agentic CLI. When comparing between Base+SAST and Base,
+we observe an absolute performance improvement from 7.3% to
+13.0%, demonstrating that incorporating SAST rules into long-term
+semantic memory effectively strengthens secure code review ca- pabilities for the detector subagent. This finding confirms that the
+incorporation of the SAST rules with LLM reasoning help the de tector subagent to generate secure code review comments that are
+correctly localized and more relevant to the actual vulnerabilities.
+The CWE Tree contributes an additional absolute improve ment of 4.5% to our AgenticSCR. When comparing between
+Base+SAST+CWE and Base+SAST, we observe an additional abso lute performance improvement from 13.0% to 17.5%, demonstrating
+AgenticSCR：⼀种⾃主代理安全代码审查技术，⽤于不成熟漏洞检测 FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤
+RQ2: AgenticSCR 在哪些类型的漏洞上表现最佳？
+表 3 展⽰了 AgenticSCR 与其他基线在⾼层次漏洞类型上的性能⽐较。
+根据安全标准，我们使⽤ CWE-1000 [1]作为标准分类法来描述漏洞类
+别。然⽽，CWE-1000 包含 944 种独特的漏洞类型，其中⼀些存在重
+叠，因此，我们考虑以下五种⾼层次类型。
+·注⼊是指不正确的中性化（CWE-707），它涵盖了输⼊缺少清
+理，导致注⼊案例。例如，CVE-2020-15141 是⼀个漏洞，由于
+路径中性化不正确，OpenAI Python 客⼾端可以写⼊任意位置。
+·授权是指⾝份验证（CWE-287）和访问控制（CWE-284），其中
+包括⾝份验证损坏，可能导致权限提升。例如，Attic（⼀个数
+据去重器）中的 CVE2015-4082 允许攻击者由于授权不安全⽽
+修改加密。
+·信息指的是信息泄露（CWE-200），即向未授权⽅披露敏感数
+据。例如，CVE-2018-1000089，其中暴露的⽇志允许攻击者伪
+造 django-anymail 中的邮件跟踪事件。
+·资源指的是资源控制不当（CWE-664），它与资源利⽤的⽆界分
+配有关，导致系统宕机。例如，在电⼦书管理器 Calibre 中的
+CVE2018-7889 允许代码执⾏，原因是恶意⼆进制⽂件加载不
+当。
+·控制指的是控制流管理不⾜（CWE-691），它涵盖了条件和检查
+中的错误，可能导致程序⾏为不正确。例如，CVE-2020-11072
+在 slp-validate（⼀个账本协议验证器）中，由于不正确的⽐
+较，可能导致错误的验证。
+结果。注⼊和⾝份验证是 AgenticSCR 表现最好的前两⼤⾼级漏洞类
+型。我们发现 AgenticSCR 可以分别为注⼊类型和⾝份验证类型⽣成
+23.4% 和 21.4% 的正确安全代码评审评论（L&R&T）。例如，
+AgenticSCR 正确评论了⼀个易受攻击的代码⾏，并预测了属于 CVE-
+2015-1326 的预提交更改的正确漏洞类型。此漏洞与 CWE-20（输⼊
+验证不当）引起的代码注⼊漏洞有关，这与我们的注⼊类型密切相
+关。
+另⼀⽅⾯，AgenticSCR 难以⽣成正确的评论（L&R&T）⽤于信息
+（6.2%）和控制（0%）漏洞类型。对于信息类型的漏洞，
+AgenticSCR 可能识别代码更改中的潜在问题，例如敏感数据流向⻛
+险区域的模式，但仍然错误地指出有问题的⾏。例如，在导致 CVE-
+2017-6200 的代码更改中，AgenticSCR 正确预测了漏洞类型并⽣成
+了相关的评论
+10
+CVE-2020-15141：https://nvd.nist.gov/vuln/detail/CVE-2020-15141
+11
+CVE-2015-4082：https://nvd.nist.gov/vuln/detail/CVE-2015-4082
+12
+CVE-2018-1000089：https://nvd.nist.gov/vuln/detail/CVE-2018-1000089
+13
+CVE-2018-7889：https://nvd.nist.gov/vuln/detail/CVE-2018-7889
+14
+CVE-2020-11072：https://nvd.nist.gov/vuln/detail/CVE-2020-11072
+15
+CVE-2015-1326：https://nvd.nist.gov/vuln/detail/CVE-2015-1326
+16
+CVE-2017-6200：https://nvd.nist.gov/vuln/detail/CVE-2017-6200
+表 3：(RQ2) AgenticSCR 在五种⾼级漏洞类型中的性能与其他基线的
+⽐较。
+⽅法 注⼊认证信息 决议/决定
+安全代码审查代理 AI
+AgenticSCR 23.4% 21.4% 6.2% 16.7% 0.00%
+基线——基于 LLM 的技术
+静态 LLM 12.6% 3.3% 1.5% 5.0% 0.0%
+静态应⽤安全测试⼯具——重新检查缺失
+CodeQL 2.23.3 3.8% 0.0% ‒ 0.0% 0.0%
+Semgrep 1.140 4.2% 0.0% 0.0% 2.5% 0.0%
+Snyk 1.130 2.6% 0.0% 0.0% 0.0% 0.0%
+表 4：(RQ3) 对我们 AgenticSCR 中安全组件的贡献分析。
+#Cmt L&R&T L R T
+对 AgenticSCR 中组件的贡献分析
+基础 + SAST 规则 + CWE 211 17.5% 30.8% 63.5% 70.1%
+Base + SAST 规则 362 13.0% 27.3% 54.4% 57.7% Base 1,070 7.3% 23.4% 31.0% 49.6%
++ 添加安全代码审查指南
+Base + 指南 757 10.3% 24.2% 49.3% 56.3% Base + 指南 + CWE 371 12.4% 26.7% 58.2%
+61.5%
++ 添加 SAST 规则和安全代码审查指南
+Base + SAST 规则 + 指南 604 12.6% 28.1% 51.2% 61.3% Base + SAST 规则 + 指南 + CWE
+338 14.8% 25.1% 54.7% 63.3%
+评论，但被注释的⾏并不是漏洞的实际原因。此外，我们观察到
+Control 也明显难以处理，因为⽆论是 AgenticSCR 还是任何基线都⽆
+法检测到这种类型的漏洞。这可能是因为这种漏洞通常需要特定的上下
+⽂信息，例如业务需求或预期的业务流程，来识别，⽽这些信息在
+AgenticSCR 可访问的代码⼯件中是不可⽤的。
+RQ3：我们 AgenticSCR 中安全组件的贡献是什么？
+表 4 展⽰了我们 AgenticSCR 中安全聚焦组件（即检测⼦代理中的
+SAST 规则和验证⼦代理中的 CWE 树）的贡献分析结果。
+结果。与基准相⽐，SAST 规则为我们的 AgenticSCR 带来了 5.7%的绝
+对改进
+Agentic CLI。当⽐较 Base+SAST 与 Base 时，我们观察到从 7.3%到
+13.0%的绝对性能提升，这表明将 SAST 规则整合到⻓期语义记忆中
+可以有效地增强检测⼦代理的安全代码审查能⼒。这⼀发现证实，通
+过 LLM 推理结合 SAST 规则，有助于检测⼦代理⽣成正确定位且与实
+际漏洞更相关的安全代码审查评论。
+CWE 树为我们的 AgenticSCR 贡献了额外的绝对改进 4.5%。当⽐较
+Base+SAST+CWE 与 Base+SAST 时，我们观察到从 13.0%到 17.5%
+的额外绝对性能改进，这证明了
+FSE ’26, July 05‒09, 2026, Montreal, Canada Wachiraphan Charoenwet, Kla Tantithamthavorn, Patanamon Thongtanunam, Hong Yi Lin, Minwoo Jeong, and Ming Wu
+that incorporating CWE Tree into long-term semantic memory
+effectively strengthens secure code review capabilities for the val idator subagent. When looking at the number of the generated com ments, we also observe that AgenticSCR can generate fewer number
+of secure code review comments (211 comments), yet achieving the
+highest overall correctness (17.5%). The CWE Tree helps reduce
+false positives of our AgenticSCR by providing a hierarchical and
+contextualized representation of weaknesses, enabling the validator
+subagent to reason about root causes, prerequisites, and scope of
+vulnerabilities rather than relying on flat pattern matching.
+Discussion 1: Do secure code review guidelines help our detec tor subagent? There exist various security-specific knowledge and
+standards that developers use to conduct secure code review. In
+addition to SAST rules, secure code review guidelines could be
+an alternative of security knowledge to enhance the capability
+of the detector subagent. To investigate this, the guidelines are
+implemented as a persistent long-term semantic memory in our
+AgenticSCR. However, prior study [37] found that an excessively
+detailed guideline may overwhelm human reviewers and divert
+their attention from the most relevant issues, which could be the
+case for LLM reasoning due to the limited context window. To ad dress this, we synthesize the core principles from Braz et al. [
+7]
+and Goncalves et al. [22]. Concretely, we encode the guideline in
+a JSON file with a list of guideline entries. Each entry has a sta- ble identifier (e.g.,
+SCR-001), a coarse-grained category such as input_validation
+, a priority level, a short title
+, and a set of
+essential_checks phrased as checklist-style questions. To make
+the guidelines directly usable for code reasoning, we also attach
+vulnerability_patterns that pair a brief pattern description (e.g.,
+request.getParameter()
+→
+database query) with a minimal code example and associated risk (e.g., SQL injection), along with
+concise remediation_steps and related_guidelines for navi gation. This guideline representation should help direct the agent’
+s
+attention toward critical security patterns (such as unvalidated in puts flowing into SQL queries or file paths) and suggested fixes,
+without introducing unnecessary cognitive load or prompt bloat.
+The guideline contributes an absolute improvement of
+3%, but relatively lower than SAST rules by 24.3%
+(
+13.
+1
+6
+3
+−10.3
+.6
+) .
+When comparing between Base+Guideline and Base, we observe
+the improvement from 7.3% to 10.5%, demonstrating that incorpo rating secure code review guideline improves detector subagent.
+Despite replacing the AgenticSCR’
+s SAST rules with guidelines
+(Base+Guideline+CWE), it can generate only 12.4% of the correct
+comments, which is 29.1%
+(
+17.
+1
+5
+7
+−12.4
+.5
+)
+relatively lower than our Agen ticSCR. These findings confirm that secure code review guidelines
+can improve the detector subagent, but not better than SAST.
+Discussion 2: Do both SAST rules and secure code review guide lines offer complementary capabilities to our detector subagent? It is
+possible that a combination of knowledge sources may improve the
+overall performance of AgenticSCR. Thus, we conduct an additional analysis to investigate if the combination of both SAST rules and
+guidelines can improve the overall performance of AgenticSCR.
+The combination of SAST rules and Guidelines achieves
+an overall correctness of 14.8%, which is 15.4%
+(
+17.
+1
+5
+7
+− 14.8
+.5
+)
+rela- tively lower than AgenticSCR. We find that adding additional guidelines to the long-term semantic memory contributes to an ab solute performance loss of 0.4% when comparing between Base+SAST
+(13%) and Base+SAST+Guideline (12.6%). The performance loss that
+we observed may have to do with the increased complexity and
+potential interference introduced by heterogeneous knowledge
+sources. While SAST rules are typically precise, pattern-driven,
+and closely aligned with syntactic vulnerability manifestations, se cure code review guidelines tend to be broader, more abstract, and
+context-dependent. Adding both into the detector subagent’
+s long term semantic memory may therefore introduce semantic noise
+or conflicting signals, making it harder for the agent to prioritize
+highly actionable cues during detection.
+6
+Threats to Validity
+Internal Validity. The construction of line-level vulnerability
+ground-truths may be subject to individual bias. To mitigate this,
+annotations followed a clearly defined operational definition of
+actual vulnerability lines (i.e., must be the line(s) that are added or
+modified in the pre-commit code change, but are later modified or
+deleted in the bug-fixing commit; and must be associated with the
+given CVE description and CWE vulnerability type). With a com parison with the actual CWE description and CWE vulnerability
+type, this will reduce the reliance on subjective judgment.
+Construct Validity. The % of relevant comments heaviy relies on
+an LLM-as-a-judge [27], formulating as a binary classification task
+whether a given code review comment is relevant to the actual vulnerability. However, like any LLMs, LLM judges are probablistic
+and non-deterministic, which may introduce any model- or prompt specific biases in how a review comment is assessed. To mitigate this
+concern, we conduct a manual verification of the judge outcomes
+based on a manually labeled dataset of 70 code review comments.
+Using the GPT-4.1, the judge achieves an F1 of 0.86, a Precision of
+0.88, and a Recall of 0.86. Thus, we consider our judge to be accurate
+enough for evaluating the comment relevance.
+External Validity. Although the experiment of our AgenticSCR
+is limited to our SCRBench, which includes a diverse set of open source projects and 5 vulnerability categories, we acknowledge that
+the results may not be generalized to other programming languages,
+projects, domains, or industrial codebases. Thus, we avoid strong
+any generalization claims.
+7
+Conclusion
+In this paper, we present AgenticSCR, an agentic AI secure code
+review framework, targeting immature vulnerabilities in newly
+changed code within a CLI environment. AgenticSCR leverages
+augmented information in an agentic architecture, where subagents
+autonomously access repository-level context while consulting a
+security-focused semantic memories to detect issues (via SAST
+rules) and validate comments (via a CWE tree). Our results confirm
+that AgenticSCR can generate the highest number of comments
+(17.5%) that are correctly localized and relevant with a valid vul nerability type, while generating 2-5 times fewer comments when
+compared to the static LLM, SAST tools. These findings lead us to
+conclude that augmenting agentic AI with security-focused seman tic memories can strengthen its performance in detecting immature
+vulnerabilities at the pre-commit stage, thereby supporting secu rity shift-left by enabling earlier vulnerability detection during the
+software development lifecycle.
+FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤ Wachiraphan Charoenwet，Kla Tantithamthavorn，Patanamon Thongtanunam，Hong Yi Lin，Minwoo Jeong 和 Ming Wu
+将 CWE 树整合到⻓期语义记忆中可以有效地增强验证器⼦代理的安
+全代码审查能⼒。在查看⽣成的评论数量时，我们还观察到
+AgenticSCR 可以⽣成较少数量的安全代码审查评论（211 条评论），
+但达到了最⾼的整体正确率（17.5%）。CWE 树通过提供弱点分层和
+上下⽂表⽰，帮助减少 AgenticSCR 的误报，使验证器⼦代理能够推
+理漏洞的根本原因、先决条件和范围，⽽不是依赖扁平模式匹配。
+讨论 1：安全代码审查指南是否有助于我们的检测⼦代理？开发者使
+⽤各种特定于安全的知识和标准来执⾏安全代码审查。除了 SAST 规
+则之外，安全代码审查指南可以作为安全知识的⼀种替代⽅案，以增
+强检测⼦代理的能⼒。为了研究这⼀点，我们将指南实现为
+AgenticSCR 中的⼀个持久化的⻓期语义记忆。然⽽，先前研究 [37]
+发现，过于详细的指南可能会使⼈类审查者感到不知所措，并让他们
+将注意⼒从最相关的问题上转移开，这对 LLM 推理来说也可能是由于
+上下⽂窗⼝有限⽽成⽴的情况。为了解决这个问题，我们从 Braz 等
+⼈ [7] 和 Goncalves 等⼈ [22] 中综合了核⼼原则。具体来说，我们将
+指南编码在⼀个 JSON ⽂件中，其中包含⼀系列指南条⽬。每个条⽬
+都有⼀个稳定的标识符（例如，SCR-001），⼀个粗粒度的分类例如
+input_validation 类，⼀个优先级级别，⼀个简短的标题，以及⼀组
+以清单形式表述的 essential_checks 检查项。为了使指南能够直接⽤
+于代码推理，我们还附带了 vulnerability_patterns，它将⼀个简要
+的模式描述（例如，
+request.getParameter() → 数据库查询) 使⽤⼀个最⼩的代码⽰例和
+相关⻛险（例如，SQL 注⼊），以及简洁的缓解步骤和相关指南。这
+些指南的表⽰应帮助引导代理的注意⼒到关键的安全模式（如未经验
+证的输⼊流⼊ SQL 查询或⽂件路径）和建议的修复措施，⽽不会引⼊
+不必要的认知负担或提⽰膨胀。
+该指南带来了 3%的绝对改进，但相对于 SAST 规则低 24.3%（13）。
+当⽐较 Base+指南和 Base 时，我们观察到
+从 7.3%提⾼到 10.5%，表明纳⼊安全代码审查指南可以提⾼检测⼦
+代理。尽管⽤指南（Base+Guideline+CWE）替换了 AgenticSCR 的
+SAST 规则，但它只能⽣成 12.4%的正确评论，这⽐我们的
+AgenticSCR 相对低 29.1%（17）。这些发现证实，安全代码审查指南
+可以提⾼检测⼦代理，但不如 SAST。
+讨论 2：SAST 规则和安全的代码审查指南是否都为我们的检测⼦代理
+提供补充功能？知识来源的组合有可能提⾼ AgenticSCR 的整体性
+能。因此，我们进⾏额外的分析，以调查 SAST 规则和指南的组合是
+否可以提⾼ AgenticSCR 的整体性能。
+SAST 规则和指南的组合实现了总体正确率为 14.8%，相对于
+AgenticSCR 较低，为 15.4%（17）。我们发现，在⻓期语义记忆中添加
+额外的指南，与 Base+SAST 相⽐，会导致绝对性能损失 0.4%。
+(13%) 和 Base+SAST+Guideline (12.6%)。我们观察到的性能下降可能
+与异构知识源带来的复杂性和潜在⼲扰有关。虽然 SAST 规则通常是精
+确的、基于模式的，并且与句法漏洞表现紧密对⻬，但安全代码审查指
+南往往更⼴泛、更抽象、更依赖于上下⽂。因此，将两者都添加到检测
+⼦代理的⻓期语义记忆中可能会引⼊语义噪声或冲突信号，使代理在检
+测过程中更难优先处理⾼度可操作的线索。
+6 对有效性的威胁
+内部有效性。⾏级漏洞真实标签的构建可能受到个⼈偏⻅的影响。为
+减轻这⼀问题，注释遵循了明确定义的漏洞⾏操作定义（即必须是预
+提交代码变更中添加或修改的⾏，但在后续的补丁提交中被修改或删
+除；并且必须与给定的 CVE 描述和 CWE 漏洞类型相关联）。通过与实
+际 CWE 描述和 CWE 漏洞类型的⽐较，这将减少对主观判断的依赖。
+构建效度。相关评论的%，很⼤程度上依赖于作为裁判的⼤型语⾔模
+型 [27]，将其制定为⼀个⼆元分类任务，判断给定的代码评审评论是
+否与实际漏洞相关。然⽽，像任何⼤型语⾔模型⼀样，⼤型语⾔模型
+裁判是概率性和⾮确定性的，这可能会在评审评论的评估⽅式中引⼊
+任何模型或特定提⽰偏差。为了缓解这⼀担忧，我们基于⼀个包含 70
+条代码评审评论的⼿动标记数据集，对裁判结果进⾏了⼈⼯验证。使
+⽤ GPT-4.1，裁判达到了 F1 值 0.86，精确度 0.88，召回率 0.86。因
+此，我们认为我们的裁判⾜够准确，可以⽤于评估评论的相关性。
+外部有效性。尽管我们的 AgenticSCR 实验仅限于我们的
+SCRBench，该基准包含多样化的开源项⽬以及 5 个漏洞类别，我们
+承认结果可能⽆法推⼴到其他编程语⾔、项⽬、领域或⼯业代码库。
+因此，我们避免做出强烈的泛化声明。
+7 结论
+本⽂介绍了 AgenticSCR，⼀个代理式 AI 安全代码审查框架，旨在针对
+CLI 环境中新修改代码中的不成熟漏洞。AgenticSCR 利⽤增强信息在
+代理架构中，其中⼦代理⾃主访问仓库级上下⽂，同时咨询以安全为重
+点的语义记忆来检测问题（通过 SAST 规则）并验证评论（通过 CWE
+树）。我们的结果表明，AgenticSCR 可以⽣成最多 17.5%的正确定位
+且与有效漏洞类型相关的评论，⽽与静态 LLM、SAST ⼯具相⽐，⽣成
+的评论数量减少了 2-5 倍。这些发现使我们得出结论，通过为具有安全
+导向的语义记忆的⾃主 AI 增加功能可以增强其在提交前阶段检测不成
+熟漏洞的性能，从⽽通过在软件开发⽣命周期中更早地检测漏洞来⽀持
+安全左移。
+AgenticSCR: An Autonomous Agentic Secure Code Review for Immature Vulnerabilities Detection FSE ’26, July 05‒09, 2026, Montreal, Canada
+References
+[1] [n. d.]. Common Weakness Enumeration (CWE-1000). https://cwe.mitre.org/
+data/definitions/1000.html
+[2] Mahmoud Alfadel, Nicholas Alexandre Nagy, Diego Elias Costa, Rabe Abdalka reem, and Emad Shihab. 2023. Empirical analysis of security-related code re views in npm packages. Journal of Systems and Software 203 (9 2023), 111752.
+doi:10.1016/J.JSS.2023.111752
+[3] Atlassian. 2025. Rovo Dev: Agentic AI in the Command Line. Technical an nouncement.
+[4] Krzysztof Baciejowski, Damian Garbala, Szymon Zmijewski, and Lech Madeyski.
+2023. Are Code Review Smells and Metrics Useful in Pull Request-Level Software
+Defect Prediction? Springer Nature Switzerland, Cham, 27‒52. doi:10.1007/978-
+3-031-27506-7_2
+[5] Tobias Baum, Fabian Kortum, Kurt Schneider, Arthur Brack, and Jens Schauder.
+2016. Comparing pre commit reviews and post commit reviews using process
+simulation. In Proceedings - International Conference on Software and System
+Process, ICSSP 2016. Association for Computing Machinery, Inc, 26‒35. doi:10.
+1145/2904354.2904362
+[6] Guru Bhandari, Amara Naseer, and Leon Moonen. 2021. CVEfixes: automated col lection of vulnerabilities and their fixes from open-source software. In Proceedings
+of the 17th International Conference on Predictive Models and Data Analytics in Soft ware Engineering (Athens, Greece) (PROMISE 2021). Association for Computing
+Machinery, New York, NY, USA, 30‒39. doi:10.1145/3475960.3475985
+[7] Larissa Braz, Christian Aeberhard, Gül Çalikli, and Alberto Bacchelli. 2022. Less
+is More: Supporting Developers in Vulnerability Detection during Code Review.
+In Proceedings of the 44th International Conference on Software Engineering, Vol. 13.
+ACM, New York, NY, USA, 1317‒1329. doi:10.1145/3510003
+[8] Larissa Braz and Alberto Bacchelli. 2022. Software Security during Modern
+Code Review: The Developer
+’
+s Perspective. In Proceedings of the 30th ACM Joint
+European Software Engineering Conference and Symposium on the Foundations of
+Software Engineering (ESEC/FSE 2022). Association for Computing Machinery,
+New York, NY, USA, 810‒821. doi:10.1145/3540250.3549135
+[9] Larissa Braz, Enrico Fregnan, Gul Calikli, and Alberto Bacchelli. 2021. Why
+don
+’t developers detect improper input validation? ’
+; DROP TABLE Papers; -. In
+Proceedings - International Conference on Software Engineering. IEEE Computer
+Society, 499‒511. doi:10.1109/ICSE43902.2021.00054
+[10] Wachiraphan Charoenwet, Patanamon Thongtanunam, Van-Thuan Pham, and
+Christoph Treude. 2024. An Empirical Study of Static Analysis Tools for Secure
+Code Review. In Proceedings of the 33rd International Symposium on Software
+Testing and Analysis. doi:10.1145/3650212.3680313
+[11] Wachiraphan Charoenwet, Patanamon Thongtanunam, Van Thuan Pham, and
+Christoph Treude. 2024. Toward effective secure code reviews: an empirical study
+of security-related coding weaknesses. Empirical Software Engineering 29, 4 (7
+2024), 1‒47. doi:10.1007/s10664-024-10496-y
+[12] Maria Christakis and Christian Bird. 2016. What developers want and need
+from program analysis: an empirical study. In Proceedings of the 31st IEEE/ACM
+International Conference on Automated Software Engineering. Association for
+Computing Machinery (ACM), 332‒343. doi:10.1145/2970276.2970347
+[13] Umut Cihan, Arda Içöz, Vahid Haratian, and Eray Tüzün. 2025. Evaluating Large
+Language Models for Code Review. (2025). https://arxiv.org/abs/2505.20206
+[14] Daniel Alencar da Costa, Shane McIntosh, Weiyi Shang, Uirá Kulesza, Roberta
+Coelho, and Ahmed E. Hassan. 2017. A Framework for Evaluating the Results of
+the SZZ Approach for Identifying Bug-Introducing Changes. IEEE Transactions
+on Software Engineering 43, 7 (2017), 641‒657. doi:10.1109/TSE.2016.2616306
+[15] Jiahao Fan, Yi Li, Shaohua Wang, and Tien N. Nguyen. 2020. A C/C++ Code
+Vulnerability Dataset with Code Changes and CVE Summaries. In 2020 IEEE/ACM
+17th International Conference on Mining Software Repositories (MSR). 508‒512.
+doi:10.1145/3379597.3387501
+[16] Zhangyin Feng, Daya Guo, Duyu Tang, Nan Duan, Xiaocheng Feng, Ming
+Gong, Linjun Shou, Bing Qin, Ting Liu, Daxin Jiang, and Ming Zhou. 2020.
+CodeBERT: A Pre-Trained Model for Programming and Natural Languages.
+arXiv:2002.08155 [cs.CL] https://arxiv.org/abs/2002.08155
+[17] Michael Fu, Van Nguyen, Chakkrit Kla Tantithamthavorn, Trung Le, and Dinh
+Phung. 2023. Vulexplainer: A transformer-based hierarchical distillation for
+explaining vulnerability types. IEEE Transactions on Software Engineering 49, 10
+(2023), 4550‒4565.
+[18] Michael Fu and Chakkrit Tantithamthavorn. 2022. LineVul: a transformer-based
+line-level vulnerability prediction. In Proceedings of the 19th International Confer ence on Mining Software Repositories (MSR). 608‒620.
+[19] Michael Fu, Chakkrit Tantithamthavorn, Trung Le, Yuki Kume, Van Nguyen, Dinh
+Phung, and John Grundy. 2023. AIBugHunter: A Practical tool for predicting,
+classifying and repairing software vulnerabilities. Empirical Softw. Engg. 29, 1
+(Nov. 2023), 33 pages. doi:10.1007/s10664-023-10346-3
+[20] Michael Fu, Chakkrit Tantithamthavorn, Trung Le, Van Nguyen, and Dinh Phung.
+2022. VulRepair: a T5-based automated software vulnerability repair. In Pro ceedings of the 30th ACM joint european software engineering conference and
+symposium on the foundations of software engineering. 935‒947.
+[21] Michael Fu, Chakkrit Kla Tantithamthavorn, Van Nguyen, and Trung Le. 2023.
+Chatgpt for vulnerability detection, classification, and repair: How far are we?. In
+2023 30th Asia-Pacific Software Engineering Conference (APSEC). IEEE, 632‒636.
+[22] Pavlina Wurzel Goncalves, Pooja Rani, Margaret Anne Storey, Diomidis Spinellis,
+and Alberto Bacchelli. 2025. Code Review Comprehension: Reviewing Strategies
+Seen Through Code Comprehension Theories. In 2025 IEEE/ACM 33rd Interna tional Conference on Program Comprehension (ICPC). IEEE Computer Society,
+589‒601. doi:10.1109/ICPC66645.2025.00068
+[23] Hanyang Guo, Xunjin Zheng, Zihan Liao, Hang Yu, Peng DI, Ziyin Zhang,
+and Hong-Ning Dai. 2025. CodeFuse-CR-Bench: A Comprehensiveness aware Benchmark for End-to-End Code Review Evaluation in Python Projects.
+arXiv:2509.14856 [cs.SE] https://arxiv.org/abs/2509.14856
+[24] Md. Asif Haider, Ayesha Binte Mostofa, Sk. Sabit Bin Mosaddek, Anindya Iqbal,
+and Toufique Ahmed. 2024. Prompting and Fine-tuning Large Language Models
+for Automated Code Review Comment Generation. (11 2024). https://arxiv.org/
+abs/2411.10129v1
+[25] Emanuele Iannone, Roberta Guadagni, Filomena Ferrucci, Andrea De Lucia, and
+Fabio Palomba. 2022. The Secret Life of Software Vulnerabilities: A Large-Scale
+Empirical Study. IEEE Transactions on Software Engineering (2022). doi:10.1109/
+TSE.2022.3140868
+[26] Brittany Johnson, Yoonki Song, Emerson Murphy-Hill, and Robert Bowdidge.
+2013. Why don
+’t software developers use static analysis tools to find bugs?. In
+Proceedings - International Conference on Software Engineering. 672‒681. doi:10.
+1109/ICSE.2013.6606613
+[27] Dawei Li, Bohan Jiang, Liangjie Huang, Alimohammad Beigi, Chengshuai Zhao,
+Zhen Tan, Amrita Bhattacharjee, Yuxuan Jiang, Canyu Chen, Tianhao Wu, Kai
+Shu, Lu Cheng, and Liu Huan. 2025. From Generation to Judgment: Opportunities
+and Challenges of LLM-as-a-judge. In Proceedings of the 2025 Conference on
+Empirical Methods in Natural Language Processing. Association for Computational
+Linguistics, Suzhou, China, 2757‒2791. doi:10.18653/V1/2025.EMNLP-MAIN.138
+[28] Jinghong Li, Phan Huy, Wen Gu, Koichi Ota, and Shinobu Hasegawa. 2024.
+Hierarchical Tree-structured Knowledge Graph for Academic Insight Survey.
+In 18th International Conference on INnovations in Intelligent SysTems and Ap plications, INISTA 2024. Institute of Electrical and Electronics Engineers Inc.
+doi:10.1109/INISTA62901.2024.10683856
+[29] Kaixuan Li, Sen Chen, Lingling Fan, Ruitao Feng, Han Liu, Chengwei Liu, Yang
+Liu, and Yixiang Chen. 2023. Comparison and Evaluation on Static Application
+Security Testing (SAST) Tools for Java. In Proceedings of the 31st ACM Joint
+European Software Engineering Conference and Symposium on the Foundations
+of Software Engineering (ESEC/FSE ’23). Association for Computing Machinery.
+doi:10.1145/3611643.3616262
+[30] Fang Liu, Simiao Liu, Yinghao Zhu, Xiaoli Lian, and Li Zhang. 2026. SecureRe viewer: Enhancing Large Language Models for Secure Code Review through
+Secure-aware Fine-tuning. In Proceedings of the IEEE/ACM 48th International Con ference on Software Engineering (ICSE ’26), Vol. 1. doi:10.1145/3744916.3773191
+[31] Francesco Lomio, Emanuele Iannone, Andrea De Lucia, Fabio Palomba, and
+Valentina Lenarduzzi. 2022. Just-in-time software vulnerability detection: Are
+we there yet? Journal of Systems and Software 188 (2022), 111283. doi:10.1016/j.
+jss.2022.111283
+[32] MITRE. 2026. CWE: Common Weakness Enumeration. https://cwe.mitre.org/.
+Accessed 2026-01-16.
+[33] Duong Nguyen, Thanh Le-Cong, Triet Huynh Minh Le, M. Ali Babar, and Quyet Thang Huynh. 2025. Toward Realistic Evaluations of Just-In-Time Vulnerability
+Prediction. In 2025 IEEE International Conference on Software Maintenance and
+Evolution (ICSME). 1‒10. doi:10.1109/ICSME64153.2025.00023
+[34] Son Nguyen, Thu-Trang Nguyen, Thanh Trong Vu, Thanh-Dat Do, Kien-Tuan
+Ngo, and Hieu Dinh Vo. 2024. Code-centric learning-based just-in-time vulnera bility detection. J. Syst. Softw. 214, C (Aug. 2024), 14 pages. doi:10.1016/j.jss.2024.
+112014
+[35] Fabio Palomba et al. 2022. Just-in-Time Software Vulnerability Detection: Are
+We There Yet? Journal of Systems and Software (2022).
+[36] Sebastiano Panichella, Venera Arnaoudova, Massimiliano Di Penta, and Giuliano
+Antoniol. 2015. Would Static Analysis Tools Help Developers with Code Reviews?.
+In 2015 IEEE 22nd International Conference on Software Analysis, Evolution, and
+Reengineering (SANER). 161‒170. doi:10.1109/SANER.2015.7081826
+[37] Luca Pascarella, Davide Spadini, Fabio Palomba, Magiel Bruntink, and Alberto
+Bacchelli. 2018. Information Needs in Contemporary Code Review. In Proceedings
+of the ACM on Human-Computer Interaction, Vol. 2. ACMPUB27New York, NY,
+USA, 27. doi:10.1145/3274404
+[38] Rajshakhar Paul, Asif Kamal Turzo, and Amiangshu Bosu. 2021. Why security
+defects go unnoticed during code reviews? A case-control study of the chromium
+OS project. In Proceedings - International Conference on Software Engineering.
+IEEE Computer Society, 1373‒1385. doi:10.1109/ICSE43902.2021.00124
+[39] Yun Peng, Kisub Kim, Linghan Meng, and Kui Liu. 2025. iCodeReviewer: Im proving Secure Code Review with Mixture of Prompts. (10 2025). https:
+//arxiv.org/abs/2510.12186v1
+[40] Chanathip Pornprasit and Chakkrit Kla Tantithamthavorn. 2021. JITLine: A
+Simpler, Better, Faster, Finer-grained Just-In-Time Defect Prediction. In 2021
+AgenticSCR：⼀种⾃主代理安全代码审查技术，⽤于不成熟漏洞检测 FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤
+参考⽂献
+[1] [n. d.]. 常⻅弱点枚举 (CWE-1000). https://cwe.mitre.org/ data/definitions/1000.html
+[2] Mahmoud Alfadel, Nicholas Alexandre Nagy, Diego Elias Costa, Rabe Abdalkareem,
+and Emad Shihab. 2023. npm 包中与安全相关的代码审查的实证分析. Journal of
+Systems and Software 203 (9 2023), 111752.
+doi:10.1016/J.JSS.2023.111752 [3] Atlassian. 2025. Rovo Dev: 命令⾏中的代理式 AI. 技术
+公告.
+[4] Krzysztof Baciejowski，Damian Garbala，Szymon Zmijewski，以及 Lech
+Madeyski。
+2023 年。代码审查异味和指标在拉取请求级别的软件中是否有⽤？
+缺陷预测？Springer Nature Switzerland, Cham, 27‒52. doi:10.1007/9783-031-27506-
+7_2
+[5] Tobias Baum，Fabian Kortum，Kurt Schneider，Arthur Brack 和 Jens Schauder。
+2016 年。利⽤过程模拟⽐较了提交前的代码审查与提交后的代码审查效果。载于《2016
+年国际软件与系统过程会议论⽂集》。计算机协会出版社，第 26-35 ⻚。
+doi:10.1145/2904354.2904362
+[6] Guru Bhandari、Amara Naseer 和 Leon Moonen。2021 年。《CVEfixes：从开源软件中
+⾃动收集漏洞及其修复⽅案》。载于会议论⽂集。
+在第 17 届国际预测模型与数据分析在软件领域中的应⽤会议上
+软件⼯程（雅典，希腊）（PROMISE 2021）。美国纽约的计算机协会，纽约，纽约，美国，第
+30-39 ⻚。doi:10.1145/3475960.3475985 [7] Larissa Braz, Christian Aeberhard, Gül
+Çalikli, 和 Alberto Bacchelli。2022 年。少即是多：在代码审查期间⽀持开发⼈员进⾏漏洞检
+测。
+在 第 44 届国际软件⼯程会议上，第 13 卷。
+ACM，纽约，纽约州，美国，1317‒1329。doi:10.1145/3510003 [8] Larissa Braz 和
+Alberto Bacchelli。2022 年。现代代码审查期间的软件安全：开发者的视⻆。在《第 30 届
+ACM 联合欧洲软件⼯程会议和基础研讨会论⽂集》中
+软件⼯程研讨会。
+Software Engineering (ESEC/FSE 2022). Association for Computing Machinery, New
+York, NY, USA, 810‒821. doi:10.1145/3540250.3549135 重试 错误原因
+[9] Larissa Braz, Enrico Fregnan, Gul Calikli, and Alberto Bacchelli. 2021. Why don
+’t
+developers detect improper input validation? ’
+; DROP TABLE Papers; -. In
+重试
+Proc
+错
+e
+误
+ed
+原
+i
+因
+ngs - International Conference on Software Engineering. IEEE Computer 重试 错误原因
+Society, 499‒511. doi:10.1109/ICSE43902.2021.00054 [10] Wachiraphan
+Charoenwet, Patanamon Thongtanunam, Van-Thuan Pham, and 重试 错误原因
+Christoph Treude. 2024. An Empirical Study of Static Analysis Tools for Secure Code
+Review. In Proceedings of the 33rd International Symposium on Software Testing
+and Analysis. doi:10.1145/3650212.3680313 重试 错误原因
+[11] Wachiraphan Charoenwet, Patanamon Thongtanunam, Van Thuan Pham, and 重试 错误原因
+Christoph Treude. 2024. Toward effective secure code reviews: an empirical study of
+security-related coding weaknesses. Empirical Software Engineering 29, 4 (7 2024),
+1‒47. doi:10.1007/s10664-024-10496-y 重试 错误原因
+[12] Maria Christakis and Christian Bird. 2016. What developers want and need 重试 错误原因
+from program analysis: an empirical study. In Proceedings of the 31st IEEE/ACM 重试 错误原因
+International Conference on Automated Software Engineering. Association for 重试 错误原因
+Computing Machinery (ACM), 332‒343. doi:10.1145/2970276.2970347 [13] Umut
+Cihan, Arda Içöz, Vahid Haratian, and Eray Tüzün. 2025. Evaluating Large
+Language Models for Code Review. (2025). https://arxiv.org/abs/2505.20206 [14]
+重试 错误原因
+Coelho, and Ahmed E. Hassan. 2017. A Framework for Evaluating the Results of the
+SZZ Approach for Identifying Bug-Introducing Changes. IEEE Transactions on
+Software Engineering 43, 7 (2017), 641‒657. doi:10.1109/TSE.2016.2616306
+[15] Jiah
+重
+a
+试
+o Fa
+错
+n
+误
+, Y
+原
+i
+因
+Li, Shaohua Wang, and Tien N. Nguyen. 2020. ⼀种 C/C++ 代码
+包含代码更改和 CVE 摘要的漏洞数据集。在 2020 年 IEEE/ACM
+第 17 届国际软件仓库挖掘会议 (MSR)。508‒512。
+doi:10.1145/3379597.3387501 [16] 冯章寅、郭⼤雅、唐杜宇、段楠、冯晓城、明
+Gong, Linjun Shou, Bing Qin, Ting Liu, Daxin Jiang, and Ming Zhou. 2020. CodeBERT:
+⼀种⽤于编程和⾃然语⾔的预训练模型. arXiv:2002.08155 [cs.CL]
+https://arxiv.org/abs/2002.08155
+[17] Michael Fu，Van Nguyen，Chakkrit Kla Tantithamthavorn，Trung Le，以及 Dinh
+Phung. 2023. Vulexplainer: 基于 Transformer 的层次化蒸馏
+解释漏洞类型。IEEE 软件⼯程汇刊 49, 10 (2023), 4550‒4565。
+[18] Michael Fu 和 Chakkrit Tantithamthavorn。2022。LineVul: 基于转换器的
+⾏级漏洞预测。在 19 届国际软件仓库挖掘会议 (MSR) 论⽂集。608‒620。
+[19] 迈克尔·傅、查克⾥特·坦蒂塔姆塔沃恩、Trung Le、由纪·久⽶、范·阮、丁
+Phung, 和 John Grundy. 2023. AIBugHunter: ⼀个⽤于预测、分类和修复软件漏洞的实
+⽤⼯具. 实验性软件⼯程 29, 1 (2023 年 11 ⽉), 33 ⻚. doi:10.1007/s10664-023-10346-3
+[20] Michael Fu, Chakkrit Tantithamthavorn, Trung Le, Van Nguyen, 和 Dinh Phung.
+2022. VulRepair: 基于 T5 的⾃动化软件漏洞修复. 在...
+第 30 届 ACM 联合欧洲软件⼯程会议和软件⼯程基础研讨会论⽂集。935‒947。
+[21] Michael Fu, Chakkrit Kla Tantithamthavorn, Van Nguyen, 和 Trung Le. 2023。
+ChatGPT 在漏洞检测、分类和修复中的应⽤：我们还有多远？——2023 年 30 届亚太软
+件⼯程会议（APSEC）。IEEE, 632‒636。
+[22] 帕夫利娜·沃尔泽尔·贡萨尔维斯、普贾·拉尼、玛格丽特·安妮·斯托⾥、迪奥⽶迪斯·斯⽪内利斯
+和 Alberto Bacchelli。2025。代码审查理解：通过代码理解理论看到的审查策略。在
+2025 IEEE/ACM 第 33 届国际程序理解会议 (ICPC)。IEEE 计算机协会，589‒601。
+doi:10.1109/ICPC66645.2025.00068
+[23] Hanyang Guo，Xunjin Zheng，Zihan Liao，Hang Yu，Peng DI，Ziyin Zhang，
+and 戴宏宁. 2025. CodeFuse-CR-Bench: ⼀个⽤于 Python 项⽬端到端代码审查评估的
+全⾯性感知基准. arXiv:2509.14856 [cs.SE] https://arxiv.org/abs/2509.14856
+[24] 穆罕默德·阿西夫·海德尔、阿耶莎·宾特·莫斯托法、萨⽐特·本·莫萨德克、阿尼恩迪亚·伊克巴尔
+and 奥⻢尔·塔夫基. 2024. ⽤于⾃动代码审查评论⽣成的提⽰和微调⼤型语⾔模型. (11
+2024). https://arxiv.org/abs/2411.10129v1
+[25] Emanuele Iannone，Roberta Guadagni，Filomena Ferrucci，Andrea De Lucia，以及
+Fabio Palomba. 2022. 软件漏洞的秘密⽣活：⼀项⼤规模
+实证研究。IEEE 软件⼯程汇刊（2022）。doi:10.1109/
+TSE.2022.3140868 [26] Brittany Johnson, Yoonki Song, Emerson Murphy-Hill, 和
+Robert Bowdidge。
+2013。为什么软件开发者不⽤静态分析⼯具来查找错误？。在
+软件⼯程国际会议论⽂集。672‒681。doi:10.
+1109/ICSE.2013.6606613 [27] 李⼤伟、江博涵、⻩良杰、阿利莫哈默德·⻉吉、赵成
+帅
+甄檀，阿⽶塔·巴塔查⾥亚，蒋宇轩，陈灿宇，吴天昊，舒凯，程路，刘欢。2025。
+从⽣成到判断：LLM 作为裁判的机会与挑战。在《2025 年⾃然语⾔处理经验⽅法会议
+论⽂集》中。计算语⾔学协会，中国苏州，2757‒2791。
+doi:10.18653/V1/2025.EMNLP-MAIN.138 [28] 李静红，潘辉，顾⽂，太⽥浩⼀，和佐
+藤慎。2024。
+⽤于学术洞察分析的层次化树状结构知识图谱。
+在第 18 届智能系统与应⽤创新国际会议上
+INISTA 2024 会议上的相关论⽂。电⽓与电⼦⼯程师协会。
+doi:10.1109/INISTA62901.2024.10683856 [29] 李凯轩、陈森、范玲玲、冯瑞涛、刘
+汉、刘成伟、杨阳
+刘，陈⼀翔。2023。对 Java 静态应⽤安全测试（SAST）⼯具的⽐较与评估。在《第 31
+届 ACM 欧洲软件⼯程联合会议和软件⼯程基础研讨会》（ESEC/FSE '23）论⽂集。
+Association for Computing Machinery。doi:10.1145/3611643.3616262
+[30] ⽅刘，刘思妙，朱英豪，连晓丽，张丽. 2026. SecureRe-
+观众：通过增强⼤型语⾔模型进⾏安全代码审查
+安全感知微调。在 IEEE/ACM 第 48 届国际软件⼯程会议（ICSE '26）论⽂集中，第 1
+卷。doi:10.1145/3744916.3773191
+[31] Francesco Lomio，Emanuele Iannone，Andrea De Lucia，Fabio Palomba，以及
+⽡伦蒂娜·莱纳尔杜⻬。2022 年。即时软件漏洞检测：我们到达终点了吗？《系统与软
+件》杂志，2022 年，第 188 期，111283。doi:10.1016/j.jss.2022.111283 [32] MITRE。
+2026 年。CWE：常⻅弱点枚举。https://cwe.mitre.org/。
+访问于 2026-01-16。
+[33] 杜昂·阮、清·黎公、哲·⻩明黎、M.阿⾥·巴巴尔、奎 yet Thang Huynh. 2025. 实时漏洞预测的逼真评估. 在 2025 IEEE 国际软件维护与演进会议
+(ICSME). 1‒10. doi:10.1109/ICSME64153.2025.00023
+[34] 汤阮、Thu-Trang Nguyen、Thanh Trong Vu、Thanh-Dat Do、Kien-Tuan
+Ngo, 和 Hieu Dinh Vo. 2024. 以代码为中⼼的学习型实时漏洞检测. J. Syst. Softw. 214, C
+(2024 年 8 ⽉), 14 ⻚. doi:10.1016/j.jss.2024. 112014
+[35] Fabio Palomba 等⼈. 2022. Just-in-Time 软件漏洞检测：我们到达了吗？系统与软件杂
+志 (2022). [36] Sebastiano Panichella, Venera Arnaoudova, Massimiliano Di Penta, 和
+Giuliano
+Antoniol. 2015. 静态分析⼯具能否帮助开发者进⾏代码审查？
+在 2015 年 IEEE 第 22 届国际软件分析、进化和
+重构 (SANER). 161‒170. doi:10.1109/SANER.2015.7081826 [37] 卢卡·帕萨雷拉，达
+维德·斯帕迪尼，法⽐奥·帕尔博纳，⻢吉埃尔·布朗廷克和阿尔⻉托
+Bacchelli. 2018. 当代代码审查中的信息需求。在会议录
+在 ACM ⼈机交互⽅⾯的论⽂，第 2 卷。ACMPUB27 纽约，纽约，
+美国，27. doi:10.1145/3274404 [38] Rajshakhar Paul, Asif Kamal Turzo, 和
+Amiangshu Bosu. 2021. 为什么安全
+代码审查期间缺陷未被注意到？⼀项病例对照研究关于铬
+操作系统项⽬。在软件⼯程国际会议论⽂集中。
+IEEE 计算机学会，1373‒1385。doi:10.1109/ICSE43902.2021.00124 [39] 云鹏，⾦基
+燮，孟令寒，刘奎。2025。iCodeReviewer：即时
+使⽤提⽰混合证明安全代码审查。(10 2025)。https: //arxiv.org/abs/2510.12186v1
+[40] Chanathip Pornprasit 和 Chakkrit Kla Tantithamthavorn. 2021. JITLine: A
+更简单、更好、更快、更细粒度的即时缺陷预测。2021 年
+FSE ’26, July 05‒09, 2026, Montreal, Canada Wachiraphan Charoenwet, Kla Tantithamthavorn, Patanamon Thongtanunam, Hong Yi Lin, Minwoo Jeong, and Ming Wu
+IEEE/ACM 18th International Conference on Mining Software Repositories (MSR).
+369‒379. doi:10.1109/MSR52588.2021.00049
+[41] Devjeet Roy, Xuchao Zhang, Rashi Bhave, Chetan Bansal, Pedro Las-Casas, Ro drigo Fonseca, and Saravan Rajmohan. 2024. Exploring LLM-Based Agents for
+Root Cause Analysis. In FSE Companion - Companion Proceedings of the 32nd ACM
+International Conference on the Foundations of Software Engineering. Association
+for Computing Machinery, Inc, 208‒219. doi:10.1145/3663529.3663841
+[42] Ranjan Sapkota, Konstantinos I. Roumeliotis, and Manoj Karkee. 2025. AI
+Agents vs. Agentic AI: A Conceptual Taxonomy, Applications and Challenge.
+arXiv:2505.10468 [cs.AI] https://arxiv.org/abs/2505.10468
+[43] Devarshi Singh, Varun Ramachandra Sekar, Kathryn T. Stolee, and Brittany
+Johnson. 2017. Evaluating how static analysis tools can reduce code review
+effort. In Proceedings of IEEE Symposium on Visual Languages and Human-Centric
+Computing, VL/HCC, Vol. 2017-October. IEEE Computer Society, 101‒105. doi:10.
+1109/VLHCC.2017.8103456
+[44] Theodore Sumers, Shunyu Yao, Karthik R Narasimhan, and Thomas L Griffiths.
+2023. Cognitive architectures for language agents. Transactions on Machine
+Learning Research (2023).
+[45] Tao Sun, Jian Xu, Yuanpeng Li, Zhao Yan, Ge Zhang, Lintao Xie, Lu Geng, Zheng
+Wang, Yueyan Chen, Qin Lin, Wenbo Duan, Kaixin Sui, and Yuanshuo Zhu. 2025.
+BitsAI-CR: Automated Code Review via LLM in Practice. In Proceedings of the
+ACM SIGSOFT Symposium on the Foundations of Software Engineering. Association
+for Computing Machinery, 274‒285. doi:10.1145/3696630.3728552
+[46] Xiaobing Sun, Mingxuan Zhou, Sicong Cao, Xiaoxue Wu, Lili Bo, Di Wu, Bin Li,
+and Yang Xiang. 2025. HgtJIT: Just-in-Time Vulnerability Detection Based on
+Heterogeneous Graph Transformer. IEEE Transactions on Dependable and Secure
+Computing 22, 6 (2025), 6522‒6538. doi:10.1109/TDSC.2025.3586669
+[47] Mohammad Tahaei, Kami Vaniea, and Konstantin Beznosov. 2021. Security
+notifications in static analysis tools: Developers
+’
+atitudes, comprehension, and
+ability to act on them. In Conference on Human Factors in Computing Systems -
+Proceedings. Association for Computing Machinery. doi:10.1145/3411764.3445616
+[48] Rahim Taheri, Meysam Ghahramani, Reza Javidan, Mohammad Shojafar, Zahra
+Pooranian, and Mauro Conti. 2020. Similarity-based Android malware detection
+using Hamming distance of static binary features. Future Generation Computer
+Systems 105 (4 2020), 230‒247. doi:10.1016/J.FUTURE.2019.11.034
+[49] Xunzhu Tang, Kisub Kim, Yewei Song, Cedric Lothritz, Bei Li, Saad Ezzini, Haoye
+Tian, Jacques Klein, and Tegawendé F. Bissyandé. 2024. CodeAgent: Autonomous
+Communicative Agents for Code Review. In Proceedings of the 2024 Conference
+on Empirical Methods in Natural Language Processing, Yaser Al-Onaizan, Mohit
+Bansal, and Yun-Nung Chen (Eds.). Association for Computational Linguistics,
+Miami, Florida, USA, 11279‒11313. doi:10.18653/v1/2024.emnlp-main.632
+[50] Kla Tantithamthavorn, Yaotian Zou, Andy Wong, Michael Gupta, Zhe Wang,
+Mike Buller, Ryan Jiang, Matthew Watson, Minwoo Jeong, Kun Chen, et al.
+2026. RovoDev Code Reviewer: A Large-Scale Online Evaluation of LLM-based
+Code Review Automation at Atlassian. In Proceedings of the 48rd International
+Conference on Software Engineering (ICSE’26).
+[51] Rosalia Tufano, Luca Pascarella, Michele Tufano, Denys Poshyvanyk, and
+Gabriele Bavota. 2021. Towards Automating Code Review Activities. In Pro ceedings of the 43rd International Conference on Software Engineering (Madrid,
+Spain) (ICSE ’21). IEEE Press, 163‒174. doi:10.1109/ICSE43902.2021.00027
+[52] Junji Yu, Honglin Shu, Michael Fu, Dong Wang, Chakkrit Tantithamthavorn,
+Yasutaka Kamei, and Junjie Chen. 2025. A Preliminary Study of Large Language
+Models for Multilingual Vulnerability Detection. (2025). arXiv:2505.07376
+[53] Jun Zhu, Jing Xie, Heather Richter Lipford, and Bill Chu. 2014. Supporting secure
+programming in web applications through interactive static analysis. Journal of
+Advanced Research 5, 4 (2014), 449‒462. doi:10.1016/J.JARE.2013.11.006
+FSE '26, 2026 年 7 ⽉ 5 ⽇⾄ 9 ⽇，蒙特利尔，加拿⼤ Wachiraphan Charoenwet，Kla Tantithamthavorn，Patanamon Thongtanunam，Hong Yi Lin，Minwoo Jeong 和 Ming Wu
+IEEE/ACM 第 18 届国际软件仓库挖掘会议 (MSR).
+369‒379. doi:10.1109/MSR52588.2021.00049 [41] Devjeet Roy, Xuchao Zhang, Rashi
+Bhave, Chetan Bansal, Pedro Las-Casas, Ro drigo Fonseca, and Saravan Rajmohan. 2024. 探索基于 LLM 的智能体.
+根本原因分析。在 FSE Companion - 第 32 届 ACM 国际软件⼯程基础会议的伴侣论⽂集
+中。Association for Computing Machinery, Inc, 208‒219。
+doi:10.1145/3663529.3663841
+[42] 拉詹·萨普科塔、康斯坦丁诺斯·I·鲁梅利奥蒂斯和⻢诺吉·卡尔基。2025 年。⼈⼯智能
+智能体与⾃主 AI：概念分类、应⽤与挑战。arXiv:2505.10468 [cs.AI]
+https://arxiv.org/abs/2505.10468
+[43] Devarshi Singh，Varun Ramachandra Sekar，Kathryn T. Stolee 和 Brittany
+约翰逊。2017 年。评估静态分析⼯具如何减少代码审查
+努⼒。在 IEEE 视觉语⾔与⼈本化研讨会论⽂集中
+计算，VL/HCC，2017 年 10 ⽉卷。IEEE 计算机学会，101‒105。
+doi:10.1109/VLHCC.2017.8103456 [44] Theodore Sumers，Shunyu Yao，Karthik R
+Narasimhan，和 Thomas L Griffiths。
+2023. 语⾔智能体的认知架构。机器学习研究交易 (2023)。
+[45] 孙涛、徐健、李远鹏、赵岩、张⼽、谢林涛、耿璐、郑正
+王越岩，陈秦，段⽂博，隋凯欣，朱源硕。2025。BitsAI-CR：基于 LLM 的⾃动化代码审
+查实践。在 ACM SIGSOFT 软件⼯程基础研讨会论⽂集。Association for Computing
+Machinery，274‒285。doi:10.1145/3696630.3728552
+[46] 孙晓兵，周明轩，曹思聪，吴晓雪，薄丽丽，吴迪，李斌
+和杨翔。2025。HgtJIT：基于异构图转换器的即时漏洞检测。IEEE 可靠与安全计算汇刊
+22, 6 (2025), 6522‒6538。doi:10.1109/TDSC.2025.3586669
+[47] Mohammad Tahaei，Kami Vaniea 和 Konstantin Beznosov。2021 年。安全
+静态分析⼯具中的通知：开发者的态度、理解⼒以及
+能够对他们采取⾏动。在计算机系统⼈因学会议 -
+会议录。美国计算机协会。doi:10.1145/3411764.3445616 [48] Rahim Taheri, Meysam
+Ghahramani, Reza Javidan, Mohammad Shojafar, Zahra
+Pooranian, 和 Mauro Conti。2020。基于相似度的安卓恶意软件检测，使⽤静态⼆进制
+特征的汉明距离。未来计算机系统 105 (2020 年 4 ⽉), 230‒247。
+doi:10.1016/J.FUTURE.2019.11.034
+[49] 唐勋⽵、⾦基苏布、宋跃伟、洛特⾥茨·塞德⾥克、李蓓、萨阿德·埃⻬尼、郝烨
+Tian, Jacques Klein, 和 Tegawendé F. Bissyandé. 2024. CodeAgent: ⽤于代码审查的⾃
+主通信代理. 在第 2024 年⾃然语⾔处理经验⽅法会议论⽂集中, Yaser Al-Onaizan, Mohit
+Bansal, 和 Yun-Nung Chen (编). 计算语⾔学协会, 佛罗⾥达州迈阿密, 美国, 11279‒
+11313. doi:10.18653/v1/2024.emnlp-main.632
+[50] 克拉·坦蒂萨姆塔沃恩、邹耀天、⻩安迪、迈克尔·古普塔、王哲
+Mike Buller, Ryan Jiang, Matthew Watson, Minwoo Jeong, Kun Chen, 等. 2026.
+RovoDev 代码审查员：在 Atlassian 中基于 LLM 的代码审查⾃动化的⼤规模在线评估. 在
+第 48 届国际软件⼯程会议论⽂集 (ICSE’26) 中.
+[51] Rosalia Tufano, Luca Pascarella, Michele Tufano, Denys Poshyvanyk, 和
+Gabriele Bavota. 2021.迈向⾃动化代码审查活动. 在第 43 届国际软件⼯程会议论⽂集
+（⻢德⾥，西班⽛）（ICSE ’21）. IEEE 出版社，163‒174.
+doi:10.1109/ICSE43902.2021.00027
+[52] 于俊吉、舒洪林、傅迈克尔、王东、查克⾥特·坦蒂塔姆塔沃恩
+Kamei Yasutaka, Chen Junjie. 2025. 多语⾔漏洞检测的⼤型语⾔模型初步研究. (2025).
+arXiv:2505.07376
+[53] 钟俊，谢静，Heather Richter Lipford，和朱斌。2014 年。⽀持安全
+通过交互式静态分析进⾏ Web 应⽤程序编程。《⾼级研究杂志》5, 4 (2014), 449‒462。
+doi:10.1016/J.JARE.2013.11.006

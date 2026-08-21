@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: 安装依赖（tree-sitter 可选插件）
+        run: npm ci
+      - name: 单元测试（node:test）
+        run: npm test
+      - name: 基准集校准（离线）
+        run: node scripts/calibrate.ts
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 安装 PyMuPDF（PDF 解析链）
+        run: pip install pymupdf --quiet
+      - name: PDF 提取链自检
+        run: python scripts/tools/pdf-extract.py examples/fixtures/sample-paper.pdf | python -c "import json,sys; j=json.load(sys.stdin); assert j['total_pages']==6; print('PDF OK')"
+      - name: 报告 Schema 校验
+        run: |
+          node scripts/cli.ts validate examples/example-review.json
+          node scripts/cli.ts validate examples/github-review/review.json
+          node scripts/cli.ts validate examples/paper-review/review.json

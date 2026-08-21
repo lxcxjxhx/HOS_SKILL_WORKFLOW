@@ -1,0 +1,49 @@
+{
+  "title": "From Trace to Line: LLM Agent for Real-World OSS Vulnerability Localization",
+  "arxivId": "2510.02389",
+  "venue": "arXiv",
+  "authors": "Haoran Xi 等 (NYU)",
+  "submitted": "2025-09-30",
+  "score": 67.8,
+  "rankEmoji": "🟡",
+  "rankLabel": "有亮点有硬伤 · 实验拖累",
+  "tags": ["崩溃调试助手", "无SOTA对比", "无FPR报告"],
+  "position": { "rank": 2, "total": 3 },
+  "beatPercent": 33.3,
+  "nextRank": { "label": "方法论扎实", "diff": 2.2 },
+  "dimensions": [
+    { "key": "novelty", "label": "新颖性", "score": 9.0, "max": 20, "note": "行级定位目标有增量，但 AST 分块+证据引导为既有组件拼接" },
+    { "key": "rigor", "label": "严谨性", "score": 11.0, "max": 25, "note": "无 SOTA 对比、无 FPR，50 案例孤证" },
+    { "key": "contribution", "label": "贡献度", "score": 14.0, "max": 20, "note": "ATA 运行时证据融合有实用价值" },
+    { "key": "repro", "label": "可复现性", "score": 10.5, "max": 15, "note": "仓库/模型配置未公开" },
+    { "key": "clarity", "label": "清晰度", "score": 8.0, "max": 10, "note": "五类崩溃族划分清晰" },
+    { "key": "impact", "label": "影响力", "score": 8.0, "max": 10, "note": "面向真实 OSS 工作流" }
+  ],
+  "highlights": [
+    "50 例真实 OSS 专家验证基准 T2L-ARVO",
+    "ATA 融合崩溃点/栈追踪的运行时证据思路"
+  ],
+  "methods": [
+    "渐进式范围缩小：模块→文件→函数→行",
+    "tree-sitter AST 分块 + 证据引导精炼",
+    "Agentic Trace Analyzer 运行时证据融合"
+  ],
+  "similarPapers": [
+    { "title": "MultiVer", "score": 37.1, "tag": "画靶射箭型" },
+    { "title": "LLMPFA", "score": 43.5, "tag": "样本贫血" }
+  ],
+  "roastFull": "T2L 号称可部署的行级漏洞定位，实则绑死崩溃点——不崩溃的注入、认证绕过、逻辑漏洞它一个都碰不到，本质是个崩溃调试助手。58% 检测率意味着一半以上漏洞没找到，还全程不报 FPR。50 个案例、零 SOTA 对比，数字孤证自嗨。",
+  "oneLiner": "定位全靠崩溃点，未崩即出局；58% 检测率也敢称可部署。",
+  "riskFlags": ["RVE-EVAL-0003 无 FPR", "RVE-BENCH-0005 绑死崩溃证据", "RVE-REPRO-0009 闭源"],
+  "suggestions": [
+    "补 FPR 与完整混淆矩阵",
+    "引入 2-3 个 SOTA 定位基线",
+    "对非崩溃型漏洞单独评测",
+    "开源仓库与模型配置"
+  ],
+  "evidence": [
+    "T2L-ARVO 仅 50 案例，5 类崩溃族",
+    "摘要自报 detection 58.0% / line-level 54.8%",
+    "论文未报告 FPR（§9.2.2 自认）"
+  ]
+}

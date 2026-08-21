@@ -1,0 +1,21 @@
+{
+  "owner": "octocat",
+  "repo": "Hello-World",
+  "fetched_at": "2026-08-01T10:00:00Z",
+  "url": "https://github.com/octocat/Hello-World",
+  "license": "MIT",
+  "description": "My first repository on GitHub!",
+  "metrics": {
+    "days_since_push": 400,
+    "days_since_created": 8000,
+    "stars": 3741,
+    "forks": 2000,
+    "open_issues": 15,
+    "archived": false,
+    "issue_health": 0.6,
+    "pr_merge_median_hours": 200,
+    "bus_factor_pct": 90,
+    "release_pace": null,
+    "star_per_year": 170
+  }
+}

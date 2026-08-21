@@ -1,0 +1,25 @@
+{
+  "name": "hos-argo-preset",
+  "version": "1.0.0",
+  "description": "ARGO × 天琴座 Haruki 创意写作预设系统 — TypeScript 结构化 prompt chain 组装器",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "sillytavern",
+    "preset",
+    "argo",
+    "creative-writing",
+    "prompt-engineering",
+    "haruki"
+  ],
+  "author": "lxcxjxhx",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "schema_version": "1.0",
+  "report_id": "rr-20260802-c3d4e5",
+  "target": {
+    "object_id": "obj-9f3c21",
+    "type": "paper",
+    "domain": "malware-detection / deep-learning",
+    "complexity": "low",
+    "size_estimate": { "bytes": 2343, "files": 1, "pages": null, "tokens": 1600 },
+    "source": { "kind": "path", "url": "examples/fixtures/sample-paper.md" },
+    "meta": { "title": "CAMEL-GRU：基于门控循环单元的轻量级恶意软件分类框架", "author": null, "year": null, "venue": "IEEE 某会议（未署名）" },
+    "signals": ["paper-structure", "has-abstract", "has-references"],
+    "confidence": 0.9,
+    "degradations": []
+  },
+  "score": {
+    "score": 54,
+    "grade": "D",
+    "grade_label": "风险",
+    "dimensions": { "technical": 6, "innovation": 5, "engineering": 5, "ecosystem": 5, "risk": 5, "strategic": 6 },
+    "verdict": "SOTA 宣称无强基线支撑，数据与代码均不可得，结论可信度受限。",
+    "one_liner": "三个弱基线撑起 SOTA 宣称，代码数据全锁柜。",
+    "decision": { "learn": false, "contribute": false, "invest": false, "research": false },
+    "rationale": "technical 6：架构为哈希+GRU+注意力常见组合，描述清楚但无深度（finding-005 partial -0.4）；innovation 5：「核心创新」表述无对比支撑，无实质新技术（finding-005 partial -0.35, finding-001 verified -1.0）；engineering 5：代码/超参/数据均未公开（finding-003 verified -1.0）；ecosystem 5：未发表、引用为零、参考链接失效；risk 5：基线弱、无消融、自建数据不可得，结论可信度低（finding-001 -0.75, finding-002 -0.5, finding-004 -0.5）；strategic 6：轻量级端点检测方向有价值但本文贡献存疑。",
+    "risk_flags": ["SOTA 宣称与基线强度不匹配", "代码/数据/超参均未公开", "无消融实验"]
+  },
+  "findings": [
+    {
+      "finding_id": "finding-001",
+      "hcr_id": "HCR-EVAL-2026-0001",
+      "class": "EVAL",
+      "severity": "HIGH",
+      "title": "SOTA 宣称缺乏强基线对比",
+      "claim": "Abstract 宣称全面超越所有现有方法（SOTA），但实验仅对比 TF-IDF+SVM、随机森林、MLP 三个弱基线，未对比任何近年深度方法",
+      "evidence_draft": "§3.2 基线表仅含三个传统/浅层方法；全文未出现近年深度学习基线",
+      "unit_refs": ["unit-005"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.9,
+      "evidence_status": "verified",
+      "patch": "补充与 ≥2 个近年深度检测方法（如 Transformer 类）的对比，或删除 SOTA 表述"
+    },
+    {
+      "finding_id": "finding-002",
+      "hcr_id": "HCR-DATA-2026-0002",
+      "class": "DATA",
+      "severity": "MEDIUM",
+      "title": "自建数据集未公开，公开数据集陈旧",
+      "claim": "两个自建数据集（共 7,400 样本）来源不可核验且未公开；唯一公开数据集为 2017 年数据，时效性不足",
+      "evidence_draft": "§3.1 数据集表：Corp-Real-A/B 均标注「否」公开，来源为『某企业端点遥测』",
+      "unit_refs": ["unit-004"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.85,
+      "evidence_status": "verified",
+      "patch": "公开数据样本/脱敏说明，补充近年公开数据集"
+    },
+    {
+      "finding_id": "finding-003",
+      "hcr_id": "HCR-REPRO-2026-0003",
+      "class": "REPRO",
+      "severity": "MEDIUM",
+      "title": "代码、超参数与数据均不可得，复现为零",
+      "claim": "Abstract 明示代码与数据集暂未公开；超参数网格『正式版本中给出』；参考文献 [1] 链接已失效",
+      "evidence_draft": "Abstract 末句；§2.2『网格搜索范围与最终取值将在正式版本中给出』；§References [1]『链接已失效』",
+      "unit_refs": ["unit-001", "unit-003", "unit-007"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.9,
+      "evidence_status": "verified",
+      "patch": "开源代码与数据（至少匿名仓库），补全超参与有效引用"
+    },
+    {
+      "finding_id": "finding-004",
+      "hcr_id": "HCR-EVAL-2026-0004",
+      "class": "EVAL",
+      "severity": "MEDIUM",
+      "title": "无消融实验，贡献无法归因",
+      "claim": "『哈希+GRU+注意力』三层各自贡献无实验支撑，99.2% 无法归因到具体组件",
+      "evidence_draft": "§3.3 明确『（未进行消融实验）』；无组件替换/移除对比",
+      "unit_refs": ["unit-006"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.95,
+      "evidence_status": "verified",
+      "patch": "补充消融：逐层移除特征哈希/自注意力并报告指标变化"
+    },
+    {
+      "finding_id": "finding-005",
+      "hcr_id": "HCR-CLAIM-2026-0005",
+      "class": "CLAIM",
+      "severity": "LOW",
+      "title": "「三段式结构是核心创新」表述缺乏对比支撑",
+      "claim": "CAMEL-GRU 为特征哈希+GRU+自注意力池化的常见组件组合，『核心创新』的宣称无与既有轻量级方法的对比证据",
+      "evidence_draft": "§2.1 架构描述为三个既有技术的拼接；无法证明组合方式具备新颖性（需外部检索确认）",
+      "unit_refs": ["unit-003"],
+      "analyzer": "text-heuristic",
+      "confidence": 0.6,
+      "evidence_status": "partial",
+      "patch": "补充与轻量级基线（如 MobileNet 风格时序模型、轻量 Transformer）的架构对比"
+    }
+  ],
+  "critiques": [
+    {
+      "crit_id": "crit-001",
+      "role": "reviewer2",
+      "attack_vector": "missing-baseline",
+      "thesis": "99.2% 的 SOTA 宣称建立在三个弱基线上，等于回避竞争",
+      "reasoning": "§3.2 只跟 TF-IDF+SVM、RF、MLP 比——三个方法都是十年前的主流；拿它们衬托『全面超越』，等于没跟任何近年深度方法比过",
+      "unit_refs": ["unit-005"],
+      "finding_refs": ["finding-001"],
+      "spiciness": 3
+    },
+    {
+      "crit_id": "crit-002",
+      "role": "experiment-auditor",
+      "attack_vector": "survivorship",
+      "thesis": "只报准确率与 F1 汇总值，细粒度指标缺失，无消融无法归因",
+      "reasoning": "§3.2 未报告按类别/恶意软件家族的细粒度指标；§3.3 无消融，99.2% 到底是哪一层贡献的，读者无从判断",
+      "unit_refs": ["unit-005", "unit-006"],
+      "finding_refs": ["finding-004"],
+      "spiciness": 3
+    },
+    {
+      "crit_id": "crit-003",
+      "role": "reviewer2",
+      "attack_vector": "hidden-cost",
+      "thesis": "复现成本被隐藏：代码、数据、超参、有效引用全部缺位",
+      "reasoning": "Abstract 明示不开源；超参『正式版本中给出』；参考文献 [1] 链接失效。审稿视角下，这不是『未来工作』，是当前不可复现的免责声明",
+      "unit_refs": ["unit-001", "unit-003", "unit-007"],
+      "finding_refs": ["finding-003"],
+      "spiciness": 3
+    },
+    {
+      "crit_id": "crit-004",
+      "role": "experiment-auditor",
+      "attack_vector": "recognition",
+      "thesis": "轻量级定位与延迟指标是有价值的工程视角",
+      "reasoning": "以 2.1M 参数和推理延迟 -47% 为目标而非单纯堆准确率，方向符合端点部署现实，这部分动机是成立的",
+      "unit_refs": ["unit-001", "unit-005"],
+      "finding_refs": [],
+      "spiciness": 0
+    }
+  ],
+  "degradations": [
+    "Semantic Scholar API 持续 429 限流（无 key），引用/影响力数据标记不可得",
+    "网络核验受限：『核心创新』新颖性判定为 partial（无法外部检索对比）"
+  ],
+  "meta": {
+    "duration_seconds": 130,
+    "toolchain": { "network": true, "semantic_scholar": false },
+    "output_mode": "quick",
+    "store_status": "pending"
+  }
+}

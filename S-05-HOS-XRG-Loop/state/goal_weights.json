@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "root": "构建稳定的 GitHub AI 迭代系统",
+  "last_updated": null,
+  "iterations_since_adjustment": 0,
+  "branches": {
+    "stability": {
+      "weight": 0.40,
+      "min_weight": 0.15,
+      "max_weight": 0.70
+    },
+    "usefulness": {
+      "weight": 0.40,
+      "min_weight": 0.15,
+      "max_weight": 0.70
+    },
+    "simplicity": {
+      "weight": 0.20,
+      "min_weight": 0.10,
+      "max_weight": 0.50
+    }
+  },
+  "history": []
+}

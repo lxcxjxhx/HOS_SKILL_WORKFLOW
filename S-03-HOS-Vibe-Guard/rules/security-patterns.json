@@ -1,0 +1,311 @@
+{
+  "schemaVersion": "2.0.0",
+  "description": "HOS-Vibe-Guard 安全风险模式检测库",
+
+  "severityLevels": {
+    "HARD_FAIL": "必须标记的高风险模式",
+    "SOFT_WARN": "建议检查的中风险模式",
+    "INFO": "信息性提示，仅做提醒"
+  },
+
+  "scanScope": ["source_files", "env_files", "git_history", "dependencies", "config_files"],
+
+  "patterns": [
+    {
+      "id": "api_key_hardcoded",
+      "severity": "HARD_FAIL",
+      "title": "API Key 硬编码",
+      "description": "API 密钥直接写入源代码",
+      "detection": {
+        "regexPatterns": [
+          "api[_-]?key\\s*[:=]\\s*['\"][a-zA-Z0-9_-]{16,}['\"]",
+          "api[_-]?secret\\s*[:=]\\s*['\"][a-zA-Z0-9_-]{16,}['\"]",
+          "sk-[a-zA-Z0-9]{20,}",
+          "pk-[a-zA-Z0-9]{20,}",
+          "AKIA[0-9A-Z]{16}",
+          "SG\\.[a-zA-Z0-9_-]{22,}",
+          "xox[abpr]-[a-zA-Z0-9-]{20,}",
+          "ghp_[a-zA-Z0-9]{36}",
+          "gho_[a-zA-Z0-9]{36}",
+          "ghu_[a-zA-Z0-9]{36}"
+        ]
+      },
+      "context": "API 密钥硬编码在代码中，版本控制系统将永久记录这些密钥",
+      "risk": "密钥泄露导致未授权访问、资源滥用、数据泄露",
+      "recommendation": "使用环境变量或密钥管理服务（AWS Secrets Manager / Vault / 1Password CLI）",
+      "codeExample": "# ❌ 不推荐\nconst API_KEY = 'sk-xxx...'\n\n# ✅ 推荐\nconst API_KEY = process.env.API_KEY\n# 或使用密钥管理服务\nconst secret = await secretsManager.getSecret('api/prod/key')"
+    },
+
+    {
+      "id": "token_hardcoded",
+      "severity": "HARD_FAIL",
+      "title": "Token 硬编码",
+      "description": "认证 Token 直接出现在源代码中",
+      "detection": {
+        "regexPatterns": [
+          "token\\s*[:=]\\s*['\"][A-Za-z0-9._-]{8,}['\"]",
+          "jwt\\s*[:=]\\s*['\"][A-Za-z0-9._-]{20,}['\"]",
+          "bearer\\s+['\"][A-Za-z0-9._-]+['\"]",
+          "access_token\\s*[:=]\\s*['\"][^'\"]{8,}['\"]",
+          "refresh_token\\s*[:=]\\s*['\"][^'\"]{8,}['\"]"
+        ]
+      },
+      "context": "Token 硬编码在代码中，包含 JWT、OAuth token、access token 等",
+      "risk": "Token 泄露导致账户接管、权限提升",
+      "recommendation": "使用短期 Token + refresh token 轮换机制，存储在安全位置",
+      "codeExample": "# ❌ 不推荐\nconst TOKEN = 'eyJhbGciOiJIUzI1NiIs...'\n\n# ✅ 推荐\nconst token = await authService.getToken()\n// 使用 httpOnly cookie 存储"
+    },
+
+    {
+      "id": "password_hardcoded",
+      "severity": "HARD_FAIL",
+      "title": "密码硬编码",
+      "description": "密码明文出现在代码中",
+      "detection": {
+        "regexPatterns": [
+          "password\\s*[:=]\\s*['\"][^'\"\\s]{1,}['\"]",
+          "passwd\\s*[:=]\\s*['\"][^'\"\\s]{1,}['\"]",
+          "pwd\\s*[:=]\\s*['\"][^'\"\\s]{1,}['\"]",
+          "db_password\\s*[:=]\\s*['\"][^'\"]+['\"]",
+          "postgres://[^:]+:[^@]+@",
+          "mysql://[^:]+:[^@]+@"
+        ]
+      },
+      "context": "数据库密码、服务密码等硬编码在配置或代码中",
+      "risk": "数据库/服务凭证泄露导致数据泄露",
+      "recommendation": "使用密钥管理服务或环境变量注入",
+      "codeExample": "# ❌ 不推荐\nDATABASE_URL='postgresql://admin:password123@localhost:5432/db'\n\n# ✅ 推荐\nDATABASE_URL=process.env.DATABASE_URL\n# .env 文件不提交到 git"
+    },
+
+    {
+      "id": "localstorage_token",
+      "severity": "SOFT_WARN",
+      "title": "Token 存入 localStorage",
+      "description": "认证 Token/敏感信息存储在前端 localStorage",
+      "detection": {
+        "regexPatterns": [
+          "localStorage\\.setItem\\(.*token",
+          "localStorage\\.setItem\\(.*auth",
+          "localStorage\\.setItem\\(.*session",
+          "localStorage\\.setItem\\(.*jwt",
+          "localStorage\\.getItem\\(.*token",
+          "sessionStorage\\.setItem\\(.*token"
+        ]
+      },
+      "context": "存储在 localStorage 的数据可被同源任何 JavaScript 访问（包括 XSS 注入的脚本）",
+      "risk": "XSS 攻击可窃取 localStorage 中的 Token，导致账户 takeover",
+      "recommendation": "使用 httpOnly Secure SameSite Cookie 存储 Token，或使用内存存储 + BFF 模式",
+      "codeExample": "// ❌ 不推荐\nlocalStorage.setItem('token', jwt)\n\n// ✅ 推荐（后端设置 httpOnly cookie）\nSet-Cookie: token=...; HttpOnly; Secure; SameSite=Strict\n\n// ✅ 或使用 BFF (Backend for Frontend)\n// 前端不直接持有 token，通过后端代理请求"
+    },
+
+    {
+      "id": "pii_in_code",
+      "severity": "SOFT_WARN",
+      "title": "个人身份信息泄露",
+      "description": "真实个人数据出现在代码/测试数据中",
+      "detection": {
+        "regexPatterns": [
+          "1[3-9]\\d{9}",
+          "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
+          "\\d{17}[\\dXx]",
+          "(?:\\d{4}[-\\.]?){3}\\d{4}"
+        ]
+      },
+      "detectionNote": "注意：此模式在代码中匹配时需要上下文确认，避免误报",
+      "context": "真实手机号、邮箱、身份证号、信用卡号在代码/测试数据中出现",
+      "risk": "PII 泄露违反数据保护法规（GDPR/PIPL/CCPA）",
+      "recommendation": "使用 Faker 库生成测试数据，对真实 PII 进行脱敏/tokenization",
+      "codeExample": "// ❌ 不推荐\nconst testUser = { name: '张三', phone: '13800138000', idCard: '110101199001011234' }\n\n// ✅ 推荐\nimport { faker } from '@faker-js/faker'\nconst testUser = { \n  name: faker.name.findName(), \n  phone: faker.phone.number(),\n  idCard: faker.helpers.replaceSymbolWithNumber('##############')\n}"
+    },
+
+    {
+      "id": "env_in_git",
+      "severity": "HARD_FAIL",
+      "title": ".env 文件被 git 跟踪",
+      "description": "环境变量文件被提交到版本控制系统",
+      "detection": {
+        "filePatterns": [
+          ".env",
+          ".env.*",
+          "*.key",
+          "*.pem",
+          "*.secret",
+          "credentials.json",
+          "config.json"
+        ],
+        "contextCheck": "检查 .gitignore 是否排除这些文件"
+      },
+      "context": "环境变量文件包含密钥/密码/Token，不应出现在 git 历史中",
+      "risk": "一旦提交，即使后续删除，历史中仍可找到",
+      "recommendation": "立即从 git 历史移除（git-filter-repo），确保 .gitignore 包含 .env",
+      "codeExample": "# .gitignore 必须包含\n.env\n.env.local\n.env.*.local\n*.key\n*.pem\n\n# ❌ 如果不小心提交了\n# 立即使用 git-filter-repo 从历史移除\n# git filter-repo --path .env --invert-paths"
+    },
+
+    {
+      "id": "no_https",
+      "severity": "SOFT_WARN",
+      "title": "非 HTTPS 通信",
+      "description": "API 调用或数据传输使用 HTTP 而非 HTTPS",
+      "detection": {
+        "regexPatterns": [
+          "http://[^:]+:\\d+",
+          "fetch\\(['\"]http://",
+          "axios\\.(get|post|put|delete)\\(['\"]http://",
+          "http\\.get\\(|http\\.request\\("
+        ],
+        "excludePatterns": [
+          "localhost",
+          "127.0.0.1",
+          "0.0.0.0"
+        ]
+      },
+      "context": "生产环境应始终使用 HTTPS 加密传输",
+      "risk": "中间人攻击可窃听/篡改通信内容",
+      "recommendation": "所有生产 API 强制使用 HTTPS，使用 HSTS 头",
+      "codeExample": "// ❌ 不推荐\nfetch('http://api.example.com/data')\n\n// ✅ 推荐\nfetch('https://api.example.com/data')\n\n// 服务器端\napp.use(helmet())\napp.use(helmet.hsts({ maxAge: 31536000 }))"
+    },
+
+    {
+      "id": "no_input_validation",
+      "severity": "SOFT_WARN",
+      "title": "缺少输入验证",
+      "description": "用户输入直接用于 SQL 查询或 HTML 渲染（SQL 注入/XSS 风险）",
+      "detection": {
+        "regexPatterns": [
+          "execute\\(.*\\+.*req\\.|\\$\\{.*req\\.|f\\(.*req\\.body",
+          "innerHTML\\s*=\\s*req|innerHTML\\s*=\\s*params|innerHTML\\s*=\\s*body",
+          "dangerouslySetInnerHTML"
+        ]
+      },
+      "context": "用户输入直接拼接到 SQL/HTML 中",
+      "risk": "SQL Injection、XSS、Command Injection",
+      "recommendation": "使用参数化查询/ORM、输出编码、Content-Security-Policy",
+      "codeExample": "// ❌ 不推荐\nconst sql = `SELECT * FROM users WHERE id = ${req.params.id}`\n\n// ✅ 推荐\nconst users = await db.query('SELECT * FROM users WHERE id = $1', [req.params.id])\n\n// ❌ 不推荐\ndocument.getElementById('output').innerHTML = userInput\n\n// ✅ 推荐\ndocument.getElementById('output').textContent = userInput"
+    },
+
+    {
+      "id": "weak_crypto",
+      "severity": "SOFT_WARN",
+      "title": "弱加密算法",
+      "description": "使用已知弱点的加密/哈希算法",
+      "detection": {
+        "regexPatterns": [
+          "MD5|md5\\(", "SHA1|sha1\\(", "DES_|des_", "ECB",
+          "crypto\\.createHash\\(['\"]md5['\"]",
+          "crypto\\.createHash\\(['\"]sha1['\"]"
+        ]
+      },
+      "context": "使用已不安全的加密算法处理敏感数据",
+      "risk": "加密强度不足导致数据可被破解",
+      "recommendation": "使用 SHA-256/256、AES-256-GCM、Argon2/bcrypt 等现代算法",
+      "codeExample": "// ❌ 不推荐\nconst hash = crypto.createHash('md5').update(password).digest('hex')\n\n// ✅ 推荐\nconst hash = await bcrypt.hash(password, 12)\n// 或\nconst hash = crypto.createHash('sha256').update(data).digest('hex')"
+    },
+
+    {
+      "id": "cors_wildcard_with_credentials",
+      "severity": "SOFT_WARN",
+      "title": "CORS 配置过于宽松",
+      "description": "同时使用通配符 Origin 和 credentials",
+      "detection": {
+        "regexPatterns": [
+          "Access-Control-Allow-Origin:\\s*\\*",
+          "Access-Control-Allow-Credentials:\\s*true"
+        ]
+      },
+      "context": "同时设置 CORS 通配符和允许凭据是不安全的，浏览器会忽略此配置",
+      "risk": "跨站请求伪造（CSRF）、数据泄露",
+      "recommendation": "明确指定允许的 Origin，不使用通配符",
+      "codeExample": "// ❌ 不推荐\napp.use(cors({ origin: '*', credentials: true }))\n\n// ✅ 推荐\napp.use(cors({ origin: ['https://example.com'], credentials: true }))"
+    },
+
+    {
+      "id": "debug_info_production",
+      "severity": "SOFT_WARN",
+      "title": "生产环境调试信息泄露",
+      "description": "错误处理可能暴露敏感信息或堆栈跟踪",
+      "detection": {
+        "regexPatterns": [
+          "stack\\s*trace", "console\\.log\\(err|error",
+          "process\\.env", "NODE_ENV\\s*!==\\s*['\"]production['\"]"
+        ]
+      },
+      "context": "生产环境暴露内部信息有助于攻击者了解系统架构",
+      "risk": "信息泄露辅助进一步攻击",
+      "recommendation": "使用结构化错误响应，不暴露内部细节"
+    },
+
+    {
+      "id": "sql_injection_vulnerable",
+      "severity": "HARD_FAIL",
+      "title": "SQL 注入漏洞",
+      "description": "直接拼接 SQL 查询，存在注入风险",
+      "detection": {
+        "regexPatterns": [
+          "SELECT\\s+.*\\s+FROM\\s+.*WHERE\\s+.*\\+",
+          "INSERT\\s+INTO\\s+.*VALUES\\s*\\(.*\\+",
+          "UPDATE\\s+.*SET\\s+.*\\+",
+          "DELETE\\s+FROM\\s+.*\\+",
+          "`SELECT.*\\$\\{",
+          "`INSERT.*\\$\\{",
+          "`UPDATE.*\\$\\{"
+        ]
+      },
+      "context": "用户输入直接拼接到 SQL 语句中",
+      "risk": "SQL 注入导致数据泄露、数据损毁、权限提升",
+      "recommendation": "始终使用参数化查询或 ORM",
+      "codeExample": "// ❌ 不推荐\nconnection.query(`SELECT * FROM users WHERE id = ${id}`)\n\n// ✅ 推荐\nconnection.query('SELECT * FROM users WHERE id = ?', [id])"
+    }
+  ],
+
+  "contextualChecks": [
+    {
+      "id": "test_data_real_pii",
+      "description": "检查测试数据是否使用真实个人信息",
+      "indicators": [
+        "测试数据中包含 '张三'、'李四' 等真实姓氏",
+        "测试手机号格式为真实号段",
+        "测试包含完整地址或身份证号"
+      ],
+      "recommendation": "使用 faker.js、Faker (Python) 等工具生成测试数据"
+    },
+    {
+      "id": "env_file_git_tracked",
+      "description": "检查 .env 类型文件是否被 git 跟踪",
+      "check": "git ls-files | grep -E '^\\.env'",
+      "recommendation": "将 .env 加入 .gitignore，使用 git-filter-repo 清理历史"
+    },
+    {
+      "id": "secrets_in_public_repo",
+      "description": "检查公开仓库是否有密钥泄露",
+      "check": "检查仓库是否为公开，以及是否包含敏感文件",
+      "recommendation": "使用 git-secrets、truffleHog 等工具扫描历史"
+    }
+  ],
+
+  "safePractices": {
+    "secretsManagement": [
+      "使用环境变量（process.env）而非硬编码",
+      "使用密钥管理服务（AWS Secrets Manager / HashiCorp Vault / Azure Key Vault）",
+      "使用 .env 文件 + .env.example 模板 + .gitignore",
+      "CI/CD 使用 Secrets 注入而非文件"
+    ],
+    "dataProtection": [
+      "PII 数据加密存储（AES-256-GCM）",
+      "传输层强制 TLS 1.2+",
+      "敏感数据脱敏/tokenization",
+      "测试数据使用 Faker 生成"
+    ],
+    "frontendSecurity": [
+      "Token 存储使用 httpOnly Cookie 而非 localStorage",
+      "Content-Security-Policy 头",
+      "X-Content-Type-Options: nosniff",
+      "X-Frame-Options: DENY"
+    ],
+    "dependencySecurity": [
+      "定期 npm audit / pip audit / cargo audit",
+      "使用 Dependabot / Renovate 自动更新",
+      "锁定依赖版本（lockfile）",
+      "避免使用已知漏洞的依赖版本"
+    ]
+  }
+}
