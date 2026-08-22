@@ -1,0 +1,41 @@
+{
+  "name": "hos-cad-builder",
+  "version": "1.0.0",
+  "description": "MCP Agent Skill for AI-driven CAD model generation, modification, validation, and export via build123d",
+  "main": "dist/index.js",
+  "bin": {
+    "hos-cad-builder": "./bin/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "test": "node --test dist/**/*.test.js",
+    "lint": "tsc --noEmit",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "cad",
+    "build123d",
+    "mcp",
+    "3d-modeling",
+    "step",
+    "stl",
+    "agent-skill",
+    "hos"
+  ],
+  "author": "HOS Team",
+  "license": "AGPL-3.0",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
