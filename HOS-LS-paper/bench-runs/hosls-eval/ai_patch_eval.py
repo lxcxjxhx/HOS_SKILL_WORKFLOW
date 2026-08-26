@@ -59,7 +59,9 @@ def llm_chat(messages, max_tokens=2048, temperature=0.2, timeout=180):
     r = requests.post(API_URL,
                       headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
                       json={"model": API_MODEL, "messages": messages, "max_tokens": max_tokens,
-                            "temperature": temperature},
+                            "temperature": temperature,
+                            **({"service_tier": os.environ["HOSLS_SERVICE_TIER"]}
+                               if os.environ.get("HOSLS_SERVICE_TIER") else {})},
                       verify=False, timeout=timeout)
     if r.status_code != 200:
         print(f"[llm] HTTP {r.status_code}: {r.text[:200]}")
