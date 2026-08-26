@@ -1,0 +1,333 @@
+[
+ {
+  "iid": "sqli_01",
+  "dur": 372.65257,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 3,
+  "sqli_hit": 3,
+  "rules": [
+   "SQL注入漏洞 - 在exportRoutines方法中直接拼接数据库对象名到SQL查询",
+   "SQL注入漏洞 - 在exportRoutines方法中直接拼接函数名到SQL查询"
+  ]
+ },
+ {
+  "iid": "sqli_02",
+  "dur": 597.329419,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sqli_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_03",
+  "dur": 707.126731,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞 - 用户ID直接拼接SQL查询"
+  ]
+ },
+ {
+  "iid": "sqli_04",
+  "dur": 317.307743,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 2,
+  "sqli_hit": 2,
+  "rules": [
+   "SQL注入漏洞 - 通过GET参数group_id直接拼接SQL查询",
+   "SQL注入漏洞 - 通过GET参数group_id在多个SQL查询中直接拼接"
+  ]
+ },
+ {
+  "iid": "sqli_05",
+  "dur": 440.710656,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入 - 用户输入直接拼接到SQL查询"
+  ]
+ },
+ {
+  "iid": "sqli_06",
+  "dur": 214.32057,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞 - 通过fmt.Sprintf拼接用户输入构造ORDER BY子句"
+  ]
+ },
+ {
+  "iid": "sqli_07",
+  "dur": 397.688678,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 2,
+  "sqli_hit": 2,
+  "rules": [
+   "SortOrder函数中的SQL注入",
+   "OrderAndPaginate函数中的SQL注入"
+  ]
+ },
+ {
+  "iid": "sqli_08",
+  "dur": 331.526645,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "ExportExcel函数中SQL注入漏洞"
+  ]
+ },
+ {
+  "iid": "sqli_09",
+  "dur": 318.669708,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 2,
+  "sqli_hit": 2,
+  "rules": [
+   "SQL注入漏洞 - 用户输入直接拼接到LIKE查询中",
+   "SQL注入漏洞 - 用户输入直接拼接到ORDER BY子句中"
+  ]
+ },
+ {
+  "iid": "sqli_10",
+  "dur": 249.092536,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞 - 用户输入直接拼接到SQL查询中"
+  ]
+ },
+ {
+  "iid": "sqli_11",
+  "dur": 765.063965,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sqli_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_12",
+  "dur": 632.174919,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sqli_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_13",
+  "dur": 273.872614,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞 - 表名直接拼接SQL查询"
+  ]
+ },
+ {
+  "iid": "sqli_14",
+  "dur": 420.564266,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 2,
+  "sqli_hit": 2,
+  "rules": [
+   "SQL注入 - 用户ID直接拼接SQL查询",
+   "SQL注入 - 查询字符串直接传递给数据库执行"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_131",
+  "dur": 226.699544,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入（ORDER BY子句）"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_132",
+  "dur": 333.018733,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 3,
+  "sqli_hit": 3,
+  "rules": [
+   "SQL注入漏洞 - SortOrder函数中直接拼接用户输入",
+   "SQL注入漏洞 - SortOrder函数中orderDirection直接拼接"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_141",
+  "dur": 537.888126,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 6,
+  "sqli_hit": 6,
+  "rules": [
+   "SortOrder函数中sort_by参数直接拼接导致SQL注入",
+   "SortOrder函数中order参数直接拼接导致SQL注入"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_142",
+  "dur": 409.126739,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 4,
+  "sqli_hit": 4,
+  "rules": [
+   "SortOrder函数中的SQL注入",
+   "OrderAndPaginate函数中的SQL注入"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_151",
+  "dur": 273.034125,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "ExportExcel函数中SQL注入漏洞"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_152",
+  "dur": 280.834889,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "ExportExcel函数中SQL注入漏洞"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_161",
+  "dur": 151.22256,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_162",
+  "dur": 77.533451,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sqli_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_mutation_171",
+  "dur": 226.691583,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞 - 路径参数直接拼接至SQL查询"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_172",
+  "dur": 265.927576,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_181",
+  "dur": 423.294954,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_191",
+  "dur": 730.524863,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞 - 用户输入直接拼接SQL查询语句"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_192",
+  "dur": 490.03539,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞 - 在/section/:id路由中直接拼接用户输入"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_201",
+  "dur": 243.406126,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入 - 表名直接拼接SQL查询"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_202",
+  "dur": 251.286112,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 2,
+  "sqli_hit": 2,
+  "rules": [
+   "SQL注入漏洞 - addNote函数中直接拼接用户输入构造SQL语句",
+   "SQL注入漏洞 - addTest函数中直接拼接用户输入构造SQL语句"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_211",
+  "dur": 230.489855,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sqli_hit": 1,
+  "rules": [
+   "SQL注入漏洞 - 用户ID直接拼接到SQL查询"
+  ]
+ }
+]
