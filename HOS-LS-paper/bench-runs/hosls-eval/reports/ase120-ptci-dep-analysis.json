@@ -1,0 +1,192 @@
+[
+ {
+  "iid": "commandi_02",
+  "type": "Command Injection",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "命令注入"
+  ]
+ },
+ {
+  "iid": "commandi_04",
+  "type": "Command Injection",
+  "patched_finds": 0,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "commandi_05",
+  "type": "Command Injection",
+  "patched_finds": 5,
+  "patched_conf": 5,
+  "rules": [
+   "命令注入 - 文件路径拼接后直接用于exec调用"
+  ]
+ },
+ {
+  "iid": "commandinjection_mutation_011",
+  "type": "Command Injection",
+  "patched_finds": 2,
+  "patched_conf": 2,
+  "rules": [
+   "命令注入"
+  ]
+ },
+ {
+  "iid": "commandinjection_mutation_013",
+  "type": "Command Injection",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "commandinjection_mutation_014",
+  "type": "Command Injection",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": []
+ },
+ {
+  "iid": "path_traversal_01",
+  "type": "Path Traversal",
+  "patched_finds": 2,
+  "patched_conf": 2,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "path_traversal_02",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "path_traversal_03",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "path_traversal_04",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "path_traversal_05",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "path_traversal_06",
+  "type": "Path Traversal",
+  "patched_finds": 2,
+  "patched_conf": 1,
+  "rules": []
+ },
+ {
+  "iid": "path_traversal_07",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "path_traversal_08",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "pathtraversal_09",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "pathtraversal_10",
+  "type": "Path Traversal",
+  "patched_finds": 4,
+  "patched_conf": 4,
+  "rules": [
+   "路径遍历 - 用户头像上传功能中不充分的路径过滤"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_351",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "路径遍历漏洞（URL编码绕过）"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_352",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "pathtraversal_mutation_383",
+  "type": "Path Traversal",
+  "patched_finds": 3,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "pathtraversal_mutation_391",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "pathtraversal_mutation_392",
+  "type": "Path Traversal",
+  "patched_finds": 0,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "pathtraversal_mutation_401",
+  "type": "Path Traversal",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_402",
+  "type": "Path Traversal",
+  "patched_finds": 4,
+  "patched_conf": 4,
+  "rules": [
+   "路径遍历漏洞（读取用户头像文件）"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_403",
+  "type": "Path Traversal",
+  "patched_finds": 2,
+  "patched_conf": 2,
+  "rules": [
+   "路径遍历漏洞 - 文件读取"
+  ]
+ }
+]

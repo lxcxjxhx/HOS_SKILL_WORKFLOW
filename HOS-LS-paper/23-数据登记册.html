@@ -38,7 +38,7 @@
 </head>
 <body>
 <header>
-  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v9 · 2026-08-27</span></h1>
+  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v10 · 2026-08-27</span></h1>
   <div class="sub">唯一数据源登记：此后每次实验/修复/PR 结束后更新本册（更新规则见页脚）。研究主线：面向 AI 生成代码变更的可归因、可证伪漏洞验证 —— (R_before, task, Δ_AI, R_after)</div>
 </header>
 <main>
@@ -192,6 +192,10 @@
         （ORDER BY/group_id/表名/参数拼接类 SQLi 残留；通过 9：sqli_01/06/09/10/13 + mutation_141/161/171/172）</td></tr>
     <tr><td><b>DEP 跨数据集汇总（V4-Flash 时代）</b></td><td>A.S.E 27=30%（mimo）、XSS=57%（8/14）、SQLI=65.4%（17/26）
         —— <b>合计 25/40 = 62.5% AI 生成修复被差分验证拒绝</b>：AI 修复不完整是普遍现象（核心论文证据）</td></tr>
+    <tr><td><b>PT+CI DEP（24 个 CONFIRMED）</b></td><td><b>13/24（54.2%）残留</b>（命令注入 4/6 + 路径遍历 9/18：
+        URL 编码绕过/头像上传/文件读取类残留）</td></tr>
+    <tr><td><b>DEP 全类最终汇总</b></td><td>A.S.E27=30%（mimo）· XSS=57.1% · SQLI=65.4% · PT+CI=54.2% ——
+        <b>V4-Flash 时代合计 38/64 = 59.4%</b>（四类漏洞全覆盖，64 次修复验证）</td></tr>
     <tr><td><b>模型对照结论（路线 #5 实证）</b></td><td>同一批 XSS 文件：mimo 0/3 → V4-Flash 14/17 ——
         <b>模型选择是检出率的第一驱动因素</b>；xss_04/06/07/08/10 + 9 个 mutation 全部 CONFIRMED（含存储型/反射型/DOM XSS）</td></tr>
     <tr><td><b>XSS DEP（14 个 CONFIRMED 的 Δ_AI 修复验证）</b></td><td><b>8/14（57%）AI 修复被差分验证拒绝</b>——
