@@ -38,7 +38,7 @@
 </head>
 <body>
 <header>
-  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v7 · 2026-08-27</span></h1>
+  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v8 · 2026-08-27</span></h1>
   <div class="sub">唯一数据源登记：此后每次实验/修复/PR 结束后更新本册（更新规则见页脚）。研究主线：面向 AI 生成代码变更的可归因、可证伪漏洞验证 —— (R_before, task, Δ_AI, R_after)</div>
 </header>
 <main>
@@ -156,6 +156,16 @@
     <tr><td>合计</td><td colspan="2"></td><td></td><td><b>3/5 (60%)</b></td><td>2/3</td><td><b>1 CONFIRMED / 19 文件</b></td></tr>
   </table>
   <div class="note">S1 全量（K=50）定位 9/9；top-3 压缩后 3/5 —— 与 Locate@K 消融一致。VulnGym 全量 AI 层待预算充足后补跑（§8）。</div>
+
+  <h2>6.6 VulnGym 全量 AI 层（V4-Flash，2026-08-27 重扫）</h2>
+  <table>
+    <tr><th>指标</th><th>mimo 时代</th><th>V4-Flash</th></tr>
+    <tr><td>CONFIRMED 条目</td><td>1/5</td><td><b>7/9</b>（00057 XSS 5、00080 CI/SSRF 6、00081 2、00392 SSRF 5、00394 1、00446 3、00062 1）</td></tr>
+    <tr><td>GT 文件内 CONFIRMED</td><td>0</td><td><b>00057 RichTextInput 存储型 XSS ✓、00080 client.go SSRF ✓、00394 director.py SSRF ✓、00081 manager.go 输入验证 ✓</b></td></tr>
+    <tr><td>SAL top-3 定位</td><td>3/5</td><td>6/9（00325 langflow worktree 超时失败）</td></tr>
+  </table>
+  <div class="note">SAL→AI 链路在真实仓库端到端打通：sink 锚定候选 → V4-Flash 7-agent 确认（含 GT 文件内命中）。
+  00389 MLflow/00430 adk 未确认；00325 langflow 基建限制（4908 文件 checkout 超时）。</div>
 
   <h2>6.5 A.S.E 120 全量（第二轮 · 2026-08-27）</h2>
   <table>

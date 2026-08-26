@@ -149,6 +149,18 @@ mutation 8/10）+ CI 6/11（commandi_02/04/05 完整文件命中 + mutation_011/
 > 一致率 61.7%；25 个实例 7-agent 检出而裸 agent 漏（含全部 CI 类 5 个）；6 个裸 agent 误报未被 7-agent 确认。
 > **多智能体（证据链/交叉验证/对抗验证）在 XSS/PT/CI 类带来 +30~37pp 增益** —— 论文"多智能体价值"的直接证据。
 
+### 3.8 VulnGym 全量 AI 层（V4-Flash 重扫，2026-08-27）
+
+| 指标 | mimo 时代 | V4-Flash |
+|---|---|---|
+| CONFIRMED 条目 | 1/5 | **7/9**（00057 XSS 5 · 00080 6 · 00081 2 · 00392 SSRF 5 · 00394 1 · 00446 3 · 00062 1） |
+| GT 文件内 CONFIRMED | 0 | **00057 RichTextInput 存储型 XSS · 00080 client.go SSRF · 00394 director.py SSRF · 00081 manager.go 输入验证** |
+| SAL top-3 定位 | 3/5 | 6/9（00325 langflow worktree 超时失败） |
+
+> **SAL→AI 链路在真实仓库端到端打通**：sink 锚定候选 → V4-Flash 7-agent 确认（含 GT 文件内命中，
+> 与 S1 静态 9/9 定位呼应）。00389 MLflow/00430 adk 未确认（候选非 GT 或上下文不足）；
+> 00325 langflow 基建限制。
+
 ## 4. 通用仓库级副线（VulnGym 10 → 本轮完成 5 条）
 ### 4.1 定位（静态，AI 扫描子集）
 
