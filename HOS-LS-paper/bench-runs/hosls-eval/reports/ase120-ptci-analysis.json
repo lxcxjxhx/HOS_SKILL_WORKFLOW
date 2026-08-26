@@ -1,0 +1,369 @@
+[
+ {
+  "iid": "commandi_01",
+  "type": "Command Injection",
+  "dur": 227.772669,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sem_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "commandi_02",
+  "type": "Command Injection",
+  "dur": 136.013474,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "命令注入"
+  ]
+ },
+ {
+  "iid": "commandi_03",
+  "type": "Command Injection",
+  "dur": 335.126451,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sem_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "commandi_04",
+  "type": "Command Injection",
+  "dur": 631.691645,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "命令注入"
+  ]
+ },
+ {
+  "iid": "commandi_05",
+  "type": "Command Injection",
+  "dur": 417.121352,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "命令注入 - 用户输入直接用于exec调用"
+  ]
+ },
+ {
+  "iid": "commandi_09",
+  "type": "Command Injection",
+  "dur": 152.187361,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sem_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "commandinjection_mutation_011",
+  "type": "Command Injection",
+  "dur": 255.963833,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 2,
+  "sem_hit": 1,
+  "rules": [
+   "命令注入",
+   "SQL注入"
+  ]
+ },
+ {
+  "iid": "commandinjection_mutation_012",
+  "type": "Command Injection",
+  "dur": 176.803205,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sem_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "commandinjection_mutation_013",
+  "type": "Command Injection",
+  "dur": 205.196193,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 0,
+  "rules": [
+   "使用pickle.loads反序列化不可信数据"
+  ]
+ },
+ {
+  "iid": "commandinjection_mutation_014",
+  "type": "Command Injection",
+  "dur": 288.728913,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "命令注入"
+  ]
+ },
+ {
+  "iid": "commandinjection_mutation_015",
+  "type": "Command Injection",
+  "dur": 295.53303,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sem_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "path_traversal_01",
+  "type": "Path Traversal",
+  "dur": 137.142243,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历"
+  ]
+ },
+ {
+  "iid": "path_traversal_02",
+  "type": "Path Traversal",
+  "dur": 348.610755,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "path_traversal_03",
+  "type": "Path Traversal",
+  "dur": 143.886987,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "path_traversal_04",
+  "type": "Path Traversal",
+  "dur": 226.386585,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历导致任意文件读取与删除"
+  ]
+ },
+ {
+  "iid": "path_traversal_05",
+  "type": "Path Traversal",
+  "dur": 159.027893,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "path_traversal_06",
+  "type": "Path Traversal",
+  "dur": 349.778393,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 3,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历漏洞",
+   "SQL注入漏洞"
+  ]
+ },
+ {
+  "iid": "path_traversal_07",
+  "type": "Path Traversal",
+  "dur": 152.160405,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "path_traversal_08",
+  "type": "Path Traversal",
+  "dur": 325.089142,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "pathtraversal_09",
+  "type": "Path Traversal",
+  "dur": 288.596716,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "pathtraversal_10",
+  "type": "Path Traversal",
+  "dur": 409.882629,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 2,
+  "sem_hit": 2,
+  "rules": [
+   "路径遍历漏洞 - get_pfp函数中用户输入直接拼接到文件路径",
+   "路径遍历漏洞 - get_banner函数中用户输入直接拼接到文件路径"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_351",
+  "type": "Path Traversal",
+  "dur": 224.862969,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历漏洞 - 文件上传路径拼接未进行规范化验证"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_352",
+  "type": "Path Traversal",
+  "dur": 156.879454,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历漏洞"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_381",
+  "type": "Path Traversal",
+  "dur": 299.481747,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sem_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "pathtraversal_mutation_382",
+  "type": "Path Traversal",
+  "dur": 265.639834,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "sem_hit": 0,
+  "rules": []
+ },
+ {
+  "iid": "pathtraversal_mutation_383",
+  "type": "Path Traversal",
+  "dur": 259.437812,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 3,
+  "sem_hit": 1,
+  "rules": [
+   "路径遍历漏洞",
+   "命令注入漏洞"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_391",
+  "type": "Path Traversal",
+  "dur": 336.778397,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 4,
+  "sem_hit": 4,
+  "rules": [
+   "路径遍历漏洞 - save函数中用户输入直接拼接到文件路径",
+   "路径遍历漏洞 - search函数中用户输入直接拼接到文件路径"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_392",
+  "type": "Path Traversal",
+  "dur": 355.855185,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 5,
+  "sem_hit": 5,
+  "rules": [
+   "路径遍历漏洞 - file_page路由中用户输入直接用于文件路径构造",
+   "路径遍历漏洞 - list_wiki路由中用户输入直接用于文件路径遍历"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_401",
+  "type": "Path Traversal",
+  "dur": 336.364357,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 4,
+  "sem_hit": 4,
+  "rules": [
+   "路径遍历漏洞 - get_pfp接口中用户输入直接拼接到文件路径",
+   "路径遍历漏洞 - get_banner接口中用户输入直接拼接到文件路径"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_402",
+  "type": "Path Traversal",
+  "dur": 344.79704,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 4,
+  "sem_hit": 4,
+  "rules": [
+   "路径遍历漏洞 - get_pfp函数中用户输入直接拼接到文件路径",
+   "路径遍历漏洞 - get_banner函数中用户输入直接拼接到文件路径"
+  ]
+ },
+ {
+  "iid": "pathtraversal_mutation_403",
+  "type": "Path Traversal",
+  "dur": 412.790794,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 4,
+  "sem_hit": 4,
+  "rules": [
+   "路径遍历漏洞 - get_pfp函数中用户输入直接拼接到文件路径",
+   "路径遍历漏洞 - get_banner函数中用户输入直接拼接到文件路径"
+  ]
+ }
+]

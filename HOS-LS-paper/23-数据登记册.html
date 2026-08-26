@@ -38,7 +38,7 @@
 </head>
 <body>
 <header>
-  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v5 · 2026-08-27</span></h1>
+  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v6 · 2026-08-27</span></h1>
   <div class="sub">唯一数据源登记：此后每次实验/修复/PR 结束后更新本册（更新规则见页脚）。研究主线：面向 AI 生成代码变更的可归因、可证伪漏洞验证 —— (R_before, task, Δ_AI, R_after)</div>
 </header>
 <main>
@@ -171,6 +171,10 @@
     <tr><td>SQLI 7-agent 波次</td><td><b>26/30 CONFIRMED（86.7%）</b>，26/26 SQLI 语义命中 —— 真实仓库 11/14
         （miss: sqli_02/11/12）+ 变异 15/16（miss: mutation_162）；全为"用户输入直接拼接 SQL 查询"类</td></tr>
     <tr><td><b>A.S.E 120 已扫合计（V4-Flash）</b></td><td><b>XSS+SQLI = 40/50（80%）</b>；对比 mimo 时代 A.S.E 27 的 37%</td></tr>
+    <tr><td>PT+CI 波次（V4-Flash）</td><td><b>24/31 CONFIRMED（77.4%）</b>：PT 18/20（90%，path_traversal_01-10 全命中 + mutation 8/10）、
+        CI 6/11（commandi_02/04/05 + mutation_011/013/014）</td></tr>
+    <tr><td><b>A.S.E 120 全量定稿（81 有代码实例）</b></td><td><b>64/81 = 79.0% CONFIRMED</b>（XSS 14/20 · SQLI 26/30 · PT 18/20 · CI 6/11）
+        —— vs mimo 时代 A.S.E 27 的 <b>37.0%</b>，检出率翻倍以上（路线#5 实证）</td></tr>
     <tr><td><b>模型对照结论（路线 #5 实证）</b></td><td>同一批 XSS 文件：mimo 0/3 → V4-Flash 14/17 ——
         <b>模型选择是检出率的第一驱动因素</b>；xss_04/06/07/08/10 + 9 个 mutation 全部 CONFIRMED（含存储型/反射型/DOM XSS）</td></tr>
     <tr><td><b>XSS DEP（14 个 CONFIRMED 的 Δ_AI 修复验证）</b></td><td><b>8/14（57%）AI 修复被差分验证拒绝</b>——

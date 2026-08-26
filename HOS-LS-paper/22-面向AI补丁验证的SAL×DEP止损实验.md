@@ -119,6 +119,23 @@ miss sqli_02/11/12）+ 变异 15/16（miss mutation_162）；全部为"用户输
 **A.S.E 120 迄今（V4-Flash）：XSS 14/20 + SQLI 26/30 = 40/50（80%）**，对比 mimo 时代 A.S.E 27 的 37%
 —— 模型切换带来检出率翻倍以上（路线 §9-#5 实证）。剩余：Path Traversal 20 + Command Injection 11 待扫。
 
+**PT+CI 波次（V4-Flash）：24/31 CONFIRMED（77.4%）** —— PT 18/20（90%，path_traversal_01-10 全命中、
+mutation 8/10）+ CI 6/11（commandi_02/04/05 完整文件命中 + mutation_011/013/014）。
+
+### 3.6 A.S.E 120 全量定稿（2026-08-27，81 个有代码实例全部扫完）
+
+| 类 | 样本 | CONFIRMED | 率 |
+|---|---|---|---|
+| XSS | 20 | 14 | 70% |
+| SQLI | 30 | 26 | 86.7% |
+| Path Traversal | 20 | 18 | 90% |
+| Command Injection | 11 | 6 | 54.5% |
+| **合计** | **81** | **64** | **79.0%** |
+
+> **对比：mimo-v2.5-pro 时代 A.S.E 27 = 37.0% → deepseek-ai/DeepSeek-V4-Flash = 79.0%**。
+> 模型选择是第一驱动因素（路线#5"更强模型"实证）：全部 64 个 CONFIRMED 均带 7-agent 证据链，
+> Semgrep 基线（30/81 文件、117 findings）与 AI 检出互补。
+
 ## 4. 通用仓库级副线（VulnGym 10 → 本轮完成 5 条）
 ### 4.1 定位（静态，AI 扫描子集）
 
