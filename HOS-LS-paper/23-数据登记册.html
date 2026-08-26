@@ -48,7 +48,7 @@
   <div class="grid">
     <div class="card"><div class="k">GitHub key（hos-ls remote 内嵌 ghp_…）</div><div class="v ok">✅ 有效</div><div class="k">gh api user → lxcxjxhx；rate limit 5000</div></div>
     <div class="card"><div class="k">LLM key（XIAOMI_TOKEN_PLAN_CN_API_KEY, tp-…）</div><div class="v bad">⛔ 429 配额耗尽</div><div class="k">2026-08-27 起 quota exhausted（已核实稳定 429）；此前数据有效</div></div>
-    <div class="card"><div class="k">当前主力：DeepInfra（用户提供 key）</div><div class="v ok">✅ 启用</div><div class="k">api.deepinfra.com/v1/openai · deepseek-ai/DeepSeek-V4-Flash（200，2026-08-27）</div></div>
+    <div class="card"><div class="k">当前主力：DeepInfra（用户提供 key）</div><div class="v ok">✅ 启用</div><div class="k">api.deepinfra.com/v1/openai · deepseek-ai/DeepSeek-V4-Flash（200）+ <b>Flex 服务层（service_tier=flex，8 折）</b>已接入（PR#39）</div></div>
     <div class="card"><div class="k">备用：官方 DeepSeek（sk-5de8…）</div><div class="v ok">✅ 可用</div><div class="k">api.deepseek.com/v1 · deepseek-chat HTTP 200（未启用）</div></div>
     <div class="card"><div class="k">DEEPSEEK_API_KEY（sk-…）对该端点</div><div class="v bad">✗ 401</div><div class="k">必须用 tp- key；网关无余额查询 API（404）</div></div>
     <div class="card"><div class="k">代理</div><div class="v warn">7897 已死 → 7890</div><div class="k">git 需 GIT_SSL_BACKEND=openssl（schannel 握手失败）</div></div>
@@ -186,6 +186,7 @@
   <h2>8. PR / 提交登记</h2>
   <table id="t8">
     <tr><th>对象</th><th>内容</th><th>状态</th></tr>
+    <tr><td><a href="https://github.com/lxcxjxhx/HOS-LS/pull/39">HOS-LS PR#39</a> feat/deepinfra-flex</td><td>DeepInfra Flex 服务层支持（HOSLS_SERVICE_TIER=flex，8 折、超时不收费）</td><td class="tag info">OPEN · 待合</td></tr>
     <tr><td><a href="https://github.com/lxcxjxhx/HOS-LS/pull/38">HOS-LS PR#38</a> feat/ase-ai-patch-dep-eval</td><td>AI 补丁差分验证数据（47 文件 / +15,617）+ SAL 候选精化 + 代理修复</td><td class="ok">✅ MERGED（commit da02ed8, 2026-08-27）</td></tr>
     <tr><td>优化落地验证（HOS-LS main）</td><td>scripts/ai_patch_eval.py · prep_ase_samples.py · sal_sinks.json · bench-runs/datasets/ase_samples + ase_eval_reports 均在 main 上（ls-tree 核验）</td><td class="ok">✅ 落地</td></tr>
     <tr><td>优化落地验证（外层仓库）</td><td>audit_eval.py SAL 过滤（skip_parts/1.5MB/.min./bundle）已提交（git show HEAD 核验）</td><td class="ok">✅ 落地</td></tr>
