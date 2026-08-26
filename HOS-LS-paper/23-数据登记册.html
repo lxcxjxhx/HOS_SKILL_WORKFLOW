@@ -38,7 +38,7 @@
 </head>
 <body>
 <header>
-  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v10 · 2026-08-27</span></h1>
+  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v11 · 2026-08-27</span></h1>
   <div class="sub">唯一数据源登记：此后每次实验/修复/PR 结束后更新本册（更新规则见页脚）。研究主线：面向 AI 生成代码变更的可归因、可证伪漏洞验证 —— (R_before, task, Δ_AI, R_after)</div>
 </header>
 <main>
@@ -235,7 +235,7 @@
   <h2>9. 下一步路线（用户已确认 · 2026-08-27）</h2>
   <table id="t9">
     <tr><th>#</th><th>任务</th><th>目标</th><th>状态</th></tr>
-    <tr><td>1</td><td>SecureVibeBench 105 仓库多文件任务</td><td>40–60 分层全量的多文件主线（静态+动态 oracle）</td><td class="tag warn">数据落地 ✓（40/41 仓库、104/105 任务）；SAL C 静态：小仓库 19/26（73%）候选含描述关键词文件；AI 试点 5 任务/24 文件 5 CONFIRMED（工具类），GT 文件（hash.c/regexec.c）未确认 → C/C++ 内存安全检出难点；全量 SAL 静态运行中</td></tr>
+    <tr><td>1</td><td>SecureVibeBench 105 仓库多文件任务</td><td>40–60 分层全量的多文件主线（静态+动态 oracle）</td><td class="tag warn">数据落地 ✓（40/41 仓库、104/105 任务）；<b>SAL C 全量静态：103 任务 65/103（63%）弱定位</b>（OpenSC/mruby/nDPI 全命中，平均 25.9 候选）；AI 试点 5/24 CONFIRMED（工具类），GT 内存安全未确认 → 需 CPG/污点分析增强</td></tr>
     <tr><td>2</td><td>A.S.E 120 全量（补 XSS 类）</td><td>四类 Web 漏洞全覆盖</td><td class="tag ok">XSS 完成（14/20 CONFIRMED）；SQLI 30 待扫</td></tr>
     <tr><td>3</td><td>基线补齐：Semgrep / CodeQL / DREA / 裸 agent 同口径</td><td>论文对比表</td><td class="tag warn">Semgrep 完成（A.S.E 27: 1/27；A.S.E 120: 30/81 文件）</td></tr>
     <tr><td>4</td><td>VulnGym 全量 AI 层补跑</td><td>通用检测副线数据</td><td class="tag warn">已确认 · 待预算</td></tr>
