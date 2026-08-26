@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOS-LS 数据登记册（Data Registry）· v1</title>
+<style>
+  :root {
+    --bg:#0f1420; --panel:#171e2e; --panel2:#1d2740; --line:#2a3555;
+    --txt:#dbe4f5; --mut:#8fa3c8; --ok:#35d07f; --warn:#f5a623; --bad:#f25c5c; --acc:#4da3ff;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI", "Microsoft YaHei", system-ui, sans-serif; background:var(--bg); color:var(--txt); }
+  header { padding:24px 32px; background:linear-gradient(135deg,#16203a,#0f1420); border-bottom:1px solid var(--line); }
+  h1 { margin:0; font-size:22px; }
+  .sub { color:var(--mut); margin-top:6px; font-size:13px; }
+  main { padding:20px 32px 60px; max-width:1280px; margin:0 auto; }
+  h2 { font-size:17px; margin:28px 0 10px; padding-left:10px; border-left:4px solid var(--acc); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; margin:10px 0; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px 14px; }
+  .card .k { color:var(--mut); font-size:12px; }
+  .card .v { font-size:14px; margin-top:4px; font-weight:600; }
+  .ok { color:var(--ok); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+  table { width:100%; border-collapse:collapse; margin:8px 0 4px; font-size:12.5px; background:var(--panel); border-radius:8px; overflow:hidden; }
+  th, td { padding:6px 8px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--panel2); color:var(--acc); font-weight:600; white-space:nowrap; }
+  tr:hover td { background:#1b2540; }
+  code { background:#0b1120; border:1px solid var(--line); border-radius:4px; padding:1px 5px; font-size:12px; }
+  .tag { display:inline-block; padding:1px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+  .tag.ok { background:#12331f; color:var(--ok); } .tag.warn { background:#33280f; color:var(--warn); }
+  .tag.bad { background:#3a1515; color:var(--bad); } .tag.info { background:#12263d; color:var(--acc); }
+  .foot { margin-top:40px; color:var(--mut); font-size:12px; border-top:1px solid var(--line); padding-top:14px; }
+  .toolbar { margin:8px 0; display:flex; gap:8px; }
+  input { background:#0b1120; border:1px solid var(--line); color:var(--txt); border-radius:6px; padding:6px 10px; width:260px; }
+  .note { background:#12263d33; border:1px dashed var(--line); border-radius:8px; padding:10px 14px; font-size:13px; margin:8px 0; }
+  a { color:var(--acc); }
+</style>
+</head>
+<body>
+<header>
+  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v1 · 2026-08-27</span></h1>
+  <div class="sub">唯一数据源登记：此后每次实验/修复/PR 结束后更新本册（更新规则见页脚）。研究主线：面向 AI 生成代码变更的可归因、可证伪漏洞验证 —— (R_before, task, Δ_AI, R_after)</div>
+</header>
+<main>
+  <div class="toolbar"><input id="q" type="text" placeholder="搜索全部表格…" oninput="filterAll(this.value)"></div>
+
+  <h2>1. 链路与 Key 状态（2026-08-27 核查）</h2>
+  <div class="grid">
+    <div class="card"><div class="k">GitHub key（hos-ls remote 内嵌 ghp_…）</div><div class="v ok">✅ 有效</div><div class="k">gh api user → lxcxjxhx；rate limit 5000</div></div>
+    <div class="card"><div class="k">LLM key（XIAOMI_TOKEN_PLAN_CN_API_KEY, tp-…）</div><div class="v ok">✅ 有效</div><div class="k">token-plan-cn.xiaomimimo.com/v1 · mimo-v2.5-pro 200</div></div>
+    <div class="card"><div class="k">DEEPSEEK_API_KEY（sk-…）对该端点</div><div class="v bad">✗ 401</div><div class="k">必须用 tp- key；网关无余额查询 API（404）</div></div>
+    <div class="card"><div class="k">代理</div><div class="v warn">7897 已死 → 7890</div><div class="k">git 需 GIT_SSL_BACKEND=openssl（schannel 握手失败）</div></div>
+    <div class="card"><div class="k">HOS-LS pure-ai 扫描链</div><div class="v ok">✅ 打通</div><div class="k">47–250s/文件；JSON+token_records 可解析</div></div>
+    <div class="card"><div class="k">audit_eval ai 桩</div><div class="v ok">✅ 已实现</div><div class="k">ai_patch_eval.py：Δ_AI 生成/双端扫描/DEP 判定</div></div>
+  </div>
+
+  <h2>2. AI 运行健康度（数据差？先看这里）</h2>
+  <table>
+    <tr><th>指标</th><th>值</th><th>判定</th></tr>
+    <tr><td>LLM API 调用</td><td>223 成功 / 0 失败（37 份扫描报告）</td><td><span class="tag ok">正常</span></td></tr>
+    <tr><td>7-Agent 流程</td><td>27/27 文件完成，222 个 agent 步骤日志</td><td><span class="tag ok">正常</span></td></tr>
+    <tr><td>平均 tokens/文件</td><td>35,281（合计 95.3 万 tokens）</td><td><span class="tag ok">正常</span></td></tr>
+    <tr><td>扫描完成率</td><td>27/27 vuln + 10/10 patched + 19 vulngym</td><td><span class="tag ok">正常</span></td></tr>
+    <tr><td>证据链</td><td>CONFIRMED 均含 evidence_chain（Agent-3/4/5 交叉验证，conf 0.9+）</td><td><span class="tag ok">正常</span></td></tr>
+    <tr><td>检出率 vs 系统既往水平</td><td>A.S.E 37.0% vs RepoPairBench 50 对 42%</td><td><span class="tag warn">口径一致</span></td></tr>
+  </table>
+  <div class="note"><b>结论：AI 正常运作。</b> 223 次调用零失败、每文件 3.5 万 token 级推理、7-agent 全程执行。
+  低检出的真实原因：① CONFIRMED 门槛严格（多智能体一致性，多数 finding 止于"风险提示"不升级 CONFIRMED）；
+  ② 摘录样本缺输入上下文（论文已证 0/4→3/4）；③ 完整文件（3377 行）上下文稀释；④ 模型为 mimo-v2.5-pro 中端档。
+  改进方向 = SAL 候选压缩 + 行级 critical_operation 判定 + 更强模型 + 更多上下文（见 §8 路线）。</div>
+
+  <h2>3. 样本集登记</h2>
+  <table>
+    <tr><th>层</th><th>来源</th><th>数量</th><th>上下文</th><th>状态</th></tr>
+    <tr><td>L1 AI 代码主线</td><td>A.S.E（commandi×5 / CI-mutation×5 / path_traversal×6 / PT-mutation×11 / sqli×1）</td><td>27</td><td>6 个真实仓库样本=base_commit 完整文件；其余=漏洞函数摘录</td><td><span class="tag ok">已完成</span></td></tr>
+    <tr><td>L1-DEP 子集</td><td>A.S.E CONFIRMED 样本</td><td>10</td><td>mimo-v2.5-pro 生成 Δ_AI 修复版（R_after）</td><td><span class="tag ok">已完成</span></td></tr>
+    <tr><td>L2 通用仓库级</td><td>VulnGym manifest-s1（open-webui/WeKnora/langflow/MLflow/fastmcp/adk/paperclip）</td><td>10（本轮 5）</td><td>commit 快照 worktree 全仓</td><td><span class="tag warn">早期信号</span></td></tr>
+    <tr><td>L3 多文件主线</td><td>SecureVibeBench 105 仓库</td><td>—</td><td>多文件编辑任务，静态+动态 oracle</td><td><span class="tag info">待办</span></td></tr>
+    <tr><td>L4 全量</td><td>A.S.E 120（补 XSS 类）</td><td>—</td><td>仓库级</td><td><span class="tag info">待办</span></td></tr>
+  </table>
+
+  <h2>4. A.S.E 逐样本登记（vuln 端扫描）</h2>
+  <table id="t4">
+    <tr><th>实例</th><th>CWE</th><th>上下文</th><th>扫描(s)</th><th>tokens</th><th>findings</th><th>CONFIRMED</th><th>规则（前 1-2 条）</th></tr>
+    <tr><td>commandi_01</td><td>CWE-78</td><td>full@commit 3377行</td><td>243</td><td>170,576</td><td>1</td><td>0</td><td>—（上下文稀释）</td></tr>
+    <tr><td>commandi_02</td><td>CWE-78</td><td>full@commit 1205行</td><td>89</td><td>32,606</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>commandi_03</td><td>CWE-78</td><td>full@commit 461行</td><td>110</td><td>23,720</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>commandi_04</td><td>CWE-78</td><td>full@commit 1005行</td><td>220</td><td>63,959</td><td>1</td><td>0</td><td>—</td></tr>
+    <tr><td>commandi_05</td><td>CWE-78</td><td>full@commit 758行</td><td>99</td><td>46,228</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>commandinjection_mutation_011</td><td>CWE-77</td><td>excerpt 54行</td><td>211</td><td>29,384</td><td>2</td><td>1</td><td>eval() 用户输入→RCE @29</td></tr>
+    <tr><td>commandinjection_mutation_012</td><td>CWE-77</td><td>excerpt 53行</td><td>143</td><td>25,993</td><td>1</td><td>1</td><td>eval 执行任意代码 @28</td></tr>
+    <tr><td>commandinjection_mutation_013</td><td>CWE-77</td><td>excerpt 53行</td><td>194</td><td>30,612</td><td>2</td><td>2</td><td>命令注入 + SQL 注入（类型错位）</td></tr>
+    <tr><td>commandinjection_mutation_014</td><td>CWE-77</td><td>excerpt 56行</td><td>115</td><td>25,418</td><td>1</td><td>1</td><td>eval 不安全使用 @30</td></tr>
+    <tr><td>commandinjection_mutation_015</td><td>CWE-77</td><td>excerpt 58行</td><td>61</td><td>13,379</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>path_traversal_01</td><td>CWE-22</td><td>excerpt 99行</td><td>44</td><td>12,484</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>path_traversal_02</td><td>CWE-22</td><td>excerpt 56行</td><td>66</td><td>14,155</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>path_traversal_03</td><td>CWE-22</td><td>excerpt 442行</td><td>175</td><td>46,070</td><td>1</td><td>1</td><td>路径遍历漏洞</td></tr>
+    <tr><td>path_traversal_04</td><td>CWE-22</td><td>excerpt 89行</td><td>177</td><td>34,789</td><td>2</td><td>2</td><td>文件路径漏洞</td></tr>
+    <tr><td>path_traversal_05</td><td>CWE-22</td><td>excerpt 114行</td><td>226</td><td>40,701</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>path_traversal_06</td><td>CWE-22</td><td>excerpt 63行</td><td>201</td><td>32,498</td><td>1</td><td>1</td><td>路径遍历漏洞</td></tr>
+    <tr><td>pathtraversal_mutation_351</td><td>CWE-22</td><td>excerpt 99行</td><td>184</td><td>31,636</td><td>1</td><td>0</td><td>风险未升级 CONFIRMED</td></tr>
+    <tr><td>pathtraversal_mutation_352</td><td>CWE-22</td><td>excerpt 99行</td><td>131</td><td>27,525</td><td>1</td><td>1</td><td>文件上传路径遍历</td></tr>
+    <tr><td>pathtraversal_mutation_381</td><td>CWE-22</td><td>excerpt 62行</td><td>185</td><td>31,896</td><td>1</td><td>0</td><td>风险未升级</td></tr>
+    <tr><td>pathtraversal_mutation_382</td><td>CWE-22</td><td>excerpt 62行</td><td>176</td><td>29,306</td><td>1</td><td>1</td><td>路径遍历漏洞</td></tr>
+    <tr><td>pathtraversal_mutation_383</td><td>CWE-22</td><td>excerpt 62行</td><td>185</td><td>34,123</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>pathtraversal_mutation_391</td><td>CWE-22</td><td>excerpt 82行</td><td>152</td><td>31,730</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>pathtraversal_mutation_392</td><td>CWE-22</td><td>excerpt 82行</td><td>243</td><td>34,698</td><td>1</td><td>1</td><td>路径遍历漏洞</td></tr>
+    <tr><td>pathtraversal_mutation_401</td><td>CWE-22</td><td>excerpt 55行</td><td>57</td><td>13,042</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>pathtraversal_mutation_402</td><td>CWE-22</td><td>excerpt 55行</td><td>195</td><td>32,366</td><td>2</td><td>0</td><td>风险未升级</td></tr>
+    <tr><td>pathtraversal_mutation_403</td><td>CWE-22</td><td>excerpt 55行</td><td>132</td><td>31,113</td><td>0</td><td>0</td><td>—</td></tr>
+    <tr><td>sqli_01</td><td>CWE-89</td><td>excerpt 63行</td><td>51</td><td>12,598</td><td>0</td><td>0</td><td>—（摘录无 SQL 上下文）</td></tr>
+  </table>
+  <div class="note"><b>合计：27 样本，检出（CONFIRMED）10/27 = 37.0%</b>；AI 变异类检出 9/13=69%，真实仓库完整文件 0/5（稀释）。类型错位信号：mutation_013 报 SQLi（CWE-77 样本）。</div>
+
+  <h2>5. DEP 补丁验证登记（10 个 CONFIRMED 样本的 Δ_AI → R_after）</h2>
+  <table id="t5">
+    <tr><th>实例</th><th>Δ_AI 生成</th><th>patched 扫描(s)</th><th>patched findings</th><th>patched CONFIRMED</th><th>DEP 判定</th><th>残留语义</th></tr>
+    <tr><td>commandinjection_mutation_011</td><td>ok 54→58</td><td>125</td><td>1</td><td>1</td><td class="bad">✗ 拒绝</td><td>SQL 查询参数未验证直接执行 @25（修复引入/遗留兄弟问题）</td></tr>
+    <tr><td>commandinjection_mutation_012</td><td>ok 53→70</td><td>62</td><td>0</td><td>0</td><td class="ok">✓ 通过</td><td>—</td></tr>
+    <tr><td>commandinjection_mutation_013</td><td>ok 53→57</td><td>53</td><td>0</td><td>0</td><td class="ok">✓ 通过</td><td>—</td></tr>
+    <tr><td>commandinjection_mutation_014</td><td>ok 56→55</td><td>55</td><td>0</td><td>0</td><td class="ok">✓ 通过</td><td>—</td></tr>
+    <tr><td>path_traversal_03</td><td>ok 442→462</td><td>147</td><td>1</td><td>1</td><td class="bad">✗ 拒绝</td><td>路径遍历漏洞 @36（主路径修复、分支仍可利用）</td></tr>
+    <tr><td>path_traversal_04</td><td>ok 89→103</td><td>128</td><td>0</td><td>0</td><td class="ok">✓ 通过</td><td>—</td></tr>
+    <tr><td>path_traversal_06</td><td>ok 63→66</td><td>78</td><td>0</td><td>0</td><td class="ok">✓ 通过</td><td>—</td></tr>
+    <tr><td>pathtraversal_mutation_352</td><td>ok 99→56</td><td>63</td><td>0</td><td>0</td><td class="ok">✓ 通过</td><td>—</td></tr>
+    <tr><td>pathtraversal_mutation_382</td><td>ok 62→71</td><td>197</td><td>1</td><td>1</td><td class="bad">✗ 拒绝</td><td>路径遍历（过滤不完整）@44</td></tr>
+    <tr><td>pathtraversal_mutation_392</td><td>ok 82→94</td><td>197</td><td>0</td><td>0</td><td class="ok">✓ 通过</td><td>—</td></tr>
+  </table>
+  <div class="note"><b>DEP 收紧：3/10 = 30% AI 生成补丁被拒绝</b>（修复不完整/引入新问题）。Pair-Correct：7/27 = 25.9%（no-DEP 与 DEP-tight 一致，残留均为 CONFIRMED）。</div>
+
+  <h2>6. VulnGym 登记（通用仓库级副线 · 早期信号）</h2>
+  <table id="t6">
+    <tr><th>条目</th><th>框架</th><th>CWE</th><th>GT 文件</th><th>SAL top-3 命中 GT</th><th>baseline 命中 GT</th><th>AI CONFIRMED</th></tr>
+    <tr><td>entry-00057</td><td>open-webui</td><td>CWE-79</td><td>4</td><td class="ok">RichTextInput.svelte</td><td class="ok">MessageInput.svelte</td><td>Notes.svelte XSS @255（非 GT，sibling）</td></tr>
+    <tr><td>entry-00062</td><td>open-webui</td><td>CWE-89</td><td>3</td><td class="bad">✗</td><td class="bad">✗</td><td>0</td></tr>
+    <tr><td>entry-00080</td><td>WeKnora</td><td>CWE-78</td><td>3</td><td class="ok">client.go</td><td class="ok">mcp_service.go</td><td>0</td></tr>
+    <tr><td>entry-00081</td><td>WeKnora</td><td>CWE-78</td><td>4</td><td class="ok">client.go+manager.go</td><td>—</td><td>0</td></tr>
+    <tr><td>entry-00389</td><td>MLflow</td><td>CWE-78</td><td>2</td><td class="bad">✗</td><td>—</td><td>0</td></tr>
+    <tr><td>合计</td><td colspan="2"></td><td></td><td><b>3/5 (60%)</b></td><td>2/3</td><td><b>1 CONFIRMED / 19 文件</b></td></tr>
+  </table>
+  <div class="note">S1 全量（K=50）定位 9/9；top-3 压缩后 3/5 —— 与 Locate@K 消融一致。VulnGym 全量 AI 层待预算充足后补跑（§8）。</div>
+
+  <h2>7. 成本登记（mimo-v2.5-pro · CNY）</h2>
+  <table id="t7">
+    <tr><th>批次</th><th>文件扫描</th><th>input tokens</th><th>output tokens</th><th>成本</th></tr>
+    <tr><td>A.S.E vuln 27</td><td>27</td><td>781,110</td><td>171,495</td><td>¥0.49</td></tr>
+    <tr><td>A.S.E patched 10</td><td>10</td><td>197,283</td><td>49,233</td><td>¥0.13</td></tr>
+    <tr><td>VulnGym 5 条</td><td>19</td><td>~820,000</td><td>~140,000</td><td>~¥0.50</td></tr>
+    <tr><td>补丁生成 37 calls</td><td>—</td><td>—</td><td>—</td><td>~¥0.2–0.4</td></tr>
+    <tr><td><b>合计</b></td><td><b>56+ 文件</b></td><td></td><td></td><td><b>~¥1.5–2.0（止损线内）</b></td></tr>
+  </table>
+
+  <h2>8. PR / 提交登记</h2>
+  <table id="t8">
+    <tr><th>对象</th><th>内容</th><th>状态</th></tr>
+    <tr><td><a href="https://github.com/lxcxjxhx/HOS-LS/pull/38">HOS-LS PR#38</a> feat/ase-ai-patch-dep-eval</td><td>AI 补丁差分验证数据（47 文件 / +15,617）+ SAL 候选精化 + 代理修复</td><td class="ok">✅ MERGED（commit da02ed8, 2026-08-27）</td></tr>
+    <tr><td>HOS_SKILL_WORKFLOW feat/hos-paper-redteam-evidence-chain</td><td>SAL/DEP 工具链 + A.S.E 数据 + 22 号报告（e24768a, 65f6941）</td><td class="ok">✅ pushed</td></tr>
+    <tr><td>22 号报告</td><td>HOS-LS-paper/22-面向AI补丁验证的SAL×DEP止损实验.md</td><td class="ok">✅ 定稿</td></tr>
+    <tr><td>本登记册</td><td>HOS-LS-paper/23-数据登记册.html</td><td class="ok">✅ v1</td></tr>
+  </table>
+
+  <h2>9. 下一步路线（已确认）</h2>
+  <table id="t9">
+    <tr><th>#</th><th>任务</th><th>目标</th><th>状态</th></tr>
+    <tr><td>1</td><td>SecureVibeBench 105 仓库多文件任务</td><td>40–60 分层全量的多文件主线（静态+动态 oracle）</td><td class="tag info">待办</td></tr>
+    <tr><td>2</td><td>A.S.E 120 全量（补 XSS 类）</td><td>四类 Web 漏洞全覆盖</td><td class="tag info">待办</td></tr>
+    <tr><td>3</td><td>基线补齐：Semgrep / CodeQL / DREA / 裸 agent 同口径</td><td>论文对比表</td><td class="tag info">待办</td></tr>
+    <tr><td>4</td><td>VulnGym 全量 AI 层补跑</td><td>通用检测副线数据</td><td class="tag info">待办</td></tr>
+    <tr><td>5</td><td>检出率提升：SAL 候选压缩 + 行级 critical_operation 判定 + 更强模型</td><td>37% → 目标提升</td><td class="tag info">待办</td></tr>
+  </table>
+
+  <div class="foot">
+    <b>登记册规则（此后所有数据以此为准）：</b>
+    ① 每次实验/修复/PR 落地后，在本册追加或修订对应表并 bump 版本号；② 原始结果 JSON 存
+    <code>hosls-eval/reports/</code> 与 <code>hos-ls/bench-runs/ase_eval_reports/</code>，登记册只登记汇总值+来源路径；③ 成本按 token_records 实记，
+    单价 mimo-v2.5-pro input ¥0.435/M / output ¥0.87/M；④ 任何 key/链路异常先记入 §1 再处置；
+    ⑤ 论文引用数据必须能回溯到本册行号。
+    <br>生成：2026-08-27 · 数据源：ase-vuln/patched/vulngym 扫描报告 + ai_patch_eval.py + 22 号报告
+  </div>
+</main>
+<script>
+function filterAll(q) {
+  q = (q || '').toLowerCase();
+  document.querySelectorAll('table').forEach(function(t) {
+    var show = !q;
+    t.querySelectorAll('tr').forEach(function(tr) {
+      if (tr.querySelector('th')) return;
+      var hit = tr.textContent.toLowerCase().indexOf(q) >= 0;
+      tr.style.display = hit ? '' : 'none';
+      if (hit) show = true;
+    });
+    t.style.display = show ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
