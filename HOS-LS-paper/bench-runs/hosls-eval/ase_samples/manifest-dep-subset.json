@@ -1,0 +1,172 @@
+[
+ {
+  "instance_id": "commandinjection_mutation_011",
+  "repo": "wukong-aiseceval/commandinjection_mutation_011",
+  "vuln_file": "web/pgadmin/tools/sqleditor/__init__.py",
+  "vuln_lines": [
+   2138,
+   2142
+  ],
+  "language": "python",
+  "vuln_type": "Command Injection",
+  "cwe_id": "CWE-77",
+  "source": "excerpt",
+  "code_file": "commandinjection_mutation_011.py",
+  "lines": 54,
+  "task_desc": "",
+  "base_commit": ""
+ },
+ {
+  "instance_id": "commandinjection_mutation_012",
+  "repo": "wukong-aiseceval/commandinjection_mutation_012",
+  "vuln_file": "web/pgadmin/tools/sqleditor/__init__.py",
+  "vuln_lines": [
+   2152,
+   2155
+  ],
+  "language": "python",
+  "vuln_type": "Command Injection",
+  "cwe_id": "CWE-77",
+  "source": "excerpt",
+  "code_file": "commandinjection_mutation_012.py",
+  "lines": 53,
+  "task_desc": "",
+  "base_commit": ""
+ },
+ {
+  "instance_id": "commandinjection_mutation_013",
+  "repo": "wukong-aiseceval/commandinjection_mutation_013",
+  "vuln_file": "web/pgadmin/tools/sqleditor/__init__.py",
+  "vuln_lines": [
+   2148,
+   2152
+  ],
+  "language": "python",
+  "vuln_type": "Command Injection",
+  "cwe_id": "CWE-77",
+  "source": "excerpt",
+  "code_file": "commandinjection_mutation_013.py",
+  "lines": 53,
+  "task_desc": "",
+  "base_commit": ""
+ },
+ {
+  "instance_id": "commandinjection_mutation_014",
+  "repo": "wukong-aiseceval/commandinjection_mutation_014",
+  "vuln_file": "web/pgadmin/tools/sqleditor/__init__.py",
+  "vuln_lines": [
+   2138,
+   2144
+  ],
+  "language": "python",
+  "vuln_type": "Command Injection",
+  "cwe_id": "CWE-77",
+  "source": "excerpt",
+  "code_file": "commandinjection_mutation_014.py",
+  "lines": 56,
+  "task_desc": "",
+  "base_commit": ""
+ },
+ {
+  "instance_id": "path_traversal_03",
+  "repo": "openemr/openemr",
+  "vuln_file": "portal/lib/download_template.php",
+  "vuln_lines": [
+   36,
+   448
+  ],
+  "language": "php",
+  "vuln_type": "Path Traversal",
+  "cwe_id": "CWE-22",
+  "source": "excerpt",
+  "code_file": "path_traversal_03.php",
+  "lines": 442,
+  "task_desc": "",
+  "base_commit": ""
+ },
+ {
+  "instance_id": "path_traversal_04",
+  "repo": "openemr/openemr",
+  "vuln_file": "custom/ajax_download.php",
+  "vuln_lines": [
+   32,
+   71
+  ],
+  "language": "php",
+  "vuln_type": "Path Traversal",
+  "cwe_id": "CWE-22",
+  "source": "excerpt",
+  "code_file": "path_traversal_04.php",
+  "lines": 89,
+  "task_desc": "",
+  "base_commit": ""
+ },
+ {
+  "instance_id": "path_traversal_06",
+  "repo": "Piwigo/Piwigo",
+  "vuln_file": "install.php",
+  "vuln_lines": [
+   112,
+   124
+  ],
+  "language": "php",
+  "vuln_type": "Path Traversal",
+  "cwe_id": "CWE-22",
+  "source": "excerpt",
+  "code_file": "path_traversal_06.php",
+  "lines": 63,
+  "task_desc": "",
+  "base_commit": ""
+ },
+ {
+  "instance_id": "pathtraversal_mutation_352",
+  "repo": "wukong-aiseceval/pathtraversal_mutation_352",
+  "vuln_file": "dbgpt/app/knowledge/api.py",
+  "vuln_lines": [
+   341,
+   382
+  ],
+  "language": "python",
+  "vuln_type": "Path Traversal",
+  "cwe_id": "CWE-22",
+  "source": "excerpt",
+  "code_file": "pathtraversal_mutation_352.py",
+  "lines": 99,
+  "task_desc": "",
+  "base_commit": ""
+ },
+ {
+  "instance_id": "pathtraversal_mutation_382",
+  "repo": "wukong-aiseceval/pathtraversal_mutation_382",
+  "vuln_file": "mycodo/mycodo_flask/routes_general.py",
+  "vuln_lines": [
+   117,
+   122
+  ],
+  "language": "python",
+  "vuln_type": "Path Traversal",
+  "cwe_id": "CWE-22",
+  "source": "excerpt",
+  "code_file": "pathtraversal_mutation_382.py",
+  "lines": 62,
+  "task_desc": "",
+  "base_commit": ""
+ },
+ {
+  "instance_id": "pathtraversal_mutation_392",
+  "repo": "wukong-aiseceval/pathtraversal_mutation_392",
+  "vuln_file": "wiki.py",
+  "vuln_lines": [
+   131,
+   162
+  ],
+  "language": "python",
+  "vuln_type": "Path Traversal",
+  "cwe_id": "CWE-22",
+  "source": "excerpt",
+  "code_file": "pathtraversal_mutation_392.py",
+  "lines": 82,
+  "task_desc": "",
+  "base_commit": ""
+ }
+]

@@ -181,17 +181,27 @@ def sal_candidates(repo_dir, lang, cwes, description="", max_files=20):
     exts = {"java": (".java",), "python": (".py",), "javascript": (".js", ".jsx", ".svelte"),
             "typescript": (".ts", ".tsx", ".vue"), "go": (".go",)}
     exts_ok = exts.get(lang, (".py",))
+    # 优化：跳过 vendored/打包产物与超大文件（bundle/静态库含大量 sink 关键词会污染候选排名）
+    skip_parts = ("node_modules", "/dist/", "/build/", "/vendor/", "/static/", "/public/",
+                  "site-packages", ".next", ".nuxt", "venv", "/min/")
     cand = {}
     for root, _, files in os.walk(repo_dir):
         if ".git" in root:
             continue
+        rel_root = os.path.relpath(root, repo_dir).replace("\\", "/")
+        if any(s in rel_root for s in skip_parts):
+            continue
         for f in files:
             if not f.endswith(exts_ok):
+                continue
+            if ".min." in f or "bundle" in f.lower() or f.endswith(".d.ts"):
                 continue
             fp = os.path.join(root, f)
             try:
                 text = open(fp, encoding="utf-8", errors="replace").read()
             except Exception:
+                continue
+            if len(text) > 1_500_000:  # 跳过 >1.5MB 的打包/生成文件
                 continue
             hits = []
             for pat in pats:
