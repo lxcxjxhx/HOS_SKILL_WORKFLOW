@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -38,7 +38,7 @@
 </head>
 <body>
 <header>
-  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v1 · 2026-08-27</span></h1>
+  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v1.1 · 2026-08-27</span></h1>
   <div class="sub">唯一数据源登记：此后每次实验/修复/PR 结束后更新本册（更新规则见页脚）。研究主线：面向 AI 生成代码变更的可归因、可证伪漏洞验证 —— (R_before, task, Δ_AI, R_after)</div>
 </header>
 <main>
@@ -68,6 +68,21 @@
   低检出的真实原因：① CONFIRMED 门槛严格（多智能体一致性，多数 finding 止于"风险提示"不升级 CONFIRMED）；
   ② 摘录样本缺输入上下文（论文已证 0/4→3/4）；③ 完整文件（3377 行）上下文稀释；④ 模型为 mimo-v2.5-pro 中端档。
   改进方向 = SAL 候选压缩 + 行级 critical_operation 判定 + 更强模型 + 更多上下文（见 §8 路线）。</div>
+
+  <h2>2.5 数据来源审计（所有登记数据必须来自 HOS-LS 7-agent 扫描链）</h2>
+  <table>
+    <tr><th>审计项</th><th>结果</th><th>判定</th></tr>
+    <tr><td>报告来源</td><td>56/56 份扫描报告均为 <code>python -m src.cli.main scan --pure-ai</code>（HOS-LS CLI）输出</td><td><span class="tag ok">通过</span></td></tr>
+    <tr><td>LLM 客户端</td><td>全部 token_records provider=<b>DeepSeekClient</b>、model=<b>mimo-v2.5-pro</b>（HOS-LS 内建客户端）</td><td><span class="tag ok">通过</span></td></tr>
+    <tr><td>Agent 执行</td><td>每报告含 12–21 行 agent 步骤日志（上下文构建→代码理解→风险枚举→验证→攻击链→对抗→最终裁决）</td><td><span class="tag ok">通过</span></td></tr>
+    <tr><td>报告结构</td><td>results[] 含 target/status/findings/debug_logs/token_records/metadata（CLI 原生格式）</td><td><span class="tag ok">通过</span></td></tr>
+  </table>
+  <div class="note"><b>来源口径（登记册铁律）：</b>
+  ① 检出（CONFIRMED）/ Pair-Correct / DEP 残留 —— 100% 来自上述 HOS-LS 7-agent 扫描报告，无独立脚本替代；
+  ② <b>Δ_AI 补丁生成</b>（R_after 的来源）使用直连模型调用（gen-patch-full）—— 属"任务执行"（让 AI 生成修复），
+  非检测环节；其质量判定（是否残留）仍由 7-agent patched 扫描独立裁决；
+  ③ SAL 候选与 DEP 聚合为确定性静态/逻辑代码（0 API），不属于 AI 检测。
+  审计脚本：<code>hosls-eval/_provenance.py</code>（56/56 OK，2026-08-27）。</div>
 
   <h2>3. 样本集登记</h2>
   <table>
@@ -154,19 +169,21 @@
   <table id="t8">
     <tr><th>对象</th><th>内容</th><th>状态</th></tr>
     <tr><td><a href="https://github.com/lxcxjxhx/HOS-LS/pull/38">HOS-LS PR#38</a> feat/ase-ai-patch-dep-eval</td><td>AI 补丁差分验证数据（47 文件 / +15,617）+ SAL 候选精化 + 代理修复</td><td class="ok">✅ MERGED（commit da02ed8, 2026-08-27）</td></tr>
+    <tr><td>优化落地验证（HOS-LS main）</td><td>scripts/ai_patch_eval.py · prep_ase_samples.py · sal_sinks.json · bench-runs/datasets/ase_samples + ase_eval_reports 均在 main 上（ls-tree 核验）</td><td class="ok">✅ 落地</td></tr>
+    <tr><td>优化落地验证（外层仓库）</td><td>audit_eval.py SAL 过滤（skip_parts/1.5MB/.min./bundle）已提交（git show HEAD 核验）</td><td class="ok">✅ 落地</td></tr>
     <tr><td>HOS_SKILL_WORKFLOW feat/hos-paper-redteam-evidence-chain</td><td>SAL/DEP 工具链 + A.S.E 数据 + 22 号报告（e24768a, 65f6941）</td><td class="ok">✅ pushed</td></tr>
     <tr><td>22 号报告</td><td>HOS-LS-paper/22-面向AI补丁验证的SAL×DEP止损实验.md</td><td class="ok">✅ 定稿</td></tr>
     <tr><td>本登记册</td><td>HOS-LS-paper/23-数据登记册.html</td><td class="ok">✅ v1</td></tr>
   </table>
 
-  <h2>9. 下一步路线（已确认）</h2>
+  <h2>9. 下一步路线（用户已确认 · 2026-08-27）</h2>
   <table id="t9">
     <tr><th>#</th><th>任务</th><th>目标</th><th>状态</th></tr>
-    <tr><td>1</td><td>SecureVibeBench 105 仓库多文件任务</td><td>40–60 分层全量的多文件主线（静态+动态 oracle）</td><td class="tag info">待办</td></tr>
-    <tr><td>2</td><td>A.S.E 120 全量（补 XSS 类）</td><td>四类 Web 漏洞全覆盖</td><td class="tag info">待办</td></tr>
-    <tr><td>3</td><td>基线补齐：Semgrep / CodeQL / DREA / 裸 agent 同口径</td><td>论文对比表</td><td class="tag info">待办</td></tr>
-    <tr><td>4</td><td>VulnGym 全量 AI 层补跑</td><td>通用检测副线数据</td><td class="tag info">待办</td></tr>
-    <tr><td>5</td><td>检出率提升：SAL 候选压缩 + 行级 critical_operation 判定 + 更强模型</td><td>37% → 目标提升</td><td class="tag info">待办</td></tr>
+    <tr><td>1</td><td>SecureVibeBench 105 仓库多文件任务</td><td>40–60 分层全量的多文件主线（静态+动态 oracle）</td><td class="tag warn">已确认 · 待启动</td></tr>
+    <tr><td>2</td><td>A.S.E 120 全量（补 XSS 类）</td><td>四类 Web 漏洞全覆盖</td><td class="tag warn">已确认 · 待启动</td></tr>
+    <tr><td>3</td><td>基线补齐：Semgrep / CodeQL / DREA / 裸 agent 同口径</td><td>论文对比表</td><td class="tag warn">已确认 · 待启动</td></tr>
+    <tr><td>4</td><td>VulnGym 全量 AI 层补跑</td><td>通用检测副线数据</td><td class="tag warn">已确认 · 待启动</td></tr>
+    <tr><td>5</td><td>检出率提升：SAL 候选压缩 + 行级 critical_operation 判定 + 更强模型</td><td>37% → 目标提升</td><td class="tag warn">已确认 · 待启动</td></tr>
   </table>
 
   <div class="foot">
@@ -174,7 +191,8 @@
     ① 每次实验/修复/PR 落地后，在本册追加或修订对应表并 bump 版本号；② 原始结果 JSON 存
     <code>hosls-eval/reports/</code> 与 <code>hos-ls/bench-runs/ase_eval_reports/</code>，登记册只登记汇总值+来源路径；③ 成本按 token_records 实记，
     单价 mimo-v2.5-pro input ¥0.435/M / output ¥0.87/M；④ 任何 key/链路异常先记入 §1 再处置；
-    ⑤ 论文引用数据必须能回溯到本册行号。
+    ⑤ 论文引用数据必须能回溯到本册行号；⑥ <b>AI 检出类数据必须来自 HOS-LS 7-agent 扫描链
+    （§2.5 审计，56/56 通过）</b>，Δ_AI 生成等非检测环节须显式标注。
     <br>生成：2026-08-27 · 数据源：ase-vuln/patched/vulngym 扫描报告 + ai_patch_eval.py + 22 号报告
   </div>
 </main>
