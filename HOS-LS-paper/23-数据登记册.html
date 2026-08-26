@@ -38,7 +38,7 @@
 </head>
 <body>
 <header>
-  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v3 · 2026-08-27</span></h1>
+  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v4 · 2026-08-27</span></h1>
   <div class="sub">唯一数据源登记：此后每次实验/修复/PR 结束后更新本册（更新规则见页脚）。研究主线：面向 AI 生成代码变更的可归因、可证伪漏洞验证 —— (R_before, task, Δ_AI, R_after)</div>
 </header>
 <main>
@@ -170,6 +170,11 @@
         成本 ~¥1.23（flex 8 折）</td></tr>
     <tr><td><b>模型对照结论（路线 #5 实证）</b></td><td>同一批 XSS 文件：mimo 0/3 → V4-Flash 14/17 ——
         <b>模型选择是检出率的第一驱动因素</b>；xss_04/06/07/08/10 + 9 个 mutation 全部 CONFIRMED（含存储型/反射型/DOM XSS）</td></tr>
+    <tr><td><b>XSS DEP（14 个 CONFIRMED 的 Δ_AI 修复验证）</b></td><td><b>8/14（57%）AI 修复被差分验证拒绝</b>——
+        xss_06（导出文件名可控反射型 + json_xml 直写存储型）、xss_08（URL 重定向未验证）、xss_10、
+        mutation_052（创建/保存模型名直存 ×2）、mutation_072（DOM 反射）、mutation_091（存储型）、
+        mutation_102（正则构造存储型）、xss_07；通过 6：xss_04/05 + mutation_051/071/092/101。
+        与 A.S.E 27（30%）同向且更强：AI 修复不完整是普遍现象（V4-Flash 判定）</td></tr>
   </table>
   <div class="note"><b>429 事件（2026-08-27）</b>：XSS 波次进行中 tp-key 配额耗尽（quota exhausted），17/20 样本的
   扫描返回 ['file_path','error'] 错误结果并回退 3-agent 兜底 —— <b>这 17 个"0 检出"无效，已从检出统计剔除</b>。

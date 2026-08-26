@@ -93,6 +93,25 @@ GitHub API 拉取 81/120 完整文件（0 成本）。XSS 30 个中有 20 个可
 Semgrep 基线（0 成本）：完整文件 30/81 命中 117 findings（xss_04=15 条 echoed-request、
 sqli_02/03/04=tainted-sql-string）；摘录文件仅 1/27 —— Semgrep 与 AI 检出互补，同做论文基线。
 
+**XSS DEP（14 个 CONFIRMED 的 Δ_AI 修复验证，V4-Flash）**：
+
+**8/14（57%）AI 生成的 XSS 修复被差分验证拒绝**（残留仍 CONFIRMED）：
+
+| 实例 | patched 残留（CONFIRMED） | 语义 |
+|---|---|---|
+| xss_06 | 反射型 XSS（导出文件名可控）+ 存储型 XSS（json_xml 直写响应） | 修一处留多处 |
+| xss_07 | 存储型 XSS | 修复不完整 |
+| xss_08 | URL 重定向未验证 → 开放重定向/反射型 XSS | 兄弟路径 |
+| xss_10 | XSS | 修复不完整 |
+| xss_mutation_052 | 存储型 XSS ×2（创建/保存模型名直存） | 修创建不修保存 |
+| xss_mutation_072 | 基于 DOM 的反射型 XSS | 修复不完整 |
+| xss_mutation_091 | 存储型 XSS | 修复不完整 |
+| xss_mutation_102 | 正则构造的存储型 XSS | 复杂路径残留 |
+
+通过 6/14：xss_04、xss_05、mutation_051/071/092/101。
+> 与 A.S.E 27 的 30% 残留率同向且更强 —— AI 修复不完整是跨数据集普遍现象；
+> DEP 差分验证把"AI 修好了"从 14 收紧到 6（57% 收紧量），是可证伪验证的核心证据。
+
 ## 4. 通用仓库级副线（VulnGym 10 → 本轮完成 5 条）
 ### 4.1 定位（静态，AI 扫描子集）
 
