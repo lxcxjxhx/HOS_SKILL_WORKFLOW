@@ -383,18 +383,25 @@ def kw_candidates(repo_dir, lang, description="", max_files=3):
     return [{"file": f, "score": s} for f, s in ranked]
 
 
-def gen_patch_full(manifest_path, outdir=None, workers=2):
+def gen_patch_full(manifest_path, outdir=None, workers=2, src_dir=None):
     """完整输出式补丁生成（适用于小摘录）：'输出完整修复后的文件内容'。
-    max_tokens=16384 + 截断校验（输出行数 < 源 50% 视为截断，重试一次）。"""
+    max_tokens=16384 + 截断校验（输出行数 < 源 50% 视为截断，重试一次）。
+    src_dir：源码文件目录（默认 ASE；A.S.E 120 样本传 ase120_samples 路径）。"""
     outdir = outdir or os.path.join(ASE, "patched")
     os.makedirs(outdir, exist_ok=True)
+    src_dir = src_dir or ASE
     man = json.load(open(manifest_path, encoding="utf-8-sig"))
     meta = {}
 
     def work(m):
         iid = m["instance_id"]
-        src = os.path.join(ASE, m["code_file"])
-        code = open(src, encoding="utf-8").read()
+        src = os.path.join(src_dir, m["code_file"])
+        try:
+            code = open(src, encoding="utf-8").read()
+        except Exception as e:
+            return iid, {"ok": False, "error": f"read fail: {e}", "out_file": None,
+                         "src_lines": 0, "out_lines": 0, "usage": None, "prompt_tokens": 0,
+                         "task_desc": m.get("task_desc", ""), "cwe_id": m.get("cwe_id")}
         task = m.get("task_desc") or f"Fix {m.get('vuln_type', 'the vulnerability')} in {m.get('vuln_file', 'this file')}"
         prompt = (
             f"You are a security engineer. Below is a code excerpt containing a security vulnerability "
@@ -447,7 +454,8 @@ def main():
         man = sys.argv[2]
         outdir = sys.argv[3] if len(sys.argv) > 3 else None
         workers = int(sys.argv[4]) if len(sys.argv) > 4 else 2
-        gen_patch_full(man, outdir, workers)
+        src_dir = sys.argv[5] if len(sys.argv) > 5 else None
+        gen_patch_full(man, outdir, workers, src_dir)
     elif cmd == "scan":
         list_json = sys.argv[2]
         outdir = sys.argv[3] if len(sys.argv) > 3 else os.path.join(REPORTS, "scans")

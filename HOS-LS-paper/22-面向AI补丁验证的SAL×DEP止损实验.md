@@ -71,8 +71,29 @@
 | Pair-Correct（DEP，patched 无同语义 finding） | 7/27 = 25.9% | 本批残留均为 CONFIRMED，两口径一致 |
 | DEP 收紧量 | **3/10 补丁被拒（30%）** | 差分验证新增的可证伪信号 |
 
-## 4. 通用仓库级副线（VulnGym 10 → 本轮完成 5 条）
+### 3.5 A.S.E 120 全量（第二轮）：XSS 波次 + 模型对照（2026-08-27）
 
+数据源 = AICGSecEval_hf/static_eval.jsonl（即 A.S.E 120，全部含 base_commit + BM25 context）；
+GitHub API 拉取 81/120 完整文件（0 成本）。XSS 30 个中有 20 个可用（10 真实 + 10 变异共享父文件）。
+
+**XSS 20 波次（HOS-LS 7-agent）：14/20 CONFIRMED（70%）**
+
+| 模型 | 样本 | CONFIRMED | 说明 |
+|---|---|---|---|
+| mimo-v2.5-pro（token-plan） | xss_01/02/03 | 0/3 | 429 配额耗尽前完成 |
+| **deepseek-ai/DeepSeek-V4-Flash（DeepInfra + flex）** | 17 个重跑 | **14/17（82%）** | 存储型/反射型/DOM XSS 全检出 |
+
+> **模型对照实证（路线 §9-#5"更强模型"落地）**：同一批 XSS 文件，mimo 0/3 → V4-Flash 14/17。
+> 模型选择是检出率的第一驱动因素；V4-Flash 明细：xss_04 存储型@8、xss_06 反射型、xss_07 存储型、
+> xss_08 DOM XSS、xss_10 XSS、mutation_051 反射+存储、mutation_052 文件名拼接响应头、
+> mutation_071/072 开放重定向、mutation_091 存储型、mutation_092 noteId 拼接 res.send、
+> mutation_101 反射型、mutation_102 XSS+正则注入；仅 xss_09/mutation_061/062 未确认。
+> 成本 ~¥1.23（flex 8 折，505K in + 186K out tokens）。
+
+Semgrep 基线（0 成本）：完整文件 30/81 命中 117 findings（xss_04=15 条 echoed-request、
+sqli_02/03/04=tainted-sql-string）；摘录文件仅 1/27 —— Semgrep 与 AI 检出互补，同做论文基线。
+
+## 4. 通用仓库级副线（VulnGym 10 → 本轮完成 5 条）
 ### 4.1 定位（静态，AI 扫描子集）
 
 | 条目 | 框架 | CWE | GT 文件 | SAL top-3 命中 GT | baseline top-3 命中 GT |
