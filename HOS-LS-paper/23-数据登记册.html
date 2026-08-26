@@ -38,7 +38,7 @@
 </head>
 <body>
 <header>
-  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v1.1 · 2026-08-27</span></h1>
+  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v2 · 2026-08-27</span></h1>
   <div class="sub">唯一数据源登记：此后每次实验/修复/PR 结束后更新本册（更新规则见页脚）。研究主线：面向 AI 生成代码变更的可归因、可证伪漏洞验证 —— (R_before, task, Δ_AI, R_after)</div>
 </header>
 <main>
@@ -47,7 +47,8 @@
   <h2>1. 链路与 Key 状态（2026-08-27 核查）</h2>
   <div class="grid">
     <div class="card"><div class="k">GitHub key（hos-ls remote 内嵌 ghp_…）</div><div class="v ok">✅ 有效</div><div class="k">gh api user → lxcxjxhx；rate limit 5000</div></div>
-    <div class="card"><div class="k">LLM key（XIAOMI_TOKEN_PLAN_CN_API_KEY, tp-…）</div><div class="v ok">✅ 有效</div><div class="k">token-plan-cn.xiaomimimo.com/v1 · mimo-v2.5-pro 200</div></div>
+    <div class="card"><div class="k">LLM key（XIAOMI_TOKEN_PLAN_CN_API_KEY, tp-…）</div><div class="v bad">⛔ 429 配额耗尽</div><div class="k">2026-08-27 起 quota exhausted（已核实稳定 429）；此前数据有效</div></div>
+    <div class="card"><div class="k">备用：官方 DeepSeek（sk-5de8…）</div><div class="v ok">✅ 可用</div><div class="k">api.deepseek.com/v1 · deepseek-chat HTTP 200（2026-08-27 验证）</div></div>
     <div class="card"><div class="k">DEEPSEEK_API_KEY（sk-…）对该端点</div><div class="v bad">✗ 401</div><div class="k">必须用 tp- key；网关无余额查询 API（404）</div></div>
     <div class="card"><div class="k">代理</div><div class="v warn">7897 已死 → 7890</div><div class="k">git 需 GIT_SSL_BACKEND=openssl（schannel 握手失败）</div></div>
     <div class="card"><div class="k">HOS-LS pure-ai 扫描链</div><div class="v ok">✅ 打通</div><div class="k">47–250s/文件；JSON+token_records 可解析</div></div>
@@ -155,6 +156,21 @@
   </table>
   <div class="note">S1 全量（K=50）定位 9/9；top-3 压缩后 3/5 —— 与 Locate@K 消融一致。VulnGym 全量 AI 层待预算充足后补跑（§8）。</div>
 
+  <h2>6.5 A.S.E 120 全量（第二轮 · 2026-08-27）</h2>
+  <table>
+    <tr><th>项</th><th>值</th></tr>
+    <tr><td>数据源</td><td>AICGSecEval_hf/static_eval.jsonl（=A.S.E 120 全量，120 条均有 base_commit + BM25 context，均值 18.7 doc）</td></tr>
+    <tr><td>分布</td><td>SQLI 35 / Path Traversal 32 / XSS 30 / Command Injection 23；php 60 / python 23 / go 17 / js 17 / java 3</td></tr>
+    <tr><td>代码落地</td><td><b>81/120 拉取成功</b>（GitHub API full@base_commit，0 成本）；39 无代码（wukong-aiseceval 变异仓库不存在于 GitHub）</td></tr>
+    <tr><td>XSS 可用</td><td>20/30（10 真实 + 10 变异共享父文件）</td></tr>
+    <tr><td>Semgrep 基线（0 成本）</td><td>完整文件 30/81 文件命中、117 findings（xss_04=15 条 echoed-request、sqli_02/03/04=tainted-sql-string、path_traversal_03/04=tainted-filename）；摘录文件仅 1/27</td></tr>
+    <tr><td>XSS 7-agent 波次</td><td><b>3 有效（xss_01/02/03，0 CONFIRMED）+ 17 个 429 配额失败（不计入检出数据）</b></td></tr>
+  </table>
+  <div class="note"><b>429 事件（2026-08-27）</b>：XSS 波次进行中 tp-key 配额耗尽（quota exhausted），17/20 样本的
+  扫描返回 ['file_path','error'] 错误结果并回退 3-agent 兜底 —— <b>这 17 个"0 检出"无效，已从检出统计剔除</b>。
+  教训（已写入审计规则）：扫描时长 &lt;30s 且结果仅含 error 键 = 管道失败，不得计为 AI 判定；
+  后续所有扫描必须核对 token_records/agent 日志（§2.5）。</div>
+
   <h2>7. 成本登记（mimo-v2.5-pro · CNY）</h2>
   <table id="t7">
     <tr><th>批次</th><th>文件扫描</th><th>input tokens</th><th>output tokens</th><th>成本</th></tr>
@@ -179,10 +195,10 @@
   <h2>9. 下一步路线（用户已确认 · 2026-08-27）</h2>
   <table id="t9">
     <tr><th>#</th><th>任务</th><th>目标</th><th>状态</th></tr>
-    <tr><td>1</td><td>SecureVibeBench 105 仓库多文件任务</td><td>40–60 分层全量的多文件主线（静态+动态 oracle）</td><td class="tag warn">已确认 · 待启动</td></tr>
-    <tr><td>2</td><td>A.S.E 120 全量（补 XSS 类）</td><td>四类 Web 漏洞全覆盖</td><td class="tag warn">已确认 · 待启动</td></tr>
-    <tr><td>3</td><td>基线补齐：Semgrep / CodeQL / DREA / 裸 agent 同口径</td><td>论文对比表</td><td class="tag warn">已确认 · 待启动</td></tr>
-    <tr><td>4</td><td>VulnGym 全量 AI 层补跑</td><td>通用检测副线数据</td><td class="tag warn">已确认 · 待启动</td></tr>
+    <tr><td>1</td><td>SecureVibeBench 105 仓库多文件任务</td><td>40–60 分层全量的多文件主线（静态+动态 oracle）</td><td class="tag warn">已确认 · 本地仅元数据（需克隆 105 仓库）</td></tr>
+    <tr><td>2</td><td>A.S.E 120 全量（补 XSS 类）</td><td>四类 Web 漏洞全覆盖</td><td class="tag warn">进行中 · 81/120 代码落地 + Semgrep 基线完成；XSS 波次 3/20 有效（429 阻塞）</td></tr>
+    <tr><td>3</td><td>基线补齐：Semgrep / CodeQL / DREA / 裸 agent 同口径</td><td>论文对比表</td><td class="tag warn">Semgrep 完成（A.S.E 27: 1/27；A.S.E 120: 30/81 文件）</td></tr>
+    <tr><td>4</td><td>VulnGym 全量 AI 层补跑</td><td>通用检测副线数据</td><td class="tag warn">已确认 · 待预算</td></tr>
     <tr><td>5</td><td>检出率提升：SAL 候选压缩 + 行级 critical_operation 判定 + 更强模型</td><td>37% → 目标提升</td><td class="tag warn">已确认 · 待启动</td></tr>
   </table>
 
