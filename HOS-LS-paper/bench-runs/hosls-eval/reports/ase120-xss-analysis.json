@@ -1,0 +1,252 @@
+[
+ {
+  "iid": "xss_01",
+  "dur": 152.673806,
+  "model": "mimo-v2.5-pro",
+  "valid": true,
+  "n_conf": 0,
+  "xss_hit": 0,
+  "rules": [],
+  "cwe": "cwe-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_02",
+  "dur": 128.268415,
+  "model": "mimo-v2.5-pro",
+  "valid": true,
+  "n_conf": 0,
+  "xss_hit": 0,
+  "rules": [],
+  "cwe": "cwe-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_03",
+  "dur": 153.004247,
+  "model": "mimo-v2.5-pro",
+  "valid": true,
+  "n_conf": 0,
+  "xss_hit": 0,
+  "rules": [],
+  "cwe": "cwe-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_04",
+  "dur": 402.98164,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "跨站脚本攻击（XSS）"
+  ],
+  "cwe": "cwe-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_05",
+  "dur": 677.82579,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "跨站脚本攻击（XSS）"
+  ],
+  "cwe": "cwe-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_06",
+  "dur": 395.280858,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "反射型XSS漏洞"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_07",
+  "dur": 495.519038,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "存储型跨站脚本攻击（XSS）"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_08",
+  "dur": 138.783285,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "基于DOM的跨站脚本（XSS）漏洞"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_09",
+  "dur": 598.12217,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "xss_hit": 0,
+  "rules": [],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_10",
+  "dur": 595.410854,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "XSS漏洞"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_mutation_051",
+  "dur": 476.906663,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 2,
+  "xss_hit": 2,
+  "rules": [
+   "反射型XSS漏洞",
+   "存储型XSS漏洞"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_mutation_052",
+  "dur": 281.904997,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "导出模型接口中文件名参数直接拼接至响应头导致XSS"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_mutation_061",
+  "dur": 213.509529,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "xss_hit": 0,
+  "rules": [],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_mutation_062",
+  "dur": 275.922961,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 0,
+  "xss_hit": 0,
+  "rules": [],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_mutation_071",
+  "dur": 210.750804,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "反射型XSS漏洞 - 通过URL参数redirect重定向到用户可控URL"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_mutation_072",
+  "dur": 175.155936,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 0,
+  "rules": [
+   "基于URL参数的开放重定向"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_mutation_091",
+  "dur": 427.797842,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "存储型XSS漏洞"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_mutation_092",
+  "dur": 576.599061,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "反射型XSS漏洞 - 用户输入noteId直接拼接到res.send响应中"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_mutation_101",
+  "dur": 235.771066,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 1,
+  "xss_hit": 1,
+  "rules": [
+   "反射型XSS漏洞"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ },
+ {
+  "iid": "xss_mutation_102",
+  "dur": 253.938248,
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "valid": true,
+  "n_conf": 2,
+  "xss_hit": 1,
+  "rules": [
+   "XSS漏洞",
+   "正则表达式注入"
+  ],
+  "cwe": "CWE-79",
+  "type": "XSS"
+ }
+]

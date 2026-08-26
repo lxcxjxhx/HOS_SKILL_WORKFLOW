@@ -38,7 +38,7 @@
 </head>
 <body>
 <header>
-  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v2 · 2026-08-27</span></h1>
+  <h1>HOS-LS 数据登记册 · Data Registry <span class="tag info">v3 · 2026-08-27</span></h1>
   <div class="sub">唯一数据源登记：此后每次实验/修复/PR 结束后更新本册（更新规则见页脚）。研究主线：面向 AI 生成代码变更的可归因、可证伪漏洞验证 —— (R_before, task, Δ_AI, R_after)</div>
 </header>
 <main>
@@ -165,8 +165,11 @@
     <tr><td>代码落地</td><td><b>81/120 拉取成功</b>（GitHub API full@base_commit，0 成本）；39 无代码（wukong-aiseceval 变异仓库不存在于 GitHub）</td></tr>
     <tr><td>XSS 可用</td><td>20/30（10 真实 + 10 变异共享父文件）</td></tr>
     <tr><td>Semgrep 基线（0 成本）</td><td>完整文件 30/81 文件命中、117 findings（xss_04=15 条 echoed-request、sqli_02/03/04=tainted-sql-string、path_traversal_03/04=tainted-filename）；摘录文件仅 1/27</td></tr>
-    <tr><td>XSS 7-agent 波次</td><td>v1（mimo）：3 有效（xss_01/02/03，0 CONFIRMED）+ 17 个 429 配额失败；
-        <b>v2（DeepInfra/deepseek-v4-flash，用户切换）：17 个重跑中，xss_04 已 CONFIRMED 存储型 XSS @8</b></td></tr>
+    <tr><td>XSS 7-agent 波次</td><td><b>14/20 CONFIRMED（70%）</b>—— mimo-v2.5-pro 0/3 vs
+        <b>deepseek-ai/DeepSeek-V4-Flash 14/17（82%）</b>；XSS 语义命中 13；仅 xss_09/mutation_061/062 未确认；
+        成本 ~¥1.23（flex 8 折）</td></tr>
+    <tr><td><b>模型对照结论（路线 #5 实证）</b></td><td>同一批 XSS 文件：mimo 0/3 → V4-Flash 14/17 ——
+        <b>模型选择是检出率的第一驱动因素</b>；xss_04/06/07/08/10 + 9 个 mutation 全部 CONFIRMED（含存储型/反射型/DOM XSS）</td></tr>
   </table>
   <div class="note"><b>429 事件（2026-08-27）</b>：XSS 波次进行中 tp-key 配额耗尽（quota exhausted），17/20 样本的
   扫描返回 ['file_path','error'] 错误结果并回退 3-agent 兜底 —— <b>这 17 个"0 检出"无效，已从检出统计剔除</b>。
@@ -180,7 +183,8 @@
     <tr><td>A.S.E patched 10</td><td>10</td><td>197,283</td><td>49,233</td><td>¥0.13</td></tr>
     <tr><td>VulnGym 5 条</td><td>19</td><td>~820,000</td><td>~140,000</td><td>~¥0.50</td></tr>
     <tr><td>补丁生成 37 calls</td><td>—</td><td>—</td><td>—</td><td>~¥0.2–0.4</td></tr>
-    <tr><td><b>合计</b></td><td><b>56+ 文件</b></td><td></td><td></td><td><b>~¥1.5–2.0（止损线内）</b></td></tr>
+    <tr><td>A.S.E XSS 20（DeepInfra/flex）</td><td>20</td><td>505,465</td><td>185,837</td><td>~¥1.23</td></tr>
+    <tr><td><b>合计</b></td><td><b>76+ 文件</b></td><td></td><td></td><td><b>~¥2.7–3.3（止损线内）</b></td></tr>
   </table>
 
   <h2>8. PR / 提交登记</h2>
@@ -199,7 +203,7 @@
   <table id="t9">
     <tr><th>#</th><th>任务</th><th>目标</th><th>状态</th></tr>
     <tr><td>1</td><td>SecureVibeBench 105 仓库多文件任务</td><td>40–60 分层全量的多文件主线（静态+动态 oracle）</td><td class="tag warn">已确认 · 本地仅元数据（需克隆 105 仓库）</td></tr>
-    <tr><td>2</td><td>A.S.E 120 全量（补 XSS 类）</td><td>四类 Web 漏洞全覆盖</td><td class="tag warn">进行中 · 81/120 代码落地 + Semgrep 基线完成；XSS 波次 3/20 有效（429 阻塞）</td></tr>
+    <tr><td>2</td><td>A.S.E 120 全量（补 XSS 类）</td><td>四类 Web 漏洞全覆盖</td><td class="tag ok">XSS 完成（14/20 CONFIRMED）；SQLI 30 待扫</td></tr>
     <tr><td>3</td><td>基线补齐：Semgrep / CodeQL / DREA / 裸 agent 同口径</td><td>论文对比表</td><td class="tag warn">Semgrep 完成（A.S.E 27: 1/27；A.S.E 120: 30/81 文件）</td></tr>
     <tr><td>4</td><td>VulnGym 全量 AI 层补跑</td><td>通用检测副线数据</td><td class="tag warn">已确认 · 待预算</td></tr>
     <tr><td>5</td><td>检出率提升：SAL 候选压缩 + 行级 critical_operation 判定 + 更强模型</td><td>37% → 目标提升</td><td class="tag warn">已确认 · 待启动</td></tr>
