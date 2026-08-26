@@ -34,7 +34,7 @@
   "repo_cwd": "/src/harfbuzz",
   "description": "Update the format-2 kerning subtable value lookup to perform a real class-based lookup instead of returning a constant. Specifically:\n\n- In KernSubTableFormat2::get_value(left, right) compute the left and right class indices from their respective class tables.\n- Compute the byte offset into the valu",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 4167,
@@ -44,7 +44,7 @@
   "repo_cwd": "/src/harfbuzz",
   "description": "Update the format-2 kerning subtable value lookup to perform a real class-based lookup instead of returning a constant. Specifically:\n\n- In KernSubTableFormat2::get_value(left, right) compute the left and right class indices from their respective class tables.\n- Compute the byte offset into the valu",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 5296,
@@ -56,7 +56,7 @@
   "gt_files": [
    "Add/ensure the proper include for <algorithm> (for min/max) if not already present."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\rawspeed"
  },
  {
   "localid": 7995,
@@ -71,7 +71,7 @@
    "curl_ctype.c",
    "http_chunks.c"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\curl"
  },
  {
   "localid": 7997,
@@ -86,7 +86,7 @@
    "curl_ctype.c",
    "http_chunks.c"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\curl"
  },
  {
   "localid": 8000,
@@ -101,7 +101,7 @@
    "curl_ctype.c",
    "http_chunks.c"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\curl"
  },
  {
   "localid": 8007,
@@ -116,7 +116,7 @@
    "curl_ctype.c",
    "http_chunks.c"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\curl"
  },
  {
   "localid": 10172,
@@ -128,7 +128,7 @@
   "gt_files": [
    "Introduce a new expert category/protocol named \"String Errors\" (internal name _ws.string) and register an expert field \"Trailing stray characters\" with an appropriate severity/class (warning/undecoded). Make this expert protocol non-toggleable."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\wireshark"
  },
  {
   "localid": 10724,
@@ -138,7 +138,7 @@
   "repo_cwd": "/src/harfbuzz",
   "description": "Update the fallback kerning routine so it respects each glyph's lookup mask. Specifically:\n- Read plan->kern_mask into a local hb_mask_t variable and use that value when calling set_lookup_mask.\n- Before attempting to apply kern for a glyph inside the main loop, check the glyph's mask (buffer->cur()",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 10762,
@@ -148,7 +148,7 @@
   "repo_cwd": "/src/harfbuzz",
   "description": "Update the fallback kerning routine so it respects each glyph's lookup mask. Specifically:\n- Read plan->kern_mask into a local hb_mask_t variable and use that value when calling set_lookup_mask.\n- Before attempting to apply kern for a glyph inside the main loop, check the glyph's mask (buffer->cur()",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 11060,
@@ -160,7 +160,7 @@
   "gt_files": [
    "Ensure new structures are included in the existing size/serialization macros/definitions so they are considered by the library's size macros (DEFINE_SIZE_ARRAY/DEFINE_SIZE_UNION) consistent with other Lookup formats."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 11074,
@@ -172,7 +172,7 @@
   "gt_files": [
    "Ensure new structures are included in the existing size/serialization macros/definitions so they are considered by the library's size macros (DEFINE_SIZE_ARRAY/DEFINE_SIZE_UNION) consistent with other Lookup formats."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 11160,
@@ -186,7 +186,7 @@
    "scan_erspan_metadata: check scan_u8 and scan_u32 returns for ver/idx/dir/hwid, return -EINVAL on 0, and advance s by the returned length.",
    "scan_geneve: check scan_be16, scan_u8, scan_u32 returns within option parsing and opt length parsing, return -EINVAL on 0, advance s accordingly, and declare/reuse an int len for these checks; also reuse that len variable when computing the final key->len."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\ovs"
  },
  {
   "localid": 11170,
@@ -200,7 +200,7 @@
    "scan_erspan_metadata: check scan_u8 and scan_u32 returns for ver/idx/dir/hwid, return -EINVAL on 0, and advance s by the returned length.",
    "scan_geneve: check scan_be16, scan_u8, scan_u32 returns within option parsing and opt length parsing, return -EINVAL on 0, advance s accordingly, and declare/reuse an int len for these checks; also reuse that len variable when computing the final key->len."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\ovs"
  },
  {
   "localid": 11359,
@@ -210,7 +210,7 @@
   "repo_cwd": "/src/radare2",
   "description": "Update r_core_task_incref and r_core_task_decref to make modifications to task->refcount protected by the tasks lock:\n\n- Do nothing if task is NULL (preserve existing null-check).\n- In both r_core_task_incref and r_core_task_decref, acquire the tasks lock before touching task->refcount and release i",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\radare2"
  },
  {
   "localid": 14501,
@@ -257,7 +257,7 @@
   "repo_cwd": "/src/wireshark",
   "description": "- Rename the TLS dissector entry point to dissect_tls and make its data parameter represent an optional appdata dissector name (const char *). Remove any \"unused\" attribute for that parameter.\n- If data is non-NULL and the session's app_handle is not already set, resolve the named dissector with fin",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\wireshark"
  },
  {
   "localid": 18482,
@@ -267,7 +267,7 @@
   "repo_cwd": "/src/opensc",
   "description": "In sc_pkcs15_decode_prkdf_entry(), after calling sc_asn1_decode_choice(), detect when the call fails (return value < 0) and, in that error path, free any memory that the ASN.1 attribute parsing may have allocated for the common private-key attribute. Specifically, if the common prkey attribute is ma",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\OpenSC"
  },
  {
   "localid": 18890,
@@ -277,7 +277,7 @@
   "repo_cwd": "/src/opensc",
   "description": "In src/libopensc/pkcs15-pubkey.c, update sc_pkcs15_decode_pukdf_entry so that after calling sc_asn1_decode(...) any negative return value triggers freeing of der->value before continuing with the existing error handling. Preserve the current handling for SC_ERROR_ASN1_END_OF_CONTENTS and the existin",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\OpenSC"
  },
  {
   "localid": 20702,
@@ -316,7 +316,7 @@
    "Deskew the original pixs, write the deskew result to an implied-format path (e.g., \"/tmp/lept/deskew/result1\") using pixWriteImpliedFormat.",
    "Ensure all created PIX objects and the PIXCMAP are destroyed/freed before returning (destroy every intermediate pix, the deskewed pix, the original pixs, and the colormap)."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\leptonica"
  },
  {
   "localid": 25533,
@@ -335,7 +335,7 @@
    "Replace the in-place logging/increment logic for invalid FORMAT id/type with calls to the new bcf_record_check_err helper while keeping the same error flags (e.g. BCF_ERR_TAG_UNDEF, BCF_ERR_TAG_INVALID).",
    "Keep all other behavior, error codes and public interfaces unchanged; ensure message/verbosity policy for warnings matches the prior behavior (warning printed when reports==0 or verbose >= debug)."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\htslib"
  },
  {
   "localid": 25815,
@@ -347,7 +347,7 @@
   "gt_files": [
    "Remove/avoid duplicate handling of 'b'/'B' in the other character-escape handling path so these are only handled as assertions."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\hermes"
  },
  {
   "localid": 26952,
@@ -362,7 +362,7 @@
    "When dissecting ParameterSeq for RTI/DDS and encountering the domainId parameter:",
    "For UI/display:"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\wireshark"
  },
  {
   "localid": 27368,
@@ -374,7 +374,7 @@
   "gt_files": [
    "Estimate the worst-case compressed expansion as 5 bytes per 32KB of input: max_input_expansion = ((in_len / 32000) + 1) * 5."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\fluent-bit"
  },
  {
   "localid": 27413,
@@ -394,7 +394,7 @@
   "repo_cwd": "/src/c-blosc2",
   "description": "Update the fuzz/decompress_frame test to properly size the uncompressed buffer and to release the schunk before tearing down the library:\n\n- Allocate the uncompressed buffer with malloc((size_t)schunk->nbytes + 1) (i.e. cast schunk->nbytes to size_t before adding 1) instead of passing schunk->nbytes",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\c-blosc2"
  },
  {
   "localid": 31585,
@@ -407,7 +407,7 @@
    "Update msgpack header fixarray element count accordingly (increase from 13 to 14) and update any header format diagrams/comments/documentation (README) and byte-offset constants to reflect the new field and shifted offsets.",
    "Set the compression parameters blocksize in the test before creating schunk/frame, and assert that the recovered schunk/storage preserves the blocksize after serialization/deserialization."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\c-blosc2"
  },
  {
   "localid": 31586,
@@ -420,7 +420,7 @@
    "Update msgpack header fixarray element count accordingly (increase from 13 to 14) and update any header format diagrams/comments/documentation (README) and byte-offset constants to reflect the new field and shifted offsets.",
    "Set the compression parameters blocksize in the test before creating schunk/frame, and assert that the recovered schunk/storage preserves the blocksize after serialization/deserialization."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\c-blosc2"
  },
  {
   "localid": 31705,
@@ -432,7 +432,7 @@
   "gt_files": [
    "Replace early returns that occurred after file/read/size errors with setting an error code (rc) and jumping to a single cleanup/exit label."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\c-blosc2"
  },
  {
   "localid": 32149,
@@ -442,7 +442,7 @@
   "repo_cwd": "/src/opensc",
   "description": "Update sc_oberthur_read_file to prevent reading past the file's declared records and to use size-appropriate types for record indexing/offsets:\n- Use size_t for the record index, the byte offset and the record length instead of int.\n- In the loop that reads records, check if the current record index",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\OpenSC"
  },
  {
   "localid": 32340,
@@ -496,7 +496,7 @@
    "For each extra channel, copy or zero-fill into the provided output extra-channel ImageF buffers using their associated Rects. Preserve the previous validation: verify referenced source extra-channel sizes and origin are at least image_xsize/image_ysize with origin 0,0; if invalid, return an error.",
    "Modify RectBlender to use the provided output buffers/rects when preparing bg pointers/strides:"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libjxl"
  },
  {
   "localid": 35492,
@@ -506,7 +506,7 @@
   "repo_cwd": "/src/selinux",
   "description": "Update expression resolution to handle anonymous category sets passed as macro parameters:\n\n- In cil_resolve_expr, when handling a CIL_DATUM item, detect if the resolved symbol is actually an anonymous category set (sym_index == CIL_SYM_CATS and the datum node flavor is CIL_CATSET).\n  - If it is an ",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\selinux"
  },
  {
   "localid": 36464,
@@ -612,7 +612,7 @@
   "gt_files": [
    "Update unit tests to remove an extraneous empty Argument-List entry and adjust expected encoded/decoded packet bytes/lengths to match the new parsing behavior."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\freeradius-server"
  },
  {
   "localid": 40073,
@@ -625,7 +625,7 @@
    "Only generate a UC_HOOK_CODE trace callback for a given Thumb instruction when the CPU is not currently in a conditional-execution (IT/ITE) clause (i.e., when the cond-execution mask is zero).",
    "For 16-bit encodings, detect IT instructions and do not generate a trace for an IT (0xBF00 family) instruction, to avoid pausing/terminating at the IT itself."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\unicorn"
  },
  {
   "localid": 43587,
@@ -661,7 +661,7 @@
   "gt_files": [
    "When handling an image colorspace fallback: after replacing a failed colorspace with a default/profile and calling the routine that sets the device color, attempt to call gx_set_dev_color (or equivalent device-color-setup) a second time. If that second attempt fails, treat it as a fatal error and exit/cleanup instead of continuing."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\ghostpdl"
  },
  {
   "localid": 44432,
@@ -717,7 +717,7 @@
    "In the reader/flow-summary logic, when a flow is identified as TFTP include the filename in the human-readable flow info: set an appropriate info type and format \"Filename: <name>\" when filename is present.",
    "Update unit/integration test expectations to reflect additional TFTP parsed flows, included filenames in flow output, and entries for malformed TFTP RRQ/WRQ packets."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\nDPI"
  },
  {
   "localid": 49248,
@@ -727,7 +727,7 @@
   "repo_cwd": "/src/opensc",
   "description": "In cardos_list_files(), fix parsing of ASN.1 file information blocks so the search base and remaining-length accounting are correct and no out-of-bounds pointer arithmetic is performed.\n\nRequirements:\n- Add a local pointer (e.g. tag) to hold the result of sc_asn1_find_tag when locating the 0x6f file",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\OpenSC"
  },
  {
   "localid": 49606,
@@ -741,7 +741,7 @@
    "When encountering the token/trailer read step, avoid reading tokens and erroring when ctx->repaired is set; return success.",
    "In the top-level xref read/repair control flow:"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\ghostpdl"
  },
  {
   "localid": 49901,
@@ -751,7 +751,7 @@
   "repo_cwd": "/src/ndpi",
   "description": "Update SoftEther protocol parsing to validate lengths and avoid out-of-bounds memory access:\n\n- In dissect_softether_type:\n  - Treat a reported size of zero as invalid and bail out. Return 0 if siz == 0 or if the remaining payload length is less than siz + 3.\n\n- In dissect_softether_ip_port:\n  - Kee",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\nDPI"
  },
  {
   "localid": 50406,
@@ -764,7 +764,7 @@
    "When following the Parent entry, do not replace the Parent key in the original dictionary with a dereferenced object (i.e., avoid storing a dereferenced Parent back into the child dictionary). Instead, detect whether Parent exists without dereferencing, obtain the Parent object for use without mutating the child dictionary, and only temporarily dereference indirect Parent references to validate/use them. If the Parent object is not a dictionary (or cannot be dereferenced to a dictionary), stop the walk.",
    "Properly manage reference counts/ownership when moving from the current dictionary to its Parent: release the current dictionary reference and take a reference on the Parent dictionary you will continue processing."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\ghostpdl"
  },
  {
   "localid": 50436,
@@ -777,7 +777,7 @@
    "When following the Parent entry, do not replace the Parent key in the original dictionary with a dereferenced object (i.e., avoid storing a dereferenced Parent back into the child dictionary). Instead, detect whether Parent exists without dereferencing, obtain the Parent object for use without mutating the child dictionary, and only temporarily dereference indirect Parent references to validate/use them. If the Parent object is not a dictionary (or cannot be dereferenced to a dictionary), stop the walk.",
    "Properly manage reference counts/ownership when moving from the current dictionary to its Parent: release the current dictionary reference and take a reference on the Parent dictionary you will continue processing."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\ghostpdl"
  },
  {
   "localid": 51090,
@@ -792,7 +792,7 @@
    "Add the necessary header includes for the charset and string utility helpers (e.g. epan/charsets.h and epan/strutil.h).",
    "Note: UTF-8 is the target encoding per WHATWG; later improvements may detect/obey a charset parameter and add expert info if decoding used replacement characters."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\wireshark"
  },
  {
   "localid": 52174,
@@ -802,7 +802,7 @@
   "repo_cwd": "/src/ndpi",
   "description": "In ndpi_search_irc_tcp (src/lib/protocols/irc.c), extend the IRC command handling so that when a packet payload matches IRC command patterns (USER, NICK, PASS, NOTICE, PRIVMSG, VERSION) the code also scans the payload for the substring \"USER \" (anywhere within the payload). If found, extract the tok",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\nDPI"
  },
  {
   "localid": 52435,
@@ -812,7 +812,7 @@
   "repo_cwd": "/src/ndpi",
   "description": "In ndpi_search_irc_tcp (src/lib/protocols/irc.c), extend the IRC command handling so that when a packet payload matches IRC command patterns (USER, NICK, PASS, NOTICE, PRIVMSG, VERSION) the code also scans the payload for the substring \"USER \" (anywhere within the payload). If found, extract the tok",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\nDPI"
  },
  {
   "localid": 52814,
@@ -822,7 +822,7 @@
   "repo_cwd": "/src/wireshark",
   "description": "Remove the blanket zeroing of the destination buffer and instead guarantee NUL-termination immediately after each small write.\n\nRequirements:\n- Remove the memset(label_str + pos, 0, free_len + 1) call that zeroes the rest of the buffer.\n- After every branch that writes characters into label_str, wri",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\wireshark"
  },
  {
   "localid": 54044,
@@ -832,7 +832,7 @@
   "repo_cwd": "/src/harfbuzz",
   "description": "After updating regionIndices.len, grow the VarData storage without zeroing it. Replace the existing call to c->extend(this) with c->extend_size(this, get_size(), false) so the buffer is resized to the current get_size() and not cleared (the new memory will be fully overwritten). Preserve the existin",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 54162,
@@ -871,7 +871,7 @@
    "Expose the discovered UUID via the probe API under the name \"UUID_SUB\" (so it becomes ID_FS_UUID_SUB / ID_FS_UUID_SUB_ENC).",
    "Update tests/expected outputs to include ID_FS_UUID_SUB and ID_FS_UUID_SUB_ENC for the affected test images."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\util-linux"
  },
  {
   "localid": 55430,
@@ -881,7 +881,7 @@
   "repo_cwd": "/src/zeek",
   "description": "Update the Teredo analyzer detection to reduce false positives by tightening the regex and adding structured header checks:\n\n- Change the compiled pattern so it only matches the IPv6-like payload patterns (remove the alternatives that matched a bare 0x00 0x00 or 0x00 0x01 as top-level matches).\n- In",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\zeek"
  },
  {
   "localid": 55868,
@@ -893,7 +893,7 @@
   "gt_files": [
    "After any allocate/extend/solidify action, return &sub->table[start - sub->start]."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\mupdf"
  },
  {
   "localid": 56455,
@@ -905,7 +905,7 @@
   "gt_files": [
    "Add two variable-font test files to test/fuzzing/fonts to allow the fuzzer to exercise font instancing behavior."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 56510,
@@ -919,7 +919,7 @@
    "In SingleSubstFormat1_3::sanitize, after existing coverage and deltaGlyphID checks, likewise call the new check_ops with population/2.",
    "Keep existing trace/sanitize checks and return behavior; only add the extra op-accounting call to these sanitize methods."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 57369,
@@ -933,7 +933,7 @@
    "Verify VXLAN header fields per RFC 7348: the I bit (VNI present) is set and reserved bits/bytes are zero as required.",
    "Integrate detection into the packet processing workflow: when a VXLAN packet is recognized, mark the packet/tunnel as VXLAN, set the Ethernet offset to the inner-frame offset, and continue regular datalink/dissection on the inner frame (same flow as existing GTP/CAPWAP detunneling)."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\nDPI"
  },
  {
   "localid": 57911,
@@ -957,7 +957,7 @@
   "gt_files": [
    "If only phantom points are required, return early after the allocation/resize."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 58626,
@@ -971,7 +971,7 @@
    "Adjust other callers to reference the face's GDEF accelerator/table consistently:",
    "Where code previously dereferenced face->table.GDEF->table, use the face->table.GDEF reference/value directly as appropriate."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 58660,
@@ -983,7 +983,7 @@
   "gt_files": [
    "Before finalizing/serializing the rangeRecord array, sort it using that comparator to handle unordered input glyph lists."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 58663,
@@ -995,7 +995,7 @@
   "gt_files": [
    "Before finalizing/serializing the rangeRecord array, sort it using that comparator to handle unordered input glyph lists."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 58671,
@@ -1007,7 +1007,7 @@
   "gt_files": [
    "Before finalizing/serializing the rangeRecord array, sort it using that comparator to handle unordered input glyph lists."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 58785,
@@ -1022,7 +1022,7 @@
    "Add a new unit test that loads a test shared object containing a preceding .note.gnu.property segment (testdata/gnu-property.so), ensures GetBuildId skips the property note and returns the correct build-id string.",
    "Fuzz/test harness adjustments:"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\tcmalloc"
  },
  {
   "localid": 58786,
@@ -1037,7 +1037,7 @@
    "Add a new unit test that loads a test shared object containing a preceding .note.gnu.property segment (testdata/gnu-property.so), ensures GetBuildId skips the property note and returns the correct build-id string.",
    "Fuzz/test harness adjustments:"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\tcmalloc"
  },
  {
   "localid": 59438,
@@ -1062,7 +1062,7 @@
    "In ndpi_search_line (src/lib/protocols/line.c), before the existing UDP-packet-number heuristic, add a gated check that only runs when:",
    "Update the unit/integration test expectations (tests/cfgs/default/result/line.pcap.out) to reflect the new heuristic results:"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\nDPI"
  },
  {
   "localid": 60467,
@@ -1074,7 +1074,7 @@
   "gt_files": [
    "Replace existing calls to c->check_array(...) in the array-related sanitizer code (unsized / sized / headless / M1 array sanitizers) with c->check_array_sized(..., sizeof(Type)), passing sizeof(Type) as the third argument. Concretely update the sanitize_shallow implementations in:"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 60475,
@@ -1086,7 +1086,7 @@
   "gt_files": [
    "Replace existing calls to c->check_array(...) in the array-related sanitizer code (unsized / sized / headless / M1 array sanitizers) with c->check_array_sized(..., sizeof(Type)), passing sizeof(Type) as the third argument. Concretely update the sanitize_shallow implementations in:"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\harfbuzz"
  },
  {
   "localid": 60616,
@@ -1098,7 +1098,7 @@
   "gt_files": [
    "Preserve the existing return/logging behavior (LOG_FUNC_RETURN(ctx, r))."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\OpenSC"
  },
  {
   "localid": 60993,
@@ -1152,7 +1152,7 @@
   "gt_files": [
    "Function construction/creation paths (e.g. _PyFunction_FromConstructor, PyFunction_NewWithQualName)"
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\cpython"
  },
  {
   "localid": 61818,
@@ -1186,7 +1186,7 @@
   "repo_cwd": "/src/opensc",
   "description": "- Add a new constant AID for the gematik eGK (bytes: D2 76 00 01 44 80 00).\n- In the PKCS#15 DIN V 66291 card initialization logic, when the card's tokeninfo->profile_indication.name is missing or not \"DIN V 66291\", attempt detection in two ways:\n  1. Primary: try to select the DF by the existing ai",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\OpenSC"
  },
  {
   "localid": 63776,
@@ -1227,7 +1227,7 @@
   "repo_cwd": "/src/mupdf",
   "description": "In the BMP decoder's color-profile reader, correct the buffer-length validation when deciding whether a color profile is fully present. Instead of testing if the available bytes are less than (profileoffset + profilesize), test only that the available bytes (cast to uint32_t) are at least profilesiz",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\mupdf"
  },
  {
   "localid": 64677,
@@ -1237,7 +1237,7 @@
   "repo_cwd": "/src/mupdf",
   "description": "In the BMP decoder's color-profile reader, correct the buffer-length validation when deciding whether a color profile is fully present. Instead of testing if the available bytes are less than (profileoffset + profilesize), test only that the available bytes (cast to uint32_t) are at least profilesiz",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\mupdf"
  },
  {
   "localid": 64898,
@@ -1249,7 +1249,7 @@
   "gt_files": [
    "If sc_get_challenge succeeds, compute len, call sc_update_binary, then free the file and only then check/log sc_update_binary's return value."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\OpenSC"
  },
  {
   "localid": 65418,
@@ -1263,7 +1263,7 @@
    "After (re)allocation, update local pointers/size variables to use the dynamic buffer in the view context, copy the NAL into the buffer, and zero the 8 reserved bytes only if the allocated buffer is larger than the required size.",
    "Allocates an aligned buffer (use the view context’s aligned alloc callback with 128-byte alignment) of the requested/adjusted size."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libavc"
  },
  {
   "localid": 65533,
@@ -1277,7 +1277,7 @@
    "Implement the conversion/dithering in a SIMD-friendly helper routine/templates so it can be used for different channel counts (1..4) and target unsigned types.",
    "Update pixel comparison tests to tolerate the additional error introduced by dithering when comparing against 8-bit outputs by increasing the allowed precision threshold by the maximum possible dithering difference (approx. 63/128)."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libjxl"
  },
  {
   "localid": 65996,
@@ -1301,7 +1301,7 @@
   "repo_cwd": "/src/igraph",
   "description": "Update the build configuration so Flex lexer generation is invoked with additional Flex compile flags. In src/CMakeLists.txt, for each FORMAT in the existing foreach that calls flex_target, append the flags \"-CF -8\" to the COMPILE_FLAGS already used (preserving flex_hide_line_numbers). All other beh",
   "gt_files": [],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\igraph"
  },
  {
   "localid": 67231,
@@ -1322,6 +1322,6 @@
    "Apply these changes to control frames, extension frames, PV0, PV1 and relevant management frame handling so that the DL SRC/DST columns reflect the appropriate new address types (RA/TA/BSSID/AID) and right-click filter generation works correctly even when WLAN is not the first link-layer.",
    "Maintain existing behavior for other address types and ensure backward compatibility where other parts of the code expect pinfo->src/pinfo->dst to have been set."
   ],
-  "local_repo": null
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\wireshark"
  }
 ]
