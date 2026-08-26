@@ -48,7 +48,8 @@
   <div class="grid">
     <div class="card"><div class="k">GitHub key（hos-ls remote 内嵌 ghp_…）</div><div class="v ok">✅ 有效</div><div class="k">gh api user → lxcxjxhx；rate limit 5000</div></div>
     <div class="card"><div class="k">LLM key（XIAOMI_TOKEN_PLAN_CN_API_KEY, tp-…）</div><div class="v bad">⛔ 429 配额耗尽</div><div class="k">2026-08-27 起 quota exhausted（已核实稳定 429）；此前数据有效</div></div>
-    <div class="card"><div class="k">备用：官方 DeepSeek（sk-5de8…）</div><div class="v ok">✅ 可用</div><div class="k">api.deepseek.com/v1 · deepseek-chat HTTP 200（2026-08-27 验证）</div></div>
+    <div class="card"><div class="k">当前主力：DeepInfra（用户提供 key）</div><div class="v ok">✅ 启用</div><div class="k">api.deepinfra.com/v1/openai · deepseek-ai/DeepSeek-V4-Flash（200，2026-08-27）</div></div>
+    <div class="card"><div class="k">备用：官方 DeepSeek（sk-5de8…）</div><div class="v ok">✅ 可用</div><div class="k">api.deepseek.com/v1 · deepseek-chat HTTP 200（未启用）</div></div>
     <div class="card"><div class="k">DEEPSEEK_API_KEY（sk-…）对该端点</div><div class="v bad">✗ 401</div><div class="k">必须用 tp- key；网关无余额查询 API（404）</div></div>
     <div class="card"><div class="k">代理</div><div class="v warn">7897 已死 → 7890</div><div class="k">git 需 GIT_SSL_BACKEND=openssl（schannel 握手失败）</div></div>
     <div class="card"><div class="k">HOS-LS pure-ai 扫描链</div><div class="v ok">✅ 打通</div><div class="k">47–250s/文件；JSON+token_records 可解析</div></div>
@@ -164,7 +165,8 @@
     <tr><td>代码落地</td><td><b>81/120 拉取成功</b>（GitHub API full@base_commit，0 成本）；39 无代码（wukong-aiseceval 变异仓库不存在于 GitHub）</td></tr>
     <tr><td>XSS 可用</td><td>20/30（10 真实 + 10 变异共享父文件）</td></tr>
     <tr><td>Semgrep 基线（0 成本）</td><td>完整文件 30/81 文件命中、117 findings（xss_04=15 条 echoed-request、sqli_02/03/04=tainted-sql-string、path_traversal_03/04=tainted-filename）；摘录文件仅 1/27</td></tr>
-    <tr><td>XSS 7-agent 波次</td><td><b>3 有效（xss_01/02/03，0 CONFIRMED）+ 17 个 429 配额失败（不计入检出数据）</b></td></tr>
+    <tr><td>XSS 7-agent 波次</td><td>v1（mimo）：3 有效（xss_01/02/03，0 CONFIRMED）+ 17 个 429 配额失败；
+        <b>v2（DeepInfra/deepseek-v4-flash，用户切换）：17 个重跑中，xss_04 已 CONFIRMED 存储型 XSS @8</b></td></tr>
   </table>
   <div class="note"><b>429 事件（2026-08-27）</b>：XSS 波次进行中 tp-key 配额耗尽（quota exhausted），17/20 样本的
   扫描返回 ['file_path','error'] 错误结果并回退 3-agent 兜底 —— <b>这 17 个"0 检出"无效，已从检出统计剔除</b>。

@@ -32,10 +32,11 @@ REPOS = os.path.join(BASE, "framework-audit", "repos")
 REPORTS = os.path.join(EVAL, "reports")
 ASE = os.path.join(EVAL, "ase_samples")
 
-API_URL = "https://token-plan-cn.xiaomimimo.com/v1/chat/completions"
-API_MODEL = "mimo-v2.5-pro"
+API_URL = os.environ.get("HOSLS_API_URL", "https://token-plan-cn.xiaomimimo.com/v1/chat/completions")
+API_MODEL = os.environ.get("HOSLS_API_MODEL", "mimo-v2.5-pro")
 SCAN_TIMEOUT = int(os.environ.get("HOSLS_SCAN_TIMEOUT", "260"))
 GIT_TIMEOUT = 300
+HOSLS_CONFIG = os.environ.get("HOSLS_CONFIG", "hos-ls.yaml")  # 默认 token-plan 配置；DeepInfra 用 hos-ls-deepinfra.yaml
 
 # Windows git + 本地代理：schannel 后端握手失败，强制 openssl（与 .gitconfig_proxy 一致）
 os.environ.setdefault("GIT_SSL_BACKEND", "openssl")
@@ -184,7 +185,7 @@ def parse_scan_report(out_json):
 
 def run_scan_file(filepath, out_json, timeout=SCAN_TIMEOUT):
     """对单个文件跑 HOS-LS pure-ai 扫描。返回解析结果 dict（超时返回 timeout 记录，不抛异常）。"""
-    cmd = [sys.executable, "-m", "src.cli.main", "-c", "hos-ls.yaml", "scan", filepath,
+    cmd = [sys.executable, "-m", "src.cli.main", "-c", HOSLS_CONFIG, "scan", filepath,
            "--pure-ai", "--test", "1", "--format", "json", "--output", out_json, "--skip-data-update"]
     t0 = time.time()
     try:
