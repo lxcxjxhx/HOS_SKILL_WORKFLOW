@@ -413,12 +413,16 @@ def gen_patch_full(manifest_path, outdir=None, workers=2, src_dir=None):
             f"```\n{code}\n```"
         )
         fixed, usage = "", None
-        for attempt in (16384, 32768):
-            content, usage = llm_chat([{"role": "user", "content": prompt}], max_tokens=attempt)
-            fixed = strip_fence(content or "")
-            if fixed and fixed.count("\n") + 1 >= max(5, m.get("lines", 0) * 0.5):
-                break
+        try:
+            for attempt in (16384, 32768):
+                content, usage = llm_chat([{"role": "user", "content": prompt}], max_tokens=attempt, timeout=600)
+                fixed = strip_fence(content or "")
+                if fixed and fixed.count("\n") + 1 >= max(5, m.get("lines", 0) * 0.5):
+                    break
+                fixed = ""
+        except Exception as e:
             fixed = ""
+            print(f"[gen-patch-full] {iid} LLM 异常: {str(e)[:100]}", flush=True)
         dst = os.path.join(outdir, m["code_file"])
         ok = bool(fixed)
         if ok:

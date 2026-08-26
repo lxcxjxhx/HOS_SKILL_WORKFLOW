@@ -1,0 +1,1327 @@
+[
+ {
+  "localid": 992,
+  "repo": "https://github.com/file/file.git",
+  "repo_name": "file",
+  "vic": "22067c96ba2d61e6628bd1afa2ae3940c3cd46ca",
+  "repo_cwd": "/src/file",
+  "description": "- Add a static helper function cdf_copy_info(cdf_property_info_t *inp, const void *p, const void *e, size_t len) that:\n  - Rejects vector properties (if inp->pi_type & CDF_VECTOR) and returns failure.\n  - Verifies there are at least len bytes available between p and e; if not, returns failure.\n  - C",
+  "gt_files": [
+   "Returns success on successful copy/convert."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\file"
+ },
+ {
+  "localid": 3522,
+  "repo": "https://github.com/facebook/zstd",
+  "repo_name": "zstd",
+  "vic": "86b4fe5b45458c65f26762fb1de2803056e3d37e",
+  "repo_cwd": "/src/zstd",
+  "description": "- lib/compress/zstd_compress.c\n  - Update ZSTD_adjustCParams_internal() logic for treating unknown/unstated input size:\n    - Introduce constants: minSrcSize = 513 and maxWindowResize = 1ULL << (ZSTD_WINDOWLOG_MAX-1).\n    - If dictSize > 0 and srcSize is unknown, assume a small source and set srcSiz",
+  "gt_files": [
+   "lib/compress/zstd_compress.c",
+   "Update ZSTD_adjustCParams_internal() logic for treating unknown/unstated input size:",
+   "lib/common/pool.c",
+   "Make pointer type declarations/definitions stylistically consistent:"
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\zstd"
+ },
+ {
+  "localid": 4088,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "a6150306838b168475a9aa661ad569b0405c9f91",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Update the format-2 kerning subtable value lookup to perform a real class-based lookup instead of returning a constant. Specifically:\n\n- In KernSubTableFormat2::get_value(left, right) compute the left and right class indices from their respective class tables.\n- Compute the byte offset into the valu",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 4167,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "a6150306838b168475a9aa661ad569b0405c9f91",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Update the format-2 kerning subtable value lookup to perform a real class-based lookup instead of returning a constant. Specifically:\n\n- In KernSubTableFormat2::get_value(left, right) compute the left and right class indices from their respective class tables.\n- Compute the byte offset into the valu",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 5296,
+  "repo": "https://github.com/darktable-org/rawspeed.git",
+  "repo_name": "rawspeed",
+  "vic": "ca04e025e5074b07a9c4f495cc79cff675a9365c",
+  "repo_cwd": "/src/librawspeed",
+  "description": "Update Spline::calculateCurve so interpolated values are safely constrained for integer value types:\n\n- Compute the interpolated value into a local double first (instead of writing directly into the output array).\n- If the spline's template value_type is not a floating-point type, clamp the interpol",
+  "gt_files": [
+   "Add/ensure the proper include for <algorithm> (for min/max) if not already present."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 7995,
+  "repo": "https://github.com/curl/curl.git",
+  "repo_name": "curl",
+  "vic": "dd7521bcc1b7a6fcb53c31f9bd1192fcc884bd56",
+  "repo_cwd": "/src/curl",
+  "description": "Requirement summary — restore and conditionally use the system ctype character-classification when requested, and adapt chunk- and URL-handling to use the appropriate checks.\n\nRequirements\n- curl_ctype.h\n  - Include curl_setup.h at the top.\n  - If CURL_DOES_CONVERSIONS is defined, include <ctype.h> ",
+  "gt_files": [
+   "curl_ctype.h",
+   "Ensure conditional compilation blocks (#ifdef / #else / #endif) are correct and close cleanly.",
+   "curl_ctype.c",
+   "http_chunks.c"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 7997,
+  "repo": "https://github.com/curl/curl.git",
+  "repo_name": "curl",
+  "vic": "dd7521bcc1b7a6fcb53c31f9bd1192fcc884bd56",
+  "repo_cwd": "/src/curl",
+  "description": "Requirement summary — restore and conditionally use the system ctype character-classification when requested, and adapt chunk- and URL-handling to use the appropriate checks.\n\nRequirements\n- curl_ctype.h\n  - Include curl_setup.h at the top.\n  - If CURL_DOES_CONVERSIONS is defined, include <ctype.h> ",
+  "gt_files": [
+   "curl_ctype.h",
+   "Ensure conditional compilation blocks (#ifdef / #else / #endif) are correct and close cleanly.",
+   "curl_ctype.c",
+   "http_chunks.c"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 8000,
+  "repo": "https://github.com/curl/curl.git",
+  "repo_name": "curl",
+  "vic": "dd7521bcc1b7a6fcb53c31f9bd1192fcc884bd56",
+  "repo_cwd": "/src/curl",
+  "description": "Requirement summary — restore and conditionally use the system ctype character-classification when requested, and adapt chunk- and URL-handling to use the appropriate checks.\n\nRequirements\n- curl_ctype.h\n  - Include curl_setup.h at the top.\n  - If CURL_DOES_CONVERSIONS is defined, include <ctype.h> ",
+  "gt_files": [
+   "curl_ctype.h",
+   "Ensure conditional compilation blocks (#ifdef / #else / #endif) are correct and close cleanly.",
+   "curl_ctype.c",
+   "http_chunks.c"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 8007,
+  "repo": "https://github.com/curl/curl.git",
+  "repo_name": "curl",
+  "vic": "dd7521bcc1b7a6fcb53c31f9bd1192fcc884bd56",
+  "repo_cwd": "/src/curl",
+  "description": "Requirement summary — restore and conditionally use the system ctype character-classification when requested, and adapt chunk- and URL-handling to use the appropriate checks.\n\nRequirements\n- curl_ctype.h\n  - Include curl_setup.h at the top.\n  - If CURL_DOES_CONVERSIONS is defined, include <ctype.h> ",
+  "gt_files": [
+   "curl_ctype.h",
+   "Ensure conditional compilation blocks (#ifdef / #else / #endif) are correct and close cleanly.",
+   "curl_ctype.c",
+   "http_chunks.c"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 10172,
+  "repo": "https://github.com/wireshark/wireshark.git",
+  "repo_name": "wireshark",
+  "vic": "5c36f6166c30b586be3e6cc600f58e1eb5830eb7",
+  "repo_cwd": "/src/wireshark",
+  "description": "Add detection and expert reporting for \"trailing stray characters\" in string items shown in the packet tree.\n\nRequirements:\n- Introduce a new expert category/protocol named \"String Errors\" (internal name _ws.string) and register an expert field \"Trailing stray characters\" with an appropriate severit",
+  "gt_files": [
+   "Introduce a new expert category/protocol named \"String Errors\" (internal name _ws.string) and register an expert field \"Trailing stray characters\" with an appropriate severity/class (warning/undecoded). Make this expert protocol non-toggleable."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 10724,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "9b0b40b3c1ac8155c80ed5dc976228f4d3ec7e1f",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Update the fallback kerning routine so it respects each glyph's lookup mask. Specifically:\n- Read plan->kern_mask into a local hb_mask_t variable and use that value when calling set_lookup_mask.\n- Before attempting to apply kern for a glyph inside the main loop, check the glyph's mask (buffer->cur()",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 10762,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "9b0b40b3c1ac8155c80ed5dc976228f4d3ec7e1f",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Update the fallback kerning routine so it respects each glyph's lookup mask. Specifically:\n- Read plan->kern_mask into a local hb_mask_t variable and use that value when calling set_lookup_mask.\n- Before attempting to apply kern for a glyph inside the main loop, check the glyph's mask (buffer->cur()",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 11060,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "f7c0b4319c6f82f1e0020a0029469d8953a7a161",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "- Add support for Lookup format 10 (variable-sized integer values) to the Lookup machinery:\n  - Introduce a LookupFormat10<T> structure that stores format, valueSize, firstGlyph, glyphCount and an array of bytes for values.\n  - Implement LookupFormat10::get_value_or_null(glyph_id) that returns the i",
+  "gt_files": [
+   "Ensure new structures are included in the existing size/serialization macros/definitions so they are considered by the library's size macros (DEFINE_SIZE_ARRAY/DEFINE_SIZE_UNION) consistent with other Lookup formats."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 11074,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "f7c0b4319c6f82f1e0020a0029469d8953a7a161",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "- Add support for Lookup format 10 (variable-sized integer values) to the Lookup machinery:\n  - Introduce a LookupFormat10<T> structure that stores format, valueSize, firstGlyph, glyphCount and an array of bytes for values.\n  - Implement LookupFormat10::get_value_or_null(glyph_id) that returns the i",
+  "gt_files": [
+   "Ensure new structures are included in the existing size/serialization macros/definitions so they are considered by the library's size macros (DEFINE_SIZE_ARRAY/DEFINE_SIZE_UNION) consistent with other Lookup formats."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 11160,
+  "repo": "https://github.com/openvswitch/ovs.git",
+  "repo_name": "ovs",
+  "vic": "4e9c96f00614d829347dce7f183c3bedc2b35829",
+  "repo_cwd": "/src/openvswitch",
+  "description": "Update parsing routines to properly handle the length return values from scan_* helpers (which return 0 on a failed parse and a positive length on success):\n\n- For every call to scan_u8 / scan_u32 / scan_be16 / scan_u128 / etc., capture the return value into an int (e.g. len or retval).\n- If the cap",
+  "gt_files": [
+   "For every call to scan_u8 / scan_u32 / scan_be16 / scan_u128 / etc., capture the return value into an int (e.g. len or retval).",
+   "scan_erspan_metadata: check scan_u8 and scan_u32 returns for ver/idx/dir/hwid, return -EINVAL on 0, and advance s by the returned length.",
+   "scan_geneve: check scan_be16, scan_u8, scan_u32 returns within option parsing and opt length parsing, return -EINVAL on 0, advance s accordingly, and declare/reuse an int len for these checks; also reuse that len variable when computing the final key->len."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 11170,
+  "repo": "https://github.com/openvswitch/ovs.git",
+  "repo_name": "ovs",
+  "vic": "4e9c96f00614d829347dce7f183c3bedc2b35829",
+  "repo_cwd": "/src/openvswitch",
+  "description": "Update parsing routines to properly handle the length return values from scan_* helpers (which return 0 on a failed parse and a positive length on success):\n\n- For every call to scan_u8 / scan_u32 / scan_be16 / scan_u128 / etc., capture the return value into an int (e.g. len or retval).\n- If the cap",
+  "gt_files": [
+   "For every call to scan_u8 / scan_u32 / scan_be16 / scan_u128 / etc., capture the return value into an int (e.g. len or retval).",
+   "scan_erspan_metadata: check scan_u8 and scan_u32 returns for ver/idx/dir/hwid, return -EINVAL on 0, and advance s by the returned length.",
+   "scan_geneve: check scan_be16, scan_u8, scan_u32 returns within option parsing and opt length parsing, return -EINVAL on 0, advance s accordingly, and declare/reuse an int len for these checks; also reuse that len variable when computing the final key->len."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 11359,
+  "repo": "https://github.com/radare/radare2",
+  "repo_name": "radare2",
+  "vic": "77d80106e65ed4ff3ba5faf568b078648faed94f",
+  "repo_cwd": "/src/radare2",
+  "description": "Update r_core_task_incref and r_core_task_decref to make modifications to task->refcount protected by the tasks lock:\n\n- Do nothing if task is NULL (preserve existing null-check).\n- In both r_core_task_incref and r_core_task_decref, acquire the tasks lock before touching task->refcount and release i",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 14501,
+  "repo": "https://github.com/lpereira/lwan.git",
+  "repo_name": "lwan",
+  "vic": "3402997c93f794903a27d35c4624ca489f52f8ac",
+  "repo_cwd": "/src/lwan",
+  "description": "- Replace the current decode_hex_digit() implementation with a static 256-entry lookup table that maps ASCII codes for '0'..'9', 'a'..'f' and 'A'..'F' to 0..15, and returns table[(unsigned char)ch]. Keep the function ALWAYS_INLINE and returning char.\n- In url_decode(), when encountering a '%' byte, ",
+  "gt_files": [
+   "In url_decode(), when encountering a '%' byte, stop doing explicit lwan_char_isxdigit() checks; instead compute the decoded byte as (decode_hex_digit(ch[1]) << 4) | decode_hex_digit(ch[2]). Preserve existing behavior: if the decoded byte is NUL return -EINVAL. Also keep the initial NULL input check and the rest of the iteration/decoding flow unchanged."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\lwan"
+ },
+ {
+  "localid": 14529,
+  "repo": "https://github.com/lpereira/lwan.git",
+  "repo_name": "lwan",
+  "vic": "ed0401f0889b6e91b41241093891e5716c24ac0b",
+  "repo_cwd": "/src/lwan",
+  "description": "Refactor and simplify parse_headers() behavior while preserving its functionality:\n\n- Replace the existing goto/label-based scanning with a single loop that repeatedly searches for the next '\\r' in the buffer.\n- If no '\\r' is found, stop scanning and treat parsing as complete (success).\n- If an empt",
+  "gt_files": [
+   "Replace the existing goto/label-based scanning with a single loop that repeatedly searches for the next '\\r' in the buffer."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\lwan"
+ },
+ {
+  "localid": 15603,
+  "repo": "https://github.com/mruby/mruby",
+  "repo_name": "mruby",
+  "vic": "23783a44300a39efbbc312a6ca22fe61d94db857",
+  "repo_cwd": "/src/mruby",
+  "description": "Update hash handling to ignore deleted entries during copy and clarify comment:\n\n- In src/hash.c, ht_copy: when iterating hash table entries, skip entries whose key is mrb_undef_p (i.e., a deleted key) — do not process or attempt to reinsert such entries; simply continue to the next entry. Keep the ",
+  "gt_files": [
+   "In src/hash.c, ht_copy: when iterating hash table entries, skip entries whose key is mrb_undef_p (i.e., a deleted key) — do not process or attempt to reinsert such entries; simply continue to the next entry. Keep the existing early-return check for the last segment/last_len.",
+   "In src/hash.c, ht_compact: adjust the inline comment for the branch that detects a deleted key from \"found delete key\" to \"found deleted key\" for clarity."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\mruby"
+ },
+ {
+  "localid": 16442,
+  "repo": "https://github.com/wireshark/wireshark.git",
+  "repo_name": "wireshark",
+  "vic": "ede7be3440689cee51489361934704467f2b2ffb",
+  "repo_cwd": "/src/wireshark",
+  "description": "- Rename the TLS dissector entry point to dissect_tls and make its data parameter represent an optional appdata dissector name (const char *). Remove any \"unused\" attribute for that parameter.\n- If data is non-NULL and the session's app_handle is not already set, resolve the named dissector with fin",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 18482,
+  "repo": "https://github.com/OpenSC/OpenSC",
+  "repo_name": "OpenSC",
+  "vic": "630d6adf32cecaab0ee184618f56497bd50400fb",
+  "repo_cwd": "/src/opensc",
+  "description": "In sc_pkcs15_decode_prkdf_entry(), after calling sc_asn1_decode_choice(), detect when the call fails (return value < 0) and, in that error path, free any memory that the ASN.1 attribute parsing may have allocated for the common private-key attribute. Specifically, if the common prkey attribute is ma",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 18890,
+  "repo": "https://github.com/OpenSC/OpenSC",
+  "repo_name": "OpenSC",
+  "vic": "0977b5496ad7f35f6575555714e2c352ce85285e",
+  "repo_cwd": "/src/opensc",
+  "description": "In src/libopensc/pkcs15-pubkey.c, update sc_pkcs15_decode_pukdf_entry so that after calling sc_asn1_decode(...) any negative return value triggers freeing of der->value before continuing with the existing error handling. Preserve the current handling for SC_ERROR_ASN1_END_OF_CONTENTS and the existin",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 20702,
+  "repo": "https://github.com/file/file.git",
+  "repo_name": "file",
+  "vic": "0717383f58e5737cc4aa28446f5a8839d484caf4",
+  "repo_cwd": "/src/file",
+  "description": "Summary: add tracking and limits for formatted output from magic files and validate printf-style formats before printing.\n\nRequirements:\n- Add a size_t field (blen) to struct out in file.h to record the current length of ms->o.buf. Also add blen to file_pushbuf_t.\n- Add a prototype for a new helper:",
+  "gt_files": [
+   "Implement file_checkfmt to scan a printf-style format string and reject unsafe/unsupported constructs:",
+   "When pushing/popping the output buffer (file_push_buffer / file_pop_buffer), save and restore the blen value along with buf and offset.",
+   "Prevent unbounded/very large output from doctored magic files by validating format strings and enforcing a 1 MiB overall output limit and a reasonable per-field-width limit (1024)."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\file"
+ },
+ {
+  "localid": 21916,
+  "repo": "https://github.com/open-source-parsers/jsoncpp",
+  "repo_name": "jsoncpp",
+  "vic": "83946a28db3d13ffe8184bdae23287a81c09fd7f",
+  "repo_cwd": "/src/jsoncpp",
+  "description": "Add optional handling for a UTF-8 byte order mark (BOM) at the start of input and expose it via reader settings.\n\nRequirements:\n- Add a boolean reader setting \"allowBom\" (default: false) to CharReaderBuilder's settings and include it in valid keys, defaults and strict-mode presets.\n- When parsing be",
+  "gt_files": [
+   "Implement the BOM-handling logic inside the reader (e.g., a skipBom helper invoked at parse start) and wire the new setting into the reader's feature/config structure."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\jsoncpp"
+ },
+ {
+  "localid": 22110,
+  "repo": "https://github.com/DanBloomberg/leptonica.git",
+  "repo_name": "leptonica",
+  "vic": "836740fd7829e6e3a92a766b7e559f4136378eb7",
+  "repo_cwd": "/src/leptonica",
+  "description": "Update the colorquant fuzzer to exercise many more color-quantization and related image routines on an input SPix image. Requirements:\n\n- Keep the fuzzer entry point signature: extern \"C\" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size).\n- Install the library null error handler at start ",
+  "gt_files": [
+   "Deskew the original pixs, write the deskew result to an implied-format path (e.g., \"/tmp/lept/deskew/result1\") using pixWriteImpliedFormat.",
+   "Ensure all created PIX objects and the PIXCMAP are destroyed/freed before returning (destroy every intermediate pix, the deskewed pix, the original pixs, and the colormap)."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 25533,
+  "repo": "https://github.com/samtools/htslib.git",
+  "repo_name": "htslib",
+  "vic": "3ac8a04f8f6071be0901a9ddcda296f58b2bcf0c",
+  "repo_cwd": "/src/htslib",
+  "description": "- Optimize bcf_dec_typed_int1_safe:\n  - Change pointer handling so the input pointer p is advanced as bytes are consumed (use p++ / p += size) and set *q once at the end to the updated p.\n  - Handle BCF_BT_INT8 by reading the signed 8-bit value and incrementing p by 1.\n  - For all other types, check",
+  "gt_files": [
+   "Change pointer handling so the input pointer p is advanced as bytes are consumed (use p++ / p += size) and set *q once at the end to the updated p.",
+   "For all other types, check remaining buffer length using bcf_type_shift[type] before reading; then branch on type to decode int16/int32 (and int64 under VCF_ALLOW_INT64) using le_to_i16/le_to_i32/le_to_i64 and advance p accordingly.",
+   "Return -1 for unknown/unsupported types and preserve existing error return behavior.",
+   "Preserve VCF_ALLOW_INT64 conditional compilation and overall function signature/semantics.",
+   "Add a small helper function bcf_record_check_err(const bcf_hdr_t*, bcf1_t*, char *type, uint32_t *reports, int i) to centralize reporting of invalid FORMAT/type/id conditions:",
+   "It should log a warning containing sequence name and position and the offending tag/type when either no previous reports have been emitted or verbosity level is DEBUG.",
+   "Replace the in-place logging/increment logic for invalid FORMAT id/type with calls to the new bcf_record_check_err helper while keeping the same error flags (e.g. BCF_ERR_TAG_UNDEF, BCF_ERR_TAG_INVALID).",
+   "Keep all other behavior, error codes and public interfaces unchanged; ensure message/verbosity policy for warnings matches the prior behavior (warning printed when reports==0 or verbose >= debug)."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 25815,
+  "repo": "https://github.com/facebook/hermes.git",
+  "repo_name": "hermes",
+  "vic": "58f7c31e9da3ac8cdf894307080929fa93648870",
+  "repo_cwd": "/src/hermes",
+  "description": "Change the regex parser so that the escape sequences \"\\b\" and \"\\B\" are parsed as word-boundary assertions, not as AtomEscape tokens. Concretely:\n- When the parser sees a backslash escape, if the escaped character is 'b' or 'B', treat it as an assertion node (word boundary) with the correct inversion",
+  "gt_files": [
+   "Remove/avoid duplicate handling of 'b'/'B' in the other character-escape handling path so these are only handled as assertions."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 26952,
+  "repo": "https://github.com/wireshark/wireshark.git",
+  "repo_name": "wireshark",
+  "vic": "c8e24f5c55cb37b9a311e5226923d291892de892",
+  "repo_cwd": "/src/wireshark",
+  "description": "Add support for determining RTPS DomainId for TCP sessions by extracting it from participant-discovery packets and showing \"Unknown\" when not available. Requirements:\n\n- Add constants for unknown-domain handling and the private-table key:\n  - RTPS_UNKNOWN_DOMAIN_ID_VAL = -1\n  - RTPS_UNKNOWN_DOMAIN_I",
+  "gt_files": [
+   "Add a global/file-scope wmem_map (discovered_tcp_participants) keyed by endpoint_guid (use existing hash_by_guid/compare_by_guid) to store participant_info objects for discovered TCP participants. Initialize this map in proto_register_rtps() using wmem_map_new_autoreset with the same hash/compare used elsewhere.",
+   "If the packet uses TCP (pinfo->ptype == PT_TCP), ensure pinfo->private_table exists (create a g_hash_table_new_full with g_free keys/values if necessary).",
+   "When dissecting ParameterSeq for RTI/DDS and encountering the domainId parameter:",
+   "For UI/display:"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 27368,
+  "repo": "https://github.com/fluent/fluent-bit",
+  "repo_name": "fluent-bit",
+  "vic": "cadff53c093210404aed01c4cf586adb8caa07af",
+  "repo_cwd": "/src/fluent-bit",
+  "description": "Update the gzip compression buffer sizing to compute a variable output buffer length based on the input size instead of a fixed fixed-offset. Specifically:\n\n- Replace the previous fixed sizing (out_size = in_len + 32) with a dynamic calculation:\n  - Estimate the worst-case compressed expansion as 5 ",
+  "gt_files": [
+   "Estimate the worst-case compressed expansion as 5 bytes per 32KB of input: max_input_expansion = ((in_len / 32000) + 1) * 5."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 27413,
+  "repo": "https://github.com/richgel999/miniz.git",
+  "repo_name": "miniz",
+  "vic": "1e7621d96cb9d0821c61db6f4e3ef36ddc19b0cd",
+  "repo_cwd": "/src/miniz",
+  "description": "Replace the fixed 256KB static output buffer in the uncompress fuzzer with a dynamically sized heap buffer derived from the fuzzer input and update the call flow accordingly:\n\n- Compute an initial output buffer length as 1 and, if available, multiply it by the first and second input bytes (i.e., use",
+  "gt_files": [],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\miniz"
+ },
+ {
+  "localid": 28392,
+  "repo": "https://github.com/Blosc/c-blosc2.git",
+  "repo_name": "c-blosc2",
+  "vic": "933c0c455c91da06604163f533e9a2084cd2f6ca",
+  "repo_cwd": "/src/c-blosc2",
+  "description": "Update the fuzz/decompress_frame test to properly size the uncompressed buffer and to release the schunk before tearing down the library:\n\n- Allocate the uncompressed buffer with malloc((size_t)schunk->nbytes + 1) (i.e. cast schunk->nbytes to size_t before adding 1) instead of passing schunk->nbytes",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 31585,
+  "repo": "https://github.com/Blosc/c-blosc2.git",
+  "repo_name": "c-blosc2",
+  "vic": "861ba79f31393dec0a0782ca11cf32cebb6f6610",
+  "repo_cwd": "/src/c-blosc2",
+  "description": "- Add a blocksize field into the serialized frame header:\n  - Insert a msgpack int32 field named \"block_size\" into the header between the existing typesize and chunksize fields.\n  - Update msgpack header fixarray element count accordingly (increase from 13 to 14) and update any header format diagram",
+  "gt_files": [
+   "Update msgpack header fixarray element count accordingly (increase from 13 to 14) and update any header format diagrams/comments/documentation (README) and byte-offset constants to reflect the new field and shifted offsets.",
+   "Set the compression parameters blocksize in the test before creating schunk/frame, and assert that the recovered schunk/storage preserves the blocksize after serialization/deserialization."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 31586,
+  "repo": "https://github.com/Blosc/c-blosc2.git",
+  "repo_name": "c-blosc2",
+  "vic": "861ba79f31393dec0a0782ca11cf32cebb6f6610",
+  "repo_cwd": "/src/c-blosc2",
+  "description": "- Add a blocksize field into the serialized frame header:\n  - Insert a msgpack int32 field named \"block_size\" into the header between the existing typesize and chunksize fields.\n  - Update msgpack header fixarray element count accordingly (increase from 13 to 14) and update any header format diagram",
+  "gt_files": [
+   "Update msgpack header fixarray element count accordingly (increase from 13 to 14) and update any header format diagrams/comments/documentation (README) and byte-offset constants to reflect the new field and shifted offsets.",
+   "Set the compression parameters blocksize in the test before creating schunk/frame, and assert that the recovered schunk/storage preserves the blocksize after serialization/deserialization."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 31705,
+  "repo": "https://github.com/Blosc/c-blosc2.git",
+  "repo_name": "c-blosc2",
+  "vic": "79e921d904d46fc9edc292e02a48f1aa54567a7d",
+  "repo_cwd": "/src/c-blosc2",
+  "description": "Update frame_get_lazychunk to centralize resource cleanup and error handling:\n\n- Introduce a single FILE* fp local initialized to NULL and remove any duplicate fp declarations.\n- Replace early returns that occurred after file/read/size errors with setting an error code (rc) and jumping to a single c",
+  "gt_files": [
+   "Replace early returns that occurred after file/read/size errors with setting an error code (rc) and jumping to a single cleanup/exit label."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 32149,
+  "repo": "https://github.com/OpenSC/OpenSC",
+  "repo_name": "OpenSC",
+  "vic": "6903aebfddc466d966c7b865fae34572bf3ed23e",
+  "repo_cwd": "/src/opensc",
+  "description": "Update sc_oberthur_read_file to prevent reading past the file's declared records and to use size-appropriate types for record indexing/offsets:\n- Use size_t for the record index, the byte offset and the record length instead of int.\n- In the loop that reads records, check if the current record index",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 32340,
+  "repo": "https://github.com/kkos/oniguruma.git",
+  "repo_name": "oniguruma",
+  "vic": "c5a2cddab8261e6e568c1384499e08c16cc45ac9",
+  "repo_cwd": "/src/oniguruma",
+  "description": "Add a small cast macro and use it wherever pointer-distance arithmetic is compared against the regex distance fields to avoid Visual Studio compiler warnings.\n\nRequirements:\n- In src/regexec.c define a macro, e.g.:\n  #define DIST_CAST(d) (int)(d)\n  placed near the existing macros/definitions before ",
+  "gt_files": [
+   "In src/regexec.c define a macro, e.g.:"
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\oniguruma"
+ },
+ {
+  "localid": 32345,
+  "repo": "https://github.com/kkos/oniguruma.git",
+  "repo_name": "oniguruma",
+  "vic": "c5a2cddab8261e6e568c1384499e08c16cc45ac9",
+  "repo_cwd": "/src/oniguruma",
+  "description": "Add a small cast macro and use it wherever pointer-distance arithmetic is compared against the regex distance fields to avoid Visual Studio compiler warnings.\n\nRequirements:\n- In src/regexec.c define a macro, e.g.:\n  #define DIST_CAST(d) (int)(d)\n  placed near the existing macros/definitions before ",
+  "gt_files": [
+   "In src/regexec.c define a macro, e.g.:"
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\oniguruma"
+ },
+ {
+  "localid": 35165,
+  "repo": "https://github.com/bminor/binutils-gdb.git",
+  "repo_name": "binutils-gdb",
+  "vic": "4de91c10cdd9f5818599578667802320df305d72",
+  "repo_cwd": "/src/binutils-gdb",
+  "description": "- Replace the GET_ELF_SYMBOLS macro with a new helper function get_elf_symbols(filedata, section, num_syms_return) which dispatches to the 32-bit or 64-bit symbol reader based on file bitness.\n\n- Add a new wrapper get_section_headers(filedata, probe) that:\n  - Returns true immediately if filedata->s",
+  "gt_files": [
+   "Modify get_32bit_section_headers and get_64bit_section_headers so they do not free filedata->section_headers at their start; they should only allocate/populate it if needed.",
+   "Replace direct calls to get_32bit_section_headers / get_64bit_section_headers throughout the code with get_section_headers(filedata, probe) where appropriate.",
+   "Add a new wrapper get_dynamic_section(filedata) that dispatches to get_32bit_dynamic_section or get_64bit_dynamic_section based on bitness, and replace direct calls to the 32/64 dynamic getters with this wrapper.",
+   "Ensure process_object always frees per-file resources before returning on error: introduce a single cleanup path (e.g., an out label) that calls free_filedata(filedata) and any other global debug/free functions before returning.",
+   "Keep existing semantics for printing and processing sections; only centralize header/symbol/dynamic-section dispatch and move the allocation/free responsibilities as described."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 35293,
+  "repo": "https://github.com/libjxl/libjxl.git",
+  "repo_name": "libjxl",
+  "vic": "dbf8653bf9c654c42406dab4b55c024f0d879cd8",
+  "repo_cwd": "/src/libjxl",
+  "description": "Update ImageBlender to operate on arbitrary output images/regions and explicit extra-channel buffers instead of assuming a single full ImageBundle destination.\n\nRequirements:\n- Change PrepareBlending API to accept:\n  - pointer to extra-channel metadata (vector<ExtraChannelInfo> const*),\n  - a frame_",
+  "gt_files": [
+   "Internally store the passed extra-channel info pointer and the output pointers/rects for use during blending.",
+   "For each extra channel, copy or zero-fill into the provided output extra-channel ImageF buffers using their associated Rects. Preserve the previous validation: verify referenced source extra-channel sizes and origin are at least image_xsize/image_ysize with origin 0,0; if invalid, return an error.",
+   "Modify RectBlender to use the provided output buffers/rects when preparing bg pointers/strides:"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 35492,
+  "repo": "https://github.com/SELinuxProject/selinux",
+  "repo_name": "selinux",
+  "vic": "982ec302b67f3c7f8df667dadb67352b1e4a6d18",
+  "repo_cwd": "/src/selinux",
+  "description": "Update expression resolution to handle anonymous category sets passed as macro parameters:\n\n- In cil_resolve_expr, when handling a CIL_DATUM item, detect if the resolved symbol is actually an anonymous category set (sym_index == CIL_SYM_CATS and the datum node flavor is CIL_CATSET).\n  - If it is an ",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 36464,
+  "repo": "https://github.com/mruby/mruby",
+  "repo_name": "mruby",
+  "vic": "47fca90069be44594d75eca69f1d978f5d9b4d65",
+  "repo_cwd": "/src/mruby",
+  "description": "In mrbgems/mruby-compiler/core/codegen.c, update the gen_move() peephole handling so OP_LOADI32 is treated the same as OP_GETUPVAR. Concretely, when the previously emitted instruction (s->lastpc) is OP_LOADI32 and peephole optimization is allowed (nopeep is false), and data.a equals the source regis",
+  "gt_files": [],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\mruby"
+ },
+ {
+  "localid": 36930,
+  "repo": "https://github.com/mruby/mruby",
+  "repo_name": "mruby",
+  "vic": "1315e8751e70937e4cf43ba9225ea0cfaa67689d",
+  "repo_cwd": "/src/mruby",
+  "description": "Add a compile-time optimization to remove loops whose condition is a constant literal so that bodies are not generated for loops that will never (or immediately) execute.\n\nRequirements:\n- Handle both while and until loops in a shared codepath.\n- When entering a loop, preserve existing loop bookkeepi",
+  "gt_files": [
+   "Clean up loop bookkeeping appropriately (pop loop info) and do not emit conditional jump/linking for the removed loop."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\mruby"
+ },
+ {
+  "localid": 37334,
+  "repo": "https://github.com/libexif/libexif",
+  "repo_name": "libexif",
+  "vic": "22799320cc1187868d9a572661d12f0c3f9939b5",
+  "repo_cwd": "/src/libexif",
+  "description": "Update exif_mnote_data_apple_identify to validate input length and perform a safe prefix comparison:\n\n- In exif_mnote_data_apple_identify(const ExifData *ed, const ExifEntry *e):\n  - If e->size is smaller than strlen(\"Apple iOS\") + 1, return 0 immediately.\n  - Otherwise compare the first strlen(\"App",
+  "gt_files": [],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libexif"
+ },
+ {
+  "localid": 37621,
+  "repo": "https://github.com/lua/lua",
+  "repo_name": "lua",
+  "vic": "41871f1803770305f182f56cbd22a336c5236a19",
+  "repo_cwd": "/src/lua",
+  "description": "- Add a new helper luaD_pretailcall(lua_State *L, CallInfo *ci, StkId func, int narg1) that prepares a Lua closure for a tail call using the provided CallInfo (ci). narg1 is the number of arguments + 1 (includes the function). It must:\n  - obtain the closure Proto from func, read p->maxstacksize (fs",
+  "gt_files": [
+   "ensure there is room for the new frame (call the appropriate checkstack/GC helper for fsize);",
+   "Change luaD_precall signature to take requested number of results (int nResults) instead of the previous encoded retdel. Update all declarations/uses accordingly.",
+   "Export the new luaD_pretailcall prototype in ldo.h and update the prototype of luaD_precall there. Remove the old retdel/delta macros and associated comment block (they are no longer used).",
+   "If the final callable is a C function (non-Lua closure), invoke luaD_precall(L, ra, LUA_MULTRET) to run the C function, then update trap/stack state, restore ci->func by subtracting the previously computed delta (for vararg correction), finish the caller with luaD_poscall using the number of results on the stack, update traps again, and return from the caller.",
+   "Adjust other call sites and stack/top handling to match the new interfaces and semantics (e.g. pass L->top + LUA_MINSTACK as top for C-call prep, pass func+1+fsize as top for regular Lua-call prep). Ensure preserved behavior for fixed-parameter filling, savedpc initialization, and top/stack bounds checks."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\lua"
+ },
+ {
+  "localid": 38359,
+  "repo": "https://github.com/cisco/libsrtp",
+  "repo_name": "libsrtp",
+  "vic": "812a683c8554f53b80f64b94966c790c59b7de32",
+  "repo_cwd": "/src/libsrtp",
+  "description": "- In the base_key_length helper, add explicit handling for SRTP_NULL_CIPHER so it returns 0 (rather than falling through to the default).\n- In the two null-cipher policy initializers (srtp_crypto_policy_set_null_cipher_hmac_sha1_80 and srtp_crypto_policy_set_null_cipher_hmac_null), set p->cipher_key",
+  "gt_files": [],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libsrtp"
+ },
+ {
+  "localid": 38843,
+  "repo": "https://github.com/mruby/mruby",
+  "repo_name": "mruby",
+  "vic": "b1b9b157f85fe371db706e0c11024681d84e4aba",
+  "repo_cwd": "/src/mruby",
+  "description": "Add a peephole optimization in the code generator to fold simple add/sub-to-constant sequences into a single integer load.\n\nRequirements\n- When generating a MOVE/ADDI/SUBI sequence, detect the pattern where an integer-valued instruction produces a value, that value is MOVEd, and then the MOVEd value",
+  "gt_files": [
+   "When generating a MOVE/ADDI/SUBI sequence, detect the pattern where an integer-valued instruction produces a value, that value is MOVEd, and then the MOVEd value is incremented/decremented by a small immediate (ADDI/SUBI).",
+   "The ADDI/SUBI instruction is not at a label boundary (do not cross basic-block boundaries).",
+   "The operand register used by ADDI/SUBI matches the MOVE source register.",
+   "Walk back to the instruction that originally produced the integer value. If that instruction yields a known integer operand (use a helper that recognizes integer-producing instructions and extracts the integer), compute the new integer by adding/subtracting the immediate.",
+   "If the arithmetic does not overflow, replace the whole sequence by emitting a single integer-load instruction for the new constant (and adjust the code generator PC so earlier MOVE and ADDI/SUBI are not emitted).",
+   "If the integer cannot be determined or the arithmetic would overflow, fall back to normal code generation for the ADDI/SUBI.",
+   "A helper to detect/extract an integer operand from an instruction (returns boolean and the integer)."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\mruby"
+ },
+ {
+  "localid": 38989,
+  "repo": "https://github.com/mruby/mruby",
+  "repo_name": "mruby",
+  "vic": "b1b9b157f85fe371db706e0c11024681d84e4aba",
+  "repo_cwd": "/src/mruby",
+  "description": "Add a peephole optimization in the code generator to fold simple add/sub-to-constant sequences into a single integer load.\n\nRequirements\n- When generating a MOVE/ADDI/SUBI sequence, detect the pattern where an integer-valued instruction produces a value, that value is MOVEd, and then the MOVEd value",
+  "gt_files": [
+   "When generating a MOVE/ADDI/SUBI sequence, detect the pattern where an integer-valued instruction produces a value, that value is MOVEd, and then the MOVEd value is incremented/decremented by a small immediate (ADDI/SUBI).",
+   "The ADDI/SUBI instruction is not at a label boundary (do not cross basic-block boundaries).",
+   "The operand register used by ADDI/SUBI matches the MOVE source register.",
+   "Walk back to the instruction that originally produced the integer value. If that instruction yields a known integer operand (use a helper that recognizes integer-producing instructions and extracts the integer), compute the new integer by adding/subtracting the immediate.",
+   "If the arithmetic does not overflow, replace the whole sequence by emitting a single integer-load instruction for the new constant (and adjust the code generator PC so earlier MOVE and ADDI/SUBI are not emitted).",
+   "If the integer cannot be determined or the arithmetic would overflow, fall back to normal code generation for the ADDI/SUBI.",
+   "A helper to detect/extract an integer operand from an instruction (returns boolean and the integer)."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\mruby"
+ },
+ {
+  "localid": 39699,
+  "repo": "https://github.com/FreeRADIUS/freeradius-server.git",
+  "repo_name": "freeradius-server",
+  "vic": "6c6878ce4cdc5ac58e5115553656e05c9695544e",
+  "repo_cwd": "/src/freeradius-server",
+  "description": "- Rename the local parameter that represented the attribute context from \"da\" to \"parent\".\n- Change tacacs_decode_args to more robustly parse each arg_N entry:\n  - Skip entries with length < 2 as malformed.\n  - Bounds-check each entry against the packet end and print an error referencing parent->nam",
+  "gt_files": [
+   "Update unit tests to remove an extraneous empty Argument-List entry and adjust expected encoded/decoded packet bytes/lengths to match the new parsing behavior."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 40073,
+  "repo": "https://github.com/unicorn-engine/unicorn.git",
+  "repo_name": "unicorn",
+  "vic": "34ddafcbcf6d16508a63623a68715394ea4e12d8",
+  "repo_cwd": "/src/unicorn",
+  "description": "Update the Thumb disassembly tracing logic so Unicorn code hooks (UC_HOOK_CODE) do not cause termination inside IT/ITE conditional execution blocks:\n\n- Only generate a UC_HOOK_CODE trace callback for a given Thumb instruction when the CPU is not currently in a conditional-execution (IT/ITE) clause (",
+  "gt_files": [
+   "Only generate a UC_HOOK_CODE trace callback for a given Thumb instruction when the CPU is not currently in a conditional-execution (IT/ITE) clause (i.e., when the cond-execution mask is zero).",
+   "For 16-bit encodings, detect IT instructions and do not generate a trace for an IT (0xBF00 family) instruction, to avoid pausing/terminating at the IT itself."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 43587,
+  "repo": "https://github.com/mity/md4c",
+  "repo_name": "md4c",
+  "vic": "db9ab417b11eaf96722b6cfb22f8ead5e22513c9",
+  "repo_cwd": "/src/md4c",
+  "description": "- Update CHANGELOG.md to add an entry describing a fix for broken internal parser state triggered by certain combinations of syntax.\n\n- md_rollback:\n  - When discarding a mark, after clearing MD_MARK_OPENER, MD_MARK_CLOSER and MD_MARK_RESOLVED flags, preserve zero-length closers by converting them t",
+  "gt_files": [
+   "Adjust comments/step numbering accordingly (table cell analysis follows links, then emphasis/autolinks)."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\md4c"
+ },
+ {
+  "localid": 43589,
+  "repo": "https://github.com/mity/md4c",
+  "repo_name": "md4c",
+  "vic": "db9ab417b11eaf96722b6cfb22f8ead5e22513c9",
+  "repo_cwd": "/src/md4c",
+  "description": "- Update CHANGELOG.md to add an entry describing a fix for broken internal parser state triggered by certain combinations of syntax.\n\n- md_rollback:\n  - When discarding a mark, after clearing MD_MARK_OPENER, MD_MARK_CLOSER and MD_MARK_RESOLVED flags, preserve zero-length closers by converting them t",
+  "gt_files": [
+   "Adjust comments/step numbering accordingly (table cell analysis follows links, then emphasis/autolinks)."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\md4c"
+ },
+ {
+  "localid": 43688,
+  "repo": "https://github.com/ArtifexSoftware/ghostpdl.git",
+  "repo_name": "ghostpdl",
+  "vic": "b98c81c443fc9ea7c6351eff306da74765d2581e",
+  "repo_cwd": "/src/ghostpdl",
+  "description": "- When handling an image colorspace fallback: after replacing a failed colorspace with a default/profile and calling the routine that sets the device color, attempt to call gx_set_dev_color (or equivalent device-color-setup) a second time. If that second attempt fails, treat it as a fatal error and ",
+  "gt_files": [
+   "When handling an image colorspace fallback: after replacing a failed colorspace with a default/profile and calling the routine that sets the device color, attempt to call gx_set_dev_color (or equivalent device-color-setup) a second time. If that second attempt fails, treat it as a fatal error and exit/cleanup instead of continuing."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 44432,
+  "repo": "https://github.com/LibreDWG/libredwg",
+  "repo_name": "libredwg",
+  "vic": "161045124139f7288f335fc1f51b1d403054ad61",
+  "repo_cwd": "/src/libredwg",
+  "description": "- Fix off-by-one handling in R2007 decompression: when checking a copy into the output buffer, treat a write that would land exactly at the buffer end as overflow. Replace the dst overflow test from \"dst + length > dst_end\" to \"dst + length >= dst_end\" in the compressed-copy path.\n\n- Add diagnostic ",
+  "gt_files": [],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libredwg"
+ },
+ {
+  "localid": 44695,
+  "repo": "https://github.com/libimobiledevice/libplist",
+  "repo_name": "libplist",
+  "vic": "474c8eb82e776bfac804338247045b11fa389d8d",
+  "repo_cwd": "/src/libplist",
+  "description": "- Add a helper function parse_decimal(const char* str, const char* str_end, char** endp) that parses an optional leading '-' and consecutive digits from str up to str_end, sets *endp to the first character after the parsed digits (never overrunning str_end), and returns the parsed value as a signed ",
+  "gt_files": [
+   "Change numeric primitive parsing to operate directly on the token substring (no copying into a temporary buffer and no use of strtoll/atof on null-terminated buffers). Treat a token as numeric if it starts with a digit or starts with '-' followed by a digit.",
+   "If there is a '.' followed by digits, parse fractional digits in-place by accumulating fraction digits with decreasing powers of ten and add/subtract the fraction to/from the double (respect sign).",
+   "Preserve existing null/primitive branch behavior and error reporting semantics; ensure all pointer arithmetic and bounds checks use the provided token start/end so parsing works with non-null-terminated JSON substrings."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libplist"
+ },
+ {
+  "localid": 48736,
+  "repo": "https://github.com/file/file.git",
+  "repo_name": "file",
+  "vic": "522e7901a20dc6f2d1ceafb5d12d44f94946e11a",
+  "repo_cwd": "/src/file",
+  "description": "Add NDJSON (Newline Delimited JSON) detection and reporting to the JSON file-type logic.\n\nRequirements:\n- Update the JSON parser entry point to recognize multiple top-level JSON values in a single buffer separated by whitespace/newlines and treat that as NDJSON (distinct from a single JSON value tha",
+  "gt_files": [
+   "Update the JSON parser entry point to recognize multiple top-level JSON values in a single buffer separated by whitespace/newlines and treat that as NDJSON (distinct from a single JSON value that fills the buffer).",
+   "Return a distinct integer/code from the parser to indicate: not JSON, a single JSON document, or NDJSON (multiple JSON documents).",
+   "For MIME mode: emit \"application/json\" for a single JSON document, and \"application/x-ndjson\" for NDJSON.",
+   "Bump the file/version identifier string to reflect the change."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\file"
+ },
+ {
+  "localid": 48883,
+  "repo": "https://github.com/ntop/nDPI.git",
+  "repo_name": "nDPI",
+  "vic": "1a01e8dc687df706ef775122a5bc31baa07f12d4",
+  "repo_cwd": "/src/ndpi",
+  "description": "- Add storage for a TFTP filename to the per-flow protocol state (e.g., add a fixed-size char filename[128] in the TFTP sub-struct of the flow/protocol union).\n- In the TFTP protocol parser: when a TFTP Read/Write Request (RRQ/WRQ) is identified, parse the packet payload to extract the filename and ",
+  "gt_files": [
+   "Add storage for a TFTP filename to the per-flow protocol state (e.g., add a fixed-size char filename[128] in the TFTP sub-struct of the flow/protocol union).",
+   "In the TFTP protocol parser: when a TFTP Read/Write Request (RRQ/WRQ) is identified, parse the packet payload to extract the filename and mode. Use a stable macro/utility for the number of known modes (instead of hardcoding sizeof(...) / sizeof(...)).",
+   "If the filename is invalid/missing, mark the flow with a malformed-packet indicator and attach an informative message (e.g., \"Invalid TFTP RR/WR header: Source/Destination file missing\").",
+   "After extracting/validating the filename, continue TFTP detection/connection handling as before (log detection and add the TFTP connection).",
+   "In the reader/flow-summary logic, when a flow is identified as TFTP include the filename in the human-readable flow info: set an appropriate info type and format \"Filename: <name>\" when filename is present.",
+   "Update unit/integration test expectations to reflect additional TFTP parsed flows, included filenames in flow output, and entries for malformed TFTP RRQ/WRQ packets."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 49248,
+  "repo": "https://github.com/OpenSC/OpenSC",
+  "repo_name": "OpenSC",
+  "vic": "972d3292eee44e9b4c61769365a3ec651ec18f39",
+  "repo_cwd": "/src/opensc",
+  "description": "In cardos_list_files(), fix parsing of ASN.1 file information blocks so the search base and remaining-length accounting are correct and no out-of-bounds pointer arithmetic is performed.\n\nRequirements:\n- Add a local pointer (e.g. tag) to hold the result of sc_asn1_find_tag when locating the 0x6f file",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 49606,
+  "repo": "https://github.com/ArtifexSoftware/ghostpdl.git",
+  "repo_name": "ghostpdl",
+  "vic": "db0f98bdf4c75486c47df4d5e9919420638f7f2c",
+  "repo_cwd": "/src/ghostpdl",
+  "description": "Summary of required changes to relax PDF repair behavior:\n\n- Change types for object and generation numbers used during repair from unsigned 64-bit to signed 64-bit so negative or out-of-range values can be detected and handled.\n\n- In the routine that adds discovered objects to the xref table:\n  - T",
+  "gt_files": [
+   "If the context indicates the file is already marked as repaired (ctx->repaired), skip xref reading/processing early and return success.",
+   "When encountering the token/trailer read step, avoid reading tokens and erroring when ctx->repaired is set; return success.",
+   "In the top-level xref read/repair control flow:"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 49901,
+  "repo": "https://github.com/ntop/nDPI.git",
+  "repo_name": "nDPI",
+  "vic": "346e274a1b1d713aedfc341f7d1300009f9f0e1a",
+  "repo_cwd": "/src/ndpi",
+  "description": "Update SoftEther protocol parsing to validate lengths and avoid out-of-bounds memory access:\n\n- In dissect_softether_type:\n  - Treat a reported size of zero as invalid and bail out. Return 0 if siz == 0 or if the remaining payload length is less than siz + 3.\n\n- In dissect_softether_ip_port:\n  - Kee",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 50406,
+  "repo": "https://github.com/ArtifexSoftware/ghostpdl.git",
+  "repo_name": "ghostpdl",
+  "vic": "461818d4af16839b9cd8c68320fc224f66d76691",
+  "repo_cwd": "/src/ghostpdl",
+  "description": "- When rendering a Widget annotation, walk up the annotation's dictionary chain via the Parent entry looking for both the \"T\" and \"FT\" keys. Do not stop the search when only one of the keys is found; continue following Parent until either both keys are found or there is no valid Parent to follow.\n- ",
+  "gt_files": [
+   "When following the Parent entry, do not replace the Parent key in the original dictionary with a dereferenced object (i.e., avoid storing a dereferenced Parent back into the child dictionary). Instead, detect whether Parent exists without dereferencing, obtain the Parent object for use without mutating the child dictionary, and only temporarily dereference indirect Parent references to validate/use them. If the Parent object is not a dictionary (or cannot be dereferenced to a dictionary), stop the walk.",
+   "Properly manage reference counts/ownership when moving from the current dictionary to its Parent: release the current dictionary reference and take a reference on the Parent dictionary you will continue processing."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 50436,
+  "repo": "https://github.com/ArtifexSoftware/ghostpdl.git",
+  "repo_name": "ghostpdl",
+  "vic": "461818d4af16839b9cd8c68320fc224f66d76691",
+  "repo_cwd": "/src/ghostpdl",
+  "description": "- When rendering a Widget annotation, walk up the annotation's dictionary chain via the Parent entry looking for both the \"T\" and \"FT\" keys. Do not stop the search when only one of the keys is found; continue following Parent until either both keys are found or there is no valid Parent to follow.\n- ",
+  "gt_files": [
+   "When following the Parent entry, do not replace the Parent key in the original dictionary with a dereferenced object (i.e., avoid storing a dereferenced Parent back into the child dictionary). Instead, detect whether Parent exists without dereferencing, obtain the Parent object for use without mutating the child dictionary, and only temporarily dereference indirect Parent references to validate/use them. If the Parent object is not a dictionary (or cannot be dereferenced to a dictionary), stop the walk.",
+   "Properly manage reference counts/ownership when moving from the current dictionary to its Parent: release the current dictionary reference and take a reference on the Parent dictionary you will continue processing."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 51090,
+  "repo": "https://github.com/wireshark/wireshark.git",
+  "repo_name": "wireshark",
+  "vic": "248ff020e7ea17785cc9451f6d24ad61c4310d1f",
+  "repo_cwd": "/src/wireshark",
+  "description": "Requirements:\n\n- When dissecting application/x-www-form-urlencoded form items, percent-decode the key and value as before, then convert the resulting raw byte sequences to a UTF-8 C string (substituting replacement characters for invalid sequences) before adding them to the protocol tree.\n  - Use a ",
+  "gt_files": [
+   "When dissecting application/x-www-form-urlencoded form items, percent-decode the key and value as before, then convert the resulting raw byte sequences to a UTF-8 C string (substituting replacement characters for invalid sequences) before adding them to the protocol tree.",
+   "Keep the original raw bytes available and use format_text(pinfo->pool, raw_bytes, raw_length) when composing the proto_item text shown in proto_item_append_text (so the displayed text preserves original byte representation/escaping).",
+   "Add the necessary header includes for the charset and string utility helpers (e.g. epan/charsets.h and epan/strutil.h).",
+   "Note: UTF-8 is the target encoding per WHATWG; later improvements may detect/obey a charset parameter and add expert info if decoding used replacement characters."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 52174,
+  "repo": "https://github.com/ntop/nDPI.git",
+  "repo_name": "nDPI",
+  "vic": "199c86e3df8da0b4734193df8424cd4a62768ae8",
+  "repo_cwd": "/src/ndpi",
+  "description": "In ndpi_search_irc_tcp (src/lib/protocols/irc.c), extend the IRC command handling so that when a packet payload matches IRC command patterns (USER, NICK, PASS, NOTICE, PRIVMSG, VERSION) the code also scans the payload for the substring \"USER \" (anywhere within the payload). If found, extract the tok",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 52435,
+  "repo": "https://github.com/ntop/nDPI.git",
+  "repo_name": "nDPI",
+  "vic": "199c86e3df8da0b4734193df8424cd4a62768ae8",
+  "repo_cwd": "/src/ndpi",
+  "description": "In ndpi_search_irc_tcp (src/lib/protocols/irc.c), extend the IRC command handling so that when a packet payload matches IRC command patterns (USER, NICK, PASS, NOTICE, PRIVMSG, VERSION) the code also scans the payload for the substring \"USER \" (anywhere within the payload). If found, extract the tok",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 52814,
+  "repo": "https://github.com/wireshark/wireshark.git",
+  "repo_name": "wireshark",
+  "vic": "f55cb116a002ae0097564522abf49e2498a7380a",
+  "repo_cwd": "/src/wireshark",
+  "description": "Remove the blanket zeroing of the destination buffer and instead guarantee NUL-termination immediately after each small write.\n\nRequirements:\n- Remove the memset(label_str + pos, 0, free_len + 1) call that zeroes the rest of the buffer.\n- After every branch that writes characters into label_str, wri",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 54044,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "e28e2dad03a453c5e5c4c5a9d6fd276182c5f80b",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "After updating regionIndices.len, grow the VarData storage without zeroing it. Replace the existing call to c->extend(this) with c->extend_size(this, get_size(), false) so the buffer is resized to the current get_size() and not cleared (the new memory will be fully overwritten). Preserve the existin",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 54162,
+  "repo": "https://github.com/LibreDWG/libredwg",
+  "repo_name": "libredwg",
+  "vic": "9d068534eb093790d9be1b8aa8ed47cafc7f2285",
+  "repo_cwd": "/src/libredwg",
+  "description": "Update bits.c overflow checks to work at bit granularity and adjust related logging and call sites.\n\nRequirements:\n- Replace the existing byte-only overflow checks with bit-level checks. Calculate the current bit offset as (dat->byte * 8) + dat->bit and compare against the buffer size in bits (dat->",
+  "gt_files": [
+   "Add/adjust a CHK_OVERFLOW_PLUS macro that checks whether adding a given number of bytes would overflow, also using bit-level arithmetic: ((dat->byte + plus) * 8) + dat->bit > dat->size * 8. Update its log message to show \"byte.bit + plus\" style information and return the same retval on overflow."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libredwg"
+ },
+ {
+  "localid": 54163,
+  "repo": "https://github.com/LibreDWG/libredwg",
+  "repo_name": "libredwg",
+  "vic": "9d068534eb093790d9be1b8aa8ed47cafc7f2285",
+  "repo_cwd": "/src/libredwg",
+  "description": "Update bits.c overflow checks to work at bit granularity and adjust related logging and call sites.\n\nRequirements:\n- Replace the existing byte-only overflow checks with bit-level checks. Calculate the current bit offset as (dat->byte * 8) + dat->bit and compare against the buffer size in bits (dat->",
+  "gt_files": [
+   "Add/adjust a CHK_OVERFLOW_PLUS macro that checks whether adding a given number of bytes would overflow, also using bit-level arithmetic: ((dat->byte + plus) * 8) + dat->bit > dat->size * 8. Update its log message to show \"byte.bit + plus\" style information and return the same retval on overflow."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libredwg"
+ },
+ {
+  "localid": 55282,
+  "repo": "https://github.com/util-linux/util-linux",
+  "repo_name": "util-linux",
+  "vic": "4ad02a2566db6ec5bae68ef2434b3481914fb81c",
+  "repo_cwd": "/src/util-linux",
+  "description": "Add parsing of bcachefs superblock \"fields\" area to discover and expose a per-device secondary UUID (ID_FS_UUID_SUB).\n\nRequirements:\n- Extend the bcachefs superblock representation to include the new header fields found before the variable \"fields\" area (e.g. dev_idx, nr_devices, u64s and other rese",
+  "gt_files": [
+   "Extend the bcachefs superblock representation to include the new header fields found before the variable \"fields\" area (e.g. dev_idx, nr_devices, u64s and other reserved/metadata fields) and a flexible-array _start[] to represent the start of the fields area. Ensure struct packing matches on-disk layout.",
+   "Define compact/packed helper structs for a field header (contains u64s and type), for a member entry (16-byte uuid + padding), and for a members-field container (field header followed by members[]).",
+   "Expose the discovered UUID via the probe API under the name \"UUID_SUB\" (so it becomes ID_FS_UUID_SUB / ID_FS_UUID_SUB_ENC).",
+   "Update tests/expected outputs to include ID_FS_UUID_SUB and ID_FS_UUID_SUB_ENC for the affected test images."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 55430,
+  "repo": "https://github.com/zeek/zeek",
+  "repo_name": "zeek",
+  "vic": "b0ac20b2f251f0ab6ba14260609af3564352adaf",
+  "repo_cwd": "/src/zeek",
+  "description": "Update the Teredo analyzer detection to reduce false positives by tightening the regex and adding structured header checks:\n\n- Change the compiled pattern so it only matches the IPv6-like payload patterns (remove the alternatives that matched a bare 0x00 0x00 or 0x00 0x01 as top-level matches).\n- In",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 55868,
+  "repo": "https://github.com/ArtifexSoftware/mupdf.git",
+  "repo_name": "mupdf",
+  "vic": "834a64a18d763de45867432265a5080b56182129",
+  "repo_cwd": "/src/mupdf",
+  "description": "- resize_xref_sub:\n  - When growing a subsection's table, only initialize newly added entries (start loop at old sub->len, not at xref->num_objects-base).\n  - Only update xref->num_objects if the new subsection range increases it (i.e. set xref->num_objects = newlen+base only when newlen+base > xref",
+  "gt_files": [
+   "After any allocate/extend/solidify action, return &sub->table[start - sub->start]."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 56455,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "c0fac016dc017596e2d979e19e1eb8f88df38ea3",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "- Add two variable-font test files to test/fuzzing/fonts to allow the fuzzer to exercise font instancing behavior.\n- Change trySubset so it accepts an externally-created hb_subset_input_t* instead of creating one internally; it should still set subset flags on that input and perform the same subsett",
+  "gt_files": [
+   "Add two variable-font test files to test/fuzzing/fonts to allow the fuzzer to exercise font instancing behavior."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 56510,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "918193ebf908d35c88bb71d02dfc14bc41ffc31d",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Add manual sanitizer op-accounting for large CoverageFormat2 tables and apply it in relevant GPOS/GSUB sanitizers.\n\nRequirements:\n- Add a new method to the sanitizer context (hb_sanitize_context_t) named check_ops(int count) that decrements the sanitizer's remaining op budget by count and returns wh",
+  "gt_files": [
+   "In SinglePosFormat1::sanitize, after existing coverage and valueFormat checks, call the new check_ops with an estimate based on the coverage table population to reduce the sanitizer op budget appropriately. Use population/2 as the adjustment (to account for CoverageFormat2 ranges expanding into many glyphs).",
+   "In SingleSubstFormat1_3::sanitize, after existing coverage and deltaGlyphID checks, likewise call the new check_ops with population/2.",
+   "Keep existing trace/sanitize checks and return behavior; only add the extra op-accounting call to these sanitize methods."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 57369,
+  "repo": "https://github.com/ntop/nDPI.git",
+  "repo_name": "nDPI",
+  "vic": "530d0de4382ab4d70cfc1dedcf8cf2ac729dfddf",
+  "repo_cwd": "/src/ndpi",
+  "description": "Add VXLAN decapsulation support to ndpiReader so tunneled Ethernet frames carried over UDP/VXLAN are detected and processed as inner datalink packets.\n\nRequirements:\n- Implement a function to validate a VXLAN packet given the pcap header, packet buffer, and IP offsets/lengths. The validator must:\n  ",
+  "gt_files": [
+   "Implement a function to validate a VXLAN packet given the pcap header, packet buffer, and IP offsets/lengths. The validator must:",
+   "Verify VXLAN header fields per RFC 7348: the I bit (VNI present) is set and reserved bits/bytes are zero as required.",
+   "Integrate detection into the packet processing workflow: when a VXLAN packet is recognized, mark the packet/tunnel as VXLAN, set the Ethernet offset to the inner-frame offset, and continue regular datalink/dissection on the inner frame (same flow as existing GTP/CAPWAP detunneling)."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 57911,
+  "repo": "https://github.com/LibreDWG/libredwg",
+  "repo_name": "libredwg",
+  "vic": "9d068534eb093790d9be1b8aa8ed47cafc7f2285",
+  "repo_cwd": "/src/libredwg",
+  "description": "Update bits.c overflow checks to work at bit granularity and adjust related logging and call sites.\n\nRequirements:\n- Replace the existing byte-only overflow checks with bit-level checks. Calculate the current bit offset as (dat->byte * 8) + dat->bit and compare against the buffer size in bits (dat->",
+  "gt_files": [
+   "Add/adjust a CHK_OVERFLOW_PLUS macro that checks whether adding a given number of bytes would overflow, also using bit-level arithmetic: ((dat->byte + plus) * 8) + dat->bit > dat->size * 8. Update its log message to show \"byte.bit + plus\" style information and return the same retval on overflow."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libredwg"
+ },
+ {
+  "localid": 58428,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "2bbb605d08298047164a20a242f4cfcfbe68c309",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "When initializing a SimpleGlyph's point storage:\n- Allocate the internal point buffer with extra room for phantom points (num_points + 4) but only set the logical length to num_points without performing per-element initialization (use a non-initializing resize).\n- If only phantom points are required",
+  "gt_files": [
+   "If only phantom points are required, return early after the allocation/resize."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 58626,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "8a8fc37c42135b3ed524e4179bcc4add854ae195",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Requirement:\n\n- Add a small in-memory cache for glyph classification/properties to the GDEF accelerator so repeated queries for the same glyph are fast.\n  - Expose a new const method on the GDEF accelerator (e.g., get_glyph_props(glyph)) that:\n    - Returns a cached value when available.\n    - Calls",
+  "gt_files": [
+   "Add a small in-memory cache for glyph classification/properties to the GDEF accelerator so repeated queries for the same glyph are fast.",
+   "Adjust other callers to reference the face's GDEF accelerator/table consistently:",
+   "Where code previously dereferenced face->table.GDEF->table, use the face->table.GDEF reference/value directly as appropriate."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 58660,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "1be39729140a6d726de164746e516c1fe5afcb19",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Requirements — Support unordered glyph lists when serializing Coverage and ClassDef\n\n1. When building Coverage from a glyph list:\n   - Detect if the glyph list is not strictly increasing (track an \"unsorted\" flag).\n   - Track the maximum glyph id seen (separate from the last-in-input value).\n   - On",
+  "gt_files": [
+   "Before finalizing/serializing the rangeRecord array, sort it using that comparator to handle unordered input glyph lists."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 58663,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "1be39729140a6d726de164746e516c1fe5afcb19",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Requirements — Support unordered glyph lists when serializing Coverage and ClassDef\n\n1. When building Coverage from a glyph list:\n   - Detect if the glyph list is not strictly increasing (track an \"unsorted\" flag).\n   - Track the maximum glyph id seen (separate from the last-in-input value).\n   - On",
+  "gt_files": [
+   "Before finalizing/serializing the rangeRecord array, sort it using that comparator to handle unordered input glyph lists."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 58671,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "1be39729140a6d726de164746e516c1fe5afcb19",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Requirements — Support unordered glyph lists when serializing Coverage and ClassDef\n\n1. When building Coverage from a glyph list:\n   - Detect if the glyph list is not strictly increasing (track an \"unsorted\" flag).\n   - Track the maximum glyph id seen (separate from the last-in-input value).\n   - On",
+  "gt_files": [
+   "Before finalizing/serializing the rangeRecord array, sort it using that comparator to handle unordered input glyph lists."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 58785,
+  "repo": "https://github.com/google/tcmalloc",
+  "repo_name": "tcmalloc",
+  "vic": "c33cb2d8935002f8ba942028a1f0871d075345a1",
+  "repo_cwd": "/src/tcmalloc",
+  "description": "- Make GetBuildId(dl_phdr_info*) robust to multiple PT_NOTE program headers:\n  - Iterate over info->dlpi_phdr[0..dlpi_phnum) and process every program header with p_type == PT_NOTE instead of assuming a single PT_NOTE segment.\n  - For each PT_NOTE use p_filesz (not p_memsz) as the segment length and",
+  "gt_files": [
+   "Compute the descriptor start and the total note size using the segment alignment (sh_addralign / p_align): desc_start = Align(sizeof(Nhdr) + nhdr->n_namesz, p_align); total_size = desc_start + Align(nhdr->n_descsz, p_align).",
+   "Validate bounds and detect corrupt notes: ensure name/desc sizes will not wrap/overflow, total_size >= sizeof(Nhdr), and note + total_size does not exceed the segment end. On corrupt data, stop processing that PT_NOTE.",
+   "Add a new unit test that loads a test shared object containing a preceding .note.gnu.property segment (testdata/gnu-property.so), ensures GetBuildId skips the property note and returns the correct build-id string.",
+   "Fuzz/test harness adjustments:"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 58786,
+  "repo": "https://github.com/google/tcmalloc",
+  "repo_name": "tcmalloc",
+  "vic": "c33cb2d8935002f8ba942028a1f0871d075345a1",
+  "repo_cwd": "/src/tcmalloc",
+  "description": "- Make GetBuildId(dl_phdr_info*) robust to multiple PT_NOTE program headers:\n  - Iterate over info->dlpi_phdr[0..dlpi_phnum) and process every program header with p_type == PT_NOTE instead of assuming a single PT_NOTE segment.\n  - For each PT_NOTE use p_filesz (not p_memsz) as the segment length and",
+  "gt_files": [
+   "Compute the descriptor start and the total note size using the segment alignment (sh_addralign / p_align): desc_start = Align(sizeof(Nhdr) + nhdr->n_namesz, p_align); total_size = desc_start + Align(nhdr->n_descsz, p_align).",
+   "Validate bounds and detect corrupt notes: ensure name/desc sizes will not wrap/overflow, total_size >= sizeof(Nhdr), and note + total_size does not exceed the segment end. On corrupt data, stop processing that PT_NOTE.",
+   "Add a new unit test that loads a test shared object containing a preceding .note.gnu.property segment (testdata/gnu-property.so), ensures GetBuildId skips the property note and returns the correct build-id string.",
+   "Fuzz/test harness adjustments:"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 59438,
+  "repo": "https://github.com/file/file.git",
+  "repo_name": "file",
+  "vic": "b17d1647cba360469ae1c22b1f7de1a3a15528b7",
+  "repo_cwd": "/src/file",
+  "description": "- Bump file RCS version string.\n- Add a stdint.h include in the non-lint build branch so fixed-width integer types (uint32_t) can be used.\n- Clarify comments to state that when SIMH_TAPEMARKS is 0 the parser examines records and tapemarks, and when SIMH_TAPEMARKS is set the parser limits by tapemark",
+  "gt_files": [
+   "Handle partial/truncated length fields robustly (avoid reading past the buffer)."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\file"
+ },
+ {
+  "localid": 60003,
+  "repo": "https://github.com/ntop/nDPI.git",
+  "repo_name": "nDPI",
+  "vic": "66bee475ae1b1f4b1b4104555b7bb4d38c3e20b6",
+  "repo_cwd": "/src/ndpi",
+  "description": "Add an early heuristic in the Line protocol dissector to detect LineCall on IPv4 flows guessed as Line by IP, and update the tests to match the new detection counts.\n\nRequirements:\n- In ndpi_search_line (src/lib/protocols/line.c), before the existing UDP-packet-number heuristic, add a gated check th",
+  "gt_files": [
+   "In ndpi_search_line (src/lib/protocols/line.c), before the existing UDP-packet-number heuristic, add a gated check that only runs when:",
+   "Update the unit/integration test expectations (tests/cfgs/default/result/line.pcap.out) to reflect the new heuristic results:"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 60467,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "d84504206c420250bfe80bee25f6a59a7177c9eb",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Add a new sized-array check helper and use it where appropriate to avoid unnecessary multiplication overflow checks.\n\nRequirements:\n- In the sanitizer context (hb-sanitize.hh) add a templated, always-inline method with signature similar to:\n  bool check_array_sized(const T *base, unsigned int len, u",
+  "gt_files": [
+   "Replace existing calls to c->check_array(...) in the array-related sanitizer code (unsized / sized / headless / M1 array sanitizers) with c->check_array_sized(..., sizeof(Type)), passing sizeof(Type) as the third argument. Concretely update the sanitize_shallow implementations in:"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 60475,
+  "repo": "https://github.com/harfbuzz/harfbuzz.git",
+  "repo_name": "harfbuzz",
+  "vic": "d84504206c420250bfe80bee25f6a59a7177c9eb",
+  "repo_cwd": "/src/harfbuzz",
+  "description": "Add a new sized-array check helper and use it where appropriate to avoid unnecessary multiplication overflow checks.\n\nRequirements:\n- In the sanitizer context (hb-sanitize.hh) add a templated, always-inline method with signature similar to:\n  bool check_array_sized(const T *base, unsigned int len, u",
+  "gt_files": [
+   "Replace existing calls to c->check_array(...) in the array-related sanitizer code (unsized / sized / headless / M1 array sanitizers) with c->check_array_sized(..., sizeof(Type)), passing sizeof(Type) as the third argument. Concretely update the sanitize_shallow implementations in:"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 60616,
+  "repo": "https://github.com/OpenSC/OpenSC",
+  "repo_name": "OpenSC",
+  "vic": "88880db0307a07e33cf2e1592bb029e9c170dfea",
+  "repo_cwd": "/src/opensc",
+  "description": "In sc_pkcs15_decode_pukdf_entry (src/libopensc/pkcs15-pubkey.c) ensure any DER buffer allocated while decoding is freed on the error path. Concretely:\n\n- In the function's error handling block (the err: label), when returning an error (r < 0) call sc_pkcs15_free_pubkey_info(info) as before and also ",
+  "gt_files": [
+   "Preserve the existing return/logging behavior (LOG_FUNC_RETURN(ctx, r))."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 60993,
+  "repo": "https://github.com/LibreDWG/libredwg",
+  "repo_name": "libredwg",
+  "vic": "9d068534eb093790d9be1b8aa8ed47cafc7f2285",
+  "repo_cwd": "/src/libredwg",
+  "description": "Update bits.c overflow checks to work at bit granularity and adjust related logging and call sites.\n\nRequirements:\n- Replace the existing byte-only overflow checks with bit-level checks. Calculate the current bit offset as (dat->byte * 8) + dat->bit and compare against the buffer size in bits (dat->",
+  "gt_files": [
+   "Add/adjust a CHK_OVERFLOW_PLUS macro that checks whether adding a given number of bytes would overflow, also using bit-level arithmetic: ((dat->byte + plus) * 8) + dat->bit > dat->size * 8. Update its log message to show \"byte.bit + plus\" style information and return the same retval on overflow."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libredwg"
+ },
+ {
+  "localid": 61050,
+  "repo": "https://github.com/jqlang/jq",
+  "repo_name": "jq",
+  "vic": "680baeffeb7983e7570b5e68db07fe47f94db8c7",
+  "repo_cwd": "/src/jq",
+  "description": "- Replace the hard-coded binary-double decimal-digit constant and related magic numbers with named constants and a small computed value:\n  - Introduce a constant for the decimal digits target for double conversion (e.g. DEC_NUMBER_DOUBLE_PRECISION = 16).\n  - Introduce a computed constant for the num",
+  "gt_files": [
+   "Introduce a computed constant for the number of decNumber unit slots required for that precision, derived from library macros (e.g. DEC_NUMBER_DOUBLE_EXTRA_UNITS = (PRECISION - DECNUMDIGITS + DECDPUN - 1) / DECDPUN).",
+   "For the full-precision context (dec_ctx_key) use DEC_INIT_BASE, then set ctx->digits = DEC_MAX_DIGITS and clear traps/status as needed.",
+   "Use a local decNumber variable for the comparison result (instead of wrapping it in auxiliary structs) and use decNumberCompare, then inspect decNumberIsZero/IsNegative on that result to return -1/0/1.",
+   "Example tests to include: \"1e-19 + 1e-20 - 5e-21\" should produce 1.05e-19; \"1 / 1e-17\" should produce 1e+17."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\jq"
+ },
+ {
+  "localid": 61235,
+  "repo": "https://github.com/jqlang/jq",
+  "repo_name": "jq",
+  "vic": "680baeffeb7983e7570b5e68db07fe47f94db8c7",
+  "repo_cwd": "/src/jq",
+  "description": "- Replace the hard-coded binary-double decimal-digit constant and related magic numbers with named constants and a small computed value:\n  - Introduce a constant for the decimal digits target for double conversion (e.g. DEC_NUMBER_DOUBLE_PRECISION = 16).\n  - Introduce a computed constant for the num",
+  "gt_files": [
+   "Introduce a computed constant for the number of decNumber unit slots required for that precision, derived from library macros (e.g. DEC_NUMBER_DOUBLE_EXTRA_UNITS = (PRECISION - DECNUMDIGITS + DECDPUN - 1) / DECDPUN).",
+   "For the full-precision context (dec_ctx_key) use DEC_INIT_BASE, then set ctx->digits = DEC_MAX_DIGITS and clear traps/status as needed.",
+   "Use a local decNumber variable for the comparison result (instead of wrapping it in auxiliary structs) and use decNumberCompare, then inspect decNumberIsZero/IsNegative on that result to return -1/0/1.",
+   "Example tests to include: \"1e-19 + 1e-20 - 5e-21\" should produce 1.05e-19; \"1 / 1e-17\" should produce 1e+17."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\jq"
+ },
+ {
+  "localid": 61721,
+  "repo": "https://github.com/python/cpython.git",
+  "repo_name": "cpython",
+  "vic": "b8f96b5eda5b376b05a9dbf046208388249e30a6",
+  "repo_cwd": "/src/cpython3",
+  "description": "Add a centralized helper to update a function object's version and keep the interpreter's func_version_cache consistent, and use it everywhere the function version is changed.\n\nRequirements:\n- Implement a new internal function:\n  - _PyFunction_SetVersion(PyFunctionObject *func, uint32_t version)\n  -",
+  "gt_files": [
+   "Function construction/creation paths (e.g. _PyFunction_FromConstructor, PyFunction_NewWithQualName)"
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 61818,
+  "repo": "https://github.com/LibreDWG/libredwg",
+  "repo_name": "libredwg",
+  "vic": "98034cb7f26721abaf3f2252eea84476e3c03afa",
+  "repo_cwd": "/src/libredwg",
+  "description": "Update bit_TV_to_utf8 to guard against unbounded destination buffer growth and to free allocated memory on error:\n\n- Impose an upper limit on destlen (0x2FFFE). If the requested or doubled destlen exceeds this limit, set loglevel |= 1, log an error, free any allocated buffer, and return NULL.\n  - Fo",
+  "gt_files": [],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libredwg"
+ },
+ {
+  "localid": 62822,
+  "repo": "https://github.com/mruby/mruby",
+  "repo_name": "mruby",
+  "vic": "e7021f190a5527b497163d3b7093bcc56fecdde0",
+  "repo_cwd": "/src/mruby",
+  "description": "- Document two new pack/unpack directives in the README: \"B\" — bit string (descending) and \"b\" — bit string (ascending).\n\n- Add a new pack direction type (e.g., PACK_DIR_BSTR) to represent bit-string directives.\n\n- Template parsing: recognize 'B' and 'b' template letters and map them to the new bit-",
+  "gt_files": [
+   "Document two new pack/unpack directives in the README: \"B\" — bit string (descending) and \"b\" — bit string (ascending).",
+   "Read bytes from the input and convert them into a string of '0'/'1' characters of the requested bit count.",
+   "Integrate the new functions into the pack/unpack dispatcher so that when a template element has the bit-string direction, the implementation calls pack_bstr on packing and unpack_bstr on unpacking."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\mruby"
+ },
+ {
+  "localid": 63587,
+  "repo": "https://github.com/OpenSC/OpenSC",
+  "repo_name": "OpenSC",
+  "vic": "fa709de8dc5045f390f321cb65c9c73c36d52dd0",
+  "repo_cwd": "/src/opensc",
+  "description": "- Add a new constant AID for the gematik eGK (bytes: D2 76 00 01 44 80 00).\n- In the PKCS#15 DIN V 66291 card initialization logic, when the card's tokeninfo->profile_indication.name is missing or not \"DIN V 66291\", attempt detection in two ways:\n  1. Primary: try to select the DF by the existing ai",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 63776,
+  "repo": "https://github.com/LibreDWG/libredwg",
+  "repo_name": "libredwg",
+  "vic": "1760559320f27e75d86c9e6edab467bab63d58e9",
+  "repo_cwd": "/src/libredwg",
+  "description": "- CI: add Ubuntu 20.04 to the GitHub Actions matrix (include ubuntu-20.04 alongside ubuntu-14.04, ubuntu-18.04, ubuntu-latest).\n\n- Decoding: when decoding pre-R13 entities/sections, detect and record any \"slack\" bytes that appear between the current read position and an object's end (i.e., when an o",
+  "gt_files": [
+   "Decoding: when decoding pre-R13 entities/sections, detect and record any \"slack\" bytes that appear between the current read position and an object's end (i.e., when an observed offset/size implies extra bytes). For those cases:",
+   "Log/trace the captured bytes.",
+   "Compute the byte length as ceil(num_unknown_bits/8).",
+   "Log/trace the bytes written.",
+   "Be invoked at the appropriate points where object data is finalized/written (so unknown bits are written after the normal object fields are encoded).",
+   "JSON output: include unknown_bits and num_unknown_bits in the JSON representation of objects/entities when obj->num_unknown_bits is non-zero. Represent num_unknown_bits as a numeric field and unknown_bits as binary data (byte length computed as ceil(num_unknown_bits/8))."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\libredwg"
+ },
+ {
+  "localid": 64337,
+  "repo": "https://github.com/PCRE2Project/pcre2",
+  "repo_name": "pcre2",
+  "vic": "c1306126c3f12c16ad62dd2553132f64a28ca607",
+  "repo_cwd": "/src/pcre2",
+  "description": "- Add tracking of the start of the \"current parsed item\" while compiling a pattern:\n  - Introduce a pointer variable (e.g. this_parsed_item) and a per-iteration previous pointer (prev_parsed_item = this_parsed_item).\n  - Before consuming/encoding the next item, set this_parsed_item = parsed_pattern ",
+  "gt_files": [
+   "Before consuming/encoding the next item, set this_parsed_item = parsed_pattern so the next iteration can reference the prior item safely.",
+   "Replace any code that inspects the previous parsed item by indexing parsed_pattern[-1] with safe dereference of prev_parsed_item (e.g. *prev_parsed_item). This prevents out-of-bounds/undefined behaviour when the encoded value of a literal is large (such as values >= 0x80000000u) or when parsed_pattern is at beginning.",
+   "In a 32-bit non-UTF build the pattern should be accepted/match (no crash/UB)."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\pcre2"
+ },
+ {
+  "localid": 64664,
+  "repo": "https://github.com/ArtifexSoftware/mupdf.git",
+  "repo_name": "mupdf",
+  "vic": "81dd97bd5612846411b581bed5b8e02b624f1160",
+  "repo_cwd": "/src/mupdf",
+  "description": "In the BMP decoder's color-profile reader, correct the buffer-length validation when deciding whether a color profile is fully present. Instead of testing if the available bytes are less than (profileoffset + profilesize), test only that the available bytes (cast to uint32_t) are at least profilesiz",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 64677,
+  "repo": "https://github.com/ArtifexSoftware/mupdf.git",
+  "repo_name": "mupdf",
+  "vic": "81dd97bd5612846411b581bed5b8e02b624f1160",
+  "repo_cwd": "/src/mupdf",
+  "description": "In the BMP decoder's color-profile reader, correct the buffer-length validation when deciding whether a color profile is fully present. Instead of testing if the available bytes are less than (profileoffset + profilesize), test only that the available bytes (cast to uint32_t) are at least profilesiz",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 64898,
+  "repo": "https://github.com/OpenSC/OpenSC",
+  "repo_name": "OpenSC",
+  "vic": "6d1fcd9cf82c6501089898066656fbe6737f3ced",
+  "repo_cwd": "/src/opensc",
+  "description": "Update authentic_emu_update_tokeninfo so the temporary file object returned by sc_select_file is always freed on all error paths and before logging errors:\n\n- After selecting AUTHENTIC_CACHE_TIMESTAMP_PATH, call sc_get_challenge. If sc_get_challenge fails, free the file (sc_file_free(file)) and retu",
+  "gt_files": [
+   "If sc_get_challenge succeeds, compute len, call sc_update_binary, then free the file and only then check/log sc_update_binary's return value."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 65418,
+  "repo": "https://github.com/ittiam-systems/libavc.git",
+  "repo_name": "libavc",
+  "vic": "37beb9729249a1cde472545e2a19d80660e40edc",
+  "repo_cwd": "/src/libavc",
+  "description": "- Add a buffer reallocation path for dynamic bitstream buffers used to hold NAL units:\n  - In the NAL copy logic, do not clamp/truncate the NAL length to fit the existing buffer. Instead, when a NAL length is > 0 compute required buffer size = NAL_length + 8 (8 bytes are reserved/zero-padded for dec",
+  "gt_files": [
+   "In the NAL copy logic, do not clamp/truncate the NAL length to fit the existing buffer. Instead, when a NAL length is > 0 compute required buffer size = NAL_length + 8 (8 bytes are reserved/zero-padded for decoder read-ahead).",
+   "After (re)allocation, update local pointers/size variables to use the dynamic buffer in the view context, copy the NAL into the buffer, and zero the 8 reserved bytes only if the allocated buffer is larger than the required size.",
+   "Allocates an aligned buffer (use the view context’s aligned alloc callback with 128-byte alignment) of the requested/adjusted size."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 65533,
+  "repo": "https://github.com/libjxl/libjxl.git",
+  "repo_name": "libjxl",
+  "vic": "815858b2335c267727c4b438cfdc00d5499791e0",
+  "repo_cwd": "/src/libjxl",
+  "description": "Add ordered 8-bit dithering when converting decoded float pixels to 8-bit output and adjust tests to account for the extra quantization noise.\n\nRequirements:\n- Introduce an 8x8 ordered dither matrix (values scaled to have mean 0 and be in (-0.5, 0.5)).\n- When converting floating-point channel values",
+  "gt_files": [
+   "Round to nearest integer and cast/demote to the target unsigned type.",
+   "Implement the conversion/dithering in a SIMD-friendly helper routine/templates so it can be used for different channel counts (1..4) and target unsigned types.",
+   "Update pixel comparison tests to tolerate the additional error introduced by dithering when comparing against 8-bit outputs by increasing the allowed precision threshold by the maximum possible dithering difference (approx. 63/128)."
+  ],
+  "local_repo": null
+ },
+ {
+  "localid": 65996,
+  "repo": "https://github.com/mruby/mruby",
+  "repo_name": "mruby",
+  "vic": "69cf074778f2e08c565f03e4251aaef38879ca69",
+  "repo_cwd": "/src/mruby",
+  "description": "- Refactor mrb_memsearch/mrb_memsearch_qs so the small/short-string linear search is performed in mrb_memsearch and mrb_memsearch_qs always implements the Quick Search (QS) algorithm.\n- In mrb_memsearch, after the existing early/trivial checks, add a branch:\n  - If (n + m) < MRB_QS_SHORT_STRING_LENG",
+  "gt_files": [
+   "Refactor mrb_memsearch/mrb_memsearch_qs so the small/short-string linear search is performed in mrb_memsearch and mrb_memsearch_qs always implements the Quick Search (QS) algorithm.",
+   "In mrb_memsearch, after the existing early/trivial checks, add a branch:",
+   "Preserve existing function signatures, types and return values. Minor formatting/indentation changes are acceptable."
+  ],
+  "local_repo": "C:\\1AAA-PROJECT\\BOS\\BOS-GIT\\HOS-LS-paper\\bench-runs\\hos-ls\\bench-runs\\datasets\\svb_repos\\mruby"
+ },
+ {
+  "localid": 66992,
+  "repo": "https://github.com/igraph/igraph",
+  "repo_name": "igraph",
+  "vic": "74b2e25f02b82b583ee6c38c52e024337571f443",
+  "repo_cwd": "/src/igraph",
+  "description": "Update the build configuration so Flex lexer generation is invoked with additional Flex compile flags. In src/CMakeLists.txt, for each FORMAT in the existing foreach that calls flex_target, append the flags \"-CF -8\" to the COMPILE_FLAGS already used (preserving flex_hide_line_numbers). All other beh",
+  "gt_files": [],
+  "local_repo": null
+ },
+ {
+  "localid": 67231,
+  "repo": "https://github.com/wireshark/wireshark.git",
+  "repo_name": "wireshark",
+  "vic": "8103dd92fcaffb35add2343bf6877c148640b1ca",
+  "repo_cwd": "/src/wireshark",
+  "description": "Requirement (concise):\n\n- Add two new address type descriptors:\n  - A WLAN \"RA/TA\" MAC address type for receiver/transmitter addresses used in control and some extension frames.\n  - A WLAN \"AID\" address type for Association IDs (2-byte SID/AID values).\n  - Register both address types during ieee8021",
+  "gt_files": [
+   "A WLAN \"RA/TA\" MAC address type for receiver/transmitter addresses used in control and some extension frames.",
+   "A WLAN \"AID\" address type for Association IDs (2-byte SID/AID values).",
+   "Register both address types during ieee80211 proto initialization and provide appropriate column-filter strings for each (RA/TA should map source->\"wlan.ta\" and dest->\"wlan.ra\"; AID should map to \"wlan.fc.sid.association_id\").",
+   "Change how per-packet source/destination columns are set:",
+   "These helpers must set pinfo->dl_src / pinfo->dl_dst using set_address_tvb (or equivalent) with the provided address-type, then shallow-copy into pinfo->src / pinfo->dst. (No longer build a custom column string; rely on the address mechanism.)",
+   "Use the new address-type variables (wlan_ra_ta_address_type, wlan_bssid_address_type, wlan_address_type, wlan_aid_address_type) when calling the updated set_src_addr_cols / set_dst_addr_cols.",
+   "For PV1 code paths where only an AID (SID) is present, allocate a 2-byte storage from the packet memory pool, mask the SID with SID_AID_MASK to obtain the AID, and set pinfo->dl_src/dl_dst with the wlan_aid_address_type and copy to pinfo->src/pinfo->dst so the columns show the AID via the new AID address type.",
+   "Ensure existing proto_tree/mac-detail calls continue to add mac48 details as before; the new set_* helpers should not alter those calls (they simply set pinfo addresses). Add a short comment in the helpers noting whether additional detailed tree additions are needed.",
+   "Apply these changes to control frames, extension frames, PV0, PV1 and relevant management frame handling so that the DL SRC/DST columns reflect the appropriate new address types (RA/TA/BSSID/AID) and right-click filter generation works correctly even when WLAN is not the first link-layer.",
+   "Maintain existing behavior for other address types and ensure backward compatibility where other parts of the code expect pinfo->src/pinfo->dst to have been set."
+  ],
+  "local_repo": null
+ }
+]

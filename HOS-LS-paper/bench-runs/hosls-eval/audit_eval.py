@@ -179,7 +179,8 @@ def sal_candidates(repo_dir, lang, cwes, description="", max_files=20):
                          "into", "through", "using", "when", "after", "before", "during"):
                 kws.append(w)
     exts = {"java": (".java",), "python": (".py",), "javascript": (".js", ".jsx", ".svelte"),
-            "typescript": (".ts", ".tsx", ".vue"), "go": (".go",)}
+            "typescript": (".ts", ".tsx", ".vue"), "go": (".go",),
+            "c": (".c", ".h"), "cpp": (".cpp", ".cc", ".hpp", ".h", ".cxx", ".c++")}
     exts_ok = exts.get(lang, (".py",))
     # 优化：跳过 vendored/打包产物与超大文件（bundle/静态库含大量 sink 关键词会污染候选排名）
     skip_parts = ("node_modules", "/dist/", "/build/", "/vendor/", "/static/", "/public/",
