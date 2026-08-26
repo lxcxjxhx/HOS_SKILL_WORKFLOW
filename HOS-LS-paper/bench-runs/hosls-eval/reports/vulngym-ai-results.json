@@ -1,0 +1,309 @@
+{
+ "localization": {
+  "sal": {
+   "entry-00057": {
+    "gt": [
+     "src/lib/components/common/RichTextInput.svelte",
+     "src/lib/components/chat/MessageInput/CommandSuggestionList.svelte",
+     "backend/open_webui/routers/prompts.py",
+     "src/lib/components/chat/MessageInput.svelte"
+    ],
+    "scanned": [
+     "NoteEditor.svelte",
+     "Notes.svelte",
+     "RichTextInput.svelte"
+    ],
+    "hit": [
+     "RichTextInput.svelte"
+    ]
+   },
+   "entry-00062": {
+    "gt": [
+     "backend/open_webui/retrieval/web/utils.py",
+     "backend/open_webui/routers/retrieval.py",
+     "backend/open_webui/retrieval/utils.py"
+    ],
+    "scanned": [
+     "db.py",
+     "oracle23ai.py",
+     "pgvector.py"
+    ],
+    "hit": []
+   },
+   "entry-00080": {
+    "gt": [
+     "internal/mcp/client.go",
+     "internal/handler/mcp_service.go",
+     "internal/application/service/mcp_service.go"
+    ],
+    "scanned": [
+     "client.go",
+     "manager.go",
+     "mcp_tool.go"
+    ],
+    "hit": [
+     "client.go"
+    ]
+   },
+   "entry-00081": {
+    "gt": [
+     "internal/mcp/client.go",
+     "internal/handler/mcp_service.go",
+     "internal/application/service/mcp_service.go",
+     "internal/mcp/manager.go"
+    ],
+    "scanned": [
+     "client.go",
+     "manager.go",
+     "mcp_tool.go"
+    ],
+    "hit": [
+     "client.go",
+     "manager.go"
+    ]
+   },
+   "entry-00389": {
+    "gt": [
+     "mlflow/pyfunc/backend.py",
+     "mlflow/pyfunc/mlserver.py"
+    ],
+    "scanned": [
+     "test_cli.py"
+    ],
+    "hit": []
+   }
+  },
+  "baseline": {
+   "entry-00057": {
+    "gt": [
+     "src/lib/components/common/RichTextInput.svelte",
+     "src/lib/components/chat/MessageInput/CommandSuggestionList.svelte",
+     "backend/open_webui/routers/prompts.py",
+     "src/lib/components/chat/MessageInput.svelte"
+    ],
+    "scanned": [
+     "MessageInput.svelte",
+     "SettingsModal.svelte"
+    ],
+    "hit": [
+     "MessageInput.svelte"
+    ]
+   },
+   "entry-00062": {
+    "gt": [
+     "backend/open_webui/retrieval/web/utils.py",
+     "backend/open_webui/routers/retrieval.py",
+     "backend/open_webui/retrieval/utils.py"
+    ],
+    "scanned": [
+     "main.py"
+    ],
+    "hit": []
+   },
+   "entry-00080": {
+    "gt": [
+     "internal/mcp/client.go",
+     "internal/handler/mcp_service.go",
+     "internal/application/service/mcp_service.go"
+    ],
+    "scanned": [
+     "docs.go",
+     "mcp_service.go",
+     "mcp_tool.go"
+    ],
+    "hit": [
+     "mcp_service.go"
+    ]
+   },
+   "entry-00081": {
+    "gt": [
+     "internal/mcp/client.go",
+     "internal/handler/mcp_service.go",
+     "internal/application/service/mcp_service.go",
+     "internal/mcp/manager.go"
+    ],
+    "scanned": [],
+    "hit": []
+   },
+   "entry-00389": {
+    "gt": [
+     "mlflow/pyfunc/backend.py",
+     "mlflow/pyfunc/mlserver.py"
+    ],
+    "scanned": [],
+    "hit": []
+   }
+  }
+ },
+ "scans": {
+  "entry-00057": {
+   "sal": [
+    {
+     "file": "NoteEditor.svelte",
+     "status": "completed",
+     "findings": [],
+     "duration": 190.626213
+    },
+    {
+     "file": "Notes.svelte",
+     "status": "completed",
+     "findings": [
+      {
+       "status": "CONFIRMED",
+       "rule": "Markdown内容未转义导致存储型XSS",
+       "line": 255,
+       "desc": "跨站脚本(XSS)漏洞：攻击者可在页面中注入恶意JavaScript代码，窃取用户Cookie、会话令牌或劫持用户操作。常见于未对用户输入进行HTML编码就输出到页面的场景。"
+      }
+     ],
+     "duration": 215.492192
+    },
+    {
+     "file": "RichTextInput.svelte",
+     "status": "completed",
+     "findings": [
+      {
+       "status": "UNCERTAIN",
+       "rule": "不安全外部函数调用攻击链",
+       "line": 0,
+       "desc": "发现可疑代码模式：generateAutoCompletion函数被声明为外部传入的Function类型，其具体实现不在当前文件中，无法评估其安全性..."
+      },
+      {
+       "status": "UNCERTAIN",
+       "rule": "协同编辑参数注入攻击链",
+       "line": 0,
+       "desc": "发现可疑代码模式：socket参数被声明并传递给协同编辑提供程序，但未显示其验证或安全处理..."
+      }
+     ],
+     "duration": 330.350514
+    }
+   ],
+   "baseline": [
+    {
+     "file": "MessageInput.svelte",
+     "status": "completed",
+     "findings": [],
+     "duration": 251.499492
+    },
+    {
+     "file": "SettingsModal.svelte",
+     "status": "completed",
+     "findings": [],
+     "duration": 128.905931
+    }
+   ]
+  },
+  "entry-00062": {
+   "sal": [
+    {
+     "file": "db.py",
+     "status": "completed",
+     "findings": [],
+     "duration": 77.231953
+    },
+    {
+     "file": "oracle23ai.py",
+     "status": "completed",
+     "findings": [],
+     "duration": 256.54918
+    },
+    {
+     "file": "pgvector.py",
+     "status": "completed",
+     "findings": [],
+     "duration": 109.263694
+    }
+   ],
+   "baseline": [
+    {
+     "file": "main.py",
+     "status": "completed",
+     "findings": [
+      {
+       "status": "WEAK",
+       "rule": "认证凭证处理函数实现未知",
+       "line": 343,
+       "desc": "代码第343行调用 `get_http_authorization_cred` 函数处理Authorization头凭证，但该函数的具体实现未知，无法验证是否存在认证绕过漏洞。"
+      }
+     ],
+     "duration": 215.27756
+    }
+   ]
+  },
+  "entry-00080": {
+   "sal": [
+    {
+     "file": "client.go",
+     "status": "completed",
+     "findings": [],
+     "duration": 124.002898
+    },
+    {
+     "file": "manager.go",
+     "status": "completed",
+     "findings": [],
+     "duration": 108.059552
+    },
+    {
+     "file": "mcp_tool.go",
+     "status": "completed",
+     "findings": [],
+     "duration": 123.356173
+    }
+   ],
+   "baseline": [
+    {
+     "file": "docs.go",
+     "status": "completed",
+     "findings": [],
+     "duration": 71.913291
+    },
+    {
+     "file": "mcp_service.go",
+     "status": "completed",
+     "findings": [],
+     "duration": 147.489911
+    },
+    {
+     "file": "mcp_tool.go",
+     "status": "completed",
+     "findings": [],
+     "duration": 203.05834
+    }
+   ]
+  },
+  "entry-00081": {
+   "sal": [
+    {
+     "file": "client.go",
+     "status": "completed",
+     "findings": [],
+     "duration": 42.770743
+    },
+    {
+     "file": "manager.go",
+     "status": "completed",
+     "findings": [],
+     "duration": 113.191341
+    },
+    {
+     "file": "mcp_tool.go",
+     "status": "completed",
+     "findings": [],
+     "duration": 303.814738
+    }
+   ],
+   "baseline": []
+  },
+  "entry-00389": {
+   "sal": [
+    {
+     "file": "test_cli.py",
+     "status": "completed",
+     "findings": [],
+     "duration": 137.811609
+    }
+   ],
+   "baseline": []
+  }
+ }
+}

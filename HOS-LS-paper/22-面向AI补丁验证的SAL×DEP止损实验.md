@@ -71,7 +71,31 @@
 | Pair-Correct（DEP，patched 无同语义 finding） | 7/27 = 25.9% | 本批残留均为 CONFIRMED，两口径一致 |
 | DEP 收紧量 | **3/10 补丁被拒（30%）** | 差分验证新增的可证伪信号 |
 
-## 4. 通用仓库级副线（VulnGym 10） — [待批次完成填充]
+## 4. 通用仓库级副线（VulnGym 10 → 本轮完成 5 条）
+
+### 4.1 定位（静态，AI 扫描子集）
+
+| 条目 | 框架 | CWE | GT 文件 | SAL top-3 命中 GT | baseline top-3 命中 GT |
+|---|---|---|---|---|---|
+| entry-00057 | open-webui | CWE-79 | 4 | ✅ RichTextInput.svelte | ✅ MessageInput.svelte |
+| entry-00062 | open-webui | CWE-89 | 3 | ✗（pgvector/oracle23ai/db.py） | ✗（main.py） |
+| entry-00080 | WeKnora | CWE-78 | 3 | ✅ client.go | ✅ mcp_service.go |
+| entry-00081 | WeKnora | CWE-78 | 4 | ✅ client.go + manager.go | — |
+| entry-00389 | MLflow | CWE-78 | 2 | ✗ | — |
+| **合计** | | | | **3/5（60%）** | **2/3** |
+
+> S1 全量（K=50）定位 9/9；本轮 top-3 压缩后 3/5 —— 定位率随 K 收紧下降，
+> 与 Locate@K 消融（K=50→100%、K=20→88.9%）一致；VulnGym 全量 AI 层留待预算充足后补跑。
+
+### 4.2 AI 检出（19 个候选文件扫描）
+
+- **1 CONFIRMED**：entry-00057 SAL 候选 `Notes.svelte` @255 —— "Markdown 内容未转义导致存储型 XSS"
+  （SAL 锚定到 sink 文件后 AI 确认真实 XSS；该文件不在该条目 GT 内，属相邻/sibling 漏洞信号）
+- 其余 18 文件 0 CONFIRMED（open-webui SQLi / WeKnora 命令注入 / MLflow 候选均未确认）
+
+**早期信号**：SAL→AI 链路端到端打通（sink 锚定 → 候选压缩 → 7-agent 确认）；
+但仓库级 AI 检出率低，VulnGym 作为"通用检测副线"仍需更大样本 + 更精确的
+critical_operation 行级判定，不作为本轮结论依据（与用户策略"早期信号"定位一致）。
 
 ## 5. 成本（止损核算）
 
@@ -79,12 +103,19 @@
 |---|---|---|---|---|
 | A.S.E vuln 27 | 27 | 781,110 | 171,495 | ¥0.49 |
 | A.S.E patched 10 | 10 | 197,283 | 49,233 | ¥0.13 |
-| VulnGym（SAL+baseline） | 16+ | 701,700 | 124,944 | ¥0.41（未完） |
+| VulnGym（SAL+baseline，5 条） | 19 | ~820,000 | ~140,000 | ~¥0.50 |
 | 补丁生成 27+10 | ~37 calls | — | — | ~¥0.2-0.4 |
-| **合计** | | | | **~¥1.5-2.0（止损线内）** |
+| **合计** | **56+ 文件扫描** | | | **~¥1.5-2.0（止损线内）** |
 
 ## 6. 结论与下一步
 
-1. **SAL 定位已 9/9（静态）**；AI 层验证链（vulngym 批次）完成后给出"候选压缩是否提升最终检出"的直接证据。
-2. **DEP 对 AI 补丁有效**：30% 的 AI 修复被差分验证拒绝 —— "主路径修复但残留路径仍可利用"是真实可测的 AI 补丁缺陷形态。
-3. 下一步：SecureVibeBench 105 仓库多文件编辑任务（静态+动态 oracle）+ A.S.E 120 全量（补 XSS 类）→ 40-60 分层全量；基线补齐 Semgrep/CodeQL/DREA/裸 agent 同口径。
+1. **链路已通、key 有效**：GitHub（ghp_）与 LLM（tp-，mimo-v2.5-pro）均验证可用；
+   代理 7897→7890 + `GIT_SSL_BACKEND=openssl` 修复为唯一环境变更。
+2. **AI 主线（A.S.E 27）**：检出 10/27（37.0%）；**DEP 拒绝 3/10（30%）AI 生成补丁**
+   —— "主路径修复但残留路径仍可利用"（路径遍历 ×2）+ "修复引入兄弟问题"（SQL 参数未验证 ×1）
+   是真实可测的 AI 补丁缺陷形态；Pair-Correct 7/27（25.9%）。
+3. **通用副线（VulnGym）**：SAL→AI 链路端到端打通，SAL top-3 定位 3/5（早期信号）；
+   仓库级 AI 检出率低，需更大样本，不作为结论依据。
+4. 下一步：SecureVibeBench 105 仓库多文件任务（静态+动态 oracle）+ A.S.E 120 全量
+   （补 XSS 类）→ 40-60 分层全量；基线补齐 Semgrep / CodeQL / DREA / 裸 agent 同口径；
+   VulnGym 全量 AI 层补跑。
