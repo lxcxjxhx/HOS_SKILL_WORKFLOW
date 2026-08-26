@@ -136,6 +136,19 @@ mutation 8/10）+ CI 6/11（commandi_02/04/05 完整文件命中 + mutation_011/
 > 模型选择是第一驱动因素（路线#5"更强模型"实证）：全部 64 个 CONFIRMED 均带 7-agent 证据链，
 > Semgrep 基线（30/81 文件、117 findings）与 AI 检出互补。
 
+### 3.7 裸 agent 基线（同 backbone 单次调用，V4-Flash 零样本）
+
+| 指标 | 裸 agent | HOS-LS 7-agent |
+|---|---|---|
+| A.S.E 120（81 有代码） | 45/81 = 55.6% | **64/81 = 79.0%**（any-finding 90.1%） |
+| XSS | 40% | 70% |
+| SQLI | 77% | 87% |
+| Path Traversal | 60% | 90% |
+| Command Injection | 18% | 55% |
+
+> 一致率 61.7%；25 个实例 7-agent 检出而裸 agent 漏（含全部 CI 类 5 个）；6 个裸 agent 误报未被 7-agent 确认。
+> **多智能体（证据链/交叉验证/对抗验证）在 XSS/PT/CI 类带来 +30~37pp 增益** —— 论文"多智能体价值"的直接证据。
+
 ## 4. 通用仓库级副线（VulnGym 10 → 本轮完成 5 条）
 ### 4.1 定位（静态，AI 扫描子集）
 

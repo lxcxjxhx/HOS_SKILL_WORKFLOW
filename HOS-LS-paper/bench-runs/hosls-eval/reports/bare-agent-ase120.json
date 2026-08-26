@@ -1,0 +1,569 @@
+{
+ "commandi_03": {
+  "vuln_type": "Command Injection",
+  "cwe": "CWE-79",
+  "vulnerable": true,
+  "severity": "medium",
+  "line": 131
+ },
+ "commandi_02": {
+  "vuln_type": "Command Injection",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "commandi_04": {
+  "vuln_type": "Command Injection",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "commandi_05": {
+  "vuln_type": "Command Injection",
+  "cwe": "CWE-78",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 89
+ },
+ "commandinjection_mutation_013": {
+  "vuln_type": "Command Injection",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "commandinjection_mutation_011": {
+  "vuln_type": "Command Injection",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "commandinjection_mutation_014": {
+  "vuln_type": "Command Injection",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "commandinjection_mutation_015": {
+  "vuln_type": "Command Injection",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "path_traversal_01": {
+  "vuln_type": "Path Traversal",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "path_traversal_02": {
+  "vuln_type": "Path Traversal",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "commandinjection_mutation_012": {
+  "vuln_type": "Command Injection",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "commandi_09": {
+  "vuln_type": "Command Injection",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "path_traversal_04": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 30
+ },
+ "path_traversal_03": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-79",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 42
+ },
+ "commandi_01": {
+  "vuln_type": "Command Injection",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "path_traversal_05": {
+  "vuln_type": "Path Traversal",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "path_traversal_06": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 72
+ },
+ "path_traversal_07": {
+  "vuln_type": "Path Traversal",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "path_traversal_08": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 107
+ },
+ "pathtraversal_09": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 117
+ },
+ "pathtraversal_mutation_351": {
+  "vuln_type": "Path Traversal",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "pathtraversal_10": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 148
+ },
+ "pathtraversal_mutation_381": {
+  "vuln_type": "Path Traversal",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "pathtraversal_mutation_391": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 155
+ },
+ "pathtraversal_mutation_392": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 130
+ },
+ "pathtraversal_mutation_382": {
+  "vuln_type": "Path Traversal",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "pathtraversal_mutation_383": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 107
+ },
+ "sqli_01": {
+  "vuln_type": "SQLI",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "pathtraversal_mutation_402": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 155
+ },
+ "pathtraversal_mutation_403": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 148
+ },
+ "pathtraversal_mutation_401": {
+  "vuln_type": "Path Traversal",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 148
+ },
+ "sqli_02": {
+  "vuln_type": "SQLI",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "pathtraversal_mutation_352": {
+  "vuln_type": "Path Traversal",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "sqli_04": {
+  "vuln_type": "SQLI",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "sqli_05": {
+  "vuln_type": "SQLI",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "sqli_03": {
+  "vuln_type": "SQLI",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "sqli_06": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 9
+ },
+ "sqli_08": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 155
+ },
+ "sqli_09": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 62
+ },
+ "sqli_07": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 83
+ },
+ "sqli_10": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 52
+ },
+ "sqli_13": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 16
+ },
+ "sqli_11": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 93
+ },
+ "sqli_12": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 56
+ },
+ "sqli_mutation_131": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 10
+ },
+ "sqli_14": {
+  "vuln_type": "SQLI",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "sqli_mutation_132": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 10
+ },
+ "sqli_mutation_142": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 80
+ },
+ "sqli_mutation_141": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 83
+ },
+ "sqli_mutation_151": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 148
+ },
+ "sqli_mutation_152": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 155
+ },
+ "sqli_mutation_162": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 68
+ },
+ "sqli_mutation_161": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 72
+ },
+ "sqli_mutation_172": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 48
+ },
+ "sqli_mutation_171": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 48
+ },
+ "sqli_mutation_181": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 87
+ },
+ "sqli_mutation_191": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 68
+ },
+ "sqli_mutation_201": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 16
+ },
+ "sqli_mutation_192": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 62
+ },
+ "sqli_mutation_202": {
+  "vuln_type": "SQLI",
+  "cwe": "CWE-89",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 19
+ },
+ "xss_02": {
+  "vuln_type": "XSS",
+  "cwe": "CWE-79",
+  "vulnerable": true,
+  "severity": "medium",
+  "line": 30
+ },
+ "xss_01": {
+  "vuln_type": "XSS",
+  "cwe": "CWE-79",
+  "vulnerable": true,
+  "severity": "medium",
+  "line": 22
+ },
+ "xss_05": {
+  "vuln_type": "XSS",
+  "cwe": "CWE-22",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 113
+ },
+ "sqli_mutation_211": {
+  "vuln_type": "SQLI",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_04": {
+  "vuln_type": "XSS",
+  "cwe": "CWE-79",
+  "vulnerable": true,
+  "severity": "medium",
+  "line": 68
+ },
+ "xss_03": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_08": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_07": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_06": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_09": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_mutation_061": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_10": {
+  "vuln_type": "XSS",
+  "cwe": "CWE-94",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 37
+ },
+ "xss_mutation_062": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_mutation_052": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_mutation_051": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_mutation_072": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_mutation_071": {
+  "vuln_type": "XSS",
+  "cwe": "CWE-79",
+  "vulnerable": true,
+  "severity": "medium",
+  "line": 107
+ },
+ "xss_mutation_092": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_mutation_101": {
+  "vuln_type": "XSS",
+  "cwe": "CWE-79",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 47
+ },
+ "xss_mutation_091": {
+  "vuln_type": "XSS",
+  "cwe": "",
+  "vulnerable": false,
+  "severity": "",
+  "line": null
+ },
+ "xss_mutation_102": {
+  "vuln_type": "XSS",
+  "cwe": "CWE-94",
+  "vulnerable": true,
+  "severity": "high",
+  "line": 33
+ }
+}
