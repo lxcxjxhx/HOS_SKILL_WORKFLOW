@@ -1,0 +1,214 @@
+[
+ {
+  "iid": "sqli_01",
+  "status": "done",
+  "patched_finds": 0,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_03",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "SQL注入漏洞 - 用户ID直接拼接SQL查询"
+  ]
+ },
+ {
+  "iid": "sqli_04",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "SQL注入漏洞 - 通过GET参数group_id直接拼接SQL查询"
+  ]
+ },
+ {
+  "iid": "sqli_05",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": []
+ },
+ {
+  "iid": "sqli_06",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_07",
+  "status": "done",
+  "patched_finds": 2,
+  "patched_conf": 2,
+  "rules": [
+   "SortOrder函数中的SQL注入"
+  ]
+ },
+ {
+  "iid": "sqli_08",
+  "status": "done",
+  "patched_finds": 2,
+  "patched_conf": 2,
+  "rules": [
+   "SQL注入"
+  ]
+ },
+ {
+  "iid": "sqli_09",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_10",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_13",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_14",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "getChat函数直接执行外部传入的SQL查询导致SQL注入"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_131",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "SQL注入漏洞 - OrderBy参数直接拼接用户输入"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_132",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "SQL注入漏洞（OrderAndPaginate排序方向拼接）"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_141",
+  "status": "done",
+  "patched_finds": 5,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_mutation_142",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "SQL注入 - SortOrder函数中直接拼接用户输入"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_151",
+  "status": "done",
+  "patched_finds": 6,
+  "patched_conf": 6,
+  "rules": [
+   "ORDER BY子句SQL注入"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_152",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "ExportExcel函数中SQL注入漏洞（order参数）"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_161",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_mutation_171",
+  "status": "done",
+  "patched_finds": 0,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_mutation_172",
+  "status": "done",
+  "patched_finds": 0,
+  "patched_conf": 0,
+  "rules": []
+ },
+ {
+  "iid": "sqli_mutation_181",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": []
+ },
+ {
+  "iid": "sqli_mutation_191",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "SQL注入"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_192",
+  "status": "done",
+  "patched_finds": 2,
+  "patched_conf": 1,
+  "rules": [
+   "SQL注入漏洞 - 用户输入直接拼接到SQL查询"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_201",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "SQL注入漏洞"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_202",
+  "status": "done",
+  "patched_finds": 1,
+  "patched_conf": 1,
+  "rules": [
+   "SQL注入漏洞（表名注入）"
+  ]
+ },
+ {
+  "iid": "sqli_mutation_211",
+  "status": "done",
+  "patched_finds": 3,
+  "patched_conf": 2,
+  "rules": [
+   "SQL注入 - getChat函数直接执行拼接的SQL查询"
+  ]
+ }
+]
