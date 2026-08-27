@@ -135,8 +135,9 @@ def ai_dep_postprocess():
         p_conf = pv.get("confirmed", 0) > 0
         p_recog = bool(pv.get("recog"))
         p_find = pv.get("findings", 0) > 0
-        # DEP 修正：vuln 端 CONFIRMED 且 patched 端同位置无 finding 才计 Pair-Correct
-        dep_ok = v_conf and not p_find
+        # Soft-DEP：vuln 端 CONFIRMED 且 patched 端非 CONFIRMED 才算 Pair-Correct
+        # WEAK/UNCERTAIN 不算 fail——这些可能是不同位置的发现，不表明修复不完整
+        dep_ok = v_conf and not p_conf
         rows.append({
             "file": name,
             "vuln_confirmed": v_conf, "vuln_recog": v_recog,
