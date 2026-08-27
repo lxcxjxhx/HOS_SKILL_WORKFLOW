@@ -149,6 +149,12 @@ mutation 8/10）+ CI 6/11（commandi_02/04/05 完整文件命中 + mutation_011/
 > 一致率 61.7%；25 个实例 7-agent 检出而裸 agent 漏（含全部 CI 类 5 个）；6 个裸 agent 误报未被 7-agent 确认。
 > **多智能体（证据链/交叉验证/对抗验证）在 XSS/PT/CI 类带来 +30~37pp 增益** —— 论文"多智能体价值"的直接证据。
 
+**CodeQL 基线（CLI 2.26.4，py+js 40 样本）**：目标 CWE 规则命中 **30/40（75%）**；
+py 23 文件 117 findings（py/path-injection 87 主导）、js 131 findings —— **高召回低精度**（
+js/reflected-xss 对 .vue-as-.js 解析失败漏检；php/go/java 未建库）。
+vs HOS-LS AI（py 子集 70% CONFIRMED，带证据链）。四条基线对照：Semgrep 30/81 文件、
+裸 agent 45/81、CodeQL 30/40、HOS-LS 64/81 —— AI 系统在精度/证据上互补。
+
 ### 3.8 VulnGym 全量 AI 层（V4-Flash 重扫，2026-08-27）
 
 | 指标 | mimo 时代 | V4-Flash |
