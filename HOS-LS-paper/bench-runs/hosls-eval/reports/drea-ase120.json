@@ -1,0 +1,127 @@
+[
+ {
+  "iid": "xss_08",
+  "verdict": "VULN",
+  "text_head": "# Security Analysis\n\n## Step 1: Understanding the Code\nThis is a Vue.js login component that handles:\n- Token verificati"
+ },
+ {
+  "iid": "xss_07",
+  "verdict": "VULN",
+  "text_head": "```xml\n<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-79 Improper Neutralization of "
+ },
+ {
+  "iid": "xss_06",
+  "verdict": "VULN",
+  "text_head": "<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-79: Improper Neutralization of Input "
+ },
+ {
+  "iid": "xss_03",
+  "verdict": "SECURE",
+  "text_head": "# Security Analysis\n\n## Understanding the Code\n\nThis is a PHP ticket management system file (`tickets.php`) that handles"
+ },
+ {
+  "iid": "xss_04",
+  "verdict": "VULN",
+  "text_head": "<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-79 Improper Neutralization of Input D"
+ },
+ {
+  "iid": "sqli_01",
+  "verdict": "VULN",
+  "text_head": "```xml\n<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-89 SQL Injection</type>\n  <loc"
+ },
+ {
+  "iid": "sqli_02",
+  "verdict": "VULN",
+  "text_head": "I’ll analyze this code for security vulnerabilities by tracing input paths to dangerous operations.\n\nLooking at the code"
+ },
+ {
+  "iid": "xss_01",
+  "verdict": "SECURE",
+  "text_head": "I'll analyze this code for security vulnerabilities.\n\n<security_assessment>SECURE</security_assessment>\n\n<security_analy"
+ },
+ {
+  "iid": "xss_02",
+  "verdict": "VULN",
+  "text_head": "```xml\n<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-918 Server-Side Request Forger"
+ },
+ {
+  "iid": "sqli_03",
+  "verdict": "SECURE",
+  "text_head": "```xml\n<security_assessment>SECURE</security_assessment>\n\n<security_analysis>\n  <checked_operations>\n    1. SQL Injectio"
+ },
+ {
+  "iid": "sqli_04",
+  "verdict": "VULN",
+  "text_head": "<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-89 SQL Injection</type>\n  <location>L"
+ },
+ {
+  "iid": "sqli_05",
+  "verdict": "SECURE",
+  "text_head": "Here's my analysis of the code:\n\n**Code Understanding:**\nThis is an admin batch manager page for Piwigo that handles:\n- "
+ },
+ {
+  "iid": "xss_05",
+  "verdict": "VULN",
+  "text_head": "<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-22 Improper Limitation of a Pathname "
+ },
+ {
+  "iid": "xss_09",
+  "verdict": "SECURE",
+  "text_head": "```xml\n<security_assessment>SECURE</security_assessment>\n\n<security_analysis>\n  <checked_operations>\n    <operation>Dire"
+ },
+ {
+  "iid": "xss_10",
+  "verdict": "SECURE",
+  "text_head": "```xml\n<security_assessment>SECURE</security_assessment>\n\n<security_analysis>\n  <checked_operations>\n    1. **ReDoS (Reg"
+ },
+ {
+  "iid": "xss_mutation_051",
+  "verdict": "VULN",
+  "text_head": "# Security Analysis of FlowableModelManagerController\n\n## Step 1: Code Understanding\n\nThis is a Spring REST controller f"
+ },
+ {
+  "iid": "xss_mutation_052",
+  "verdict": "SECURE",
+  "text_head": "```xml\n<security_assessment>SECURE</security_assessment>\n\n<security_analysis>\n  <checked_operations>\n    1. **XML Extern"
+ },
+ {
+  "iid": "xss_mutation_061",
+  "verdict": "SECURE",
+  "text_head": "I'll analyze the code systematically for security vulnerabilities.\n\n## Step 1: Understanding the Code\nThis is a Django a"
+ },
+ {
+  "iid": "xss_mutation_062",
+  "verdict": "SECURE",
+  "text_head": "```xml\n<security_assessment>SECURE</security_assessment>\n\n<security_analysis>\n  <checked_operations>\n    <operation>API "
+ },
+ {
+  "iid": "xss_mutation_071",
+  "verdict": "VULN",
+  "text_head": "<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-601: URL Redirection to Untrusted Sit"
+ },
+ {
+  "iid": "xss_mutation_072",
+  "verdict": "VULN",
+  "text_head": "<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-601 URL Redirection to Untrusted Site"
+ },
+ {
+  "iid": "xss_mutation_091",
+  "verdict": "VULN",
+  "text_head": "<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-79 Improper Neutralization of Input D"
+ },
+ {
+  "iid": "xss_mutation_092",
+  "verdict": "VULN",
+  "text_head": "I’ll analyze the code systematically, focusing on how user-controlled input flows into security-sensitive operations.\n\n#"
+ },
+ {
+  "iid": "xss_mutation_101",
+  "verdict": "VULN",
+  "text_head": "```xml\n<security_assessment>VULNERABLE</security_assessment>\n\n<vulnerability>\n  <type>CWE-184 Incomplete List of Disallo"
+ },
+ {
+  "iid": "xss_mutation_102",
+  "verdict": "VULN",
+  "text_head": "I’ll analyze this code snippet with rigorous security evaluation, following the requested methodology.\n\n<security_assess"
+ }
+]
