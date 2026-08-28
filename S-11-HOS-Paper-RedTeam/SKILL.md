@@ -43,6 +43,33 @@ HOS 模式（红队）：
 
 ---
 
+## 一·五、方法论背书（Methodology Reference → Operationalization）
+
+本 Skill 的评审规则不是 AI 自创的「看起来很专业」的清单，而是对通用科研方法论的工程化——对外可解释、有权威来源。背书结构对齐 S-12-HOS-Critic-Review：**权威方法论 → 可解释规则 → Skill → Workflow → AI 执行**。完整背书见 [references/methodology.md](references/methodology.md)，权威书评/解读来源见 [references/authoritative-sources.md](references/authoritative-sources.md)。
+
+**Methodology Reference**（评审规则的权威来源）
+
+- Booth, Colomb & Williams, *The Craft of Research*, 5th ed., University of Chicago Press, 2024 —— 研究总纲：Topic → Problem → Question → Evidence → Argument → Contribution
+- Creswell & Creswell, *Research Design*, 5th ed., SAGE —— 研究设计顺序：先有研究问题，后有方法；防止「先决定方法再硬找问题」
+- S. Keshav, *How to Read a Paper* —— CS 论文三遍阅读法：快速判断 → 理解方法与实验 → 挑战细节（隐藏假设/反例）
+- Silvia, *How to Write a Lot* —— 写作是固定生产流程，不是灵感
+- Wallwork, *English for Writing Research Papers* —— 国际论文八段写作结构
+- CS Reviewer Rubric —— 同行评审标准（Novelty/Soundness/Baseline/Data/Experiment/Ablation/Statistical validity/Repro/Real-world relevance）
+
+**Operationalization**（方法论 → 本 Skill 规则，详见 methodology.md 映射表）
+
+| 方法论 | 本 Skill 落点 |
+|--------|--------------|
+| 三遍阅读法第三遍（挑战实验细节/隐藏假设） | Experiment Auditor 检查点 + Paper Autopsy 攻击向量（`hidden-assumption` / `counterexample`） |
+| CS Reviewer Rubric（Novelty/Technical/Experiment/Clarity…） | Reviewer Simulator 评分维度 + Score Model 六维/五维 |
+| 「研究问题 → 设计 → 方法 → 实验 → 证据」顺序 | Experiment Auditor 检查点 Design-order：先定方法后找问题的论文必须被点名 |
+| Craft of Research 的证据纪律（声称必须有证据支撑） | 铁律「No Evidence No Criticism」+ Claim Analyzer 逐条核验 |
+| How to Write a Lot 的队列化写作 | workflows/ 三档节奏 + Blogger Agent 生产流程 |
+
+**权威佐证（背书第二层）**：RVE 证据、一句话点评、Reviewer 模拟的「与真实 OpenReview 对照」三处必须尽量挂权威第三方佐证（OpenReview 审稿、Papers with Code 复现、Semantic Scholar 引用、arXiv 元数据）——不是「我们说的」，是领域公认的。来源与引用格式见 [references/authoritative-sources.md](references/authoritative-sources.md)。
+
+---
+
 ## 二、十步流水线
 
 | 步 | Agent | 动作 | 产物 |
@@ -70,8 +97,9 @@ HOS 模式（红队）：
 3. Experiment Auditor 与 Security Auditor 可并行，输出统一汇总到 Paper Autopsy。
 4. **每条发现必须挂 RVE 编号**（见 [rve-catalog.md](references/rve-catalog.md)），否则不进入正式输出。
 5. 最后必须产出 **Patch（修复方案）** 与 **Next Paper Idea（下一篇论文方向）**——只骂不补不是红队，是喷子。
-6. **评分卡永远在最顶部**——用 TS 渲染器（`node src/index.ts <review.json>`，结构见 [ghfind-card.md](references/ghfind-card.md)）生成 ghfind 式评分卡（分数+评级+维度条+一句话点评），长文靠后。评分模型见 [score-model.md](references/score-model.md)。
-7. 输出语言跟随用户语言；默认中文。
+6. **每条发现尽量挂权威佐证**——RVE 证据、一句话点评、Reviewer 对照必须尝试核验权威来源（arXiv/OpenReview/PWC/S2），查不到写「查不到，证据缺口」，禁止编造（降级不撒谎）。
+7. **评分卡永远在最顶部**——用 TS 渲染器（`node src/index.ts <review.json> [--format md|html]`，**默认 HTML**，结构见 [ghfind-card.md](references/ghfind-card.md)）生成 ghfind 式评分卡（分数+评级+维度条+一句话点评），长文靠后。评分模型见 [score-model.md](references/score-model.md)。
+8. 输出语言跟随用户语言；默认中文。
 
 ---
 
@@ -148,6 +176,8 @@ HOS-RVE-YYYY-NNNN     # 例：HOS-RVE-2026-0001
 | 审稿模拟 | [reviewer-report.md](templates/reviewer-report.md) | Reviewer 打分 |
 | 公开博客 | [blog-article.md](templates/blog-article.md) | 公开发布版 |
 | 研究机会 | [research-idea.md](templates/research-idea.md) | Next Paper Idea |
+
+**所有模板（除 score-card 外）均含「权威解读与佐证」区块**：列出核验过的权威来源（OpenReview 审稿意见 / PWC 复现 / S2 引用 / arXiv 元数据），无则写「未找到权威第三方解读，证据缺口」。
 
 ### 输出模式（防长文、防枯燥）
 

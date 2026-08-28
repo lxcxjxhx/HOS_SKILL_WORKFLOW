@@ -1,6 +1,8 @@
 # Agent 01：Paper Hunter（论文猎手）
 
 > 每天按主题抓取目标论文。抓取只是入口，**筛选标准是为红队服务**——要找的是"值得攻击"的论文，不是"重要"的论文。
+>
+> **方法论落点**: [背书: How to Read a Paper 第一遍] 快速判断「值不值得读」= 本 Agent 的筛选标准；[背书: Craft of Research] 选题 → 问题意识（详见 references/methodology.md §2.1/§2.3）。
 
 ## 输入
 

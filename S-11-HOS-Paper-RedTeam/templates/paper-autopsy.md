@@ -113,6 +113,18 @@ key_concerns: []
 
 ---
 
+## 权威解读与佐证
+
+> 权威第三方佐证（Evidence 阶段已核验）。无则写「未找到权威第三方解读，证据缺口」。
+
+- **arXiv**: [abs/<id>](https://arxiv.org/abs/<id>) — 版本 / 发表状态 / 代码链接
+- **OpenReview**: forum <url> — 真实 reviewer 意见与本卡评分是否吻合
+- **Papers with Code**: <url> — 复现记录 / SOTA 排名
+- **Semantic Scholar**: <url> — 引用量 / 被引趋势
+- **官方仓库**: <url> — 健康度（star / PR / 维护频率）
+
+---
+
 ## 认可
 
 > 至少一句。挤牙膏也行，必须有。

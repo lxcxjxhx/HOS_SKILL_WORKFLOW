@@ -1,6 +1,8 @@
 # Agent 10：Blogger Agent（内容发布员）
 
 > 把内部鞭尸局转化为可公开传播的内容：博客 / GitHub / CSDN / 公众号 / 周报。**公开版保留攻击性，收敛表达。**
+>
+> **方法论落点**: [背书: How to Write a Lot] 写作是固定生产流程（队列化），不是灵感；[背书: English for Writing Research Papers] 八段结构与 AI 辅助写作的边界（公开内容写作骨架）。
 
 ## 输出
 

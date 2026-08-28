@@ -52,3 +52,12 @@ spiciness: 1        # 审稿报告一律低辣度（这是给学术场合用的�
 | IEEE S&P | | |
 | ISSTA | | |
 | NeurIPS | | |
+
+## 权威解读与佐证
+
+> Evidence 阶段已核验的权威第三方来源；无则写「未找到权威第三方解读，证据缺口」。
+
+- **OpenReview**: forum <url> — 真实审稿意见与本报告 Concerns 是否吻合
+- **Papers with Code**: <url> — 复现记录
+- **Semantic Scholar**: <url> — 引用量
+- **arXiv**: <url> — 元数据核验
