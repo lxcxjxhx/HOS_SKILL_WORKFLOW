@@ -157,6 +157,59 @@ def save_stratified_samples(n=50):
     return samples
 
 
+def vulngym_inventory():
+    """VulnGym 数据清单"""
+    vg_dir = DATASETS / "VulnGym"
+    if not vg_dir.exists():
+        return {"error": "VulnGym not found"}
+    entries_file = vg_dir / "data" / "entries.jsonl"
+    reports_file = vg_dir / "data" / "reports.jsonl"
+    entries, reports = [], []
+    if entries_file.exists():
+        for line in open(entries_file, encoding="utf-8").readlines():
+            line = line.strip()
+            if line:
+                entries.append(json.loads(line))
+    if reports_file.exists():
+        for line in open(reports_file, encoding="utf-8").readlines():
+            line = line.strip()
+            if line:
+                reports.append(json.loads(line))
+    repos = set(e.get("repo_url", "") for e in entries)
+    projects = set(e.get("project", "") for e in entries if e.get("project"))
+    cwe_types = set()
+    for e in entries:
+        vc = e.get("vuln_category_l2") or e.get("vuln_category_l1") or ""
+        if vc:
+            cwe_types.add(vc)
+    return {
+        "entries": len(entries),
+        "reports": len(reports),
+        "repos": len(repos),
+        "projects": len(projects),
+        "cwe_types": sorted(cwe_types)[:20],
+        "sample_entry": {k: entries[0][k] for k in ("entry_id", "repo_url", "project", "vuln_category_l1", "vuln_category_l2")} if entries else {},
+    }
+
+
+def full_inventory():
+    """输出完整数据集报告"""
+    svb = svb_inventory()
+    ase = ase_inventory()
+    vg = vulngym_inventory()
+    print("=" * 60)
+    print("  数据集完整清单")
+    print("=" * 60)
+    print(f"\n📦 SecureVibeBench: {svb.get('repos', '?')} 仓库")
+    print(f"📦 A.S.E: {ase.get('pairs', '?')} 对 (vuln, patched)")
+    print(f"📦 VulnGym: {vg.get('entries', '?')} entries, "
+          f"{vg.get('reports', '?')} advisories, "
+          f"{vg.get('repos', '?')} repos, "
+          f"{vg.get('projects', '?')} projects")
+    print(f"\n{"=" * 60}")
+    return {"svb": svb, "ase": ase, "vulngym": vg}
+
+
 # ---- CLI ----
 
 def main():
@@ -164,15 +217,7 @@ def main():
     cmd = sys.argv[1] if len(sys.argv) > 1 else "inventory"
 
     if cmd == "inventory":
-        print("=== SVB ===")
-        svb = svb_inventory()
-        for k, v in svb.items():
-            print(f"  {k}: {v}")
-
-        print("\n=== ASE ===")
-        ase = ase_inventory()
-        for k, v in ase.items():
-            print(f"  {k}: {v}")
+        full_inventory()
 
     elif cmd == "stratified":
         n = int(sys.argv[2]) if len(sys.argv) > 2 else 50
